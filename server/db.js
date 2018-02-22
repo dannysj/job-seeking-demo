@@ -1,0 +1,51 @@
+var self = this;
+var pg = require('pg');
+var uuidv4 = require('uuid/v4');
+var config = require('./config.js');
+var db = new pg.Pool(config.db);
+
+exports.reset = function(){
+  var query = `
+    drop table if exists user_industry;
+    drop table if exists industry;
+    drop table if exists users;
+    create table if not exists users (
+      id serial unique primary key,
+      first varchar(255),
+      last varchar(255),
+      dob date,
+      profile_pic text,
+      register_date date,
+      ismentor boolean,
+      isadmin boolean,
+      password varchar(255),
+      email varchar(255)
+    );
+    create table if not exists industry (
+      id serial unique primary key,
+      name varchar(255)
+    );
+    create table if not exists user_industry (
+      uid int references users(id),
+      iid int references industry(id)
+    );
+  `;
+  db.query(query, function(err, result){
+    if(err){
+      console.log(err);
+      return;
+    }
+    console.log('DB Reset Successful!');
+  });
+};
+
+exports.getIndustryList = function(callback){
+  var query = 'select * from industry;';
+  db.query(query, function(err, result){
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows);
+  });
+}
