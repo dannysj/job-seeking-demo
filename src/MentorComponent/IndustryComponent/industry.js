@@ -23,7 +23,7 @@ class Industry extends Component {
 
   render() {
     return (
-      <div className="Industry">
+      <div>
         <div className="ui vertical menu">
           <div className="item">
             <div className="ui transparent icon input">

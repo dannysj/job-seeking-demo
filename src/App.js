@@ -2,15 +2,18 @@ import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
 import logo from './logo.svg';
+import './Semantic/semantic.min.css';
 import './App.css';
-import NavLink from './NavLinkComponent/navlink'
+import NavLink from './NavLinkComponent/navlink';
 import Home from './HomeComponent/home';
-import Mentor from './MentorComponent/mentor'
+import Mentor from './MentorComponent/mentor';
+import UserStatus from './UserComponent/userstatus';
+import Login from './UserComponent/login';
+import Signup from './UserComponent/signup';
+// import Signup from './UserComponent/signup';
+
 
 class App extends Component {
-  onRouteChange () {
-    alert('ha');
-  }
 
   render() {
     return (
@@ -35,16 +38,11 @@ class App extends Component {
           <NavLink to="/about">
             About
           </NavLink>
-          <div className="right menu">
-            <div className="item">
-              <div className="ui transparent icon input">
-                <input type="text" placeholder="Search users..." />
-                <i className="search link icon"></i>
-              </div>
-            </div>
-          </div>
+          <UserStatus></UserStatus>
         </div>
         <Switch onChange={this.onRouteChange}>
+          <Route path='/login' component={Login}/>
+          <Route path='/signup' component={Signup}/>
           <Route path='/mentor' component={Mentor}/>
           <Route path='/' component={Home}/>
         </Switch>

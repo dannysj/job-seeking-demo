@@ -10,7 +10,7 @@ class Mentor extends Component {
         <div>
           <List></List>
         </div>
-        <div className="ui right internal rail">
+        <div className="ui right internal rail Industry-container">
           <Industry></Industry>
         </div>
       </div>

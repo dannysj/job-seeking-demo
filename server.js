@@ -17,7 +17,6 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.post('/api/industry_list', function(req, res){
-  console.log('fuck');
   db.getIndustryList((err, list) => {
     if(err){
       console.log(err);
@@ -25,6 +24,28 @@ app.post('/api/industry_list', function(req, res){
       return;
     }
     res.json({code: 0, list: list});
+  });
+});
+
+app.post('/api/get_mentor_list', function(req, res){
+  db.getMentorList([], (err, list) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0, list: list});
+  });
+});
+
+app.post('/api/create_user', function(req, res){
+  db.createUser(req.body, (err) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1, errMsg: err});
+      return;
+    }
+    res.json({code: 0});
   });
 });
 

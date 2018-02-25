@@ -48,4 +48,27 @@ exports.getIndustryList = function(callback){
     }
     callback(null, result.rows);
   });
-}
+};
+
+exports.getMentorList = function(filter, callback){
+  var query = 'select * from users where ismentor=true;';
+  db.query(query, function(err, result){
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows);
+  });
+};
+
+// TODO: check and return proper error first if the user's email is duplicated
+exports.createUser = function(user, callback){
+  var query = `insert into users (first,last,password,email,profile_pic) values($1,$2,$3,$4,'/img/sample_profile.jpg');`;
+  db.query(query, [user.first, user.last, user.password, user.email], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+};
