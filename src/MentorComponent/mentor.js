@@ -5,6 +5,7 @@ import List from './ListComponent/list';
 
 class Mentor extends Component {
   render() {
+    console.log(this.props);
     return (
       <div className="ui container">
         <div>

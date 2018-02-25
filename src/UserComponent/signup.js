@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import './user.css';
 
 //TODO Replace all alert with custom error message system
 
-class Login extends Component {
+class Signup extends Component {
 
   constructor (props) {
     super(props);
     this.state={user:{}};
+    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
     // if(this.context.user)
@@ -20,13 +22,12 @@ class Login extends Component {
   }
 
   handleSubmit (e) {
-
+    e.preventDefault();
     if(this.state.user.password == this.state.user.cpassword){
       axios.post('http://localhost:3005/api/create_user',this.state.user).then(res => {
-        console.log(res);
         if(res.data.code==0){
-
-          // this.setState({mentors:res.data.list});
+          this.props.onSuccess(this.state.user); // TODO: use the user profile returned by the server
+          this.context.router.history.push('/');
         }
         else{
           alert();
@@ -36,7 +37,7 @@ class Login extends Component {
     else{
       alert('Password does not match');
     }
-    e.preventDefault();
+
   }
 
   handleChange (e) {
@@ -46,6 +47,8 @@ class Login extends Component {
   }
 
   render() {
+    console.log(this.props);
+    console.log(this.context);
     return (
       <div class="login-signup-container">
         <form class="ui form" onSubmit={this.handleSubmit}>
@@ -55,19 +58,19 @@ class Login extends Component {
           </div>
           <div class="field">
             <label>Last Name</label>
-            <input type="text" name="last" placeholder="Last Name" onChange={this.handleChange.bind(this)} required/>
+            <input type="text" name="last" placeholder="Last Name" onChange={this.handleChange} required/>
           </div>
           <div class="field">
             <label>First Name</label>
-            <input type="text" name="first" placeholder="First Name" onChange={this.handleChange.bind(this)} required />
+            <input type="text" name="first" placeholder="First Name" onChange={this.handleChange} required />
           </div>
           <div class="field">
             <label>Password</label>
-            <input type="password" name="password" placeholder="Password" onChange={this.handleChange.bind(this)} required />
+            <input type="password" name="password" placeholder="Password" onChange={this.handleChange} required />
           </div>
           <div class="field">
             <label>Comfirm Password</label>
-            <input type="password" name="cpassword" placeholder="Confirm Password" onChange={this.handleChange.bind(this)} required />
+            <input type="password" name="cpassword" placeholder="Confirm Password" onChange={this.handleChange} required />
           </div>
           <Link to="/signup">I already have an account, log me in!</Link>
           <br /><br />
@@ -78,4 +81,8 @@ class Login extends Component {
   }
 }
 
-export default Login;
+Signup.contextTypes = {
+    router: PropTypes.object
+};
+
+export default Signup;

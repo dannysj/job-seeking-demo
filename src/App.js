@@ -14,6 +14,15 @@ import Signup from './UserComponent/signup';
 
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {};
+    this.updateUser = this.updateUser.bind(this);
+  }
+
+  updateUser(user) {
+    this.setState({user: user});
+  }
 
   render() {
     return (
@@ -38,11 +47,11 @@ class App extends Component {
           <NavLink to="/about">
             About
           </NavLink>
-          <UserStatus></UserStatus>
+          <UserStatus user={this.state.user}></UserStatus>
         </div>
         <Switch onChange={this.onRouteChange}>
-          <Route path='/login' component={Login}/>
-          <Route path='/signup' component={Signup}/>
+          <Route path='/login' render={()=><Login onSuccess={this.updateUser}></Login>} />
+          <Route path='/signup' render={()=><Signup onSuccess={this.updateUser}></Signup>}  />
           <Route path='/mentor' component={Mentor}/>
           <Route path='/' component={Home}/>
         </Switch>

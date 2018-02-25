@@ -7,7 +7,6 @@ class UserStatus extends Component {
   constructor (props) {
     super(props);
 
-    this.state={isloggedin:false};
     axios.post('http://localhost:3005/api/all_mentor_list',{}).then(res => {
       console.log(res);
       if(res.data.code==0){
@@ -22,12 +21,14 @@ class UserStatus extends Component {
   }
 
   render() {
-    if(this.context.user){
+    if(this.props.user){
       return (
-        <div className="ui item">
-          <Link to="/login">
-              Login or Signup
-          </Link>
+        <div className="right menu">
+          <div className="ui item">
+            <Link to="/account">
+                Account
+            </Link>
+          </div>
         </div>
       );
     }

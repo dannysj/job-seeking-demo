@@ -45,7 +45,18 @@ app.post('/api/create_user', function(req, res){
       res.json({code: 1, errMsg: err});
       return;
     }
-    res.json({code: 0});
+    res.json({code: 0}); // TODO: Return token
+  });
+});
+
+app.post('/api/verify_user', function(req, res){
+  db.verifyUser(req.body, (err, user) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1, errMsg: err});
+      return;
+    }
+    res.json({code: 0, user: user});
   });
 });
 

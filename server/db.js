@@ -72,3 +72,20 @@ exports.createUser = function(user, callback){
     callback(null);
   });
 };
+
+exports.verifyUser = function(user, callback){
+  var query = `select * from users where email=$1 and password=$2;`;
+  db.query(query, [user.email, user.password], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    if(result.rows.length==0){
+      callback('No such email found');
+      return;
+    }
+    var userAccount = result.rows[0];
+    userAccount.password = null;
+    callback(null, userAccount);
+  });
+}
