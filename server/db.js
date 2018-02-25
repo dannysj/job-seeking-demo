@@ -74,6 +74,7 @@ exports.createUser = function(user, callback){
 };
 
 exports.verifyUser = function(user, callback){
+  console.log(user.email);
   var query = `select * from users where email=$1 and password=$2;`;
   db.query(query, [user.email, user.password], (err, result)=>{
     if(err){
