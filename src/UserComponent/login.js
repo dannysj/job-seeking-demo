@@ -19,7 +19,7 @@ class Login extends Component {
     axios.post('http://localhost:3005/api/verify_user',this.state.user).then(res => {
       if(res.data.code==0){
         this.props.onSuccess(res.data.user);
-        this.context.router.history.push('/');
+        this.context.router.history.push('/account');
       }
       else{
         alert(); // TODO: proper err

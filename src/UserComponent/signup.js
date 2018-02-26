@@ -27,7 +27,7 @@ class Signup extends Component {
       axios.post('http://localhost:3005/api/create_user',this.state.user).then(res => {
         if(res.data.code==0){
           this.props.onSuccess(this.state.user); // TODO: use the user profile returned by the server
-          this.context.router.history.push('/');
+          this.context.router.history.push('/account');
         }
         else{
           alert();
