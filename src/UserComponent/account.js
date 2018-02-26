@@ -27,19 +27,19 @@ class Account extends Component {
                 <img className="ui medium circular image" src={this.props.user.profile_pic}></img>
               </a>
               <a className="item active">
-                Profile
+                基础资料
               </a>
               <a className="item">
-                My Mentors
+                我的导师
               </a>
               <a className="item">
-                Balance
+                我的余额
               </a>
               <a className="item">
-                Be a mentor
+                成为导师
               </a>
               <a className="item">
-                Log out
+                注销
               </a>
             </div>
           </div>

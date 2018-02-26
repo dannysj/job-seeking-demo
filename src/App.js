@@ -31,22 +31,22 @@ class App extends Component {
         <div className="ui top attached tabular menu">
           <div className="item">
             <img src="/img/icon.png" height="50px"></img>
-            <b>Job Seeking</b>
+            <b>Buddy Career</b>
           </div>
           <NavLink to="/">
-            Home
+            主页
           </NavLink>
           <NavLink to="/mentor">
-            Mentor
+            导师
           </NavLink>
           <NavLink to="/news">
-            News
+            就业新闻
           </NavLink>
           <NavLink to="/join">
-            Join
+            加入我们
           </NavLink>
           <NavLink to="/about">
-            About
+            关于
           </NavLink>
           <UserStatus user={this.state.user}></UserStatus>
         </div>

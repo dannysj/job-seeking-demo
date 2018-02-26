@@ -57,24 +57,24 @@ class Signup extends Component {
             <input type="email" name="email" placeholder="Email" onChange={this.handleChange.bind(this)} required />
           </div>
           <div class="field">
-            <label>Last Name</label>
+            <label>姓</label>
             <input type="text" name="last" placeholder="Last Name" onChange={this.handleChange} required/>
           </div>
           <div class="field">
-            <label>First Name</label>
+            <label>名</label>
             <input type="text" name="first" placeholder="First Name" onChange={this.handleChange} required />
           </div>
           <div class="field">
-            <label>Password</label>
+            <label>密码</label>
             <input type="password" name="password" placeholder="Password" onChange={this.handleChange} required />
           </div>
           <div class="field">
-            <label>Comfirm Password</label>
+            <label>确认密码</label>
             <input type="password" name="cpassword" placeholder="Confirm Password" onChange={this.handleChange} required />
           </div>
-          <Link to="/signup">I already have an account, log me in!</Link>
+          <Link to="/signup">已有账号？点击登陆</Link>
           <br /><br />
-          <button class="ui button" type="submit">Submit</button>
+          <button class="ui button" type="submit">注册</button>
         </form>
       </div>
     );

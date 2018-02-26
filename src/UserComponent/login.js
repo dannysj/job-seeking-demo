@@ -43,12 +43,12 @@ class Login extends Component {
             <input type="email" name="email" placeholder="Email" onChange={this.handleChange} required />
           </div>
           <div class="field">
-            <label>Password</label>
+            <label>密码</label>
             <input type="password" name="password" placeholder="Password" onChange={this.handleChange} required />
           </div>
-          <Link to="/signup">I don't have an account yet, sign me up!</Link>
+          <Link to="/signup">还没有账号？注册账号</Link>
           <br /><br />
-          <button class="ui button" type="submit">Submit</button>
+          <button class="ui button" type="submit">登陆</button>
         </form>
       </div>
     );

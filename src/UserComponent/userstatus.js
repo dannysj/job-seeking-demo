@@ -26,7 +26,7 @@ class UserStatus extends Component {
         <div className="right menu">
           <div className="ui item">
             <Link to="/account">
-                Account
+                我的账号
             </Link>
           </div>
         </div>
@@ -36,12 +36,12 @@ class UserStatus extends Component {
       <div className="right menu">
         <div className="item">
           <Link className="item" to="/login">
-              Login
+              登陆
           </Link>
         </div>
         <div className="item">
           <Link className="item" to="/signup">
-              Signup
+              注册
           </Link>
         </div>
       </div>
