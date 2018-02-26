@@ -11,6 +11,7 @@ import UserStatus from './UserComponent/userstatus';
 import Login from './UserComponent/login';
 import Signup from './UserComponent/signup';
 import Account from './UserComponent/account';
+import MentorDetail from './MentorComponent/mentor_detail';
 // import Signup from './UserComponent/signup';
 
 
@@ -54,6 +55,7 @@ class App extends Component {
           <Route path='/login' render={()=><Login onSuccess={this.updateUser}></Login>} />
           <Route path='/signup' render={()=><Signup onSuccess={this.updateUser}></Signup>}  />
           <Route path='/account' render={()=><Account user={this.state.user} onSuccess={this.updateUser}></Account>} />
+          <Route path="/mentor/:mid" component={MentorDetail} />
           <Route path='/mentor' component={Mentor}/>
           <Route path='/' component={Home}/>
         </Switch>
