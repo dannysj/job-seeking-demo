@@ -19,7 +19,7 @@ class Account extends Component {
       return;
     }
     return (
-      <div>
+      <div className="ui container">
         <div className="ui grid">
           <div className="four wide column">
             <div className="ui vertical fluid tabular menu">

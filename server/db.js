@@ -19,7 +19,8 @@ exports.reset = function(){
       ismentor boolean,
       isadmin boolean,
       password varchar(255),
-      email varchar(255)
+      email varchar(255),
+      cover text
     );
     create table if not exists industry (
       id serial unique primary key,
@@ -63,7 +64,7 @@ exports.getMentorList = function(filter, callback){
 
 // TODO: check and return proper error first if the user's email is duplicated
 exports.createUser = function(user, callback){
-  var query = `insert into users (first,last,password,email,profile_pic) values($1,$2,$3,$4,'/img/sample_profile.jpg');`;
+  var query = `insert into users (first,last,password,email,profile_pic,register_date) values($1,$2,$3,$4,'/img/sample_profile.jpg',now());`;
   db.query(query, [user.first, user.last, user.password, user.email], (err, result)=>{
     if(err){
       callback(err);
