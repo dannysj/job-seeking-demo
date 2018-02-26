@@ -1,3 +1,7 @@
 .ui.left.internal.rail.account-nav-container {
   margin: 7em auto;
 }
+
+.account-partial-container {
+  margin: 3em 3em;
+}

@@ -4,7 +4,13 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import './account.css';
+import NavLink from '../NavLinkComponent/navlink';
 import AccountProfile from './AccountPartial/account_profile';
+import AccountMentor from './AccountPartial/account_mentor';
+import AccountBalance from './AccountPartial/account_balance';
+import AccountApply from './AccountPartial/account_apply';
+
+// TODO: Modify the structure of navlink
 
 class Account extends Component {
 
@@ -26,27 +32,32 @@ class Account extends Component {
               <a className="item">
                 <img className="ui medium circular image" src={this.props.user.profile_pic}></img>
               </a>
-              <a className="item active">
+              <NavLink to="/account/">
                 基础资料
-              </a>
-              <a className="item">
+              </NavLink>
+              <NavLink to="/account/mentor">
                 我的导师
-              </a>
-              <a className="item">
+              </NavLink>
+              <NavLink to="/account/balance">
                 我的余额
-              </a>
-              <a className="item">
+              </NavLink>
+              <NavLink to="/account/apply">
                 成为导师
-              </a>
+              </NavLink>
               <a className="item">
                 注销
               </a>
             </div>
           </div>
           <div className="twelve wide stretched column">
-            <Switch onChange={this.onRouteChange}>
-              <Route path='/account/' render={()=><AccountProfile user={this.props.user}></AccountProfile>} />
-            </Switch>
+            <div className="account-partial-container">
+              <Switch onChange={this.onRouteChange}>
+                <Route path='/account/mentor' render={()=><AccountMentor user={this.props.user}></AccountMentor>} />
+                <Route path='/account/balance' render={()=><AccountBalance user={this.props.user}></AccountBalance>} />
+                <Route path='/account/apply' render={()=><AccountApply user={this.props.user}></AccountApply>} />
+                <Route path='/account/' render={()=><AccountProfile user={this.props.user}></AccountProfile>} />
+              </Switch>
+            </div>
           </div>
         </div>
       </div>
