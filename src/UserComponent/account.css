@@ -11,7 +11,9 @@
 }
 
 .ui.modal.add-service-container {
-  display: inherit;
+  display: block;
+  position: absolute;
+  z-index: 1001;
 }
 
 .add-service-form-container {
