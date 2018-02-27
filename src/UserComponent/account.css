@@ -5,3 +5,16 @@
 .account-partial-container {
   margin: 3em 3em;
 }
+
+.input-file {
+  display: none;
+}
+
+.ui.modal.add-service-container {
+  display: inherit;
+}
+
+.add-service-form-container {
+  margin-left: 5em;
+  margin-right: 5em;
+}
