@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './mentor.css';
-import Industry from './IndustryComponent/industry';
+import Filter from './FilterComponent/filter';
 import List from './ListComponent/list';
 
 class Mentor extends Component {
@@ -11,8 +11,8 @@ class Mentor extends Component {
         <div>
           <List></List>
         </div>
-        <div className="ui right internal rail Industry-container">
-          <Industry></Industry>
+        <div className="ui right internal rail Filter-container">
+          <Filter></Filter>
         </div>
       </div>
     );

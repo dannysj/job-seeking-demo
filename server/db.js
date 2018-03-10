@@ -30,6 +30,14 @@ exports.reset = function(){
       uid int references users(id),
       iid int references industry(id)
     );
+    create table if not exists college (
+      id serial unique primary key,
+      name varchar(255)
+    );
+    create table if not exists user_college (
+      uid int references users(id),
+      cid int references college(id)
+    );
   `;
   db.query(query, function(err, result){
     if(err){

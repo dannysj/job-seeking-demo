@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Segment, Button } from 'semantic-ui-react';
 import axios from 'axios';
 import './list.css';
 
@@ -28,40 +29,17 @@ class List extends Component {
         {this.state.mentors.map(el => (
           <div className="mentor-container" key={el.id}>
             <img className="mentor-picture" src={el.profile_pic}></img>
-            <h4>{el.last+' '}{el.first}</h4>
+            <div className="mentor-text">
+              <h4>{el.last+' '}{el.first}</h4>
+              <p>Offer: {el.offer}</p>
+              <p>院校: {el.college}</p>
+              <p>专业: {el.major}</p>
+              <p>最低价格: {el.lowest_price}</p>
+            </div>
+            <Button floated='right'>点击查看细节>></Button>
           </div>
         ))}
       </div>
-      // <div>
-      // <div className="mentor-container">
-      //   <img className="mentor-picture" src="/img/sample_profile.jpg"></img>
-      //   <h4>张三</h4>
-      // </div>
-      // <div className="mentor-container">
-      //   <img className="mentor-picture" src="/img/sample_profile.jpg"></img>
-      //   <h4>张三</h4>
-      // </div>
-      // <div className="mentor-container">
-      //   <img className="mentor-picture" src="/img/sample_profile.jpg"></img>
-      //   <h4>张三</h4>
-      // </div>
-      // <div className="mentor-container">
-      //   <img className="mentor-picture" src="/img/sample_profile.jpg"></img>
-      //   <h4>张三</h4>
-      // </div>
-      // <div className="mentor-container">
-      //   <img className="mentor-picture" src="/img/sample_profile.jpg"></img>
-      //   <h4>张三</h4>
-      // </div>
-      // <div className="mentor-container">
-      //   <img className="mentor-picture" src="/img/sample_profile.jpg"></img>
-      //   <h4>张三</h4>
-      // </div>
-      //   <div className="mentor-container">
-      //     <img className="mentor-picture" src="/img/sample_profile.jpg"></img>
-      //     <h4>张三</h4>
-      //   </div>
-      // </div>
     );
   }
 }
