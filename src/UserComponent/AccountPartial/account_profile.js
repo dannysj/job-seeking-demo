@@ -7,55 +7,48 @@ class AccountProfile extends React.Component {
         return(
           <div className="ui large celled list">
             <div className="item">
-              <img className="ui medium image" src={this.props.user.profile_pic}></img>
-            </div>
-            <div className="item">
-              <div className="content">
-                <div className="header">Email</div>
-                {this.props.user.email}
-                <br/>
-              </div>
+              <img className="ui medium image profile_pic" src={this.props.user.profile_pic}></img>
             </div>
             <div className="item">
               <div className="content">
                 <div className="header">姓</div>
-                {this.props.user.last}
-                <br/>
+                <div className="info">{this.props.user.last}</div>
               </div>
             </div>
             <div className="item">
               <div className="content">
                 <div className="header">名</div>
-                {this.props.user.first}
-                <br/>
+                <div className="info">{this.props.user.first}</div>
+              </div>
+            </div>
+            <div className="item">
+              <div className="content">
+                <div className="header">Email</div>
+                <div className="info">{this.props.user.email}</div>
               </div>
             </div>
             <div className="item">
               <div className="content">
                 <div className="header">理想行业</div>
-                ...
-                <br/>
+                <div className="info">...</div>
               </div>
             </div>
             <div className="item">
               <div className="content">
                 <div className="header">出生日期</div>
-                {this.props.user.dob}
-                <br/>
+                <div className="info">{this.props.user.dob}</div>
               </div>
             </div>
             <div className="item">
               <div className="content">
                 <div className="header">注册日期</div>
-                {this.props.user.register_date}
-                <br/>
+                <div className="info">{this.props.user.register_date}</div>
               </div>
             </div>
             <div className="item">
               <div className="content">
                 <div className="header">自我介绍</div>
-                {this.props.user.cover}
-                <br/>
+                <div className="info">{this.props.user.cover}</div>
               </div>
             </div>
           </div>

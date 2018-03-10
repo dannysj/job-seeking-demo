@@ -13,3 +13,16 @@
 .detail-section {
   margin-top: 3em;
 }
+
+.account-partial-container > .list > .item {
+  padding: 1em;
+}
+
+.account-partial-container > .list > .item > .content{
+  line-height: 200%;
+}
+
+.account-partial-container > .list > .item > .ui.medium.image.profile_pic {
+  margin: auto;
+  display: grid;
+}
