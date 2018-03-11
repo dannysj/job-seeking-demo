@@ -72,7 +72,7 @@ class Signup extends Component {
             <label>确认密码</label>
             <input type="password" name="cpassword" placeholder="Confirm Password" onChange={this.handleChange} required />
           </div>
-          <Link to="/signup">已有账号？点击登陆</Link>
+          <Link to="/login">已有账号？点击登陆</Link>
           <br /><br />
           <button class="ui button" type="submit">注册</button>
         </form>

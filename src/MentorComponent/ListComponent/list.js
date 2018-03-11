@@ -30,12 +30,12 @@ class List extends Component {
             <img className="mentor-picture" src={el.profile_pic}></img>
             <div className="mentor-text">
               <h4>{el.last+' '}{el.first}</h4>
-              <p>Offer: {el.offer}</p>
-              <p>院校: {el.college}</p>
-              <p>专业: {el.major}</p>
+              <p>Offer公司: {el.offer_company}</p>
+              <p>Offer职位: {el.offer_title}</p>
+              <p>院校: {el.college_name}</p>
               <p>最低价格: {el.lowest_price}</p>
             </div>
-            <Link to={'/mentor/'+el.id}><Button floated='right' >点击查看细节>></Button></Link>
+            <Link to={'/mentor/'+el.mid}><Button floated='right' >点击查看细节>></Button></Link>
           </div>
         ))}
       </div>

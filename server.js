@@ -71,6 +71,17 @@ app.post('/api/mentor_apply', function(req, res){
   });
 });
 
+app.post('/api/get_mentor_detail', function(req, res){
+  db.getMentorDetail(req.body.mid, (err, mentor) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0, mentor: mentor});
+  });
+});
+
 app.post('/api/get_college_list', function(req, res){
   db.getCollegeList((err, list) => {
     if(err){

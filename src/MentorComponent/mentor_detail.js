@@ -8,7 +8,17 @@ class MentorDetail extends Component {
 
   constructor (props) {
     super(props);
-    this.state={mentor:{first:"", last:""}};
+    this.state={mentor:{first:"", last:"", service:[]}};
+
+    axios.post('http://localhost:3005/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
+      if(res.data.code==0){
+        console.log(res.data.mentor);
+        this.setState({mentor:res.data.mentor});
+      }
+      else{
+        //TODO: Error Handling
+      }
+    });
   }
 
   // {this.props.match.params.mid}
@@ -29,13 +39,27 @@ class MentorDetail extends Component {
               </div>
             </h2>
             <div>
-              <p><b>在读院校：</b>University of Wisconsin-Madison</p>
-              <p><b>offer成就：</b>Lucid Software Summer Intern</p>
-              <p><b>简介：</b>这里是一些简介信息</p>
-              <p><b>经历：</b>这里是一些主要经历</p>
+              <p><b>在读院校：</b>{this.state.mentor.college_name}</p>
+              <p><b>offer公司：</b>{this.state.mentor.offer_company}</p>
+              <p><b>offer职位：</b>{this.state.mentor.offer_title}</p>
+              <p><b>年龄：</b>{this.state.mentor.dob}</p>
             </div>
           </div>
         </div>
+
+        <div className="detail-section">
+          <h2 className="ui header">
+            <i className="id badge outline icon"></i>
+            <div className="content">
+              自我介绍
+              <div className="sub header">关于导师的自我介绍</div>
+            </div>
+          </h2>
+          <div>
+            {this.state.mentor.bio}
+          </div>
+        </div>
+
         <div className="detail-section">
           <h2 className="ui header">
             <i className="calendar outline icon"></i>
@@ -51,19 +75,17 @@ class MentorDetail extends Component {
               <th>具体介绍</th>
             </tr></thead>
             <tbody>
-              <tr>
-                <td>简历修改</td>
-                <td>1000 USD</td>
-                <td>将提供细致入微的简历修改意见，并与mentee一同修改</td>
-              </tr>
-              <tr>
-                <td>Mock Interview</td>
-                <td>500 USD</td>
-                <td>将提供模拟面试，时长30分钟，事后将提出整改意见</td>
-              </tr>
+              {
+                this.state.mentor.service.map(el => (
+                  <tr>
+                    <td>{el.name}</td>
+                    <td>{el.price+' USD'}</td>
+                    <td>{el.description}</td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
-
         </div>
 
         <div className="detail-section">
@@ -73,6 +95,8 @@ class MentorDetail extends Component {
               简历
             </div>
           </h2>
+          <iframe className="resume-holder" width="100%" src={this.state.mentor.resume}>
+          </iframe>
         </div>
 
         <div className="detail-section">

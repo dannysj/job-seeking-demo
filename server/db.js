@@ -87,7 +87,17 @@ exports.getIndustryList = function(callback){
 };
 
 exports.getMentorList = function(filter, callback){
-  var query = 'select * from users where ismentor=true;';
+  var query = `
+    select u.first as first,
+      u.profile_pic as profile_pic,
+      u.last as last,
+      c.name as college_name,
+      m.offer_title as offer_title,
+      m.offer_company as offer_company,
+      m.id as mid
+    from users u, mentor_info m, college c
+    where m.uid = u.id and m.cid = c.id and u.ismentor = true;
+  `;
   db.query(query, function(err, result){
     if(err){
       callback(err);
@@ -206,5 +216,28 @@ exports.getCollegeList = (callback) => {
       return;
     }
     callback(null, result.rows);
+  });
+};
+
+exports.getMentorDetail = (mid, callback) => {
+  var query = `
+    select u.first as first,
+      u.last as last,
+      u.dob as dob,
+      c.name as college_name,
+      m.offer_title as offer_title,
+      m.offer_company as offer_company,
+      m.bio as bio,
+      m.service as service,
+      m.resume as resume
+    from users u, mentor_info m, college c
+    where m.uid = u.id and m.cid = c.id and m.id = $1;
+  `;
+  db.query(query, [mid], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows[0]);
   });
 }
