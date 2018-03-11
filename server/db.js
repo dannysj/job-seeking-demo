@@ -119,4 +119,25 @@ exports.createNews = (news, callback) => {
     }
     callback(null, result.rows[0].id);
   });
+};
+
+exports.getNewsDetail = (nid, callback) => {
+  var query = `
+    select n.title as title,
+      u.first as author_first,
+      u.last as author_last,
+      n.type as type,
+      n.publish_time as publish_time,
+      n.thumbnail as thumbnail,
+      n.content as content
+    from news n, users u
+    where n.author_id = u.id
+      and n.id = $1`;
+  db.query(query, [nid], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows[0]);
+  });
 }

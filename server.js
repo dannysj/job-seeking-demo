@@ -42,6 +42,17 @@ app.post('/api/get_news_list', function(req, res){
   // TODO:
 });
 
+app.post('/api/get_news_detail', function(req, res){
+  db.getNewsDetail(req.body.nid, (err, news) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0, news: news});
+  });
+});
+
 app.post('/api/admin/create_news', function(req, res){
   // TODO: Authentication
   req.body.type=0; // News submitted by admin
