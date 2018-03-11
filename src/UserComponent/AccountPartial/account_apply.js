@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Modal, Button, Image, Header } from 'semantic-ui-react';
+import { Modal, Button, Image, Header, Dropdown } from 'semantic-ui-react';
 import axios from 'axios';
 import '../account.css';
 
@@ -30,7 +30,14 @@ class AccountApply extends React.Component {
     axios.post('http://localhost:3005/api/get_college_list').then(res => {
       if(res.data.code==0){
         console.log(res.data.list);
-        this.setState({college_list:res.data.list});
+        let college_list = [];
+        res.data.list.forEach((college)=>{
+          college_list.push({
+            value: college.id,
+            text: college.name
+          });
+        });
+        this.setState({college_list:college_list});
       }
       else{
         //TODO: Error Handling
@@ -64,9 +71,15 @@ class AccountApply extends React.Component {
     this.tempService[e.target.name] = e.target.value;
   }
 
-  handleChange(e) {
+  handleChange(e, data) {
+
     let curState = this.state;
-    curState.mentor_info[e.target.name] = e.target.value;
+    if(data){
+      curState.mentor_info[data.name] = data.value;
+    }
+    else{
+      curState.mentor_info[e.target.name] = e.target.value;
+    }
     this.setState(curState);
   }
 
@@ -88,14 +101,15 @@ class AccountApply extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     console.log(this.state.mentor_info);
-    // axios.post('http://localhost:3005/api/mentor_apply',this.state.mentor_info).then(res => {
-    //   if(res.data.code==0){
-    //     alert('success');
-    //   }
-    //   else{
-    //     //TODO: Error Handling
-    //   }
-    // });
+    axios.post('http://localhost:3005/api/mentor_apply',this.state.mentor_info).then(res => {
+      if(res.data.code==0){
+        alert('success');
+        // TODO: 
+      }
+      else{
+        //TODO: Error Handling
+      }
+    });
   }
 
     render() {
@@ -140,7 +154,7 @@ class AccountApply extends React.Component {
             <form className="ui form">
               <div className="field">
                 <label>院校名称：</label>
-                <input type="text" name="college" placeholder="院校名称" onChange={this.handleChange} />
+                <Dropdown name='cid' placeholder='院校名称' fluid search selection options={this.state.college_list} onChange={this.handleChange} />
               </div>
               <div className="field">
                 <label>Offer职位：</label>

@@ -171,16 +171,6 @@ exports.getNewsList = (batch_size, batch_num, callback) => {
 };
 
 exports.createMentorApp = (mentor_info, callback) => {
-  uid int references users(id),
-  isapproved boolean,
-  submission_time timestamp,
-  approval_time timestamp,
-  cid int references college(id),
-  offer_title varchar(255),
-  offer_company varchar(255),
-  bio text,
-  service jsonb,
-  resume text
   var query = `insert into mentor_info
     (uid,
       isapproved,
@@ -198,12 +188,23 @@ exports.createMentorApp = (mentor_info, callback) => {
     mentor_info.offer_title,
     mentor_info.offer_company,
     mentor_info.bio,
-    mentor_info.services,
+    JSON.stringify(mentor_info.services),
     mentor_info.resume], (err, result)=>{
     if(err){
       callback(err);
       return;
     }
     callback(null);
+  });
+};
+
+exports.getCollegeList = (callback) => {
+  var query = `select * from college;`;
+  db.query(query, (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows);
   });
 }

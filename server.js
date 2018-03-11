@@ -71,6 +71,17 @@ app.post('/api/mentor_apply', function(req, res){
   });
 });
 
+app.post('/api/get_college_list', function(req, res){
+  db.getCollegeList((err, list) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0, list: list});
+  });
+});
+
 app.post('/api/admin/create_news', function(req, res){
   // TODO: Authentication
   req.body.type=0; // News submitted by admin
