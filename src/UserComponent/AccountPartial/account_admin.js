@@ -18,6 +18,7 @@ class AccountAdmin extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleThumbnail = this.handleThumbnail.bind(this);
     this.handleSubmitNews = this.handleSubmitNews.bind(this);
+    this.handleTitleChange = this.handleTitleChange.bind(this);
   }
 
   handleChange(value) {
@@ -41,6 +42,12 @@ class AccountAdmin extends React.Component {
     };
   }
 
+  handleTitleChange(e) {
+    let curState = this.state;
+    curState.news.title = e.target.value;
+    this.setState(curState);
+  }
+
   handleSubmitNews(){
     let data = this.state.news;
     data.author_id = this.props.user.id;
@@ -48,6 +55,7 @@ class AccountAdmin extends React.Component {
       if(res.data.code==0){
         console.log(res.data.nid);
         alert('success'); // TODO: change this
+        this.context.router.history.push('/news/'+res.data.nid);
       }
       else{
         alert(); // TODO: proper err
@@ -63,7 +71,7 @@ class AccountAdmin extends React.Component {
     return(
       <div>
         <h4>编写干货:</h4>
-        标题: {' '}<Input placeholder='标题'/>
+        标题: {' '}<Input placeholder='标题' onChange={this.handleTitleChange}/>
         <br />
         <label for="thumbnail-input" className="ui button">
           <i className="ui upload icon"></i>
