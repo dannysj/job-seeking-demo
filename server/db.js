@@ -140,4 +140,15 @@ exports.getNewsDetail = (nid, callback) => {
     }
     callback(null, result.rows[0]);
   });
+};
+
+exports.getNewsList = (batch_size, batch_num, callback) => {
+  var query = `select * from news order by publish_time desc limit $2 offset $1;`;
+  db.query(query, [batch_num*batch_size,batch_size], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows);
+  });
 }

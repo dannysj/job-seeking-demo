@@ -6,3 +6,25 @@
 .news-detail-content {
   text-align: left;
 }
+
+.list-news-container {
+  height: 180px;
+  padding: 10px 30px;
+  border-top: 1px solid #CCC;
+  margin-top: 30px;
+  display: block;
+  text-align: left;
+}
+
+.list-news-picture {
+  border-radius: 10px;
+  height: 90%;
+  display: inline-block;
+}
+
+.list-news-text {
+  margin-left: 30px;
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+}

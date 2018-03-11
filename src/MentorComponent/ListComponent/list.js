@@ -11,8 +11,6 @@ class List extends Component {
 
     this.state={mentors:[]};
     axios.post('http://localhost:3005/api/get_mentor_list',this.props.filter).then(res => {
-      console.log('FUCK!!');
-      console.log(res);
       if(res.data.code==0){
         console.log(res.data.list);
         this.setState({mentors:res.data.list});

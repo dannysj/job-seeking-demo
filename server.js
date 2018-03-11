@@ -39,7 +39,14 @@ app.post('/api/get_mentor_list', function(req, res){
 });
 
 app.post('/api/get_news_list', function(req, res){
-  // TODO:
+  db.getNewsList(req.body.batch_size, req.body.batch_num, (err, news_list) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0, news_list: news_list});
+  });
 });
 
 app.post('/api/get_news_detail', function(req, res){
