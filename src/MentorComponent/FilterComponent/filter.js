@@ -37,12 +37,12 @@ class Filter extends Component {
         <Dropdown placeholder='院校' fluid search selection options={this.state.schools} />
         <br />
         <p>年龄区间</p>
-        <p>从<Input placeholder='最小年龄' /></p>
-        <p>到<Input placeholder='最大年龄' /></p>
+        <p>从{' '}<Input placeholder='最小年龄' /></p>
+        <p>到{' '}<Input placeholder='最大年龄' /></p>
         <br />
         <p>价格区间</p>
-        <p>从<Input placeholder='最小价格' /></p>
-        <p>到<Input placeholder='最大价格' /></p>
+        <p>从{' '}<Input placeholder='最小价格' /></p>
+        <p>到{' '}<Input placeholder='最大价格' /></p>
         <br />
       </div>
     );

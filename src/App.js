@@ -12,6 +12,7 @@ import Login from './UserComponent/login';
 import Signup from './UserComponent/signup';
 import Account from './UserComponent/account';
 import MentorDetail from './MentorComponent/mentor_detail';
+import News from './NewsComponent/news';
 // import Signup from './UserComponent/signup';
 
 
@@ -41,7 +42,7 @@ class App extends Component {
             导师
           </NavLink>
           <NavLink to="/news">
-            就业新闻
+            就业干货
           </NavLink>
           <NavLink to="/join">
             加入我们
@@ -57,6 +58,7 @@ class App extends Component {
           <Route path='/account' render={()=><Account user={this.state.user} onSuccess={this.updateUser}></Account>} />
           <Route path="/mentor/:mid" component={MentorDetail} />
           <Route path='/mentor' component={Mentor}/>
+          <Route path='/news' component={News}/>
           <Route path='/' component={Home}/>
         </Switch>
       </div>

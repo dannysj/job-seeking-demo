@@ -4,12 +4,17 @@ import Filter from './FilterComponent/filter';
 import List from './ListComponent/list';
 
 class Mentor extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {filter:{}};
+  }
+
   render() {
     console.log(this.props);
     return (
       <div className="ui container">
         <div>
-          <List></List>
+          <List filter={this.state.filter}></List>
         </div>
         <div className="ui right internal rail Filter-container">
           <Filter></Filter>

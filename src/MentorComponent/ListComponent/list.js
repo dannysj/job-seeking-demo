@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Segment, Button } from 'semantic-ui-react';
+import { Segment, Button} from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './list.css';
 
@@ -9,7 +10,7 @@ class List extends Component {
     super(props);
 
     this.state={mentors:[]};
-    axios.post('http://localhost:3005/api/get_mentor_list',{}).then(res => {
+    axios.post('http://localhost:3005/api/get_mentor_list',this.props.filter).then(res => {
       console.log('FUCK!!');
       console.log(res);
       if(res.data.code==0){
@@ -36,7 +37,7 @@ class List extends Component {
               <p>专业: {el.major}</p>
               <p>最低价格: {el.lowest_price}</p>
             </div>
-            <Button floated='right'>点击查看细节>></Button>
+            <Link to={'/mentor/'+el.id}><Button floated='right' >点击查看细节>></Button></Link>
           </div>
         ))}
       </div>

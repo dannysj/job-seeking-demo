@@ -5,6 +5,7 @@ var config = require('./config.js');
 var db = new pg.Pool(config.db);
 
 exports.reset = function(){
+  // TODO: removal of all tables
   var query = `
     drop table if exists user_industry;
     drop table if exists industry;
@@ -37,6 +38,15 @@ exports.reset = function(){
     create table if not exists user_college (
       uid int references users(id),
       cid int references college(id)
+    );
+    create table if not exists news (
+      id serial unique primary key,
+      author_id int references users(id),
+      publish_time timestamp,
+      title text,
+      type int, -- 0 for official article, 1 for peer sharing
+      thumbnail text,
+      content text
     );
   `;
   db.query(query, function(err, result){
@@ -97,5 +107,16 @@ exports.verifyUser = function(user, callback){
     var userAccount = result.rows[0];
     userAccount.password = null;
     callback(null, userAccount);
+  });
+};
+
+exports.createNews = (news, callback) => {
+  var query = `insert into news (author_id,publish_time,type,title,thumbnail,content) values($1,now(),$2,$3,$4,$5) returning id;`;
+  db.query(query, [news.author_id,news.type,news.title,news.thumbnail,news.content], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows[0].id);
   });
 }

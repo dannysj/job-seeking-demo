@@ -10,8 +10,8 @@ var app = express();
 var args = process.argv.slice(2);
 var PORT = process.env.PORT || 3005;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -35,6 +35,23 @@ app.post('/api/get_mentor_list', function(req, res){
       return;
     }
     res.json({code: 0, list: list});
+  });
+});
+
+app.post('/api/get_news_list', function(req, res){
+  // TODO:
+});
+
+app.post('/api/admin/create_news', function(req, res){
+  // TODO: Authentication
+  req.body.type=0; // News submitted by admin
+  db.createNews(req.body, (err, nid) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0, nid: nid});
   });
 });
 
