@@ -48,6 +48,23 @@ exports.reset = function(){
       thumbnail text,
       content text
     );
+    create table if not exists college (
+      id serial unique primary key,
+      name varchar(255)
+    );
+    create table if not exists mentor_info (
+      id serial unique primary key,
+      uid int references users(id),
+      isapproved boolean,
+      submission_time timestamp,
+      approval_time timestamp,
+      cid int references college(id),
+      offer_title varchar(255),
+      offer_company varchar(255),
+      bio text,
+      service jsonb,
+      resume text
+    );
   `;
   db.query(query, function(err, result){
     if(err){
@@ -150,5 +167,43 @@ exports.getNewsList = (batch_size, batch_num, callback) => {
       return;
     }
     callback(null, result.rows);
+  });
+};
+
+exports.createMentorApp = (mentor_info, callback) => {
+  uid int references users(id),
+  isapproved boolean,
+  submission_time timestamp,
+  approval_time timestamp,
+  cid int references college(id),
+  offer_title varchar(255),
+  offer_company varchar(255),
+  bio text,
+  service jsonb,
+  resume text
+  var query = `insert into mentor_info
+    (uid,
+      isapproved,
+      submission_time,
+      cid,
+      offer_title,
+      offer_company,
+      bio,
+      service,
+      resume)
+    values($1,false,now(),$2,$3,$4,$5,$6,$7);`
+  db.query(query,
+    [mentor_info.uid,
+    mentor_info.cid,
+    mentor_info.offer_title,
+    mentor_info.offer_company,
+    mentor_info.bio,
+    mentor_info.services,
+    mentor_info.resume], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null);
   });
 }

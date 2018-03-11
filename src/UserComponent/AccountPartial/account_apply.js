@@ -2,12 +2,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Modal, Button, Image, Header } from 'semantic-ui-react';
+import axios from 'axios';
 import '../account.css';
 
 class AccountApply extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {services: [], showAddServiceModal: false};
+    this.state = {
+      mentor_info:
+      {
+        services: [],
+        uid: this.props.user.id
+      },
+      showAddServiceModal: false
+    };
     this.tempService = {};
 
     // This binding is necessary to make `this` work in the callback
@@ -15,21 +23,34 @@ class AccountApply extends React.Component {
     this.confirmAddService = this.confirmAddService.bind(this);
     this.cancelAddService = this.cancelAddService.bind(this);
     this.handleAddServiceForm = this.handleAddServiceForm.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleResume = this.handleResume.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+
+    axios.post('http://localhost:3005/api/get_college_list').then(res => {
+      if(res.data.code==0){
+        console.log(res.data.list);
+        this.setState({college_list:res.data.list});
+      }
+      else{
+        //TODO: Error Handling
+      }
+    });
   }
 
   addService (e) {
     e.preventDefault();
-    var curState = this.state;
-    curState.showAddServiceModal = true;
-    this.setState(curState);
+    this.setState({showAddServiceModal:true});
   }
 
   confirmAddService(e) {
     e.preventDefault();
-    var curState = this.state;
-    curState.showAddServiceModal = false;
-    curState.services.push(this.tempService);
-    this.setState(curState);
+    let curServices = this.state.mentor_info.services.slice();
+    let service = Object.assign({}, this.tempService);
+    let curInfo = this.state.mentor_info;
+    curServices.push(service);
+    curInfo.services = curServices;
+    this.setState({mentor_info:curInfo,showAddServiceModal : false});
   }
 
   cancelAddService(e) {
@@ -41,6 +62,40 @@ class AccountApply extends React.Component {
 
   handleAddServiceForm(e) {
     this.tempService[e.target.name] = e.target.value;
+  }
+
+  handleChange(e) {
+    let curState = this.state;
+    curState.mentor_info[e.target.name] = e.target.value;
+    this.setState(curState);
+  }
+
+  handleResume(e) {
+    var reader = new FileReader();
+    var curState = this.state;
+    var handler = this;
+    reader.readAsDataURL(e.target.files[0]);
+    reader.onload = function () {
+
+      curState.mentor_info['resume'] = reader.result;
+      handler.setState(curState);
+    };
+    reader.onerror = function (error) {
+      console.log('Error: ', error);
+    };
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    console.log(this.state.mentor_info);
+    // axios.post('http://localhost:3005/api/mentor_apply',this.state.mentor_info).then(res => {
+    //   if(res.data.code==0){
+    //     alert('success');
+    //   }
+    //   else{
+    //     //TODO: Error Handling
+    //   }
+    // });
   }
 
     render() {
@@ -85,15 +140,15 @@ class AccountApply extends React.Component {
             <form className="ui form">
               <div className="field">
                 <label>院校名称：</label>
-                <input type="text" name="college" placeholder="院校名称" />
+                <input type="text" name="college" placeholder="院校名称" onChange={this.handleChange} />
               </div>
               <div className="field">
                 <label>Offer职位：</label>
-                <input type="text" name="offer_title" placeholder="Offer职位" />
+                <input type="text" name="offer_title" placeholder="Offer职位" onChange={this.handleChange} />
               </div>
               <div className="field">
                 <label>Offer企业：</label>
-                <input type="text" name="offer_company" placeholder="Offer企业" />
+                <input type="text" name="offer_company" placeholder="Offer企业" onChange={this.handleChange} />
               </div>
               <div className="field">
                 <label>提供服务：</label>
@@ -105,7 +160,7 @@ class AccountApply extends React.Component {
                   </tr></thead>
                   <tbody>
                     {
-                      this.state.services.map(service => (
+                      this.state.mentor_info.services.map(service => (
                         <tr>
                           <td>{service.name}</td>
                           <td>{service.price}</td>
@@ -119,20 +174,18 @@ class AccountApply extends React.Component {
               </div>
               <div className="field">
                 <label>自我介绍：</label>
-                <textarea type="text" rows="8"></textarea>
+                <textarea type="text" rows="8" name="bio" onChange={this.handleChange}></textarea>
               </div>
               <div className="field">
                 <label>上传简历：</label>
-                <label for="resume-input" className="ui button">
+                <label for="resume-input" className={this.state.mentor_info.resume?'ui button positive':'ui button'}>
                   <i className="ui upload icon"></i>
-                  上传简历
+                  {this.state.mentor_info.resume?'成功':'上传简历'}
                 </label>
-                <input type="file" className="input-file" id="resume-input" />
+                <input type="file" className="input-file" id="resume-input" onChange={this.handleResume} />
               </div>
 
-
-
-              <button className="ui button" type="submit">提交</button>
+              <button className="ui button" type="submit" onClick={this.handleSubmit}>提交</button>
             </form>
           </div>
         );

@@ -60,6 +60,17 @@ app.post('/api/get_news_detail', function(req, res){
   });
 });
 
+app.post('/api/mentor_apply', function(req, res){
+  db.createMentorApp(req.body, (err) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0});
+  });
+});
+
 app.post('/api/admin/create_news', function(req, res){
   // TODO: Authentication
   req.body.type=0; // News submitted by admin
