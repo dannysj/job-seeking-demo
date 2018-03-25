@@ -14,6 +14,7 @@ import Account from './UserComponent/account';
 import MentorDetail from './MentorComponent/mentor_detail';
 import News from './NewsComponent/news';
 import NewsDetail from './NewsComponent/news_detail';
+import About from './AboutComponent/about';
 // import Signup from './UserComponent/signup';
 
 
@@ -45,9 +46,6 @@ class App extends Component {
           <NavLink to="/news">
             就业干货
           </NavLink>
-          <NavLink to="/join">
-            加入我们
-          </NavLink>
           <NavLink to="/about">
             关于
           </NavLink>
@@ -61,6 +59,7 @@ class App extends Component {
           <Route path='/mentor' component={Mentor}/>
           <Route path='/news/:nid' component={NewsDetail}/>
           <Route path='/news' component={News}/>
+          <Route path='/about' component={About}/>
           <Route path='/' component={Home}/>
         </Switch>
       </div>
