@@ -30,9 +30,9 @@ class Account extends Component {
         <div className="ui grid">
           <div className="four wide column">
             <div className="ui vertical fluid tabular menu">
-              <a className="item">
+              <Link to="/account/"><a className="item">
                 <img className="ui medium circular image" src={this.props.user.profile_pic}></img>
-              </a>
+              </a></Link>
               <NavLink to="/account/">
                 基础资料
               </NavLink>
@@ -69,7 +69,7 @@ class Account extends Component {
                 <Route path='/account/balance' render={()=><AccountBalance user={this.props.user}></AccountBalance>} />
                 <Route path='/account/apply' render={()=><AccountApply user={this.props.user}></AccountApply>} />
                 <Route path='/account/admin' render={()=><AccountAdmin user={this.props.user}></AccountAdmin>} />
-                <Route path='/account/' render={()=><AccountProfile user={this.props.user}></AccountProfile>} />
+                <Route path='/account/' render={()=><AccountProfile user={this.props.user} onUpdate={this.props.onSuccess}></AccountProfile>} />
               </Switch>
             </div>
           </div>

@@ -21,7 +21,8 @@ exports.reset = function(){
       isadmin boolean,
       password varchar(255),
       email varchar(255),
-      cover text
+      major text,
+      cover text,
     );
     create table if not exists industry (
       id serial unique primary key,
@@ -177,6 +178,17 @@ exports.getNewsList = (batch_size, batch_num, callback) => {
       return;
     }
     callback(null, result.rows);
+  });
+};
+
+exports.updateUser = (data, callback) => {
+  var query = `update users set `+data.attr+`=$1 where id=$2;`;
+  db.query(query, [data.val,data.uid], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null);
   });
 };
 

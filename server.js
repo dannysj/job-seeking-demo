@@ -138,20 +138,23 @@ app.post('/api/verify_user', function(req, res){
   });
 });
 
+app.post('/api/update_user', function(req, res){
+  db.updateUser(req.body, (err, user) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1, errMsg: 'Operation Forbidden'});
+      return;
+    }
+    res.json({code: 0});
+  });
+});
+
 app.post('/api/file/general_upload', upload.single('file'), function(req, res) {
   console.log('fuck');
   if (!req.file)
-    return res.json({code: -21, msg: 'No files found'});
+    return res.json({code: -21, errMsg: 'No files found'});
 
   res.json({code: 0, url:'/files/'+req.file.filename});
-
-  // Use the mv() method to place the file somewhere on your server
-  // imgFile.mv(path.join(__dirname, 'public/files'), function(err) {
-  //   if (err)
-  //     return res.json({code: -20, msg: 'Server Error'});
-  //
-  //   res.json({code: 0, url});
-  // });
 });
 
 // Static resources
