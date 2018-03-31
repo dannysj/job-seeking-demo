@@ -43,11 +43,11 @@ class Account extends Component {
                 我的余额
               </NavLink>
               {
-                this.props.user.ismentor ? (
+                !this.props.user.ismentor ? (
                   <NavLink to="/account/apply">
                     成为导师
                   </NavLink>) : (
-                    <NavLink to="/account/mentor">
+                    <NavLink to="/account/service">
                       我的服务
                     </NavLink>)
               }

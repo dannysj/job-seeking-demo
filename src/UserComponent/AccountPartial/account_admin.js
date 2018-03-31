@@ -30,26 +30,23 @@ class AccountAdmin extends React.Component {
 
   handleThumbnail(e){
     let data = new FormData();
-    data.append('file', document);
-    data.append('name', name);
+    data.append('file', e.target.files[0]);
     var handler = this;
 
-    return (dispatch) => {
-      axios.post('/api/file/news_thumbnail', data).then(res => {
-        if(res.data.code == 0){
-          console.log(res.data);
-          var curState = this.state;
-          curState['news']['thumbnail'] = res.url;
-          handler.setState(curState);
-        }
-        else{
-          // TODO: error handling
-          alert('Thumnail Error');
-
-        }
-      });
-    };
-    // 
+    axios.post('http://localhost:3005/api/file/general_upload', data).then(res => {
+      if(res.data.code == 0){
+        console.log(res.data);
+        var curState = handler.state;
+        curState['news']['thumbnail'] = res.data.url;
+        handler.setState(curState);
+      }
+      else{
+        // TODO: error handling
+        alert('Thumnail Error');
+        console.log(res.data);
+      }
+    });
+    //
     // var reader = new FileReader();
     // var curState = this.state;
     // var handler = this;
@@ -90,6 +87,7 @@ class AccountAdmin extends React.Component {
     if(!this.props.user.isadmin){
       return (<h1>您没有权限访问本页，别给老子瞎搞</h1>);
     }
+    console.log(this.state.news);
     return(
       <div>
         <Segment>

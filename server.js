@@ -6,14 +6,22 @@ var db = require('./server/db.js');
 var config = require('./server/config.js');
 var http = require('http');
 var https = require('https');
-var fileUpload = require('express-fileupload');
+var multer  = require('multer');
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, __dirname + '/public/files');
+  },
+  filename: function (req, file, cb) {
+    cb(null, new Date().getTime()+'-'+file.originalname);
+  }
+});
+var upload = multer({ storage: storage });
 var app = express();
 var args = process.argv.slice(2);
 var PORT = process.env.PORT || 3005;
 
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
-app.use(fileUpload());
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -130,20 +138,21 @@ app.post('/api/verify_user', function(req, res){
   });
 });
 
-app.post('/api/file/news_thumbnail', function(req, res) {
-  if (!req.files)
+app.post('/api/file/general_upload', upload.single('file'), function(req, res) {
+  console.log('fuck');
+  if (!req.file)
     return res.json({code: -21, msg: 'No files found'});
 
-  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-  let imgFile = req.files.thumbnail;
+  res.json({code: 0, url:'/files/'+req.file.filename});
 
   // Use the mv() method to place the file somewhere on your server
-  imgFile.mv(path.join(__dirname, 'public/files'), function(err) {
-    if (err)
-      return res.json({code: -20, msg: 'Server Error'});
-
-    res.json({code: 0});
-  });
+  // imgFile.mv(path.join(__dirname, 'public/files'), function(err) {
+  //   if (err)
+  //     return res.json({code: -20, msg: 'Server Error'});
+  //
+  //   res.json({code: 0, url});
+  // });
+});
 
 // Static resources
 app.use(express.static(__dirname + '/build'));
