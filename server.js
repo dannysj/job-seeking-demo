@@ -6,12 +6,14 @@ var db = require('./server/db.js');
 var config = require('./server/config.js');
 var http = require('http');
 var https = require('https');
+var fileUpload = require('express-fileupload');
 var app = express();
 var args = process.argv.slice(2);
 var PORT = process.env.PORT || 3005;
 
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(fileUpload());
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -127,6 +129,21 @@ app.post('/api/verify_user', function(req, res){
     res.json({code: 0, user: user});
   });
 });
+
+app.post('/api/file/news_thumbnail', function(req, res) {
+  if (!req.files)
+    return res.json({code: -21, msg: 'No files found'});
+
+  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+  let imgFile = req.files.thumbnail;
+
+  // Use the mv() method to place the file somewhere on your server
+  imgFile.mv(path.join(__dirname, 'public/files'), function(err) {
+    if (err)
+      return res.json({code: -20, msg: 'Server Error'});
+
+    res.json({code: 0});
+  });
 
 // Static resources
 app.use(express.static(__dirname + '/build'));

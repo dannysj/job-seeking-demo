@@ -29,18 +29,39 @@ class AccountAdmin extends React.Component {
   }
 
   handleThumbnail(e){
-    var reader = new FileReader();
-    var curState = this.state;
+    let data = new FormData();
+    data.append('file', document);
+    data.append('name', name);
     var handler = this;
-    reader.readAsDataURL(e.target.files[0]);
-    reader.onload = function () {
 
-      curState['news']['thumbnail'] = reader.result;
-      handler.setState(curState);
+    return (dispatch) => {
+      axios.post('/api/file/news_thumbnail', data).then(res => {
+        if(res.data.code == 0){
+          console.log(res.data);
+          var curState = this.state;
+          curState['news']['thumbnail'] = res.url;
+          handler.setState(curState);
+        }
+        else{
+          // TODO: error handling
+          alert('Thumnail Error');
+
+        }
+      });
     };
-    reader.onerror = function (error) {
-      console.log('Error: ', error);
-    };
+    // 
+    // var reader = new FileReader();
+    // var curState = this.state;
+    // var handler = this;
+    // reader.readAsDataURL(e.target.files[0]);
+    // reader.onload = function () {
+    //
+    //   curState['news']['thumbnail'] = reader.result;
+    //   handler.setState(curState);
+    // };
+    // reader.onerror = function (error) {
+    //   console.log('Error: ', error);
+    // };
   }
 
   handleTitleChange(e) {

@@ -10,7 +10,6 @@ if (process.env.DATABASE_URL) {
     host: db_params.hostname,
     port: db_params.port,
     database: db_params.pathname.split('/')[1],
-    ssl: true,
     max: 20,
     idleTimeoutMillis: 30000
   };

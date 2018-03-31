@@ -42,9 +42,15 @@ class Account extends Component {
               <NavLink to="/account/balance">
                 我的余额
               </NavLink>
-              <NavLink to="/account/apply">
-                成为导师
-              </NavLink>
+              {
+                this.props.user.ismentor ? (
+                  <NavLink to="/account/apply">
+                    成为导师
+                  </NavLink>) : (
+                    <NavLink to="/account/mentor">
+                      我的服务
+                    </NavLink>)
+              }
               {
                 this.props.user.isadmin && (
                   <NavLink to="/account/admin">
