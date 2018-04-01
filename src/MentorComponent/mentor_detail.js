@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { Modal, Button, Image, Header, Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import './mentor.css';
 
@@ -28,7 +29,7 @@ class MentorDetail extends Component {
       <div className="mentor-detail-container">
         <div className="ui grid">
           <div className="six wide column">
-            <img className="mentor-img" src="/img/sample_profile.jpg"></img>
+            <img className="mentor-img" src={this.state.mentor.profile_pic}></img>
           </div>
           <div className="ten wide column">
             <h2 className="ui header">
@@ -42,7 +43,7 @@ class MentorDetail extends Component {
               <p><b>在读院校：</b>{this.state.mentor.college_name}</p>
               <p><b>offer公司：</b>{this.state.mentor.offer_company}</p>
               <p><b>offer职位：</b>{this.state.mentor.offer_title}</p>
-              <p><b>年龄：</b>{this.state.mentor.dob}</p>
+              <p><b>年龄：</b>{parseInt((new Date() - new Date(this.state.mentor.dob))/(365*24*3600*1000))}</p>
             </div>
           </div>
         </div>
@@ -73,6 +74,7 @@ class MentorDetail extends Component {
               <tr><th>服务名称</th>
               <th>服务价格</th>
               <th>具体介绍</th>
+              <th></th>
             </tr></thead>
             <tbody>
               {
@@ -81,6 +83,7 @@ class MentorDetail extends Component {
                     <td>{el.name}</td>
                     <td>{el.price+' USD'}</td>
                     <td>{el.description}</td>
+                    <td><Button positive onClick={()=>this.initBuy(el.name, el.price)}>购买</Button></td>
                   </tr>
                 )
               )}

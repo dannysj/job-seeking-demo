@@ -236,6 +236,7 @@ exports.getMentorDetail = (mid, callback) => {
     select u.first as first,
       u.last as last,
       u.dob as dob,
+      u.profile_pic as profile_pic,
       c.name as college_name,
       m.offer_title as offer_title,
       m.offer_company as offer_company,

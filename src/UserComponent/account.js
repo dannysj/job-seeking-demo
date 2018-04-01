@@ -9,6 +9,7 @@ import AccountProfile from './AccountPartial/account_profile';
 import AccountMentor from './AccountPartial/account_mentor';
 import AccountBalance from './AccountPartial/account_balance';
 import AccountApply from './AccountPartial/account_apply';
+import AccountService from './AccountPartial/account_service';
 import AccountAdmin from './AccountPartial/account_admin';
 
 // TODO: Modify the structure of navlink
@@ -68,6 +69,7 @@ class Account extends Component {
                 <Route path='/account/mentor' render={()=><AccountMentor user={this.props.user}></AccountMentor>} />
                 <Route path='/account/balance' render={()=><AccountBalance user={this.props.user}></AccountBalance>} />
                 <Route path='/account/apply' render={()=><AccountApply user={this.props.user}></AccountApply>} />
+                <Route path='/account/service' render={()=><AccountService user={this.props.user}></AccountService>} />
                 <Route path='/account/admin' render={()=><AccountAdmin user={this.props.user}></AccountAdmin>} />
                 <Route path='/account/' render={()=><AccountProfile user={this.props.user} onUpdate={this.props.onSuccess}></AccountProfile>} />
               </Switch>

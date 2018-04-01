@@ -51,3 +51,7 @@
 .notification-msg {
   color: red;
 }
+
+.header-input-label {
+  cursor: pointer;
+}

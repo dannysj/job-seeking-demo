@@ -17,15 +17,15 @@ class AccountService extends React.Component {
     render() {
         return(
           <div>
-            <h4>我的订单</h4>
-            
+            <h4>我的订单：</h4>
+            <p>暂无Mentee预定您的服务</p>
           </div>
         );
     }
 }
 
-AccountApply.contextTypes = {
+AccountService.contextTypes = {
     router: PropTypes.object
 };
 
-export default AccountApply;
+export default AccountService;

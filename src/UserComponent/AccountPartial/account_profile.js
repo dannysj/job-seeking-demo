@@ -18,6 +18,7 @@ class AccountProfile extends React.Component {
     this.confirmAttrChange = this.confirmAttrChange.bind(this);
     this.cancelAttrChange = this.cancelAttrChange.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleHeader = this.handleHeader.bind(this);
   }
 
   initAttrChange (key_name, display_name) {
@@ -39,6 +40,32 @@ class AccountProfile extends React.Component {
       else{
         alert(res.data.errMsg);
         //TODO: Error Handling
+      }
+    });
+  }
+
+  handleHeader(e){
+    let data = new FormData();
+    data.append('file', e.target.files[0]);
+    var handler = this;
+
+    axios.post('http://localhost:3005/api/file/general_upload', data).then(res => {
+      if(res.data.code == 0){
+        console.log(res.data);
+        handler.props.user.profile_pic = res.data.url;
+        handler.props.onUpdate(handler.props.user);
+        axios.post('http://localhost:3005/api/update_user',{uid:this.props.user.id,attr:'profile_pic',val:res.data.url}).then(res => {
+          if(res.data.code==0){
+          }
+          else{
+            alert(res.data.errMsg);
+            //TODO: Error Handling
+          }
+        });
+      }
+      else{
+        // TODO: error handling
+        alert('Header Error');
       }
     });
   }
@@ -85,7 +112,10 @@ class AccountProfile extends React.Component {
                 </div>
               </div>
               <div className="item">
-                <img className="ui medium image profile_pic" src={this.props.user.profile_pic}></img>
+                <label className="header-input-label" for="header-input">
+                  <img className="ui medium image profile_pic" src={this.props.user.profile_pic}></img>
+                </label>
+                <input type="file" className="input-file" id="header-input" onChange={this.handleHeader} />
               </div>
               <div className="item">
                 <div className="content">
