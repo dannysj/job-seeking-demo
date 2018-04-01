@@ -10,7 +10,7 @@ var multer  = require('multer');
 var crypto = require('crypto');
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, __dirname + '/public/files');
+    cb(null, __dirname + '/static/files');
   },
   filename: function (req, file, cb) {
     cb(null, new Date().getTime()+'-'+file.originalname);
@@ -21,7 +21,7 @@ var app = express();
 var args = process.argv.slice(2);
 var PORT = process.env.PORT || 3005;
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/static'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
