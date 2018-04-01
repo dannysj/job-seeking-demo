@@ -7,6 +7,7 @@ var config = require('./server/config.js');
 var http = require('http');
 var https = require('https');
 var multer  = require('multer');
+var crypto = require('crypto');
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, __dirname + '/public/files');
@@ -117,13 +118,13 @@ app.post('/api/admin/create_news', function(req, res){
 });
 
 app.post('/api/create_user', function(req, res){
-  db.createUser(req.body, (err) => {
+  db.createUser(req.body, (err, user) => {
     if(err){
       console.log(err);
       res.json({code: 1, errMsg: err});
       return;
     }
-    res.json({code: 0}); // TODO: Return token
+    res.json({code: 0, user: user}); // TODO: Return token
   });
 });
 
@@ -199,6 +200,76 @@ app.post('/api/get_application_status', function(req, res){
     }
     res.json({code: 0, status: status_code});
   });
+});
+
+var pendingPayments = {};
+
+app.post('/api/callback/payment_complete', function(req, res){
+  console.log(JSON.stringify(req.body));
+  res.json();
+  if(pendingPayments[req.body.orderid]){
+    pendingPayments[req.body.orderid].json({code:0});
+  }
+  else{
+// Error Handling
+  }
+});
+
+app.post('/api/poll_payment', function(req, res){
+  pendingPayments[req.body.order_id] = res;
+  setTimeout(function(){
+    res.json({code: 15});
+    pendingPayments[req.body.order_id] = null;
+  }, 10000);
+});
+
+app.post('/api/create_order', function(req, res){
+
+  console.log(process.env.PAY_UID);
+  var timestamp = new Date().getTime();
+  var value_in_whole = timestamp+'-'+req.body.uid+'-'+req.body.mid +
+    2+'http://job.y-l.me/callback/payment_complete'+timestamp+req.body.service_price+
+    'http://job.y-l.me/mentor'+process.env.PAY_TOKEN+process.env.PAY_UID;
+  var md5hash = crypto.createHash('md5').update(value_in_whole).digest("hex");
+  var postData = JSON.stringify({
+    uid: process.env.PAY_UID,
+    goodsname: timestamp+'-'+req.body.uid+'-'+req.body.mid,
+    istype: 2,
+    notify_url: 'http://job.y-l.me/callback/payment_complete',
+    orderid: timestamp,
+    price: req.body.service_price,
+    return_url: 'http://job.y-l.me/mentor',
+    key: md5hash
+  });
+  let options = {
+    hostname: 'pay.paysapi.com',
+    port: 443,
+    path: '/?format=json',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': postData.length
+    }
+  };
+  console.log(postData);
+  var req = https.request(options, (resp) => {
+    console.log('statusCode:', resp.statusCode);
+    console.log('headers:', resp.headers);
+
+    resp.on('data', (d) => {
+      var result = JSON.parse(d);
+      console.dir(result);
+      pendingPayments[result.data.orderid] = true;
+      res.json({code: 0, order_id:result.data.orderid, qr_code: result.data.qrcode});
+    });
+  });
+
+  req.on('error', (e) => {
+    console.error(e);
+  });
+
+  req.write(postData);
+  req.end();
 });
 
 // Static resources

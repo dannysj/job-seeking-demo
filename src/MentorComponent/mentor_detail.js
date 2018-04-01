@@ -9,7 +9,7 @@ class MentorDetail extends Component {
 
   constructor (props) {
     super(props);
-    this.state={mentor:{first:"", last:"", service:[]}};
+    this.state={mentor:{first:"", last:"", service:[]}, showAddServiceModal: false};
 
     axios.post('http://localhost:3005/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code==0){
@@ -20,13 +20,78 @@ class MentorDetail extends Component {
         //TODO: Error Handling
       }
     });
+
+    this.initBuy = this.initBuy.bind(this);
+  }
+
+  initBuy(service_name, service_price){
+    if(!this.props.user){
+      this.context.router.history.push('/login');
+      return;
+    }
+    var handler = this;
+    axios.post('http://localhost:3005/api/create_order',
+    {
+      uid:this.props.user.id,
+      mid:this.props.match.params.mid,
+      service_name: service_name,
+      service_price, service_price
+    }).then(res => {
+      console.log(res.data);
+      if(res.data.code==0){
+        handler.setState({showAddServiceModal: true, qr_code: 'https://pan.baidu.com/share/qrcode?w=280&h=280&url='+res.data.qr_code});
+        handler.pollPayment(res.data.order_id);
+      }
+      else{
+        //TODO: Error Handling
+      }
+    });
+  }
+
+  pollPayment(order_id){
+    var handler = this;
+    axios.post('http://localhost:3005/api/poll_payment',
+    {
+      uid:this.props.user.id,
+      order_id:order_id
+    }).then(res => {
+      console.log(res.data);
+      if(res.data.code==0){
+        handler.setState({showAddServiceModal: false, qr_code: ''});
+        alert('支付成功'); //TODO Notification System
+
+      }
+      else if(res.data.code == 15){
+        handler.pollPayment(order_id);
+      }
+      else{
+        //TODO: Error Handling
+      }
+    });
   }
 
   // {this.props.match.params.mid}
 
   render() {
+    let modalClassName='ui modal';
+    if(this.state.showAddServiceModal){
+      modalClassName += ' add-service-container';
+    }
+
     return (
       <div className="mentor-detail-container">
+        <div className={modalClassName}>
+          <i className="close icon"></i>
+          <div className="header">
+            支付
+          </div>
+          <div className="add-service-form-container">
+            <Image size="large" src={this.state.qr_code}></Image>
+          </div>
+          <div className="actions">
+          </div>
+        </div>
+
         <div className="ui grid">
           <div className="six wide column">
             <img className="mentor-img" src={this.state.mentor.profile_pic}></img>

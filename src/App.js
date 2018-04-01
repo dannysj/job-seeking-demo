@@ -55,7 +55,7 @@ class App extends Component {
           <Route path='/login' render={()=><Login onSuccess={this.updateUser}></Login>} />
           <Route path='/signup' render={()=><Signup onSuccess={this.updateUser}></Signup>}  />
           <Route path='/account' render={()=><Account user={this.state.user} onSuccess={this.updateUser}></Account>} />
-          <Route path="/mentor/:mid" component={MentorDetail} />
+          <Route path="/mentor/:mid" render={(props)=><MentorDetail {...props} user={this.state.user}></MentorDetail>} />
           <Route path='/mentor' component={Mentor}/>
           <Route path='/news/:nid' component={NewsDetail}/>
           <Route path='/news' component={News}/>

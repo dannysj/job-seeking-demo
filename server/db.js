@@ -20,7 +20,7 @@ exports.reset = function(){
       ismentor boolean,
       isadmin boolean,
       password varchar(255),
-      email varchar(255),
+      email varchar(255) unique,
       major text,
       cover text,
     );
@@ -110,13 +110,15 @@ exports.getMentorList = function(filter, callback){
 
 // TODO: check and return proper error first if the user's email is duplicated
 exports.createUser = function(user, callback){
-  var query = `insert into users (first,last,password,email,profile_pic,register_date,isadmin,ismentor) values($1,$2,$3,$4,'/img/sample_profile.jpg',now(),false,false);`;
+  var query = `insert into users (first,last,password,email,profile_pic,register_date,isadmin,ismentor) values($1,$2,$3,$4,'/img/sample_profile.jpg',now(),false,false) returning *;`;
   db.query(query, [user.first, user.last, user.password, user.email], (err, result)=>{
     if(err){
       callback(err);
       return;
     }
-    callback(null);
+    var userInfo = result.rows[0];
+    userInfo.password = null;
+    callback(null, userInfo);
   });
 };
 
