@@ -7,8 +7,12 @@ var db = new pg.Pool(config.db);
 exports.reset = function(){
   // TODO: removal of all tables
   var query = `
+    drop table if exists mentor_rel;
+    drop table if exists mentor_info;
     drop table if exists user_industry;
     drop table if exists industry;
+    drop table if exists user_college;
+    drop table if exists college;
     drop table if exists users;
     create table if not exists users (
       id serial unique primary key,
@@ -23,6 +27,7 @@ exports.reset = function(){
       email varchar(255) unique,
       major text,
       cover text,
+      balance numeric(8,2) default 0.00
     );
     create table if not exists industry (
       id serial unique primary key,
@@ -55,7 +60,7 @@ exports.reset = function(){
     );
     create table if not exists mentor_info (
       id serial unique primary key,
-      uid int references users(id),
+      uid int unique references users(id),
       isapproved boolean,
       submission_time timestamp,
       approval_time timestamp,
@@ -66,7 +71,16 @@ exports.reset = function(){
       service jsonb,
       resume text
     );
-  `;
+    create table if not exists mentor_rel(
+      id serial unique primary key,
+      mid int references mentor_info(id),
+      uid int references users(id),
+      service_name text,
+      service_price numeric(8,2),
+      start_time timestamp,
+      end_time timestamp,
+      status int -- 1 for in progress, 2 for mentor confirmation, 3 for mentee confirmation
+    );`;
   db.query(query, function(err, result){
     if(err){
       console.log(err);
@@ -315,5 +329,102 @@ exports.getApplicationStatus = (uid, callback) => {
     else{
       callback(null, 1);
     }
+  });
+};
+
+exports.addMentorShip = (uid, mid, service_name, service_price, callback) => {
+  var query = `insert into mentor_rel (uid, mid, service_name, service_price, start_time, status) values(
+    $1,$2,$3,$4,now(),1
+  );`;
+  db.query(query, [uid, mid, service_name, service_price], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+};
+
+exports.getRelMentors = (uid, callback) => {
+  var query = `
+  select u.first as first,
+    u.profile_pic as profile_pic,
+    u.last as last,
+    u.email as email,
+    c.name as college_name,
+    m.offer_title as offer_title,
+    m.offer_company as offer_company,
+    m.id as mid,
+    u.id as uid,
+    mr.status as status,
+    mr.start_time as start_time
+  from users u, mentor_info m, college c, mentor_rel mr
+  where m.uid = u.id and m.cid = c.id and mr.mid=m.id and mr.uid=$1;
+  `;
+  db.query(query, [uid], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows);
+  });
+};
+
+exports.getRelMentees = (uid, callback) => {
+  var query = `
+  select u.first as first,
+    u.profile_pic as profile_pic,
+    u.last as last,
+    u.email as email,
+    u.id as uid,
+    mr.status as status,
+    mr.start_time as start_time
+  from users u, mentor_info m, mentor_rel mr
+  where mr.uid=u.id and mr.mid=m.id and m.uid=$1;
+  `;
+  db.query(query, [uid], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows);
+  });
+};
+
+exports.setMentorConfirm = (mentor_uid, mentee_uid, callback)=>{
+  var query = `
+    update mentor_rel set status=2 where uid=$2 and mid=(
+      select id from mentor_info where uid=$1
+    );
+  `;
+  db.query(query, [mentor_uid, mentee_uid], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+};
+
+exports.setMenteeConfirm = (uid, mid, callback)=>{
+  var query = `
+    update mentor_rel set status=3 where uid=$1 and mid=$2;
+    `;
+  db.query(query, [uid, mid], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    var query = `update users set balance=balance+(
+      select service_price from mentor_rel where uid=$1 and mid=$2
+    ) where id=(select uid from mentor_info where id=$2);
+    `
+    db.query(query, [uid, mid], (err, result)=>{
+      if(err){
+        callback(err);
+        return;
+      }
+      callback(null);
+    });
   });
 };

@@ -207,8 +207,21 @@ var pendingPayments = {};
 app.post('/api/callback/payment_complete', function(req, res){
   console.log(JSON.stringify(req.body));
   res.json();
-  if(pendingPayments[req.body.orderid]){
-    pendingPayments[req.body.orderid].json({code:0});
+  if(pendingPayments[req.body.orderid].res){
+    db.addMentorShip(pendingPayments[req.body.orderid].uid,
+      pendingPayments[req.body.orderid].mid,
+      pendingPayments[req.body.orderid].service_name,
+      pendingPayments[req.body.orderid].service_price,
+      (err) => {
+        if(err){
+          console.log(err);
+          pendingPayments[req.body.orderid].res.json({code: 1, errMsg: 'Database Error'});
+          pendingPayments[req.body.order_id] = null;
+          return;
+        }
+        pendingPayments[req.body.orderid].res.json({code:0});
+        pendingPayments[req.body.order_id] = null;
+    });
   }
   else{
 // Error Handling
@@ -216,11 +229,50 @@ app.post('/api/callback/payment_complete', function(req, res){
 });
 
 app.post('/api/poll_payment', function(req, res){
-  pendingPayments[req.body.order_id] = res;
+  pendingPayments[req.body.order_id].res = res;
   setTimeout(function(){
-    res.json({code: 15});
-    pendingPayments[req.body.order_id] = null;
+    try{
+      res.json({code: 15});
+    }catch(e){}
+    pendingPayments[req.body.order_id].res = null;
   }, 10000);
+  // setTimeout(function(){
+  //   db.addMentorShip(pendingPayments[req.body.order_id].uid,
+  //     pendingPayments[req.body.order_id].mid,
+  //     pendingPayments[req.body.order_id].service_name,
+  //     pendingPayments[req.body.order_id].service_price,
+  //     (err) => {
+  //       if(err){
+  //         console.log(err);
+  //         res.json({code: 1, errMsg: 'Database Error'});
+  //         return;
+  //       }
+  //       res.json({code:0});
+  //   });
+  //   pendingPayments[req.body.order_id] = null;
+  // }, 3000);
+});
+
+app.post('/api/get_rel_mentors', (req, res)=>{
+  db.getRelMentors(req.body.uid, (err, mentors)=>{
+    if(err){
+      console.log(err);
+      res.json({code: 1, errMsg: 'Database Error'});
+      return;
+    }
+    res.json({code:0, mentors: mentors});
+  });
+});
+
+app.post('/api/get_rel_mentees', (req, res)=>{
+  db.getRelMentees(req.body.uid, (err, mentees)=>{
+    if(err){
+      console.log(err);
+      res.json({code: 1, errMsg: 'Database Error'});
+      return;
+    }
+    res.json({code:0, mentees: mentees});
+  });
 });
 
 app.post('/api/create_order', function(req, res){
@@ -252,24 +304,46 @@ app.post('/api/create_order', function(req, res){
     }
   };
   console.log(postData);
-  var req = https.request(options, (resp) => {
+  var reqp = https.request(options, (resp) => {
     console.log('statusCode:', resp.statusCode);
     console.log('headers:', resp.headers);
 
     resp.on('data', (d) => {
       var result = JSON.parse(d);
       console.dir(result);
-      pendingPayments[result.data.orderid] = true;
+      pendingPayments[result.data.orderid] = {uid: req.body.uid, mid: req.body.mid, service_name: req.body.service_name, service_price: req.body.service_price};
       res.json({code: 0, order_id:result.data.orderid, qr_code: result.data.qrcode});
     });
   });
 
-  req.on('error', (e) => {
+  reqp.on('error', (e) => {
     console.error(e);
   });
 
-  req.write(postData);
-  req.end();
+  reqp.write(postData);
+  reqp.end();
+});
+
+app.post('/api/mentor_confirm', (req, res)=>{
+  db.setMentorConfirm(req.body.uid, req.body.mentee_uid, (err)=>{
+    if(err){
+      console.log(err);
+      res.json({code: 1, errMsg: 'Database Error'});
+      return;
+    }
+    res.json({code:0});
+  });
+});
+
+app.post('/api/mentee_confirm', (req, res)=>{
+  db.setMenteeConfirm(req.body.uid, req.body.mid, (err)=>{
+    if(err){
+      console.log(err);
+      res.json({code: 1, errMsg: 'Database Error'});
+      return;
+    }
+    res.json({code:0});
+  });
 });
 
 // Static resources

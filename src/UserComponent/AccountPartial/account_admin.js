@@ -111,12 +111,12 @@ class AccountAdmin extends React.Component {
     axios.post('http://localhost:3005/api/admin/decide_mentor_app',{uid:uid,mid:mid,decision:decision}).then(res => {
       if(res.data.code==0){
         alert('success'); // TODO: change this
-        handler.state.applications.forEach(function(app, index){
-          if(app.id == mid){
-            handler.state.applications.slice(index, 1);
-          }
-        });
-        handler.setState({applications: handler.state.applications});
+        // handler.state.applications.forEach(function(app, index){
+        //   if(app.id == mid){
+        //     handler.state.applications.slice(index, 1);
+        //   }
+        // });
+        // handler.setState({applications: handler.state.applications});
       }
       else{
         alert(res.data.errMsg); // TODO: proper err

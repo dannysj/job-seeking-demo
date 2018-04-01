@@ -35,7 +35,7 @@ class MentorDetail extends Component {
       uid:this.props.user.id,
       mid:this.props.match.params.mid,
       service_name: service_name,
-      service_price, service_price
+      service_price: service_price
     }).then(res => {
       console.log(res.data);
       if(res.data.code==0){
@@ -59,7 +59,7 @@ class MentorDetail extends Component {
       if(res.data.code==0){
         handler.setState({showAddServiceModal: false, qr_code: ''});
         alert('支付成功'); //TODO Notification System
-
+        this.context.router.history.push('/account/mentor');
       }
       else if(res.data.code == 15){
         handler.pollPayment(order_id);
