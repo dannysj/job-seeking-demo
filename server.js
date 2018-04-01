@@ -216,7 +216,7 @@ app.post('/api/get_application_status', function(req, res){
 
 var pendingPayments = {};
 
-app.post('/api/callback/payment_complete', function(req, res){
+app.post('/callback/payment_complete', function(req, res){
   console.log(JSON.stringify(req.body));
   res.json();
   if(pendingPayments[req.body.orderid].res){
