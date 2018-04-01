@@ -14,6 +14,10 @@ class AccountService extends React.Component {
         mentees: []
       };
 
+    this.updateInfo();
+  }
+
+  updateInfo(){
     var handler = this;
     axios.post('http://localhost:3005/api/get_rel_mentees', {uid: this.props.user.id}).then(res => {
       if(res.data.code == 0){
@@ -29,10 +33,11 @@ class AccountService extends React.Component {
   }
 
   handleConfirm(mentee_uid){
+    var handler = this;
     axios.post('http://localhost:3005/api/mentor_confirm', {uid: this.props.user.id, mentee_uid: mentee_uid}).then(res => {
       if(res.data.code == 0){
         console.log(res.data);
-        this.context.router.history.push('/account/service');
+        handler.updateInfo();
       }
       else{
         // TODO: error handling

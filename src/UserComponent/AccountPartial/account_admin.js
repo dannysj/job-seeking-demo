@@ -22,6 +22,10 @@ class AccountAdmin extends React.Component {
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleAppDecision = this.handleAppDecision.bind(this);
 
+    this.updateInfo();
+  }
+
+  updateInfo() {
     var handler = this;
     axios.post('http://localhost:3005/api/admin/get_applications').then(res => {
       if(res.data.code == 0){
@@ -117,6 +121,7 @@ class AccountAdmin extends React.Component {
         //   }
         // });
         // handler.setState({applications: handler.state.applications});
+        handler.updateInfo();
       }
       else{
         alert(res.data.errMsg); // TODO: proper err

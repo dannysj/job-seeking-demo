@@ -120,6 +120,7 @@ class AccountApply extends React.Component {
     axios.post('http://localhost:3005/api/mentor_apply',this.state.mentor_info).then(res => {
       if(res.data.code==0){
         alert('success');
+        this.context.router.history.push('/account');
         // TODO:
       }
       else{
