@@ -154,6 +154,23 @@ exports.verifyUser = function(user, callback){
   });
 };
 
+exports.getUserInfo = (uid, callback) => {
+  var query = `select * from users where id=$1;`;
+  db.query(query, [uid], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    if(result.rows.length==0){
+      callback('No such email found');
+      return;
+    }
+    var userAccount = result.rows[0];
+    userAccount.password = null;
+    callback(null, userAccount);
+  });
+}
+
 exports.createNews = (news, callback) => {
   var query = `insert into news (author_id,publish_time,type,title,thumbnail,content) values($1,now(),$2,$3,$4,$5) returning id;`;
   db.query(query, [news.author_id,news.type,news.title,news.thumbnail,news.content], (err, result)=>{

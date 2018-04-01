@@ -14,7 +14,7 @@ class NewsDetail extends Component {
         thumbnail: '/img/loading.gif'
       }
     };
-    axios.post('http://localhost:3005/api/get_news_detail',
+    axios.post('/api/get_news_detail',
       {nid:this.props.match.params.nid}).then(res => {
 
       if(res.data.code==0){

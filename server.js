@@ -117,6 +117,17 @@ app.post('/api/admin/create_news', function(req, res){
   });
 });
 
+app.post('/api/get_user_info', (req, res) => {
+  db.getUserInfo(req.body.uid, (err, user)=>{
+    if(err){
+      console.log(err);
+      res.json({code: 1, errMsg: err});
+      return;
+    }
+    res.json({code: 0, user: user});
+  });
+});
+
 app.post('/api/create_user', function(req, res){
   db.createUser(req.body, (err, user) => {
     if(err){

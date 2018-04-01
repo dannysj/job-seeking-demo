@@ -9,7 +9,7 @@ class Filter extends Component {
     super(props);
 
     this.state={industries:[]};
-    axios.post('http://localhost:3005/api/industry_list',{}).then(res => {
+    axios.post('/api/industry_list',{}).then(res => {
       console.log('FUCK!!');
       console.log(res);
       if(res.data.code==0){

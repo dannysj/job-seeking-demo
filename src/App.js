@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
 import logo from './logo.svg';
+import axios from 'axios';
 import './Semantic/semantic.min.css';
 import './App.css';
 import NavLink from './NavLinkComponent/navlink';
@@ -23,10 +24,25 @@ class App extends Component {
     super(props);
     this.state = {};
     this.updateUser = this.updateUser.bind(this);
+
+    let uid = localStorage.getItem('uid');
+    if(uid){
+      this.state = {user: {id: uid}};
+      var handler = this;
+      axios.post('/api/get_user_info',{uid:uid}).then(res => {
+        if(res.data.code==0){
+          handler.updateUser(res.data.user);
+        }
+        else{
+          alert('Database Error'); // TODO: proper err
+        }
+      });
+    }
   }
 
   updateUser(user) {
     this.setState({user: user});
+    localStorage.setItem('uid', user.id);
   }
 
   render() {

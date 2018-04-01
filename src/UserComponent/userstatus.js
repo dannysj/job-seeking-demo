@@ -7,7 +7,7 @@ class UserStatus extends Component {
   constructor (props) {
     super(props);
 
-    axios.post('http://localhost:3005/api/all_mentor_list',{}).then(res => {
+    axios.post('/api/all_mentor_list',{}).then(res => {
       console.log(res);
       if(res.data.code==0){
         console.log(res.data.list);

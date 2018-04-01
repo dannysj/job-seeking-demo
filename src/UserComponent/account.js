@@ -58,7 +58,7 @@ class Account extends Component {
                     管理员页面
                   </NavLink>)
               }
-              <a className="item">
+              <a href="/" className="item">
                 注销
               </a>
             </div>

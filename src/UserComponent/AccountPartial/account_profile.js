@@ -32,7 +32,7 @@ class AccountProfile extends React.Component {
     console.log(this.state.attr_val);
     var key = this.state.attr_key;
     var value = this.state.attr_val;
-    axios.post('http://localhost:3005/api/update_user',{uid:this.props.user.id,attr:this.state.attr_key,val:this.state.attr_val}).then(res => {
+    axios.post('/api/update_user',{uid:this.props.user.id,attr:this.state.attr_key,val:this.state.attr_val}).then(res => {
       if(res.data.code==0){
         this.props.user[key] = value;
         this.props.onUpdate(this.props.user);
@@ -49,12 +49,12 @@ class AccountProfile extends React.Component {
     data.append('file', e.target.files[0]);
     var handler = this;
 
-    axios.post('http://localhost:3005/api/file/general_upload', data).then(res => {
+    axios.post('/api/file/general_upload', data).then(res => {
       if(res.data.code == 0){
         console.log(res.data);
         handler.props.user.profile_pic = res.data.url;
         handler.props.onUpdate(handler.props.user);
-        axios.post('http://localhost:3005/api/update_user',{uid:this.props.user.id,attr:'profile_pic',val:res.data.url}).then(res => {
+        axios.post('/api/update_user',{uid:this.props.user.id,attr:'profile_pic',val:res.data.url}).then(res => {
           if(res.data.code==0){
           }
           else{
@@ -150,7 +150,7 @@ class AccountProfile extends React.Component {
               <div className="item">
                 <div className="content">
                   <div className="header">注册日期</div>
-                  <div className="info">{this.props.user.register_date.substring(0,10)}</div>
+                  <div className="info">{this.props.user.register_date?this.props.user.register_date.substring(0,10):'暂无资料'}</div>
                 </div>
               </div>
               <div className="item">

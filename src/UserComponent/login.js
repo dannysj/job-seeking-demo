@@ -16,7 +16,7 @@ class Login extends Component {
   handleSubmit (e) {
     e.preventDefault();
 
-    axios.post('http://localhost:3005/api/verify_user',this.state.user).then(res => {
+    axios.post('/api/verify_user',this.state.user).then(res => {
       if(res.data.code==0){
         this.props.onSuccess(res.data.user);
         this.context.router.history.goBack();

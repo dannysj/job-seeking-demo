@@ -29,7 +29,7 @@ class AccountApply extends React.Component {
     this.handleResume = this.handleResume.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
-    axios.post('http://localhost:3005/api/get_college_list').then(res => {
+    axios.post('/api/get_college_list').then(res => {
       if(res.data.code==0){
         console.log(res.data.list);
         let college_list = [];
@@ -46,7 +46,7 @@ class AccountApply extends React.Component {
       }
     });
 
-    axios.post('http://localhost:3005/api/get_application_status', {uid: this.props.user.id}).then(res => {
+    axios.post('/api/get_application_status', {uid: this.props.user.id}).then(res => {
       if(res.data.code==0){
         if(res.data.status == 1){
           this.setState({hadApplied: true, pendingApplication: true});
@@ -117,7 +117,7 @@ class AccountApply extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     console.log(this.state.mentor_info);
-    axios.post('http://localhost:3005/api/mentor_apply',this.state.mentor_info).then(res => {
+    axios.post('/api/mentor_apply',this.state.mentor_info).then(res => {
       if(res.data.code==0){
         alert('success');
         this.context.router.history.push('/account');

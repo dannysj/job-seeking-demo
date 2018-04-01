@@ -27,7 +27,7 @@ class AccountAdmin extends React.Component {
 
   updateInfo() {
     var handler = this;
-    axios.post('http://localhost:3005/api/admin/get_applications').then(res => {
+    axios.post('/api/admin/get_applications').then(res => {
       if(res.data.code == 0){
         console.log(res.data);
         handler.setState({applications:res.data.applications});
@@ -51,7 +51,7 @@ class AccountAdmin extends React.Component {
     data.append('file', e.target.files[0]);
     var handler = this;
 
-    axios.post('http://localhost:3005/api/file/general_upload', data).then(res => {
+    axios.post('/api/file/general_upload', data).then(res => {
       if(res.data.code == 0){
         console.log(res.data);
         var curState = handler.state;
@@ -88,7 +88,7 @@ class AccountAdmin extends React.Component {
   handleSubmitNews(){
     let data = this.state.news;
     data.author_id = this.props.user.id;
-    axios.post('http://localhost:3005/api/admin/create_news',data).then(res => {
+    axios.post('/api/admin/create_news',data).then(res => {
       if(res.data.code==0){
         console.log(res.data.nid);
         alert('success'); // TODO: change this
@@ -112,7 +112,7 @@ class AccountAdmin extends React.Component {
 
     var handler = this;
 
-    axios.post('http://localhost:3005/api/admin/decide_mentor_app',{uid:uid,mid:mid,decision:decision}).then(res => {
+    axios.post('/api/admin/decide_mentor_app',{uid:uid,mid:mid,decision:decision}).then(res => {
       if(res.data.code==0){
         alert('success'); // TODO: change this
         // handler.state.applications.forEach(function(app, index){
