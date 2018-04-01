@@ -21,6 +21,7 @@ var app = express();
 var args = process.argv.slice(2);
 var PORT = process.env.PORT || 3005;
 
+app.use(express.static('public'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
