@@ -32,3 +32,12 @@
   height: 500px;
   border: 0px;
 }
+
+.ui.modal.payment-qr-container {
+  display: block;
+  position: fixed;
+  width: auto;
+  left: 50%;
+  margin-left: -145px;
+  z-index: 1001;
+}

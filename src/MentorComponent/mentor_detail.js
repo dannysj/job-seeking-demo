@@ -75,7 +75,7 @@ class MentorDetail extends Component {
   render() {
     let modalClassName='ui modal';
     if(this.state.showAddServiceModal){
-      modalClassName += ' add-service-container';
+      modalClassName += ' payment-qr-container';
     }
 
     return (
