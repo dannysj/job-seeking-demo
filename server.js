@@ -150,11 +150,55 @@ app.post('/api/update_user', function(req, res){
 });
 
 app.post('/api/file/general_upload', upload.single('file'), function(req, res) {
-  console.log('fuck');
   if (!req.file)
     return res.json({code: -21, errMsg: 'No files found'});
 
   res.json({code: 0, url:'/files/'+req.file.filename});
+});
+
+app.post('/api/admin/get_applications', function(req, res){
+  db.getMentorApplications((err, list) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1, errMsg: 'Operation Forbidden'});
+      return;
+    }
+    res.json({code: 0, applications:list});
+  });
+});
+
+app.post('/api/admin/decide_mentor_app', function(req, res){
+  if(req.body.decision == 1){
+    db.approveMentor(req.body.uid, req.body.mid, (err) => {
+      if(err){
+        console.log(err);
+        res.json({code: 1, errMsg: 'Database Error'});
+        return;
+      }
+      res.json({code:0});
+    });
+  }
+  else{
+    db.disapproveMentor(req.body.uid, req.body.mid, (err) => {
+      if(err){
+        console.log(err);
+        res.json({code: 1, errMsg: 'Database Error'});
+        return;
+      }
+      res.json({code:0});
+    });
+  }
+});
+
+app.post('/api/get_application_status', function(req, res){
+  db.getApplicationStatus(req.body.uid, (err, status_code) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1, errMsg: 'Database Error'});
+      return;
+    }
+    res.json({code: 0, status: status_code});
+  });
 });
 
 // Static resources

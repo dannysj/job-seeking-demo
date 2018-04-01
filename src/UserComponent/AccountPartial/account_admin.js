@@ -20,6 +20,20 @@ class AccountAdmin extends React.Component {
     this.handleThumbnail = this.handleThumbnail.bind(this);
     this.handleSubmitNews = this.handleSubmitNews.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
+    this.handleAppDecision = this.handleAppDecision.bind(this);
+
+    var handler = this;
+    axios.post('http://localhost:3005/api/admin/get_applications').then(res => {
+      if(res.data.code == 0){
+        console.log(res.data);
+        handler.setState({applications:res.data.applications});
+      }
+      else{
+        // TODO: error handling
+        alert('Database Error');
+        console.log(res.data);
+      }
+    });
   }
 
   handleChange(value) {
@@ -82,6 +96,34 @@ class AccountAdmin extends React.Component {
     });
   }
 
+  handleAppDecision(uid, mid, ispassed){
+    let decision = 0;
+
+    if(ispassed){
+      decision = 1;
+    }
+    else{
+      decision = 0;
+    }
+
+    var handler = this;
+
+    axios.post('http://localhost:3005/api/admin/decide_mentor_app',{uid:uid,mid:mid,decision:decision}).then(res => {
+      if(res.data.code==0){
+        alert('success'); // TODO: change this
+        handler.state.applications.forEach(function(app, index){
+          if(app.id == mid){
+            handler.state.applications.slice(index, 1);
+          }
+        });
+        handler.setState({applications: handler.state.applications});
+      }
+      else{
+        alert(res.data.errMsg); // TODO: proper err
+      }
+    });
+  }
+
 
   render() {
     if(!this.props.user.isadmin){
@@ -107,6 +149,20 @@ class AccountAdmin extends React.Component {
         <Segment>
           <h4>审核Mentor申请:</h4>
           {this.state.applications.length==0 && '暂无申请'}
+          {this.state.applications.map(el => (
+            <div className="app-mentor-container" key={el.id}>
+              <img className="app-mentor-picture" src={el.profile_pic}></img>
+              <div className="app-mentor-text">
+                <h4>{el.last+' '}{el.first}</h4>
+                <p>Offer公司: {el.offer_company}</p>
+                <p>Offer职位: {el.offer_title}</p>
+                <p>院校: {el.college_name}</p>
+              </div>
+              <Link to={'/mentor/'+el.mid}><Button floated='right' >查看细节>></Button></Link>
+              <Button floated='right' positive onClick={() => this.handleAppDecision(el.uid, el.mid, true)}>批准申请</Button>
+              <Button floated='right' negative onClick={() => this.handleAppDecision(el.uid, el.mid, false)}>拒绝申请</Button>
+            </div>
+          ))}
         </Segment>
       </div>
     );

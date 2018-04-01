@@ -9,6 +9,8 @@ class AccountApply extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      hadApplied: false,
+      pendingApplication: false,
       mentor_info:
       {
         services: [],
@@ -38,6 +40,20 @@ class AccountApply extends React.Component {
           });
         });
         this.setState({college_list:college_list});
+      }
+      else{
+        //TODO: Error Handling
+      }
+    });
+
+    axios.post('http://localhost:3005/api/get_application_status', {uid: this.props.user.id}).then(res => {
+      if(res.data.code==0){
+        if(res.data.status == 1){
+          this.setState({hadApplied: true, pendingApplication: true});
+        }
+        else if(res.data.status == 2){
+          this.setState({hadApplied: true, pendingApplication: false});
+        }
       }
       else{
         //TODO: Error Handling
@@ -104,7 +120,7 @@ class AccountApply extends React.Component {
     axios.post('http://localhost:3005/api/mentor_apply',this.state.mentor_info).then(res => {
       if(res.data.code==0){
         alert('success');
-        // TODO: 
+        // TODO:
       }
       else{
         //TODO: Error Handling
@@ -151,6 +167,7 @@ class AccountApply extends React.Component {
               </div>
             </div>
             <h4>申请成为导师</h4>
+            {this.state.hadApplied&&<b className="notification-msg">您已经提交申请，请勿重复提交</b>}
             <form className="ui form">
               <div className="field">
                 <label>院校名称：</label>
@@ -198,8 +215,8 @@ class AccountApply extends React.Component {
                 </label>
                 <input type="file" className="input-file" id="resume-input" onChange={this.handleResume} />
               </div>
-
-              <button className="ui button" type="submit" onClick={this.handleSubmit}>提交</button>
+              {this.state.hadApplied?<Button disabled>提交</Button>:
+              <button className="ui button" type="submit" onClick={this.handleSubmit}>提交</button>}
             </form>
           </div>
         );

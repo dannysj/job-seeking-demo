@@ -252,4 +252,65 @@ exports.getMentorDetail = (mid, callback) => {
     }
     callback(null, result.rows[0]);
   });
-}
+};
+
+exports.getMentorApplications = (callback) => {
+  var query = `
+    select u.first as first,
+      u.profile_pic as profile_pic,
+      u.last as last,
+      c.name as college_name,
+      m.offer_title as offer_title,
+      m.offer_company as offer_company,
+      m.id as mid,
+      u.id as uid
+    from users u, mentor_info m, college c
+    where m.uid = u.id and m.cid = c.id and u.ismentor = false;
+  `;
+  db.query(query, (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows);
+  });
+};
+
+exports.approveMentor = (uid, mid, callback) => {
+  console.log(uid);
+  var query = `update users set ismentor=true where id=$1;`;
+  db.query(query, [uid], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+};
+
+exports.disapproveMentor = (uid, mid, callback) => {
+  var query = `delete from mentor_info where id=$1;`;
+  db.query(query, [mid], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+};
+
+exports.getApplicationStatus = (uid, callback) => {
+  var query = `select u.ismentor,m.id as ismentor from users u, mentor_info m where m.uid=u.id and u.id=$1;`;
+  db.query(query, [uid], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    if(result.rows.length == 0){
+      callback(null, 0);
+    }
+    else{
+      callback(null, 1);
+    }
+  });
+};
