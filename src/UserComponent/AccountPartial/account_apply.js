@@ -16,7 +16,8 @@ class AccountApply extends React.Component {
         services: [],
         uid: this.props.user.id
       },
-      showAddServiceModal: false
+      showAddServiceModal: false,
+      mentor:{}
     };
     this.tempService = {};
 
@@ -54,6 +55,16 @@ class AccountApply extends React.Component {
         else if(res.data.status == 2){
           this.setState({hadApplied: true, pendingApplication: false});
         }
+      }
+      else{
+        //TODO: Error Handling
+      }
+    });
+
+    axios.post('/api/get_mentor_detail',{mid:this.props.user.id}).then(res => {
+      if(res.data.code==0){
+        console.log(res.data.mentor);
+        this.setState({mentor:res.data.mentor});
       }
       else{
         //TODO: Error Handling
@@ -153,7 +164,7 @@ class AccountApply extends React.Component {
                   </div>
                   <div className="field">
                     <label>服务描述：</label>
-                    <textarea type="text" name="description" rows="4" onChange={this.handleAddServiceForm} ></textarea>
+                    <textarea type="text" name="description" rows="4" onChange={this.handleAddServiceForm} />
                   </div>
                 </form>
               </div>
@@ -163,16 +174,21 @@ class AccountApply extends React.Component {
                 </div>
                 <div className="ui positive right labeled icon button" onClick={this.confirmAddService}>
                   添加
-                  <i className="checkmark icon"></i>
+                  <i className="checkmark icon" />
                 </div>
               </div>
             </div>
             <h4>申请成为导师</h4>
-            {this.state.hadApplied&&<b className="notification-msg">您已经提交申请，请勿重复提交</b>}
             <form className="ui form">
               <div className="field">
                 <label>院校名称：</label>
-                <Dropdown name='cid' placeholder='院校名称' fluid search selection options={this.state.college_list} onChange={this.handleChange} />
+                <b className="notification-msg">
+                  // TODO: fill in the data
+                {this.state.hadApplied?
+                  (<Dropdown name='cid' placeholder='院校名称' fluid search selection options={this.state.college_list} onChange={this.handleChange} />):
+                  (<Dropdown name='cid' fluid search selection options={this.state.college_list} onChange={this.handleChange}>{this.state.mentor.college_name}</Dropdown>)
+                }
+                </b>
               </div>
               <div className="field">
                 <label>Offer职位：</label>
