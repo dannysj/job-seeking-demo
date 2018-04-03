@@ -51,11 +51,11 @@ class AccountApply extends React.Component {
     });
 
     axios.post('/api/get_application_status', {uid: this.props.user.id}).then(res => {
-      if (res.data.code == 0) {
-        if (res.data.status == 1) {
+      if (res.data.code === 0) {
+        if (res.data.status === 1) {
           this.setState({hadApplied: true, pendingApplication: true});
         }
-        else if (res.data.status == 2) {
+        else if (res.data.status === 2) {
           this.setState({hadApplied: true, pendingApplication: false});
         }
       }

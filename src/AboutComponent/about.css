@@ -14,6 +14,7 @@
   margin-top: 30px;
   display: block;
   text-align: left;
+  overflow: hidden;
 }
 
 .list-news-picture {
@@ -27,4 +28,8 @@
   display: inline-block;
   vertical-align: top;
   overflow: hidden;
+}
+
+.list-news-text > p {
+  max-width: 400px;
 }
