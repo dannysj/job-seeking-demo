@@ -51,7 +51,7 @@ class App extends Component {
         <div className="ui top attached tabular menu">
           <div className="item">
             <img src="/img/icon.png" height="50px"></img>
-            <b>Buddy Career</b>
+            <b>{' '}Buddy Career</b>
           </div>
           <NavLink to="/">
             主页
