@@ -40,7 +40,7 @@ class News extends React.Component {
                   <h4>{el.title}</h4>
                   <p dangerouslySetInnerHTML={{__html:el.content}}/>
                 </div>
-                <Link to={'/news/'+el.id}><Button floated='right' >点击查看细节>></Button></Link>
+                <Link to={'/news/'+el.id}><Button floated='right'>点击查看细节>></Button></Link>
               </div>
             ))
           }
