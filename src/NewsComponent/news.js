@@ -15,7 +15,7 @@ class News extends React.Component {
     this.batch_num = 0;
     axios.post('/api/get_news_list',
       {batch_size: this.batch_size, batch_num:this.batch_num}).then(res => {
-      if(res.data.code==0){
+      if(res.data.code===0){
         this.batch_num++;
         console.log(res.data);
         let curState = this.state;
@@ -35,10 +35,10 @@ class News extends React.Component {
           {
             this.state.news_list.map(el => (
               <div className="list-news-container">
-                <img className="list-news-picture" src={el.thumbnail}></img>
+                <img className="list-news-picture" src={el.thumbnail}/>
                 <div className="list-news-text">
                   <h4>{el.title}</h4>
-                  <p dangerouslySetInnerHTML={{__html:el.content}}></p>
+                  <p dangerouslySetInnerHTML={{__html:el.content}}/>
                 </div>
                 <Link to={'/news/'+el.id}><Button floated='right' >点击查看细节>></Button></Link>
               </div>
