@@ -8,6 +8,12 @@ var http = require('http');
 var https = require('https');
 var multer  = require('multer');
 var crypto = require('crypto');
+var paypal = require('paypal-rest-sdk');
+paypal.configure({
+  'mode': 'sandbox', //sandbox or live
+  'client_id': process.env.PAYPAL_ID,
+  'client_secret': process.env.PAYPAL_SECRET
+});
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, __dirname + '/static/files');
@@ -288,52 +294,127 @@ app.post('/api/get_rel_mentees', (req, res)=>{
 });
 
 app.post('/api/create_order', function(req, res){
-
-  console.log(process.env.PAY_UID);
   var timestamp = new Date().getTime();
-  var value_in_whole = timestamp+'-'+req.body.uid+'-'+req.body.mid +
-    2+'http://job.y-l.me/callback/payment_complete'+timestamp+req.body.service_price+
-    'http://job.y-l.me/mentor'+process.env.PAY_TOKEN+process.env.PAY_UID;
-  var md5hash = crypto.createHash('md5').update(value_in_whole).digest("hex");
-  var postData = JSON.stringify({
-    uid: process.env.PAY_UID,
-    goodsname: timestamp+'-'+req.body.uid+'-'+req.body.mid,
-    istype: 2,
-    notify_url: 'http://job.y-l.me/callback/payment_complete',
-    orderid: timestamp,
-    price: req.body.service_price,
-    return_url: 'http://job.y-l.me/mentor',
-    key: md5hash
-  });
-  let options = {
-    hostname: 'pay.paysapi.com',
-    port: 443,
-    path: '/?format=json',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': postData.length
+
+  var create_payment_json = {
+    "intent": "sale",
+    "payer": {
+        "payment_method": "paypal"
+    },
+    "redirect_urls": {
+        "return_url": "http://job.y-l.me/return/payment_complete",
+        "cancel_url": "http://job.y-l.me/return/payment_cancel"
+    },
+    "transactions": [{
+        "item_list": {
+            "items": [{
+                "name": req.body.service_name,
+                "sku": req.body.service_name,
+                "price": req.body.service_price,
+                "currency": "USD",
+                "quantity": 1
+            }]
+        },
+        "amount": {
+            "currency": "USD",
+            "total": req.body.service_price
+        },
+        "description": "Buddy Career 提供的服务"
+    }]
+};
+
+  paypal.payment.create(create_payment_json, function (err, payment) {
+    if (err) {
+      console.log(err);
+      res.json({code: 2, errMsg: 'Paypal API Error'});
+      return;
     }
-  };
-  console.log(postData);
-  var reqp = https.request(options, (resp) => {
-    console.log('statusCode:', resp.statusCode);
-    console.log('headers:', resp.headers);
 
-    resp.on('data', (d) => {
-      var result = JSON.parse(d);
-      console.dir(result);
-      pendingPayments[result.data.orderid] = {uid: req.body.uid, mid: req.body.mid, service_name: req.body.service_name, service_price: req.body.service_price};
-      res.json({code: 0, order_id:result.data.orderid, qr_code: result.data.qrcode});
+    var redirect_url = '';
+    payment.links.forEach(function(el){
+      if(el.rel == 'approval_url')
+        redirect_url = el.href;
     });
+
+    pendingPayments[payment.id] = {uid: req.body.uid, mid: req.body.mid, service_name: req.body.service_name, service_price: req.body.service_price};
+    console.dir(payment);
+    res.json({code: 0, url: redirect_url});
   });
 
-  reqp.on('error', (e) => {
-    console.error(e);
-  });
+  // var value_in_whole = timestamp+'-'+req.body.uid+'-'+req.body.mid +
+  //   2+'http://job.y-l.me/callback/payment_complete'+timestamp+parseFloat(req.body.service_price).toFixed(2)+
+  //   'http://job.y-l.me/mentor'+process.env.PAY_TOKEN+process.env.PAY_UID;
+  // var md5hash = crypto.createHash('md5').update(value_in_whole).digest("hex");
+  // var postData = JSON.stringify({
+  //   uid: process.env.PAY_UID,
+  //   goodsname: timestamp+'-'+req.body.uid+'-'+req.body.mid,
+  //   istype: 2,
+  //   notify_url: 'http://job.y-l.me/callback/payment_complete',
+  //   orderid: timestamp,
+  //   price: parseFloat(req.body.service_price).toFixed(2),
+  //   return_url: 'http://job.y-l.me/mentor',
+  //   key: md5hash
+  // });
+  // let options = {
+  //   hostname: 'pay.paysapi.com',
+  //   port: 443,
+  //   path: '/?format=json',
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     'Content-Length': postData.length
+  //   }
+  // };
+  // console.log(postData);
+  // var reqp = https.request(options, (resp) => {
+  //   console.log('statusCode:', resp.statusCode);
+  //   console.log('headers:', resp.headers);
+  //
+  //   resp.on('data', (d) => {
+  //     var result = JSON.parse(d);
+  //     console.dir(result);
+  //     pendingPayments[result.data.orderid] = {uid: req.body.uid, mid: req.body.mid, service_name: req.body.service_name, service_price: req.body.service_price};
+  //     res.json({code: 0, order_id:result.data.orderid, qr_code: result.data.qrcode});
+  //   });
+  // });
+  //
+  // reqp.on('error', (e) => {
+  //   console.error(e);
+  // });
+  //
+  // reqp.write(postData);
+  // reqp.end();
+});
 
-  reqp.write(postData);
-  reqp.end();
+app.get('/return/payment_complete', (req, res)=>{
+  paypal.payment.get(req.query.paymentId, (err, payment) => {
+    console.dir(payment);
+    if (err) {
+      console.log(err);
+      res.json({code: 2, errMsg: 'Paypal API Error'});
+      return;
+    }
+
+    if(payment.payer.status == 'VERIFIED'){
+      db.addMentorShip(pendingPayments[payment.id].uid,
+        pendingPayments[payment.id].mid,
+        pendingPayments[payment.id].service_name,
+        pendingPayments[payment.id].service_price,
+        (err) => {
+          if(err){
+            console.log(err);
+            pendingPayments[payment.id] = null;
+            return;
+          }
+          pendingPayments[payment.id] = null;
+          res.redirect('/account/mentor');
+      });
+
+    }
+    else{
+      res.redirect('/account/payment_fail');
+    }
+  });
 });
 
 app.post('/api/mentor_confirm', (req, res)=>{

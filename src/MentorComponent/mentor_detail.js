@@ -39,8 +39,10 @@ class MentorDetail extends Component {
     }).then(res => {
       console.log(res.data);
       if(res.data.code==0){
-        handler.setState({showAddServiceModal: true, qr_code: 'https://pan.baidu.com/share/qrcode?w=280&h=280&url='+res.data.qr_code});
-        handler.pollPayment(res.data.order_id);
+        // handler.setState({showAddServiceModal: true, qr_code: 'https://pan.baidu.com/share/qrcode?w=280&h=280&url='+res.data.qr_code});
+        // handler.pollPayment(res.data.order_id);
+        window.location.href = res.data.url;
+        // window.open(res.data.url,"Paypal", "width=800,height=1200");
       }
       else{
         //TODO: Error Handling
@@ -57,7 +59,7 @@ class MentorDetail extends Component {
     }).then(res => {
       console.log(res.data);
       if(res.data.code==0){
-        handler.setState({showAddServiceModal: false, qr_code: ''});
+        // handler.setState({showAddServiceModal: false, qr_code: ''});
         alert('支付成功'); //TODO Notification System
         this.context.router.history.push('/account/mentor');
       }
