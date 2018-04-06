@@ -10,7 +10,7 @@ var multer  = require('multer');
 var crypto = require('crypto');
 var paypal = require('paypal-rest-sdk');
 paypal.configure({
-  'mode': 'sandbox', //sandbox or live
+  'mode': 'live', //sandbox or live
   'client_id': process.env.PAYPAL_ID,
   'client_secret': process.env.PAYPAL_SECRET
 });
@@ -395,7 +395,8 @@ app.get('/return/payment_complete', (req, res)=>{
       return;
     }
 
-    if(payment.payer.status == 'VERIFIED'){
+    // if(payment.payer.status == 'VERIFIED'){ // TODO: uncommment these
+    
       db.addMentorShip(pendingPayments[payment.id].uid,
         pendingPayments[payment.id].mid,
         pendingPayments[payment.id].service_name,
@@ -410,10 +411,10 @@ app.get('/return/payment_complete', (req, res)=>{
           res.redirect('/account/mentor');
       });
 
-    }
-    else{
-      res.redirect('/account/payment_fail');
-    }
+    // }
+    // else{
+      // res.redirect('/account/payment_fail');
+    // }
   });
 });
 
