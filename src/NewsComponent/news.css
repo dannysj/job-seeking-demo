@@ -14,17 +14,26 @@
   margin-top: 30px;
   display: block;
   text-align: left;
+  overflow: hidden;
 }
 
 .list-news-picture {
   border-radius: 10px;
   height: 90%;
   display: inline-block;
+  float: left;
 }
 
 .list-news-text {
+  margin-bottom: 10px;
   margin-left: 30px;
   display: inline-block;
   vertical-align: top;
   overflow: hidden;
+  max-width: 380px;
+  max-height: 120px;
+}
+
+.list-news-text > p {
+  max-width: 400px;
 }

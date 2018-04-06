@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Button, Container } from 'semantic-ui-react';
 import axios from 'axios';
 import './about.css';
+import '../NewsComponent/news.css';
 
 class About extends React.Component {
   render() {
