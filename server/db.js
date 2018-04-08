@@ -106,6 +106,7 @@ exports.getMentorList = function(filter, callback){
     select u.first as first,
       u.profile_pic as profile_pic,
       u.last as last,
+      u.major as major,
       c.name as college_name,
       m.offer_title as offer_title,
       m.offer_company as offer_company,
