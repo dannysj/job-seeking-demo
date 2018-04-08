@@ -242,7 +242,7 @@ class AccountApply extends React.Component {
               <i className="ui upload icon"/>
               {this.state.mentor_info.resume ? '成功' : '上传简历'}
             </label>
-            <input type="application/pdf" className="input-file" id="resume-input" onChange={this.handleResume}/>
+            <input type="file" accept="application/pdf" className="input-file" id="resume-input" onChange={this.handleResume}/>
           </div>
           {this.state.hadApplied ? <button className="ui button" type="submit" onClick={this.handleSubmit}>更新</button> :
             <button className="ui button" type="submit" onClick={this.handleSubmit}>提交</button>}

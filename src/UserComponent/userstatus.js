@@ -7,16 +7,17 @@ class UserStatus extends Component {
   constructor (props) {
     super(props);
 
-    axios.post('/api/all_mentor_list',{}).then(res => {
-      console.log(res);
-      if(res.data.code==0){
-        console.log(res.data.list);
-        this.setState({mentors:res.data.list});
-      }
-      else{
-        //TODO: Error Handling
-      }
-    });
+    // no such api
+    // axios.post('/api/all_mentor_list',{}).then(res => {
+    //   console.log(res);
+    //   if(res.data.code==0){
+    //     console.log(res.data.list);
+    //     this.setState({mentors:res.data.list});
+    //   }
+    //   else{
+    //     //TODO: Error Handling
+    //   }
+    // });
     // this.context.router.route.location.pathname
   }
 
