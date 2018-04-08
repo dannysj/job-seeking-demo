@@ -140,7 +140,7 @@ class AccountProfile extends React.Component {
               <div className="item">
                 <div className="content">
                   <div className="header">微信<Button floated='right' onClick={()=>this.initAttrChange('wechat','微信')}><Icon name='write' size='small' /></Button></div>
-                  <div className="info">{this.props.user.wechat}</div>
+                  <div className="info">{this.props.user.wechat ? this.props.user.wechat : '暂无资料'}</div>
                 </div>
               </div>
 
