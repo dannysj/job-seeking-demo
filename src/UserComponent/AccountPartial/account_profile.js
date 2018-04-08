@@ -113,7 +113,7 @@ class AccountProfile extends React.Component {
               </div>
               <div className="item">
                 <label className="header-input-label" for="header-input">
-                  <img className="ui medium image profile_pic" src={this.props.user.profile_pic}></img>
+                  <img className="ui medium image profile_pic" src={this.props.user.profile_pic}/>
                 </label>
                 <input type="file" className="input-file" id="header-input" onChange={this.handleHeader} />
               </div>
@@ -129,12 +129,21 @@ class AccountProfile extends React.Component {
                   <div className="info">{this.props.user.first}</div>
                 </div>
               </div>
+
               <div className="item">
                 <div className="content">
                   <div className="header">Email<Button floated='right' onClick={()=>this.initAttrChange('email','Email')}><Icon name='write' size='small' /></Button></div>
                   <div className="info">{this.props.user.email}</div>
                 </div>
               </div>
+
+              <div className="item">
+                <div className="content">
+                  <div className="header">微信<Button floated='right' onClick={()=>this.initAttrChange('wechat','微信')}><Icon name='write' size='small' /></Button></div>
+                  <div className="info">{this.props.user.wechat}</div>
+                </div>
+              </div>
+
               <div className="item">
                 <div className="content">
                   <div className="header">专业<Button floated='right' onClick={()=>this.initAttrChange('major','专业')}><Icon name='write' size='small' /></Button></div>
