@@ -14,10 +14,10 @@ class Mentor extends Component {
     return (
       <div className="ui container">
         <div>
-          <List filter={this.state.filter}></List>
+          <List filter={this.state.filter}/>
         </div>
         <div className="ui right internal rail Filter-container">
-          <Filter></Filter>
+          <Filter/>
         </div>
       </div>
     );

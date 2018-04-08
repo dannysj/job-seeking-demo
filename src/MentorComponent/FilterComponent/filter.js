@@ -12,9 +12,9 @@ class Filter extends Component {
     axios.post('/api/industry_list',{}).then(res => {
       console.log('FUCK!!');
       console.log(res);
-      if(res.data.code==0){
+      if(res.data.code===0){
         console.log(res.data.list);
-        var industries = [];
+        let industries = [];
         res.data.list.forEach((industry) => {
           industries.push({value:industry.id, text:industry.name});
         });
@@ -28,7 +28,7 @@ class Filter extends Component {
 
   render() {
     return (
-      <div class="filter-container">
+      <div className="filter-container">
         <h3>筛选导师：</h3>
         <label>选择领域</label>
         <Dropdown placeholder='领域' fluid search selection options={this.state.industries} />

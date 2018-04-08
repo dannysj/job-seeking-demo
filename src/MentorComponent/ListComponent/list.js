@@ -11,7 +11,7 @@ class List extends Component {
 
     this.state={mentors:[]};
     axios.post('/api/get_mentor_list',this.props.filter).then(res => {
-      if(res.data.code==0){
+      if(res.data.code===0){
         console.log(res.data.list);
         this.setState({mentors:res.data.list});
       }
@@ -27,7 +27,7 @@ class List extends Component {
       <div>
         {this.state.mentors.map(el => (
           <div className="mentor-container" key={el.id}>
-            <img className="mentor-picture" src={el.profile_pic}></img>
+            <img className="mentor-picture" src={el.profile_pic}/>
             <div className="mentor-text">
               <h4>{el.last+' '}{el.first}</h4>
               <p>Offer公司: {el.offer_company}</p>

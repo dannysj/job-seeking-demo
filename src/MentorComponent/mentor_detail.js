@@ -12,7 +12,7 @@ class MentorDetail extends Component {
     this.state={mentor:{first:"", last:"", service:[]}, showAddServiceModal: false};
 
     axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
-      if(res.data.code==0){
+      if(res.data.code===0){
         console.log(res.data.mentor);
         this.setState({mentor:res.data.mentor});
       }
