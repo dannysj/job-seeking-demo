@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, Dropdown} from 'semantic-ui-react';
+import {Dropdown} from 'semantic-ui-react';
 import axios from 'axios';
 import '../account.css';
 
@@ -35,7 +35,7 @@ class AccountApply extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
 
     axios.post('/api/get_college_list').then(res => {
-      if (res.data.code == 0) {
+      if (res.data.code === 0) {
         let college_list = [];
         res.data.list.forEach((college) => {
           college_list.push({
@@ -68,10 +68,15 @@ class AccountApply extends React.Component {
       if (res.data.code === 0) {
         let mentor = res.data.mentor;
         console.log(mentor);
-        this.setState({mentor: {bio: mentor.bio,
-          college_name : mentor.college_name,
-          offer_company: mentor.offer_company,
-          offer_title: mentor.offer_title}});
+        this.setState({
+          mentor:
+            {
+              bio: mentor.bio,
+              college_name: mentor.college_name,
+              offer_company: mentor.offer_company,
+              offer_title: mentor.offer_title
+            }
+        });
       }
       else {
         //TODO: Error Handling
@@ -96,7 +101,7 @@ class AccountApply extends React.Component {
 
   cancelAddService(e) {
     e.preventDefault();
-    var curState = this.state;
+    let curState = this.state;
     curState.showAddServiceModal = false;
     this.setState(curState);
   }
@@ -135,7 +140,7 @@ class AccountApply extends React.Component {
     e.preventDefault();
     console.log(this.state.mentor_info);
     axios.post('/api/mentor_apply', this.state.mentor_info).then(res => {
-      if (res.data.code == 0) {
+      if (res.data.code === 0) {
         alert('success');
         this.context.router.history.push('/account');
         // TODO:
@@ -170,7 +175,7 @@ class AccountApply extends React.Component {
               </div>
               <div className="field">
                 <label>服务描述：</label>
-                <textarea type="text" name="description" rows="4" onChange={this.handleAddServiceForm}/>
+                <textarea name="description" rows="4" onChange={this.handleAddServiceForm}/>
               </div>
             </form>
           </div>
@@ -195,15 +200,17 @@ class AccountApply extends React.Component {
           </div>
           <div className="field">
             <label>Offer职位：</label>
-            <input type="text" name="offer_title" placeholder="Offer职位" onChange={this.handleChange} value={this.state.mentor.offer_title}/>
+            <input type="text" name="offer_title" placeholder="Offer职位" onChange={this.handleChange}
+                   value={this.state.mentor.offer_title}/>
           </div>
           <div className="field">
             <label>Offer企业：</label>
-            <input type="text" name="offer_company" placeholder="Offer企业" onChange={this.handleChange} value={this.state.mentor.offer_company}/>
+            <input type="text" name="offer_company" placeholder="Offer企业" onChange={this.handleChange}
+                   value={this.state.mentor.offer_company}/>
           </div>
           <div className="field">
             <label>提供服务：</label>
-            <table class="ui celled table">
+            <table className="ui celled table">
               <thead>
               <tr>
                 <th>服务名称</th>
@@ -227,11 +234,11 @@ class AccountApply extends React.Component {
           </div>
           <div className="field">
             <label>自我介绍：</label>
-            <textarea type="text" rows="8" name="bio" onChange={this.handleChange} value={this.state.mentor.bio}/>
+            <textarea rows="8" name="bio" onChange={this.handleChange} value={this.state.mentor.bio}/>
           </div>
           <div className="field">
             <label>上传简历：</label>
-            <label for="resume-input" className={this.state.mentor_info.resume ? 'ui button positive' : 'ui button'}>
+            <label htmlFor="resume-input" className={this.state.mentor_info.resume ? 'ui button positive' : 'ui button'}>
               <i className="ui upload icon"/>
               {this.state.mentor_info.resume ? '成功' : '上传简历'}
             </label>

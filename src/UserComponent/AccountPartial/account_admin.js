@@ -26,11 +26,11 @@ class AccountAdmin extends React.Component {
   }
 
   updateInfo() {
-    var handler = this;
+    let handler = this;
     axios.post('/api/admin/get_applications').then(res => {
-      if(res.data.code == 0){
+      if(res.data.code === 0){
         console.log(res.data);
-        handler.setState({applications:res.data.applications});
+        handler.setState({applications: res.data.applications});
       }
       else{
         // TODO: error handling
@@ -41,7 +41,7 @@ class AccountAdmin extends React.Component {
   }
 
   handleChange(value) {
-    var curState = this.state;
+    let curState = this.state;
     curState.news.content = value;
     this.setState(curState);
   }
@@ -49,18 +49,18 @@ class AccountAdmin extends React.Component {
   handleThumbnail(e){
     let data = new FormData();
     data.append('file', e.target.files[0]);
-    var handler = this;
+    let handler = this;
 
     axios.post('/api/file/general_upload', data).then(res => {
-      if(res.data.code == 0){
+      if(res.data.code === 0){
         console.log(res.data);
-        var curState = handler.state;
+        let curState = handler.state;
         curState['news']['thumbnail'] = res.data.url;
         handler.setState(curState);
       }
       else{
         // TODO: error handling
-        alert('Thumnail Error');
+        alert('Thumbnail Error');
         console.log(res.data);
       }
     });
@@ -89,7 +89,7 @@ class AccountAdmin extends React.Component {
     let data = this.state.news;
     data.author_id = this.props.user.id;
     axios.post('/api/admin/create_news',data).then(res => {
-      if(res.data.code==0){
+      if(res.data.code===0){
         console.log(res.data.nid);
         alert('success'); // TODO: change this
         this.context.router.history.push('/news/'+res.data.nid);
@@ -101,19 +101,12 @@ class AccountAdmin extends React.Component {
   }
 
   handleAppDecision(uid, mid, ispassed){
-    let decision = 0;
+    let decision = ispassed ? 1 : 0 ;
 
-    if(ispassed){
-      decision = 1;
-    }
-    else{
-      decision = 0;
-    }
-
-    var handler = this;
+    let handler = this;
 
     axios.post('/api/admin/decide_mentor_app',{uid:uid,mid:mid,decision:decision}).then(res => {
-      if(res.data.code==0){
+      if(res.data.code===0){
         alert('success'); // TODO: change this
         // handler.state.applications.forEach(function(app, index){
         //   if(app.id == mid){
@@ -141,8 +134,8 @@ class AccountAdmin extends React.Component {
           <h4>编写干货:</h4>
           标题: {' '}<Input placeholder='标题' onChange={this.handleTitleChange}/>
           <br />
-          <label for="thumbnail-input" className="ui button">
-            <i className="ui upload icon"></i>
+          <label htmlFor="thumbnail-input" className="ui button">
+            <i className="ui upload icon"/>
             缩略图上传
           </label>
           <input type="file" className="input-file" id="thumbnail-input" onChange={this.handleThumbnail}/>
@@ -153,10 +146,10 @@ class AccountAdmin extends React.Component {
         </Segment>
         <Segment>
           <h4>审核Mentor申请:</h4>
-          {this.state.applications.length==0 && '暂无申请'}
+          {this.state.applications.length===0 && '暂无申请'}
           {this.state.applications.map(el => (
             <div className="app-mentor-container" key={el.id}>
-              <img className="app-mentor-picture" src={el.profile_pic}></img>
+              <img className="app-mentor-picture" src={el.profile_pic}/>
               <div className="app-mentor-text">
                 <h4>{el.last+' '}{el.first}</h4>
                 <p>Offer公司: {el.offer_company}</p>

@@ -17,9 +17,9 @@ class AccountMentor extends React.Component {
   }
 
   updateInfo(){
-    var handler = this;
+    let handler = this;
     axios.post('/api/get_rel_mentors', {uid: this.props.user.id}).then(res => {
-      if(res.data.code == 0){
+      if(res.data.code === 0){
         console.log(res.data);
         handler.setState({mentors:res.data.mentors});
       }
@@ -32,9 +32,9 @@ class AccountMentor extends React.Component {
   }
 
   handleConfirm(mid) {
-    var handler = this;
+    let handler = this;
     axios.post('/api/mentee_confirm', {uid: this.props.user.id, mid: mid}).then(res => {
-      if(res.data.code == 0){
+      if(res.data.code === 0){
         console.log(res.data);
         handler.updateInfo();
       }
@@ -50,10 +50,10 @@ class AccountMentor extends React.Component {
     render() {
         return(
           <div>
-            {this.state.mentors.length==0 && '您暂时并无导师签约'}
+            {this.state.mentors.length===0 && '您暂时并无导师签约'}
             {this.state.mentors.map(el => (
               <div className="app-mentor-container" key={el.id}>
-                <img className="app-mentor-picture" src={el.profile_pic}></img>
+                <img className="app-mentor-picture" src={el.profile_pic}/>
                 <div className="app-mentor-text">
                   <h4>{el.last+' '}{el.first}</h4>
                   <p>Offer: {el.offer_company+' '+el.offer_title}</p>

@@ -20,7 +20,7 @@ class AccountService extends React.Component {
   updateInfo(){
     var handler = this;
     axios.post('/api/get_rel_mentees', {uid: this.props.user.id}).then(res => {
-      if(res.data.code == 0){
+      if(res.data.code === 0){
         console.log(res.data);
         handler.setState({mentees:res.data.mentees});
       }
@@ -35,7 +35,7 @@ class AccountService extends React.Component {
   handleConfirm(mentee_uid){
     var handler = this;
     axios.post('/api/mentor_confirm', {uid: this.props.user.id, mentee_uid: mentee_uid}).then(res => {
-      if(res.data.code == 0){
+      if(res.data.code === 0){
         console.log(res.data);
         handler.updateInfo();
       }
@@ -52,10 +52,10 @@ class AccountService extends React.Component {
         return(
           <div>
             <div>
-              {this.state.mentees.length==0 && '您暂时并无Mentee签约'}
+              {this.state.mentees.length===0 && '您暂时并无Mentee签约'}
               {this.state.mentees.map(el => (
                 <div className="app-mentor-container" key={el.id}>
-                  <img className="app-mentor-picture" src={el.profile_pic}></img>
+                  <img className="app-mentor-picture" src={el.profile_pic}/>
                   <div className="app-mentor-text">
                     <h4>{el.last+' '}{el.first}</h4>
                     <p>Email: {el.email}</p>

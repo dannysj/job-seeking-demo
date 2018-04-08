@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 class AccountLogout extends React.Component {
   constructor(props) {
     super(props);
-    this.setState({user: null})
+    this.setState({user: null});
     localStorage.removeItem('uid');
     window.location.href = '/';
   }

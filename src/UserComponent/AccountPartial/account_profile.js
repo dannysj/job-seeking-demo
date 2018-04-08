@@ -30,10 +30,10 @@ class AccountProfile extends React.Component {
     // TODO: Process and upload data
     this.setState({showAddServiceModal : false});
     console.log(this.state.attr_val);
-    var key = this.state.attr_key;
-    var value = this.state.attr_val;
+    const key = this.state.attr_key;
+    const value = this.state.attr_val;
     axios.post('/api/update_user',{uid:this.props.user.id,attr:this.state.attr_key,val:this.state.attr_val}).then(res => {
-      if(res.data.code==0){
+      if(res.data.code===0){
         this.props.user[key] = value;
         this.props.onUpdate(this.props.user);
       }
@@ -47,15 +47,15 @@ class AccountProfile extends React.Component {
   handleHeader(e){
     let data = new FormData();
     data.append('file', e.target.files[0]);
-    var handler = this;
+    let handler = this;
 
     axios.post('/api/file/general_upload', data).then(res => {
-      if(res.data.code == 0){
+      if(res.data.code === 0){
         console.log(res.data);
         handler.props.user.profile_pic = res.data.url;
         handler.props.onUpdate(handler.props.user);
         axios.post('/api/update_user',{uid:this.props.user.id,attr:'profile_pic',val:res.data.url}).then(res => {
-          if(res.data.code==0){
+          if(res.data.code===0){
           }
           else{
             alert(res.data.errMsg);
@@ -72,7 +72,7 @@ class AccountProfile extends React.Component {
 
   cancelAttrChange(e) {
     e.preventDefault();
-    var curState = this.state;
+    let curState = this.state;
     curState.showAddServiceModal = false;
     this.setState(curState);
   }
@@ -89,7 +89,7 @@ class AccountProfile extends React.Component {
         return(
             <div className="ui large celled list">
               <div className={modalClassName}>
-                <i className="close icon"></i>
+                <i className="close icon"/>
                 <div className="header">
                   {this.state.attr_display_name}
                 </div>
@@ -107,12 +107,12 @@ class AccountProfile extends React.Component {
                   </div>
                   <div className="ui positive right labeled icon button" onClick={this.confirmAttrChange}>
                     确认
-                    <i className="checkmark icon"></i>
+                    <i className="checkmark icon"/>
                   </div>
                 </div>
               </div>
               <div className="item">
-                <label className="header-input-label" for="header-input">
+                <label className="header-input-label" htmlFor="header-input">
                   <img className="ui medium image profile_pic" src={this.props.user.profile_pic}/>
                 </label>
                 <input type="file" className="input-file" id="header-input" onChange={this.handleHeader} />
