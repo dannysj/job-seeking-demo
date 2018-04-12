@@ -22,6 +22,7 @@ class AccountProfile extends React.Component {
     this.cancelAttrChange = this.cancelAttrChange.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleHeader = this.handleHeader.bind(this);
+    this.handleResume = this.handleResume.bind(this);
   }
 
   initAttrChange (key_name, display_name) {
@@ -43,6 +44,33 @@ class AccountProfile extends React.Component {
       else{
         alert(res.data.errMsg);
         //TODO: Error Handling
+      }
+    });
+  }
+
+  handleResume(e) {
+    var fileType = e.target.files[0]["type"];
+    var validTypes = ["application/pdf"];
+    if (validTypes.indexOf(fileType) < 0) {
+         // invalid file type code goes here.
+         alert("Not a valid pdf. Please choose again.")
+         return
+    }
+    // upload first, then
+    let data = new FormData();
+    // for security reason, can't access local files on client's comp
+    data.append('file', e.target.files[0]);
+    let handler = this;
+
+    axios.post('/api/file/general_upload', data).then(res => {
+      if(res.data.code === 0){
+        // TODO: upload resume
+        var splitName = res.data.url.split('\\').pop().split('/').pop();
+        this.setState({fileName: splitName})
+      }
+      else{
+        // TODO: error handling
+        alert('PDF Error');
       }
     });
   }
@@ -156,11 +184,12 @@ class AccountProfile extends React.Component {
               <div className="item">
                 {this.state.showImgCrop ? ( <ImgCrop dataUrl={this.state.imgCropDataUrl} onSuccess={this.onSuccessCrop}/> )
                   :
-                  ( <div>
+                  ( <div className="imgContainer">
                     <label className="header-input-label" htmlFor="header-input">
-                      <img className="ui medium image profile_pic" src={this.props.user.profile_pic}/>
+                      <img className="ui medium image profile_pic center-profile" src={this.props.user.profile_pic}/>
                     </label>
-                    <input type="file" className="input-file" id="header-input" onChange={this.handleHeader} />
+                    <div className="header image-header">点击更换头像哦</div>
+                    <input type="file" accept="image/*" className="input-file" id="header-input" onChange={this.handleHeader} />
                     </div>
                   )}
 
@@ -182,6 +211,19 @@ class AccountProfile extends React.Component {
                 <div className="content">
                   <div className="header">Email<Button floated='right' onClick={()=>this.initAttrChange('email','Email')}><Icon name='write' size='small' /></Button></div>
                   <div className="info">{this.props.user.email}</div>
+                </div>
+              </div>
+
+              <div className="item">
+                <div className="content">
+                  <div className="resume">简历</div>
+                  <div className="info">{this.state.fileName ? this.state.fileName : '暂无资料'}</div>
+                  <label htmlFor="resume-input" className={this.state.fileName ? 'ui button positive' : 'ui button'}>
+                    <i className="ui upload icon"/>
+                    {this.state.fileName ? '成功' : '上传简历'}
+                  </label>
+                  <input type="file" accept="application/pdf" className="input-file" id="resume-input" onChange={this.handleResume}/>
+
                 </div>
               </div>
 

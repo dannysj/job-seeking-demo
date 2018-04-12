@@ -90,7 +90,7 @@ export default class ImgCrop extends Component {
   }
 
   onCropChange = (crop) => {
-    this.setState({ crop });
+    this.setState({crop: crop });
   }
 
   render() {

@@ -3,12 +3,13 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './user.css';
+import { Message } from 'semantic-ui-react'
 
 class Login extends Component {
 
   constructor (props) {
     super(props);
-    this.state={user:{}};
+    this.state={user:{}, isLoginFailed:false};
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -22,7 +23,7 @@ class Login extends Component {
         this.context.router.history.goBack();
       }
       else{
-        alert(); // TODO: proper err
+        this.setState({isLoginFailed: true})
       }
     });
   }
@@ -37,6 +38,10 @@ class Login extends Component {
   render() {
     return (
       <div class="login-signup-container">
+      {this.state.isLoginFailed ? (<Message negative>
+    <Message.Header>Login failed. The email and password combination does not match.</Message.Header>
+  </Message> )
+        : (<div></div>) }
         <form class="ui form" onSubmit={this.handleSubmit}>
           <div class="field">
             <label>Email</label>
