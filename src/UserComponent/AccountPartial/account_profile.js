@@ -4,12 +4,15 @@ import PropTypes from 'prop-types';
 import { Icon, Button } from 'semantic-ui-react';
 import axios from 'axios';
 import '../account.css';
+import ImgCrop from './ImgCrop/imgcrop.js';
 
 class AccountProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showAddServiceModal: false
+      showAddServiceModal: false,
+      showImgCrop: false
+
     };
     this.tempService = {};
 
@@ -45,17 +48,55 @@ class AccountProfile extends React.Component {
   }
 
   handleHeader(e){
+    // check legit files
+    var fileType = e.target.files[0]["type"];
+    var ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
+    if (ValidImageTypes.indexOf(fileType) < 0) {
+         // invalid file type code goes here.
+         alert("Not a valid image. Please choose again.")
+         return
+    }
+    // upload first, then
     let data = new FormData();
+    // for security reason, can't access local files on client's comp
     data.append('file', e.target.files[0]);
     let handler = this;
 
     axios.post('/api/file/general_upload', data).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
+        console.log("Calling IMGCROP")
+        console.log("Res is 0, successfully uploaded image")
+        this.setState({showImgCrop: true, imgCropDataUrl: res.data.url})
+
+      }
+      else{
+        // TODO: error handling
+        alert('Header Error');
+      }
+    });
+  }
+
+  onSuccessCrop = (img) => {
+    if (img === undefined) {
+      this.setState({showImgCrop: false})
+      return
+    }
+    let data = new FormData();
+    data.append('file', img);
+    let handler = this;
+
+    axios.post('/api/file/general_upload', data).then(res => {
+      if(res.data.code === 0){
+        console.log(res.data);
+        console.log("Calling upload")
         handler.props.user.profile_pic = res.data.url;
+        this.setState({showImgCrop: false})
         handler.props.onUpdate(handler.props.user);
         axios.post('/api/update_user',{uid:this.props.user.id,attr:'profile_pic',val:res.data.url}).then(res => {
           if(res.data.code===0){
+              console.log("Res is 0, successfully changed image")
+
           }
           else{
             alert(res.data.errMsg);
@@ -91,6 +132,7 @@ class AccountProfile extends React.Component {
               <div className={modalClassName}>
                 <i className="close icon"/>
                 <div className="header">
+
                   {this.state.attr_display_name}
                 </div>
                 <div className="add-service-form-container">
@@ -112,10 +154,16 @@ class AccountProfile extends React.Component {
                 </div>
               </div>
               <div className="item">
-                <label className="header-input-label" htmlFor="header-input">
-                  <img className="ui medium image profile_pic" src={this.props.user.profile_pic}/>
-                </label>
-                <input type="file" className="input-file" id="header-input" onChange={this.handleHeader} />
+                {this.state.showImgCrop ? ( <ImgCrop dataUrl={this.state.imgCropDataUrl} onSuccess={this.onSuccessCrop}/> )
+                  :
+                  ( <div>
+                    <label className="header-input-label" htmlFor="header-input">
+                      <img className="ui medium image profile_pic" src={this.props.user.profile_pic}/>
+                    </label>
+                    <input type="file" className="input-file" id="header-input" onChange={this.handleHeader} />
+                    </div>
+                  )}
+
               </div>
               <div className="item">
                 <div className="content">
@@ -168,7 +216,11 @@ class AccountProfile extends React.Component {
                   <div className="info">{this.props.user.cover ? this.props.user.cover : '暂无资料'}</div>
                 </div>
               </div>
+
+
             </div>
+
+
         );
     }
 }
