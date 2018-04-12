@@ -62,8 +62,7 @@ app.post('/api/get_mentor_list', function(req, res){
 });
 
 app.post('/api/send_mail', function(req,res) {
-  /*///////// START - THE NODEMAILER PART ///////////*/
-
+  // TODO: Replace process.env.TEST_SENDER, SMTP_LOGIN, SMTP_PASSW (top)
   // setup e-mail data
   var mailOptions = {
       from: '"'+req.body.author+'" <'+process.env.TEST_SENDER+'>', // sender address
@@ -81,7 +80,6 @@ app.post('/api/send_mail', function(req,res) {
       console.log('Message sent: ' + info.response);
   });
 
-/*///////// END - THE NODEMAILER PART ///////////*/
 })
 
 app.post('/api/get_news_list', function(req, res){
