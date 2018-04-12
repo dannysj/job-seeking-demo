@@ -9,6 +9,11 @@ var https = require('https');
 var multer  = require('multer');
 var crypto = require('crypto');
 var paypal = require('paypal-rest-sdk');
+var nodemailer = require('nodemailer');
+// create reusable transporter object using the default SMTP transport
+var transporter = nodemailer.createTransport('smtps://'+process.env.SMTP_LOGIN+':'+process.env.SMTP_PASSW+'@smtp.mailgun.org');
+var fs = require('fs');
+
 paypal.configure({
   'mode': 'live', //sandbox or live
   'client_id': process.env.PAYPAL_ID,
@@ -55,6 +60,29 @@ app.post('/api/get_mentor_list', function(req, res){
     res.json({code: 0, list: list});
   });
 });
+
+app.post('/api/send_mail', function(req,res) {
+  /*///////// START - THE NODEMAILER PART ///////////*/
+
+  // setup e-mail data
+  var mailOptions = {
+      from: '"'+req.body.author+'" <'+process.env.TEST_SENDER+'>', // sender address
+      to: req.body.senders, // list of receivers
+      subject: req.body.subject, // Subject line
+      text: req.body.text, // plaintext body
+      html: '<b>'+req.body.text+'</b>' // html body
+  };
+
+  // send mail with defined transport object
+  transporter.sendMail(mailOptions, function(error, info){
+      if(error){
+          return console.log(error);
+      }
+      console.log('Message sent: ' + info.response);
+  });
+
+/*///////// END - THE NODEMAILER PART ///////////*/
+})
 
 app.post('/api/get_news_list', function(req, res){
   db.getNewsList(req.body.batch_size, req.body.batch_num, (err, news_list) => {
@@ -147,6 +175,7 @@ app.post('/api/create_user', function(req, res){
 });
 
 app.post('/api/verify_user', function(req, res){
+  console.log("Verify user called")
   db.verifyUser(req.body, (err, user) => {
     if(err){
       console.log(err);
@@ -396,7 +425,7 @@ app.get('/return/payment_complete', (req, res)=>{
     }
 
     // if(payment.payer.status == 'VERIFIED'){ // TODO: uncommment these
-    
+
       db.addMentorShip(pendingPayments[payment.id].uid,
         pendingPayments[payment.id].mid,
         pendingPayments[payment.id].service_name,
