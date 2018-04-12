@@ -16,11 +16,11 @@ if (process.env.DATABASE_URL) {
 }
 else {
   self.db = {
-    user: 'buzun',
-    database: 'firm',
-    password: 'bakemongatari',
+    user: 'postgres',
+    database: 'db',
+    password: 'dannychew7',
     host: 'localhost',
-    port: 5432,
+    port: 5080,
     max: 20,
     idleTimeoutMillis: 30000
   };
@@ -36,5 +36,15 @@ self.root_admin = {
     companyName: 'MasterCFO'
   }
 };
+
+self.mail_config = {
+  host: 'smtp.zoho.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: 'non-reply@y-l.me',
+    pass: 'nonreply123',
+  }
+}
 
 exports.self;

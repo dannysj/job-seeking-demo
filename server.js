@@ -11,8 +11,8 @@ var crypto = require('crypto');
 var paypal = require('paypal-rest-sdk');
 var nodemailer = require('nodemailer');
 // create reusable transporter object using the default SMTP transport
-var transporter = nodemailer.createTransport('smtps://'+process.env.SMTP_LOGIN+':'+process.env.SMTP_PASSW+'@smtp.mailgun.org');
-var fs = require('fs');
+var transporter = nodemailer.createTransport(config.mail_config);
+
 
 paypal.configure({
   'mode': 'live', //sandbox or live
@@ -65,7 +65,7 @@ app.post('/api/send_mail', function(req,res) {
   // TODO: Replace process.env.TEST_SENDER, SMTP_LOGIN, SMTP_PASSW (top)
   // setup e-mail data
   var mailOptions = {
-      from: '"'+req.body.author+'" <'+process.env.TEST_SENDER+'>', // sender address
+      from: '"Test Job Name" <'+config.mail_config.auth.user+'>', // sender address
       to: req.body.senders, // list of receivers
       subject: req.body.subject, // Subject line
       text: req.body.text, // plaintext body
