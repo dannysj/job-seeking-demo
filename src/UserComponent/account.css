@@ -54,3 +54,15 @@
 .header-input-label {
   cursor: pointer;
 }
+
+.imgContainer {
+  text-align: center;
+}
+
+.center-profile {
+  display: inline-flex !important;
+}
+
+.image-header {
+  padding-top: 10px;
+}

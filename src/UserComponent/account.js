@@ -13,6 +13,7 @@ import AccountService from './AccountPartial/account_service';
 import AccountAdmin from './AccountPartial/account_admin';
 import AccountLogout from "./AccountPartial/account_logout";
 
+
 // TODO: Modify the structure of navlink
 
 class Account extends Component {
@@ -32,9 +33,10 @@ class Account extends Component {
         <div className="ui grid">
           <div className="four wide column">
             <div className="ui vertical fluid tabular menu">
-              <Link to="/account/"><a className="item">
+              <Link to="/account/"><div className="item">
                 <img className="ui medium circular image" src={this.props.user.profile_pic}/>
-              </a></Link>
+
+              </div></Link>
               <NavLink to="/account/">
                 基础资料
               </NavLink>
