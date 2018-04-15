@@ -160,18 +160,17 @@ class MentorDetail extends Component {
 
         <div className="detail-section">
           <h2 className="ui header">
-            <i className="file alternate outline icon"></i>
+            <i className="file alternate outline icon"/>
             <div className="content">
               简历
             </div>
           </h2>
-          <iframe className="resume-holder" width="100%" src={this.state.mentor.resume}>
-          </iframe>
+          <embed className="resume-holder" src={this.state.mentor.resume} width="100%" type='application/pdf'/>
         </div>
 
         <div className="detail-section">
           <h2 className="ui header">
-            <i className="comment alternate outline icon"></i>
+            <i className="comment alternate outline icon"/>
             <div className="content">
               过往评价
             </div>
