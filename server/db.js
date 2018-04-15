@@ -27,7 +27,8 @@ exports.reset = function(){
       email varchar(255) unique,
       major text,
       cover text,
-      balance numeric(8,2) default 0.00
+      balance numeric(8,2) default 0.00,
+      wechat text
     );
     create table if not exists industry (
       id serial unique primary key,
