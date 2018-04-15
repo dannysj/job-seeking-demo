@@ -443,9 +443,9 @@ app.post('/api/mentee_confirm', (req, res)=>{
 // Static resources
 app.use(express.static(__dirname + '/build'));
 
-app.get('/*', function(req, res) {
-  res.sendFile(__dirname + '/build/index.html');
-});
+// app.get('/*', function(req, res) {
+//   res.sendFile(__dirname + '/build/index.html');
+// });
 
 function server() {
   app.listen(PORT, function() {

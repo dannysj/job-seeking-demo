@@ -67,7 +67,7 @@ class AccountApply extends React.Component {
     axios.post('/api/get_mentor_detail', {mid: this.props.user.id}).then(res => {
       if (res.data.code === 0) {
         let mentor = res.data.mentor;
-        console.log(mentor);
+        //console.log(mentor);
         this.setState({
           mentor:
             {
