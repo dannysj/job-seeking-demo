@@ -84,8 +84,7 @@ class Mentor extends Component {
                 <p>Offer公司: {el.offer_company}</p>
                 <p>Offer职位: {el.offer_title}</p>
                 <p>院校: {el.college_name}</p>
-                <p>领域: {el.major}</p>
-                <p>最低价格: {el.lowest_price}</p>
+                <p>专业: {el.major}</p>
               </div>
               <Link to={'/mentor/' + el.mid}><Button floated='right'>点击查看细节>></Button></Link>
             </div>

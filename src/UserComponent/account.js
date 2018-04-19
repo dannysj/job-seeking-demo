@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import './account.css';

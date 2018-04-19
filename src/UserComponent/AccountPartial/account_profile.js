@@ -240,18 +240,18 @@ class AccountProfile extends React.Component {
                   <div className="info">{this.props.user.major ? this.props.user.major : '暂无资料'}</div>
                 </div>
               </div>
-              <div className="item">
-                <div className="content">
-                  <div className="header">出生日期<Button floated='right' onClick={()=>this.initAttrChange('dob','出生日期')}><Icon name='write' size='small' /></Button></div>
-                  <div className="info">{this.props.user.dob ? this.props.user.dob.substring(0,10) : '暂无资料'}</div>
-                </div>
-              </div>
-              <div className="item">
-                <div className="content">
-                  <div className="header">注册日期</div>
-                  <div className="info">{this.props.user.register_date?this.props.user.register_date.substring(0,10):'暂无资料'}</div>
-                </div>
-              </div>
+              // <div className="item">
+              //   <div className="content">
+              //     <div className="header">出生日期<Button floated='right' onClick={()=>this.initAttrChange('dob','出生日期')}><Icon name='write' size='small' /></Button></div>
+              //     <div className="info">{this.props.user.dob ? this.props.user.dob.substring(0,10) : '暂无资料'}</div>
+              //   </div>
+              // </div>
+              // <div className="item">
+              //   <div className="content">
+              //     <div className="header">注册日期</div>
+              //     <div className="info">{this.props.user.register_date?this.props.user.register_date.substring(0,10):'暂无资料'}</div>
+              //   </div>
+              // </div>
               <div className="item">
                 <div className="content">
                   <div className="header">自我介绍<Button floated='right' onClick={()=>this.initAttrChange('cover','自我介绍')}><Icon name='write' size='small' /></Button></div>

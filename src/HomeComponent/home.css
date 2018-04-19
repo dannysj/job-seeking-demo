@@ -43,6 +43,11 @@
   border-radius: 5px;
 }
 
+.news-overview-text {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .overview-holder {
   padding-left: 10px;
   text-align: center;

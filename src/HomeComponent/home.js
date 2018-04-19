@@ -14,10 +14,10 @@ class Home extends Component {
       <div>
         <Carousel showThumbs={false} autoPlay={true} interval={3000} showStatus={false}>
           <div>
-            <img width={900} height={500} alt="900x500" src="/img/test1.jpg" />
+            <img width={900} height={500} alt="900x500" src="/img/banner1.jpg" />
           </div>
           <div>
-            <img width={900} height={500} alt="900x500" src="/img/test2.jpg" />
+            <img width={900} height={500} alt="900x500" src="/img/test1.jpg" />
           </div>
           <div>
             <img width={900} height={500} alt="900x500" src="/img/test3.jpg" />

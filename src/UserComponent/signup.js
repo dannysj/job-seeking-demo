@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -22,6 +24,7 @@ class Signup extends Component {
 
 
     // this.context.router.route.location.pathname
+
   }
 
   handleSubmit (e) {
@@ -30,23 +33,23 @@ class Signup extends Component {
       axios.post('/api/create_user',this.state.user).then(res => {
         if(res.data.code==0){
           this.props.onSuccess(res.data.user); // TODO: use the user profile returned by the server
-          axios.post('/api/send_mail',{senders: this.state.user.email, subject:'Welcome to Job', text:'Hello, ' + this.state.user.last}).then(res => {
-            if(res.data.code==0){
-              console.log("Success mail")
-            }
-            else{
-
-            }
-          });
+          // axios.post('/api/send_mail',{senders: this.state.user.email, subject:'Welcome to Job', text:'Hello, ' + this.state.user.last}).then(res => {
+          //   if(res.data.code==0){
+          //     console.log("Success mail")
+          //   }
+          //   else{
+          //
+          //   }
+          // });
           this.context.router.history.push('/account');
         }
         else{
-          alert("Failed to create user");
+          NotificationManager.error('无法成功注册您的账户', '错误');
         }
       });
     }
     else{
-      alert('Password does not match');
+      NotificationManager.error('两次输入的密码不一致', '错误');
     }
 
   }
@@ -62,6 +65,7 @@ class Signup extends Component {
     console.log(this.context);
     return (
       <div class="login-signup-container">
+        <NotificationContainer />
         <form class="ui form" onSubmit={this.handleSubmit}>
           <div class="field">
             <label>Email</label>

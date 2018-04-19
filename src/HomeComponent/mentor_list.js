@@ -33,8 +33,8 @@ class MentorList extends Component {
               <img className="mentor-overview-picture" src={el.profile_pic}></img>
               <div>
                 <h4>{el.last+' '}{el.first}</h4>
-                <p className="mentor-overview-text">Offer: {el.offer_company+' '+el.offer_title}</p>
-                <p className="mentor-overview-text">院校: {el.college_name}</p>
+                <p className="mentor-overview-text">{el.offer_company+' '+el.offer_title}</p>
+                <p className="mentor-overview-text">{el.college_name}</p>
               </div>
             </div>
           </Link>
