@@ -66,9 +66,8 @@ class AccountProfile extends React.Component {
 
     axios.post('/api/file/general_upload', data).then(res => {
       if(res.data.code === 0){
-        // TODO: upload resume
-        var splitName = res.data.url.split('\\').pop().split('/').pop();
-        this.setState({fileName: splitName})
+        console.log("Res is 0, successfully upload resume");
+        this.setState({fileName: res.data.url});
       }
       else{
         // TODO: error handling

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Carousel } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { Header, Container, Segment } from 'semantic-ui-react';
+import { Header, Container, Segment, Button } from 'semantic-ui-react';
 import axios from 'axios';
 import './home.css';
 
@@ -39,6 +39,8 @@ class MentorList extends Component {
             </div>
           </Link>
         ))}
+        {this.state.mentors.length >= 6 &&
+          <Link to='/mentor'><Button floated='right'>查看更多导师</Button></Link>}
       </div>
     );
   }

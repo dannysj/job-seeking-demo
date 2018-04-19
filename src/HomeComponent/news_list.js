@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Carousel } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { Header, Container, Segment } from 'semantic-ui-react';
+import { Header, Container, Segment, Button } from 'semantic-ui-react';
 import axios from 'axios';
 import './home.css';
 
@@ -41,6 +41,8 @@ class NewsList extends Component {
             </div>
           </Link>
         ))}
+        {this.state.news_list.length >= 6 &&
+          <Link to='/news'><Button floated='right'>查看更多干货</Button></Link>}
       </div>
     );
   }
