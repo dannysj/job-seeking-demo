@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Icon, Button } from 'semantic-ui-react';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
 import '../account.css';
 import ImgCrop from './ImgCrop/imgcrop.js';
@@ -52,9 +54,9 @@ class AccountProfile extends React.Component {
     var fileType = e.target.files[0]["type"];
     var validTypes = ["application/pdf"];
     if (validTypes.indexOf(fileType) < 0) {
-         // invalid file type code goes here.
-         alert("Not a valid pdf. Please choose again.")
-         return
+      // invalid file type code goes here.
+      NotificationManager.error('简历格式必须为pdf', '错误');
+      return;
     }
     // upload first, then
     let data = new FormData();
@@ -80,35 +82,24 @@ class AccountProfile extends React.Component {
     var fileType = e.target.files[0]["type"];
     var ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
     if (ValidImageTypes.indexOf(fileType) < 0) {
-         // invalid file type code goes here.
-         alert("Not a valid image. Please choose again.")
-         return
+      // invalid file type code goes here.
+      NotificationManager.error('必须是图片文件', '错误');
+      return;
     }
-    // upload first, then
-    let data = new FormData();
-    // for security reason, can't access local files on client's comp
-    data.append('file', e.target.files[0]);
-    let handler = this;
 
-    axios.post('/api/file/general_upload', data).then(res => {
-      if(res.data.code === 0){
-        console.log(res.data);
-        console.log("Calling IMGCROP")
-        console.log("Res is 0, successfully uploaded image")
-        this.setState({showImgCrop: true, imgCropDataUrl: res.data.url})
-
-      }
-      else{
-        // TODO: error handling
-        alert('Header Error');
-      }
-    });
+    var file = e.target.files[0];
+    var fileReader = new FileReader();
+    var handler = this;
+    fileReader.onloadend = function (e2) {
+      handler.setState({showImgCrop: true, imgCropDataUrl: e2.target.result, imgCropName: file.name})
+    };
+    fileReader.readAsDataURL(file);
   }
 
   onSuccessCrop = (img) => {
-    if (img === undefined) {
-      this.setState({showImgCrop: false})
-      return
+    if (!img) {
+      this.setState({showImgCrop: false});
+      return;
     }
     let data = new FormData();
     data.append('file', img);
@@ -123,8 +114,8 @@ class AccountProfile extends React.Component {
         handler.props.onUpdate(handler.props.user);
         axios.post('/api/update_user',{uid:this.props.user.id,attr:'profile_pic',val:res.data.url}).then(res => {
           if(res.data.code===0){
-              console.log("Res is 0, successfully changed image")
-
+            console.log("Res is 0, successfully changed image")
+            NotificationManager.success('头像上传成功','上传成功');
           }
           else{
             alert(res.data.errMsg);
@@ -157,6 +148,7 @@ class AccountProfile extends React.Component {
       }
         return(
             <div className="ui large celled list">
+              <NotificationContainer />
               <div className={modalClassName}>
                 <i className="close icon"/>
                 <div className="header">
@@ -182,7 +174,7 @@ class AccountProfile extends React.Component {
                 </div>
               </div>
               <div className="item">
-                {this.state.showImgCrop ? ( <ImgCrop dataUrl={this.state.imgCropDataUrl} onSuccess={this.onSuccessCrop}/> )
+                {this.state.showImgCrop ? ( <ImgCrop dataUrl={this.state.imgCropDataUrl} fileName={this.state.imgCropName} onSuccess={this.onSuccessCrop}/> )
                   :
                   ( <div className="imgContainer">
                     <label className="header-input-label" htmlFor="header-input">
@@ -216,19 +208,6 @@ class AccountProfile extends React.Component {
 
               <div className="item">
                 <div className="content">
-                  <div className="resume">简历</div>
-                  <div className="info">{this.state.fileName ? this.state.fileName : '暂无资料'}</div>
-                  <label htmlFor="resume-input" className={this.state.fileName ? 'ui button positive' : 'ui button'}>
-                    <i className="ui upload icon"/>
-                    {this.state.fileName ? '成功' : '上传简历'}
-                  </label>
-                  <input type="file" accept="application/pdf" className="input-file" id="resume-input" onChange={this.handleResume}/>
-
-                </div>
-              </div>
-
-              <div className="item">
-                <div className="content">
                   <div className="header">微信<Button floated='right' onClick={()=>this.initAttrChange('wechat','微信')}><Icon name='write' size='small' /></Button></div>
                   <div className="info">{this.props.user.wechat ? this.props.user.wechat : '暂无资料'}</div>
                 </div>
@@ -240,22 +219,23 @@ class AccountProfile extends React.Component {
                   <div className="info">{this.props.user.major ? this.props.user.major : '暂无资料'}</div>
                 </div>
               </div>
-              // <div className="item">
-              //   <div className="content">
-              //     <div className="header">出生日期<Button floated='right' onClick={()=>this.initAttrChange('dob','出生日期')}><Icon name='write' size='small' /></Button></div>
-              //     <div className="info">{this.props.user.dob ? this.props.user.dob.substring(0,10) : '暂无资料'}</div>
-              //   </div>
-              // </div>
-              // <div className="item">
-              //   <div className="content">
-              //     <div className="header">注册日期</div>
-              //     <div className="info">{this.props.user.register_date?this.props.user.register_date.substring(0,10):'暂无资料'}</div>
-              //   </div>
-              // </div>
               <div className="item">
                 <div className="content">
                   <div className="header">自我介绍<Button floated='right' onClick={()=>this.initAttrChange('cover','自我介绍')}><Icon name='write' size='small' /></Button></div>
                   <div className="info">{this.props.user.cover ? this.props.user.cover : '暂无资料'}</div>
+                </div>
+              </div>
+
+              <div className="item">
+                <div className="content">
+                  <div className="resume">简历</div>
+                  <div className="info">{this.state.fileName ? this.state.fileName : '暂无资料'}</div>
+                  <label htmlFor="resume-input" className={this.state.fileName ? 'ui button positive' : 'ui button'}>
+                    <i className="ui upload icon"/>
+                    {this.state.fileName ? '成功' : '上传简历'}
+                  </label>
+                  <input type="file" accept="application/pdf" className="input-file" id="resume-input" onChange={this.handleResume}/>
+
                 </div>
               </div>
 

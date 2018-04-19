@@ -28,7 +28,8 @@ exports.reset = function(){
       major text,
       cover text,
       balance numeric(8,2) default 0.00,
-      wechat text
+      wechat text,
+      resume text
     );
     create table if not exists industry (
       id serial unique primary key,
