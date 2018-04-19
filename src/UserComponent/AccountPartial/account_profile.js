@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Icon, Button } from 'semantic-ui-react';
+import { Icon, Button, Image } from 'semantic-ui-react';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
@@ -176,10 +176,10 @@ class AccountProfile extends React.Component {
                 {this.state.showImgCrop ? ( <ImgCrop dataUrl={this.state.imgCropDataUrl} fileName={this.state.imgCropName} onSuccess={this.onSuccessCrop}/> )
                   :
                   ( <div className="imgContainer">
+                    <div className="image-text-centered">点击更换头像</div>
                     <label className="header-input-label" htmlFor="header-input">
-                      <img className="ui medium image profile_pic center-profile" src={this.props.user.profile_pic}/>
+                      <Image className="center-profile" small bordered src={this.props.user.profile_pic} />
                     </label>
-                    <div className="header image-header">点击更换头像哦</div>
                     <input type="file" accept="image/*" className="input-file" id="header-input" onChange={this.handleHeader} />
                     </div>
                   )}
@@ -227,7 +227,7 @@ class AccountProfile extends React.Component {
 
               <div className="item">
                 <div className="content">
-                  <div className="resume">简历</div>
+                  <div className="header">简历</div>
                   <div className="info">{this.state.fileName ? this.state.fileName : '暂无资料'}</div>
                   <label htmlFor="resume-input" className={this.state.fileName ? 'ui button positive' : 'ui button'}>
                     <i className="ui upload icon"/>
