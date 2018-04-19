@@ -41,8 +41,6 @@ class NewsList extends Component {
             </div>
           </Link>
         ))}
-        {this.state.news_list.length >= 6 &&
-          <Link to='/news'><Button floated='right'>查看更多干货</Button></Link>}
       </div>
     );
   }

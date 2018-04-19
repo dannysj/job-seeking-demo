@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import { Link } from 'react-router-dom';
-import { Header, Container, Segment } from 'semantic-ui-react';
+import { Header, Container, Segment, Button, Divider } from 'semantic-ui-react';
 import NewsList from './news_list';
 import MentorList from './mentor_list';
 import styles from 'react-responsive-carousel/lib/styles/carousel.min.css';
@@ -28,6 +28,8 @@ class Home extends Component {
         <Container>
 
           <Header textAlign={'center'} as='h3'>导师推荐</Header>
+          <Link to='/mentor'><Button floated='right'>查看更多导师</Button></Link>
+          <Divider hidden clearing />
           <Segment>
             <MentorList>
             </MentorList>
@@ -37,6 +39,8 @@ class Home extends Component {
         <br />
         <Container>
           <Header textAlign={'center'} as='h3'>干货推荐</Header>
+          <Link to='/news'><Button floated='right'>查看更多干货</Button></Link>
+          <Divider hidden clearing />
           <Segment>
             <NewsList>
             </NewsList>

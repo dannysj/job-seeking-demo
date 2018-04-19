@@ -39,8 +39,6 @@ class MentorList extends Component {
             </div>
           </Link>
         ))}
-        {this.state.mentors.length >= 6 &&
-          <Link to='/mentor'><Button floated='right'>查看更多导师</Button></Link>}
       </div>
     );
   }
