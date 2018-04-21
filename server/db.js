@@ -228,6 +228,32 @@ exports.updateUser = (data, callback) => {
   });
 };
 
+exports.addUserVerificationCode = (email, verification_code, callback) => {
+  let query = `
+  insert into user_verification (uid, verification_code) values ((select id from users where email = $1),$2) 
+    on CONFLICT (uid) do update set verification_code = $2, time_added=now() returning * ;`;
+  db.query(query, [email, verification_code], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows[0]);
+  });
+};
+
+exports.confirmVerification = (verification_code, callback) => {
+  let query = `
+    update users set isactivated=true where id=(select id from user_verification where verification_code=$1);
+  delete from user_verification where verification_code=$1;`;
+  db.query(query, [verification_code], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows[0]);
+  });
+};
+
 exports.createMentorApp = (mentor_info, callback) => {
   var query = `insert into mentor_info
     (uid,
