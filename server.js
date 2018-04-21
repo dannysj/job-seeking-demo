@@ -197,7 +197,7 @@ app.post('/api/create_user', function(req, res){
       res.json({code: 1});
     }
   });
-
+/*
   let verifyLink = '/api/verify_user?code=' + verificationCode;
 
   // TODO: Replace process.env.TEST_SENDER, SMTP_LOGIN, SMTP_PASSW (top)
@@ -220,7 +220,7 @@ app.post('/api/create_user', function(req, res){
     console.log('Message sent: ' + info.response);
   });
 
-  res.json({code: 0});
+  res.json({code: 0}); */
 });
 
 
