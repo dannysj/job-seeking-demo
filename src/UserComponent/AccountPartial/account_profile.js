@@ -14,8 +14,8 @@ class AccountProfile extends React.Component {
     super(props);
     this.state = {
       showAddServiceModal: false,
-      showImgCrop: false
-
+      showImgCrop: false,
+      fileName: this.props.user.resume
     };
     this.tempService = {};
 
@@ -27,6 +27,7 @@ class AccountProfile extends React.Component {
     this.handleHeader = this.handleHeader.bind(this);
     this.handleResume = this.handleResume.bind(this);
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
+
   }
 
   initAttrChange (key_name, display_name) {
@@ -70,6 +71,22 @@ class AccountProfile extends React.Component {
       if(res.data.code === 0){
         console.log("Res is 0, successfully upload resume");
         this.setState({fileName: res.data.url});
+
+        handler.props.user.resume = res.data.url;
+        handler.props.onUpdate(handler.props.user);
+        console.log(handler.props.user)
+        console.log("Hmm")
+        axios.post('/api/update_user',{uid:this.props.user.id,attr:'resume',val:res.data.url}).then(res => {
+          if(res.data.code===0){
+            console.log("Res is 0, successfully changed image")
+            NotificationManager.success('简历上传成功','完成啦');
+          }
+          else{
+            alert(res.data.errMsg);
+            //TODO: Error Handling
+          }
+        });
+
       }
       else{
         // TODO: error handling
@@ -152,6 +169,8 @@ class AccountProfile extends React.Component {
       if(this.state.showAddServiceModal){
         modalClassName += ' add-service-container';
       }
+
+
         return(
             <div className="ui large celled list">
               <NotificationContainer />
@@ -235,17 +254,17 @@ class AccountProfile extends React.Component {
               <div className="item">
                 <div className="content">
                   <div className="header">简历</div>
-                  <div className="info">{this.state.fileName ? this.state.fileName : '暂无资料'}</div>
+                  <div className="info">{this.state.fileName ? '' : '暂无资料'}</div>
                   <label htmlFor="resume-input" className={this.state.fileName ? 'ui button positive' : 'ui button'}>
                     <i className="ui upload icon"/>
                     {this.state.fileName ? '成功' : '上传简历'}
                   </label>
                   <input type="file" accept="application/pdf" className="input-file" id="resume-input" onChange={this.handleResume}/>
-                    {this.state.fileName ? (   <Document
+                    {this.state.fileName ? (   <div><Document
                           file={this.state.fileName}
                           onLoadSuccess={this.onDocumentLoad}>
                           <Page pageNumber={this.state.pageNumber} />
-                        </Document>) : (<div></div>)}
+                        </Document></div>) : (<div></div>)}
                 </div>
               </div>
 

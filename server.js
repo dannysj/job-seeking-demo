@@ -223,7 +223,7 @@ app.post('/api/create_user', function(req, res){
 
       // TODO:
       var host=req.get('host');
-      var link="http://"+req.get('host')+"/verify?id="+hash ;
+      var link="http://"+req.get('host')+"/activate?id="+hash ;
 
       var mailOptions = {
           from: '"Test Job Name" <'+config.mail_config.auth.user+'>', // sender address
@@ -260,11 +260,11 @@ app.post('/api/verify_user', function(req, res){
 
 // TODO: FIXME:
 // Verifying
-app.get('/verify', function(req, res) {
+app.post('/api/activate', function(req, res) {
   console.log("GET verify user called")
 
     // match domain
-    db.activateAccount(req.query.id, (err) => {
+    db.activateAccount(req.body, (err) => {
       if(err){
         console.log(err);
         res.json({code: 1, errMsg: err});
