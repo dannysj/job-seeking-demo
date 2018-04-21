@@ -62,11 +62,18 @@ app.post('/api/get_mentor_list', function(req, res){
 });
 
 app.post('/api/send_mail', function(req,res) {
+
+  let rand=Math.floor((Math.random() * 10000000));
+
+  db.addUserVerificationCode(req.body.receivers,rand,e=>{
+    console.log(e);
+  });
+
   // TODO: Replace process.env.TEST_SENDER, SMTP_LOGIN, SMTP_PASSW (top)
   // setup e-mail data
   var mailOptions = {
       from: '"Test Job Name" <'+config.mail_config.auth.user+'>', // sender address
-      to: req.body.senders, // list of receivers
+      to: req.body.receivers, // list of receivers
       subject: req.body.subject, // Subject line
       text: req.body.text, // plaintext body
       html: '<b>'+req.body.text+'</b>' // html body
