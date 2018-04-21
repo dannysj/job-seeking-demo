@@ -61,35 +61,58 @@ app.post('/api/get_mentor_list', function(req, res){
   });
 });
 
-app.post('/api/send_mail', function(req,res) {
+app.post('/api/send_verify_mail', (req, res) => {
 
-  let rand=Math.floor((Math.random() * 10000000));
+  let verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
 
-  db.addUserVerificationCode(req.body.receivers,rand,e=>{
-    console.log(e);
+  db.addUserVerificationCode(req.body.receivers, verificationCode, (error, data) => {
+    if (error) {
+      console.log(error);
+      res.json({code: 1});
+    }
   });
+
+  let verifyLink = '/api/verify_user?code=' + verificationCode;
 
   // TODO: Replace process.env.TEST_SENDER, SMTP_LOGIN, SMTP_PASSW (top)
   // setup e-mail data
-  var mailOptions = {
-      from: '"Test Job Name" <'+config.mail_config.auth.user+'>', // sender address
-      to: req.body.receivers, // list of receivers
-      subject: req.body.subject, // Subject line
-      text: req.body.text, // plaintext body
-      html: '<b>'+req.body.text+'</b>' // html body
+  let mailOptions = {
+    from: '"Test Job Name" <' + config.mail_config.auth.user + '>', // sender address
+    to: req.body.receivers, // list of receivers
+    subject: 'Welcome to Buddy Career', // Subject line
+    text: verifyLink, // plaintext body
+    html: verifyLink // html body
   };
 
   // send mail with defined transport object
-  transporter.sendMail(mailOptions, function(error, info){
-      if(error){
-          return console.log(error);
-      }
-      console.log('Message sent: ' + info.response);
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      res.json({code: 1});
+      return
+    }
+    console.log('Message sent: ' + info.response);
   });
 
-})
+  res.json({code: 0});
+});
 
-app.post('/api/get_news_list', function(req, res){
+app.post('/api/verify_user', (req, res)=>{
+  let verificationCode = req.query.code;
+
+  console.log(verificationCode);
+
+  db.confirmVerification(verificationCode, (error, data)=>{
+    if (error) {
+      console.log(error);
+      res.json({code: 1});
+    }
+  });
+
+  res.json({code: 0});
+});
+
+app.post('/api/get_news_list', (req, res) => {
   db.getNewsList(req.body.batch_size, req.body.batch_num, (err, news_list) => {
     if(err){
       console.log(err);
