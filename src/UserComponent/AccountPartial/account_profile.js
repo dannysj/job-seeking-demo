@@ -191,6 +191,8 @@ class AccountProfile extends React.Component {
                     </div>
                   )}
 
+                {this.props.user.isactivated ? "": (<h1>NOT ACTIVATED!!!!!!</h1>)}
+
               </div>
               <div className="item">
                 <div className="content">

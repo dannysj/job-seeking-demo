@@ -150,7 +150,7 @@ app.post('/api/create_user', function(req, res){
       return;
     }
 
-    let verificationCode = Math.random().toString(64).replace(/[^a-z]+/g, '');
+    let verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
 
     db.addUserVerificationCode(user.email, verificationCode, (error, data) => {
       if (error) {
@@ -238,7 +238,7 @@ app.post('/api/confirm_verification', (req, res)=>{
 });
 
 app.post('/api/verify_user', function(req, res){
-  console.log("Verify user called")
+  console.log("Verify user called");
   db.verifyUser(req.body, (err, user) => {
     if(err){
       console.log(err);
