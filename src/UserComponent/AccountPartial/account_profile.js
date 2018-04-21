@@ -7,6 +7,7 @@ import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
 import '../account.css';
 import ImgCrop from './ImgCrop/imgcrop.js';
+import { Document, Page } from 'react-pdf';
 
 class AccountProfile extends React.Component {
   constructor(props) {
@@ -25,6 +26,7 @@ class AccountProfile extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleHeader = this.handleHeader.bind(this);
     this.handleResume = this.handleResume.bind(this);
+    this.onDocumentLoad = this.onDocumentLoad.bind(this);
   }
 
   initAttrChange (key_name, display_name) {
@@ -75,6 +77,11 @@ class AccountProfile extends React.Component {
       }
     });
   }
+
+  onDocumentLoad = ({ numPages }) => {
+  this.setState({ numPages });
+  this.setState({pageNumber: 1});
+}
 
   handleHeader(e){
     // check legit files
@@ -234,7 +241,11 @@ class AccountProfile extends React.Component {
                     {this.state.fileName ? '成功' : '上传简历'}
                   </label>
                   <input type="file" accept="application/pdf" className="input-file" id="resume-input" onChange={this.handleResume}/>
-
+                    {this.state.fileName ? (   <Document
+                          file={this.state.fileName}
+                          onLoadSuccess={this.onDocumentLoad}>
+                          <Page pageNumber={this.state.pageNumber} />
+                        </Document>) : (<div></div>)}
                 </div>
               </div>
 

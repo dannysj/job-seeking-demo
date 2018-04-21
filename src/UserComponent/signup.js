@@ -27,21 +27,16 @@ class Signup extends Component {
 
   }
 
+
   handleSubmit (e) {
     e.preventDefault();
     if(this.state.user.password == this.state.user.cpassword){
       axios.post('/api/create_user',this.state.user).then(res => {
         if(res.data.code==0){
           this.props.onSuccess(res.data.user); // TODO: use the user profile returned by the server
-          // axios.post('/api/send_mail',{senders: this.state.user.email, subject:'Welcome to Job', text:'Hello, ' + this.state.user.last}).then(res => {
-          //   if(res.data.code==0){
-          //     console.log("Success mail")
-          //   }
-          //   else{
-          //
-          //   }
-          // });
+
           this.context.router.history.push('/account');
+            NotificationManager.success('请检查邮件并激活此账号', '注册成功');
         }
         else{
           NotificationManager.error('无法成功注册您的账户', '错误');
@@ -64,32 +59,32 @@ class Signup extends Component {
     console.log(this.props);
     console.log(this.context);
     return (
-      <div class="login-signup-container">
+      <div className="login-signup-container">
         <NotificationContainer />
-        <form class="ui form" onSubmit={this.handleSubmit}>
-          <div class="field">
+        <form className="ui form" onSubmit={this.handleSubmit}>
+          <div className="field">
             <label>Email</label>
             <input type="email" name="email" placeholder="Email" onChange={this.handleChange.bind(this)} required />
           </div>
-          <div class="field">
+          <div className="field">
             <label>姓</label>
             <input type="text" name="last" placeholder="Last Name" onChange={this.handleChange} required/>
           </div>
-          <div class="field">
+          <div className="field">
             <label>名</label>
             <input type="text" name="first" placeholder="First Name" onChange={this.handleChange} required />
           </div>
-          <div class="field">
+          <div className="field">
             <label>密码</label>
             <input type="password" name="password" placeholder="Password" onChange={this.handleChange} required />
           </div>
-          <div class="field">
+          <div className="field">
             <label>确认密码</label>
             <input type="password" name="cpassword" placeholder="Confirm Password" onChange={this.handleChange} required />
           </div>
           <Link to="/login">已有账号？点击登陆</Link>
           <br /><br />
-          <button class="ui button" type="submit">注册</button>
+          <button className="ui button" type="submit">注册</button>
         </form>
       </div>
     );
