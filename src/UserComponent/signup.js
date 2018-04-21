@@ -33,14 +33,6 @@ class Signup extends Component {
       axios.post('/api/create_user',this.state.user).then(res => {
         if(res.data.code===0){
           this.props.onSuccess(res.data.user); // TODO: use the user profile returned by the server
-          axios.post('/api/send_verify_mail',{receivers: this.state.user.email, text:'Hello, ' + this.state.user.last}).then(res => {
-            if(res.data.code===0){
-              console.log("Success mail")
-            }
-            else{
-
-            }
-          });
           this.context.router.history.push('/account');
         }
         else{
