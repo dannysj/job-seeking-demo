@@ -149,80 +149,93 @@ app.post('/api/create_user', function(req, res){
       res.json({code: 1, errMsg: err});
       return;
     }
-    //res.json({code: 0, user: user}); // TODO: Return token
-    //TODO: create activateAccount
-    // FIXME: a better way to hash
 
-    var hash = Date.now();
-    var temp = "Welcome to this website!"
+    let verificationCode = Math.random().toString(64).replace(/[^a-z]+/g, '');
 
-    console.log("User created, id is " + user.id);
-    db.setActivationLink(user.id, hash, (err) => {
-      if (err) {
-        console.log(err);
-        res.json({code: 0, errMsg: err});
-        return;
+    db.addUserVerificationCode(user.email, verificationCode, (error, data) => {
+      if (error) {
+        console.log(error);
+        res.json({code: 1, errMsg: error});
       }
-
-      // create a link
-
-      // TODO:
-      var host=req.get('host');
-      var link="http://"+req.get('host')+"/verify?id="+hash ;
-
-      var mailOptions = {
-          from: '"Test Job Name" <'+config.mail_config.auth.user+'>', // sender address
-          to: user.email, // list of receivers
-          subject: 'Welcome! Activation Required!', // Subject line
-          text: temp, // plaintext body
-          html: '<b>'+temp+'</b><a href='+link+'>Click here to verify</a>' // html body
-      };
-
-      // send mail with defined transport object
-      transporter.sendMail(mailOptions, function(error, info){
-          if(error){
-              return console.log(error);
-          }
-          console.log('Message sent: ' + info.response);
-      });
     });
-    res.json({code: 0, user: user});
+
+    let verifyLink = "http://"+req.get('host') + '/api/confirm_verification?code=' + verificationCode;
+
+    // TODO: Replace process.env.TEST_SENDER, SMTP_LOGIN, SMTP_PASSW (top)
+
+    // setup e-mail data
+    let mailOptions = {
+      from: '"Test Job Name" <' + config.mail_config.auth.user + '>', // sender address
+      to: user.email, // list of receivers
+      subject: 'Welcome to Buddy Career', // Subject line
+      text: verifyLink, // plaintext body
+      html: '<a href='+verifyLink+'>Click here to verify</a>' // html body
+    };
+
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log('Message sent: ' + info.response);
+    });
+
+    res.json({code: 0});
+
+
+    // //res.json({code: 0, user: user}); // TODO: Return token
+    // //TODO: create activateAccount
+    // // FIXME: a better way to hash
+    //
+    // var hash = Date.now();
+    // var temp = "Welcome to this website!"
+    //
+    // console.log("User created, id is " + user.id);
+    // db.setActivationLink(user.id, hash, (err) => {
+    //   if (err) {
+    //     console.log(err);
+    //     res.json({code: 0, errMsg: err});
+    //     return;
+    //   }
+    //
+    //   // create a link
+    //
+    //   // TODO:
+    //   var host=req.get('host');
+    //   var link="http://"+req.get('host')+"/verify?id="+hash ;
+    //
+    //   var mailOptions = {
+    //       from: '"Test Job Name" <'+config.mail_config.auth.user+'>', // sender address
+    //       to: user.email, // list of receivers
+    //       subject: 'Welcome! Activation Required!', // Subject line
+    //       text: temp, // plaintext body
+    //       html: '<b>'+temp+'</b><a href='+link+'>Click here to verify</a>' // html body
+    //   };
+    //
+    //   // send mail with defined transport object
+    //   transporter.sendMail(mailOptions, function(error, info){
+    //       if(error){
+    //           return console.log(error);
+    //       }
+    //       console.log('Message sent: ' + info.response);
+    //   });
+    // });
+    // res.json({code: 0, user: user});
   });
-
-  let verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
-
-  db.addUserVerificationCode(req.body.email, verificationCode, (error, data) => {
-    if (error) {
-      console.log(error);
-      res.json({code: 1});
-    }
-  });
-/*
-  let verifyLink = '/api/verify_user?code=' + verificationCode;
-
-  // TODO: Replace process.env.TEST_SENDER, SMTP_LOGIN, SMTP_PASSW (top)
-  // setup e-mail data
-  let mailOptions = {
-    from: '"Test Job Name" <' + config.mail_config.auth.user + '>', // sender address
-    to: req.body.email, // list of receivers
-    subject: 'Welcome to Buddy Career', // Subject line
-    text: verifyLink, // plaintext body
-    html: verifyLink // html body
-  };
-
-  // send mail with defined transport object
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      res.json({code: 1});
-      return
-    }
-    console.log('Message sent: ' + info.response);
-  });
-
-  res.json({code: 0}); */
 });
 
+app.post('/api/confirm_verification', (req, res)=>{
+  let verificationCode = req.query.code;
+
+  db.confirmVerification(verificationCode, error => {
+    if (error) {
+      return console.log(error);
+    }
+  });
+
+  res.json({code: 0});
+});
 
 app.post('/api/verify_user', function(req, res){
   console.log("Verify user called")
@@ -239,7 +252,7 @@ app.post('/api/verify_user', function(req, res){
 // TODO: FIXME:
 // Verifying
 app.get('/verify', function(req, res) {
-  console.log("GET verify user called")
+  console.log("GET verify user called");
 
     // match domain
     db.activateAccount(req.query.id, (err) => {
@@ -266,21 +279,6 @@ app.post('/api/update_user', function(req, res){
 });
 
 
-
-app.post('/api/verify_user', (req, res)=>{
-  let verificationCode = req.query.code;
-
-  console.log(verificationCode);
-
-  db.confirmVerification(verificationCode, (error, data)=>{
-    if (error) {
-      console.log(error);
-      res.json({code: 1});
-    }
-  });
-
-  res.json({code: 0});
-});
 
 app.post('/api/file/general_upload', upload.single('file'), function(req, res) {
   if (!req.file)

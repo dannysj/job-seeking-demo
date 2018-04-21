@@ -242,15 +242,13 @@ exports.addUserVerificationCode = (email, verification_code, callback) => {
 };
 
 exports.confirmVerification = (verification_code, callback) => {
-  let query = `
-    update users set isactivated=true where id=(select id from user_verification where verification_code=$1);
-  delete from user_verification where verification_code=$1;`;
+  let query = `update users set isactivated=true where id=(select uid from user_verification where verification_code=$1);`;
   db.query(query, [verification_code], (err, result) => {
     if(err){
       callback(err);
       return;
     }
-    callback(null, result.rows[0]);
+    callback(null);
   });
 };
 
