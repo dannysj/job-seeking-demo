@@ -63,7 +63,7 @@ app.post('/api/get_mentor_list', function(req, res){
   });
 });
 
-<<<<<<< HEAD
+
 /*app.post('/api/send_mail', function(req,res) {
 =======
 app.post('/api/send_verify_mail', (req, res) => {
@@ -117,7 +117,7 @@ app.post('/api/verify_user', (req, res)=>{
 
   res.json({code: 0});
 });
-
+*/
 app.post('/api/get_news_list', (req, res) => {
   db.getNewsList(req.body.batch_size, req.body.batch_num, (err, news_list) => {
     if(err){
@@ -258,6 +258,7 @@ app.post('/api/verify_user', function(req, res){
   });
 });
 
+// TODO: FIXME:
 // Verifying
 app.get('/verify', function(req, res) {
   console.log("GET verify user called")
