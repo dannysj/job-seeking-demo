@@ -14,6 +14,8 @@ var nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport(config.mail_config);
 
 
+
+
 paypal.configure({
   'mode': 'live', //sandbox or live
   'client_id': process.env.PAYPAL_ID,
@@ -147,7 +149,44 @@ app.post('/api/create_user', function(req, res){
       res.json({code: 1, errMsg: err});
       return;
     }
-    res.json({code: 0, user: user}); // TODO: Return token
+    //res.json({code: 0, user: user}); // TODO: Return token
+    //TODO: create activateAccount
+    // FIXME: a better way to hash
+
+    var hash = Date.now();
+    var temp = "Welcome to this website!"
+
+    console.log("User created, id is " + user.id);
+    db.setActivationLink(user.id, hash, (err) => {
+      if (err) {
+        console.log(err);
+        res.json({code: 0, errMsg: err});
+        return;
+      }
+
+      // create a link
+
+      // TODO:
+      var host=req.get('host');
+      var link="http://"+req.get('host')+"/verify?id="+hash ;
+
+      var mailOptions = {
+          from: '"Test Job Name" <'+config.mail_config.auth.user+'>', // sender address
+          to: user.email, // list of receivers
+          subject: 'Welcome! Activation Required!', // Subject line
+          text: temp, // plaintext body
+          html: '<b>'+temp+'</b><a href='+link+'>Click here to verify</a>' // html body
+      };
+
+      // send mail with defined transport object
+      transporter.sendMail(mailOptions, function(error, info){
+          if(error){
+              return console.log(error);
+          }
+          console.log('Message sent: ' + info.response);
+      });
+    });
+    res.json({code: 0, user: user});
   });
 
   let verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
@@ -184,6 +223,7 @@ app.post('/api/create_user', function(req, res){
   res.json({code: 0});
 });
 
+
 app.post('/api/verify_user', function(req, res){
   console.log("Verify user called")
   db.verifyUser(req.body, (err, user) => {
@@ -196,14 +236,32 @@ app.post('/api/verify_user', function(req, res){
   });
 });
 
+// TODO: FIXME:
+// Verifying
+app.get('/verify', function(req, res) {
+  console.log("GET verify user called")
+
+    // match domain
+    db.activateAccount(req.query.id, (err) => {
+      if(err){
+        console.log(err);
+        res.json({code: 1, errMsg: err});
+        return;
+      }
+      res.json({code: 0});
+    });
+
+});
+
 app.post('/api/update_user', function(req, res){
-  db.updateUser(req.body, (err, user) => {
+  db.updateUser(req.body, (err) => {
     if(err){
       console.log(err);
       res.json({code: 1, errMsg: 'Operation Forbidden'});
       return;
     }
     res.json({code: 0});
+
   });
 });
 

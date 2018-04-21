@@ -473,4 +473,50 @@ exports.setMenteeConfirm = (uid, mid, callback)=>{
       callback(null);
     });
   });
+
+};
+
+exports.setActivationLink = (uid, code, callback)=>{
+  // TODO: code
+  var query = `
+    insert into user_act_rel
+    (id, isActivated, code)
+    values($1, false, $2)
+  `;
+  db.query(query, [uid, code], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+};
+
+exports.activateAccount = (code, callback)=>{
+  var query = `
+    delete from user_act_rel where code=$1;
+    `;
+  db.query(query, [code], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+};
+
+exports.checkActivation = (code, callback)=>{
+var query = `
+  select * from user_act_rel where code=$1;
+  `;
+db.query(query, [code], (err, result) => {
+  if(err){
+    // means the account has been activated.
+    callback(null);
+    return;
+  }
+  // else,
+  // TODO:
+  callback(err);
+});
 };
