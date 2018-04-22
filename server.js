@@ -63,61 +63,6 @@ app.post('/api/get_mentor_list', function(req, res){
   });
 });
 
-
-/*app.post('/api/send_mail', function(req,res) {
-=======
-app.post('/api/send_verify_mail', (req, res) => {
-
-  let verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
-
-  db.addUserVerificationCode(req.body.receivers, verificationCode, (error, data) => {
-    if (error) {
-      console.log(error);
-      res.json({code: 1});
-    }
-  });
-
-  let verifyLink = '/api/verify_user?code=' + verificationCode;
-
->>>>>>> d18ee3b37f81a761f9fb8ff00e53d146996ff4d1
-  // TODO: Replace process.env.TEST_SENDER, SMTP_LOGIN, SMTP_PASSW (top)
-  // setup e-mail data
-  let mailOptions = {
-    from: '"Test Job Name" <' + config.mail_config.auth.user + '>', // sender address
-    to: req.body.receivers, // list of receivers
-    subject: 'Welcome to Buddy Career', // Subject line
-    text: verifyLink, // plaintext body
-    html: verifyLink // html body
-  };
-
-  // send mail with defined transport object
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      res.json({code: 1});
-      return
-    }
-    console.log('Message sent: ' + info.response);
-  });
-
-  res.json({code: 0});
-});
-
-app.post('/api/verify_user', (req, res)=>{
-  let verificationCode = req.query.code;
-
-  console.log(verificationCode);
-
-  db.confirmVerification(verificationCode, (error, data)=>{
-    if (error) {
-      console.log(error);
-      res.json({code: 1});
-    }
-  });
-
-  res.json({code: 0});
-});
-*/
 app.post('/api/get_news_list', (req, res) => {
   db.getNewsList(req.body.batch_size, req.body.batch_num, (err, news_list) => {
     if(err){
@@ -204,50 +149,43 @@ app.post('/api/create_user', function(req, res){
       res.json({code: 1, errMsg: err});
       return;
     }
-    //res.json({code: 0, user: user}); // TODO: Return token
-    //TODO: create activateAccount
-    // FIXME: a better way to hash
 
-    var hash = Date.now();
-    var temp = "Welcome to this website!"
+    let verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
 
-    console.log("User created, id is " + user.id);
-    db.setActivationLink(user.id, hash, (err) => {
-      if (err) {
-        console.log(err);
-        res.json({code: 0, errMsg: err});
-        return;
+    db.addUserVerificationCode(user.email, verificationCode, (error, data) => {
+      if (error) {
+        console.log(error);
+        res.json({code: 1, errMsg: error});
       }
-
-      // create a link
-
-      // TODO:
-      var host=req.get('host');
-      var link="http://"+req.get('host')+"/activate?id="+hash ;
-
-      var mailOptions = {
-          from: '"Test Job Name" <'+config.mail_config.auth.user+'>', // sender address
-          to: user.email, // list of receivers
-          subject: 'Welcome! Activation Required!', // Subject line
-          text: temp, // plaintext body
-          html: '<b>'+temp+'</b><a href='+link+'>Click here to verify</a>' // html body
-      };
-
-      // send mail with defined transport object
-      transporter.sendMail(mailOptions, function(error, info){
-          if(error){
-              return console.log(error);
-          }
-          console.log('Message sent: ' + info.response);
-      });
     });
+
+    var host=req.get('host');
+    var link="http://"+req.get('host')+"/activate?code="+verificationCode ;
+
+    // setup e-mail data
+    let mailOptions = {
+      from: '"Test Job Name" <' + config.mail_config.auth.user + '>', // sender address
+      to: user.email, // list of receivers
+      subject: 'Welcome to Buddy Career', // Subject line
+      text: link, // plaintext body
+      html: '<a href='+link+'>Click here to verify</a>' // html body
+    };
+
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log('Message sent: ' + info.response);
+    });
+
     res.json({code: 0, user: user});
   });
 });
 
-
 app.post('/api/verify_user', function(req, res){
-  console.log("Verify user called")
+  console.log("Verify user called");
   db.verifyUser(req.body, (err, user) => {
     if(err){
       console.log(err);
@@ -258,20 +196,16 @@ app.post('/api/verify_user', function(req, res){
   });
 });
 
-// TODO: FIXME:
-// Verifying
-app.post('/api/activate', function(req, res) {
+app.get('/activate', function(req, res) {
   console.log("GET verify user called")
 
-    // match domain
-    db.activateAccount(req.body, (err) => {
-      if(err){
-        console.log(err);
-        res.json({code: 1, errMsg: err});
-        return;
-      }
-      res.json({code: 0});
-    });
+  db.confirmVerification(req.query.code, error => {
+    if (error) {
+      res.redirect('/');
+      return;
+    }
+    res.redirect('/account');
+  });
 
 });
 
@@ -286,6 +220,8 @@ app.post('/api/update_user', function(req, res){
 
   });
 });
+
+
 
 app.post('/api/file/general_upload', upload.single('file'), function(req, res) {
   if (!req.file)
@@ -562,9 +498,9 @@ app.post('/api/mentee_confirm', (req, res)=>{
 // Static resources
 app.use(express.static(__dirname + '/build'));
 
-// app.get('/*', function(req, res) {
-//   res.sendFile(__dirname + '/build/index.html');
-// });
+app.get('/*', function(req, res) {
+  res.sendFile(__dirname + '/build/index.html');
+});
 
 function server() {
   app.listen(PORT, function() {

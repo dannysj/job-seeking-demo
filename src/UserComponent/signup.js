@@ -34,7 +34,6 @@ class Signup extends Component {
       axios.post('/api/create_user',this.state.user).then(res => {
         if(res.data.code===0){
           this.props.onSuccess(res.data.user); // TODO: use the user profile returned by the server
-
           this.context.router.history.push('/account');
             NotificationManager.success('请检查邮件并激活此账号', '注册成功');
         }

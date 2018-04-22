@@ -29,7 +29,8 @@ exports.reset = function(){
       cover text,
       balance numeric(8,2) default 0.00,
       wechat text,
-      resume text
+      resume text,
+      isactivated
     );
     create table if not exists industry (
       id serial unique primary key,
@@ -230,7 +231,7 @@ exports.updateUser = (data, callback) => {
 
 exports.addUserVerificationCode = (email, verification_code, callback) => {
   let query = `
-  insert into user_verification (uid, verification_code) values ((select id from users where email = $1),$2) 
+  insert into user_verification (uid, verification_code) values ((select id from users where email = $1),$2)
     on CONFLICT (uid) do update set verification_code = $2, time_added=now() returning * ;`;
   db.query(query, [email, verification_code], (err, result)=>{
     if(err){
@@ -242,15 +243,13 @@ exports.addUserVerificationCode = (email, verification_code, callback) => {
 };
 
 exports.confirmVerification = (verification_code, callback) => {
-  let query = `
-    update users set isactivated=true where id=(select id from user_verification where verification_code=$1);
-  delete from user_verification where verification_code=$1;`;
+  let query = `update users set isactivated=true where id=(select uid from user_verification where verification_code=$1);`;
   db.query(query, [verification_code], (err, result) => {
     if(err){
       callback(err);
       return;
     }
-    callback(null, result.rows[0]);
+    callback(null);
   });
 };
 
@@ -480,7 +479,7 @@ exports.setActivationLink = (uid, code, callback)=>{
   // TODO: code
   var query = `
     insert into user_act_rel
-    (id, isActivated, code)
+    (id, isactivated, code)
     values($1, false, $2)
   `;
   db.query(query, [uid, code], (err, result) => {
@@ -494,6 +493,9 @@ exports.setActivationLink = (uid, code, callback)=>{
 
 exports.activateAccount = (code, callback)=>{
   var query = `
+    update users set isactivated=true where id=(
+      select
+    );
     delete from user_act_rel where code=$1;
     `;
   db.query(query, [code], (err, result) => {

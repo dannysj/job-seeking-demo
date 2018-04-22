@@ -13,6 +13,7 @@ import AccountApply from './AccountPartial/account_apply';
 import AccountService from './AccountPartial/account_service';
 import AccountAdmin from './AccountPartial/account_admin';
 import AccountLogout from "./AccountPartial/account_logout";
+import AccountForbidden from "./AccountPartial/account_forbidden";
 
 
 // TODO: Modify the structure of navlink
@@ -69,15 +70,19 @@ class Account extends Component {
           </div>
           <div className="twelve wide stretched column">
             <div className="account-partial-container">
-              <Switch onChange={this.onRouteChange}>
-                <Route path='/account/mentor' render={()=><AccountMentor user={this.props.user}/>} />
-                <Route path='/account/balance' render={()=><AccountBalance user={this.props.user}/>} />
-                <Route path='/account/apply' render={()=><AccountApply user={this.props.user}/>} />
-                <Route path='/account/service' render={()=><AccountService user={this.props.user}/>} />
-                <Route path='/account/admin' render={()=><AccountAdmin user={this.props.user}/>} />
-                <Route path='/account/logout' render={()=><AccountLogout/>} />
-                <Route path='/account/' render={()=><AccountProfile user={this.props.user} onUpdate={this.props.onSuccess}/>} />
-              </Switch>
+              {this.props.user.isactivated ? (
+                <Switch onChange={this.onRouteChange}>
+                  <Route path='/account/mentor' render={()=><AccountMentor user={this.props.user}/>} />
+                  <Route path='/account/balance' render={()=><AccountBalance user={this.props.user}/>} />
+                  <Route path='/account/apply' render={()=><AccountApply user={this.props.user}/>} />
+                  <Route path='/account/service' render={()=><AccountService user={this.props.user}/>} />
+                  <Route path='/account/admin' render={()=><AccountAdmin user={this.props.user}/>} />
+                  <Route path='/account/logout' render={()=><AccountLogout/>} />
+                  <Route path='/account/' render={()=><AccountProfile user={this.props.user} onUpdate={this.props.onSuccess}/>} />
+                </Switch>
+              )
+                : (<AccountForbidden />)}
+
             </div>
           </div>
         </div>

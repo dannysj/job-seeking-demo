@@ -1,13 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Icon, Button, Image } from 'semantic-ui-react';
+import {Button, Icon, Image} from 'semantic-ui-react';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
 import '../account.css';
 import ImgCrop from './ImgCrop/imgcrop.js';
-import { Document, Page } from 'react-pdf';
+
+// import { Document, Page } from 'react-pdf';
 
 class AccountProfile extends React.Component {
   constructor(props) {
@@ -209,7 +209,6 @@ class AccountProfile extends React.Component {
                     <input type="file" accept="image/*" className="input-file" id="header-input" onChange={this.handleHeader} />
                     </div>
                   )}
-
               </div>
               <div className="item">
                 <div className="content">
@@ -260,11 +259,12 @@ class AccountProfile extends React.Component {
                     {this.state.fileName ? '成功' : '上传简历'}
                   </label>
                   <input type="file" accept="application/pdf" className="input-file" id="resume-input" onChange={this.handleResume}/>
-                    {this.state.fileName ? (   <div><Document
-                          file={this.state.fileName}
-                          onLoadSuccess={this.onDocumentLoad}>
-                          <Page pageNumber={this.state.pageNumber} />
-                        </Document></div>) : (<div></div>)}
+                  {this.state.fileName ? (<embed className="resume-holder" src={this.state.fileName} width="100%"
+                                                 type='application/pdf'/>) : (<div></div>)}
+                  {/*{this.state.fileName ? (*/}
+                    {/*<Document file={this.state.fileName} onLoadSuccess={this.onDocumentLoad}> <Page*/}
+                      {/*pageNumber={this.state.pageNumber}/>*/}
+                    {/*</Document>) : (<div></div>)}*/}
                 </div>
               </div>
 
