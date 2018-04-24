@@ -294,11 +294,13 @@ exports.getCollegeList = (callback) => {
 
 exports.getMentorDetail = (mid, callback) => {
   var query = `
-    select u.first as first,
+    select u.id as uid,
+      u.first as first,
       u.last as last,
       u.dob as dob,
       u.profile_pic as profile_pic,
       c.name as college_name,
+      m.id as mid,
       m.offer_title as offer_title,
       m.offer_company as offer_company,
       m.bio as bio,

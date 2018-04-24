@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { Modal, Button, Image, Header, Dropdown } from 'semantic-ui-react';
+import Disqus from 'disqus-react';
+import {Button, Image} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import './mentor.css';
 
@@ -80,15 +80,23 @@ class MentorDetail extends Component {
       modalClassName += ' payment-qr-container';
     }
 
-    return (
+      const disqusConfig = {
+          url: window.location.href,
+          identifier: this.state.mentor.mid,
+          title: this.state.mentor.last + this.state.mentor.first
+      };
+
+      console.log(disqusConfig);
+
+      return (
       <div className="mentor-detail-container">
         <div className={modalClassName}>
-          <i className="close icon"></i>
+            <i className="close icon"/>
           <div className="header">
             支付
           </div>
           <div className="add-service-form-container">
-            <Image size="large" src={this.state.qr_code}></Image>
+              <Image size="large" src={this.state.qr_code}/>
           </div>
           <div className="actions">
           </div>
@@ -96,11 +104,11 @@ class MentorDetail extends Component {
 
         <div className="ui grid">
           <div className="six wide column">
-            <img className="mentor-img" src={this.state.mentor.profile_pic}></img>
+              <img className="mentor-img" src={this.state.mentor.profile_pic}/>
           </div>
           <div className="ten wide column">
             <h2 className="ui header">
-              <i className="address card icon"></i>
+                <i className="address card icon"/>
               <div className="content">
                 导师介绍
                 <div className="sub header">{this.state.mentor.last+this.state.mentor.first}的详细资料</div>
@@ -117,7 +125,7 @@ class MentorDetail extends Component {
 
         <div className="detail-section">
           <h2 className="ui header">
-            <i className="id badge outline icon"></i>
+              <i className="id badge outline icon"/>
             <div className="content">
               自我介绍
               <div className="sub header">关于导师的自我介绍</div>
@@ -130,7 +138,7 @@ class MentorDetail extends Component {
 
         <div className="detail-section">
           <h2 className="ui header">
-            <i className="calendar outline icon"></i>
+              <i className="calendar outline icon"/>
             <div className="content">
               服务介绍
               <div className="sub header">具体服务范围</div>
@@ -172,10 +180,13 @@ class MentorDetail extends Component {
           <h2 className="ui header">
             <i className="comment alternate outline icon"/>
             <div className="content">
-              过往评价
+                过往评价
+                <Disqus.DiscussionEmbed shortname={this.state.mentor.last + this.state.mentor.first}
+                                        config={disqusConfig}/>
             </div>
           </h2>
         </div>
+
       </div>
 
 
