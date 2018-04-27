@@ -50,24 +50,38 @@ class App extends Component {
       <div>
         <div className="ui top attached tabular menu">
           <div className="item">
-            <img src="/img/icon.png" height="50px"></img>
-            <b>{' '}Buddy Career</b>
+            <img src="/img/icon.png" height="40px"></img>
+            <b>{' '}Buddy{'\n'}Career</b>
           </div>
-          <NavLink to="/">
-            主页
+          <NavLink to="/" ishorizontal={true} >
+            <div className="Nav-item ">
+              <div className="App-subtitle">Home</div>
+              <div className="chinese-top">主页</div>
+            </div>
           </NavLink>
-          <NavLink to="/mentor">
-            导师
+          <NavLink to="/mentor" ishorizontal={true}>
+            <div className="Nav-item ">
+              <div className="App-subtitle">Tutors</div>
+              <div className="chinese-top">导师</div>
+            </div>
           </NavLink>
-          <NavLink to="/news">
-            就业干货
+          <NavLink to="/news" ishorizontal={true}>
+            <div className="Nav-item ">
+              <div className="App-subtitle">Careers</div>
+              <div className="chinese-top">就业干货</div>
+            </div>
+
           </NavLink>
-          <NavLink to="/about">
-            关于
+          <NavLink to="/about" ishorizontal={true}>
+            <div className="Nav-item ">
+              <div className="App-subtitle">About</div>
+              <div className="chinese-top">关于</div>
+            </div>
+
           </NavLink>
           <UserStatus user={this.state.user}></UserStatus>
         </div>
-        <Switch onChange={this.onRouteChange}>
+        <Switch onChwange={this.onRouteChange}>
           <Route path='/login' render={()=><Login onSuccess={this.updateUser}></Login>} />
           <Route path='/signup' render={()=><Signup onSuccess={this.updateUser}></Signup>}  />
           <Route path='/account' render={()=><Account user={this.state.user} onSuccess={this.updateUser}></Account>} />

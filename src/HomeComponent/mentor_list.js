@@ -31,7 +31,7 @@ class MentorList extends Component {
           <Link to={'/mentor/'+el.mid}>
             <div className="mentor-overview_container" key={el.id}>
               <img className="mentor-overview-picture" src={el.profile_pic}></img>
-              <div>
+              <div className="mentor-overview-placeholder">
                 <h4>{el.last+' '}{el.first}</h4>
                 <p className="mentor-overview-text">{el.offer_company+' '+el.offer_title}</p>
                 <p className="mentor-overview-text">{el.college_name}</p>
