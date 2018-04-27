@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import Disqus from 'disqus-react';
 import {Button, Image} from 'semantic-ui-react';
+import Disqus from './disqus.js';
 import PropTypes from 'prop-types';
 import './mentor.css';
 
@@ -38,7 +38,7 @@ class MentorDetail extends Component {
       service_price: service_price
     }).then(res => {
       console.log(res.data);
-      if(res.data.code==0){
+        if (res.data.code === 0) {
         // handler.setState({showAddServiceModal: true, qr_code: 'https://pan.baidu.com/share/qrcode?w=280&h=280&url='+res.data.qr_code});
         // handler.pollPayment(res.data.order_id);
         window.location.href = res.data.url;
@@ -80,13 +80,6 @@ class MentorDetail extends Component {
       modalClassName += ' payment-qr-container';
     }
 
-      const disqusConfig = {
-          url: window.location.href,
-          identifier: this.state.mentor.mid,
-          title: this.state.mentor.last + this.state.mentor.first
-      };
-
-      console.log(disqusConfig);
 
       return (
       <div className="mentor-detail-container">
@@ -181,12 +174,13 @@ class MentorDetail extends Component {
             <i className="comment alternate outline icon"/>
             <div className="content">
                 过往评价
-                <Disqus.DiscussionEmbed shortname={this.state.mentor.last + this.state.mentor.first}
-                                        config={disqusConfig}/>
+                <Disqus id={this.state.mentor.id}
+                        title={this.state.mentor.id}
+                        path={"/mentor" + this.state.mentor.id}
+                />
             </div>
           </h2>
         </div>
-
       </div>
 
 
