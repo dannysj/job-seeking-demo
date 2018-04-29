@@ -28,7 +28,7 @@ class UserStatus extends Component {
           <div className="ui item">
             <Link to="/account">
               <div className="user-inline">
-                <div>我的账号</div>
+                <div className="chinese-top">我的账号</div>
                 <img className="ui mini circular image" src={this.props.user.profile_pic}/>
               </div>
             </Link>

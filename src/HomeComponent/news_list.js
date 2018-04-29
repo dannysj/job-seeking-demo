@@ -40,7 +40,7 @@ class NewsList extends Component {
                   <h4>{el.title}</h4>
                 </div>
                   <div className="news-overview-stamp">
-                  {el.author_id + " " + el.publish_time}
+                  {el.last + el.first + " " + el.date}
                   </div>
                 </div>
 

@@ -22,12 +22,12 @@ class Home extends Component {
         <div className="header-cover" style={backimgstyle}>
           <Container>
             <div className="container-sideline">
-            <Header textAlign={'left'} as='h2'>
+            <div className="header-text">
               <div className="container-block">
-                <div>求 职 路 上{'\t'}<strong>你</strong> 并 不 孤 单</div>
-                <h3 className="subtitle">Share Connect Succeed</h3>
+                <div className="chinese-top">求 职 路 上&nbsp;&nbsp;&nbsp;&nbsp;<strong>你</strong> 并 不 孤 单</div>
+                <div className="subtitle">Share Connect Succeed</div>
               </div>
-            </Header>
+            </div>
             </div>
           </Container>
         </div>
@@ -35,12 +35,12 @@ class Home extends Component {
         <br />
         <Container>
           <div className="container-sideline">
-          <Header textAlign={'left'} as='h2'>
+          <div className="header-text">
           <div className="container-block">
-            <div>导师推荐</div>
-            <h3 className="subtitle">Hot Tutors</h3>
+            <div className="chinese-top">导 师 推 荐 </div>
+            <div className="subtitle">Hot Tutors</div>
           </div>
-          </Header>
+          </div>
           <Divider hidden clearing />
           <div>
             <MentorList>
@@ -49,7 +49,7 @@ class Home extends Component {
           <Link to='/mentor'>
             <div style={{textAlign:'right'}}>
               <div className="">More</div>
-              <div className="">更多</div>
+              <div className="chinese-top">更多</div>
             </div>
 
           </Link>
@@ -59,12 +59,12 @@ class Home extends Component {
         <br />
         <Container>
           <div className="container-sideline">
-              <Header textAlign={'left'} as='h2'>
+              <div className="header-text">
               <div className="container-block">
-                <div>干货推荐</div>
-                <h3 className="subtitle">Hot Careers</h3>
+                <div className="chinese-top">干 货 推 荐</div>
+                <div className="subtitle">Hot Careers</div>
               </div>
-              </Header>
+              </div>
             <Divider hidden clearing />
             <div>
               <NewsList>
@@ -73,7 +73,7 @@ class Home extends Component {
             <Link to='/news'>
             <div style={{textAlign:'right'}}>
               <div className="">More</div>
-              <div className="">更多</div>
+              <div className="chinese-top">更多</div>
             </div>
             </Link>
           </div>
@@ -84,7 +84,7 @@ class Home extends Component {
         <footer className="main-footer">
           <Container>
             <div className="footer-container">
-            <p>伙伴求职 Buddy Career</p>
+            <p className="chinese-top">伙伴求职 Buddy Career</p>
             <p>www.buddycareer.com</p>
             <p>© 2018 Buddy Career | All Fucking Rights Reserved</p>
             <p><Link to="about">About</Link> | <Link to="contact">Contact</Link></p>

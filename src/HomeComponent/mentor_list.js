@@ -10,7 +10,8 @@ class MentorList extends Component {
   constructor (props) {
     super(props);
 
-    this.state={mentors:[]};
+    this.state={mentors:[]
+    };
     axios.post('/api/get_mentor_list',this.props.filter).then(res => {
       if(res.data.code==0){
         console.log(res.data.list);

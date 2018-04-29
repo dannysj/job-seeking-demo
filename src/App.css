@@ -29,8 +29,12 @@
 
 /* */
 
-.App {
+.App, .App * {
   text-align: center;
+  font-family: NeutraText-Light;
+}
+
+body {
   font-family: NeutraText-Light;
 }
 
