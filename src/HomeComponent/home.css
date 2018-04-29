@@ -1,32 +1,3 @@
-/* Font */
-@font-face {
-	font-family: Arita;
-	src:
-		url('/fonts/ChiFonts/Arita-CZS.woff2') format('woff2'),
-		url('/fonts/ChiFonts/Arita-CZS.woff') format('woff');
-}
-
-@font-face {
-	font-family: HYYakuHei-DEW;
-	src:
-		url('/fonts/ChiFonts/HYYakuHei-DEW.woff2') format('woff2'),
-		url('/fonts/ChiFonts/HYYakuHei-DEW.woff') format('woff');
-}
-
-@font-face {
-	font-family: HYYakuHei-GEW;
-	src:
-		url('/fonts/ChiFonts/HYYakuHei-GEW.woff2') format('woff2'),
-		url('/fonts/ChiFonts/HYYakuHei-GEW.woff') format('woff');
-}
-
-@font-face {
-	font-family: NeutraText-Light;
-	src:
-		url('/fonts/Neutra_Text_Light/NeutraText-Light.woff2') format('woff2'),
-		url('/fonts/Neutra_Text_Light/NeutraText-Light.woff') format('woff');
-}
-
 /* Real CSS */
 
 .main-footer {
