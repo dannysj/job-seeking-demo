@@ -11,7 +11,7 @@ import './home.css';
 class Home extends Component {
 
   render() {
-    var test_url = '/files/test.jpg';
+    var test_url = '/img/banner.jpg';
     const backimgstyle = {
       backgroundImage: 'url('+test_url+')',
       backgroundPosition: 'center center no-repeat',
