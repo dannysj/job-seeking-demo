@@ -35,9 +35,15 @@ class NewsList extends Component {
           <Link to={'/news/'+el.id}>
             <div className="news-overview_container" key={el.id}>
               <img className="news-overview-picture" src={el.thumbnail}></img>
-              <div className="news-overview-text">
-                <h4>{el.title}</h4>
-              </div>
+              <div className="news-overview-second">
+                <div className="news-overview-text">
+                  <h4>{el.title}</h4>
+                </div>
+                  <div className="news-overview-stamp">
+                  {el.last + el.first + " " + el.date}
+                  </div>
+                </div>
+
             </div>
           </Link>
         ))}

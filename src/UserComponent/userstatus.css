@@ -1,0 +1,8 @@
+.user-inline {
+  display: flex;
+  align-items: center;
+}
+
+.user-inline > img {
+  margin-left: 1em;
+}

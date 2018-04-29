@@ -21,6 +21,7 @@ class Login extends Component {
       if(res.data.code==0){
         this.props.onSuccess(res.data.user);
         this.context.router.history.goBack();
+
       }
       else{
         this.setState({isLoginFailed: true})

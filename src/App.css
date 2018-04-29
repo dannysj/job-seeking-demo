@@ -1,5 +1,41 @@
-.App {
+/* Font */
+@font-face {
+	font-family: Arita;
+	src:
+		url('/fonts/ChiFonts/Arita-CZS.woff2') format('woff2'),
+		url('/fonts/ChiFonts/Arita-CZS.woff') format('woff');
+}
+
+@font-face {
+	font-family: HYYakuHei-DEW;
+	src:
+		url('/fonts/ChiFonts/HYYakuHei-DEW.woff2') format('woff2'),
+		url('/fonts/ChiFonts/HYYakuHei-DEW.woff') format('woff');
+}
+
+@font-face {
+	font-family: HYYakuHei-GEW;
+	src:
+		url('/fonts/ChiFonts/HYYakuHei-GEW.woff2') format('woff2'),
+		url('/fonts/ChiFonts/HYYakuHei-GEW.woff') format('woff');
+}
+
+@font-face {
+	font-family: NeutraText-Light;
+	src:
+		url('/fonts/Neutra_Text_Light/NeutraText-Light.woff2') format('woff2'),
+		url('/fonts/Neutra_Text_Light/NeutraText-Light.woff') format('woff');
+}
+
+/* */
+
+.App, .App * {
   text-align: center;
+  font-family: NeutraText-Light;
+}
+
+body {
+  font-family: NeutraText-Light;
 }
 
 .App-logo {
@@ -11,18 +47,33 @@
   background-color: #222;
   height: 150px;
   padding: 20px;
-  color: white;
+  color: #f1f2f2;
 }
 
 .App-title {
   font-size: 1.5em;
 }
 
+.App-subtitle {
+  font-size: 0.8em;
+  margin-bottom: 1em;
+}
+
+.Nav-item {
+  text-align: center;
+  display: block;
+}
+
 .App-intro {
   font-size: large;
 }
 
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.chinese-top {
+  font-family: Arita;
 }

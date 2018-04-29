@@ -1,0 +1,8 @@
+.active-custom {
+  border-bottom: 2px solid #001bba !important;
+}
+
+.vertical-col {
+  border-left: 2px solid #001bba !important;
+  border-bottom: none;
+}

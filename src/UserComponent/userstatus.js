@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
+import './userstatus.css';
 class UserStatus extends Component {
 
   constructor (props) {
@@ -27,7 +27,10 @@ class UserStatus extends Component {
         <div className="right menu">
           <div className="ui item">
             <Link to="/account">
-                我的账号
+              <div className="user-inline">
+                <div className="chinese-top">我的账号</div>
+                <img className="ui mini circular image" src={this.props.user.profile_pic}/>
+              </div>
             </Link>
           </div>
         </div>

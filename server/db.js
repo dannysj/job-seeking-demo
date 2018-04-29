@@ -208,7 +208,7 @@ exports.getNewsDetail = (nid, callback) => {
 };
 
 exports.getNewsList = (batch_size, batch_num, callback) => {
-  var query = `select * from news order by publish_time desc limit $2 offset $1;`;
+  var query = `select n.*, to_char(n.publish_time,'DD Mon YYYY') as date, u.first as first, u.last as last from news n, users u where n.author_id = u.id  order by n.publish_time desc limit $2 offset $1;`;
   db.query(query, [batch_num*batch_size,batch_size], (err, result)=>{
     if(err){
       callback(err);

@@ -15,7 +15,7 @@ export default class ImgCrop extends Component {
       crop: {
         x: 0,
         y: 0,
-        aspect: 16 / 9
+        aspect: 1
       },
       maxHeight: 80,
       dataUrl: this.props.dataUrl,
