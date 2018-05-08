@@ -56,6 +56,8 @@
 .mentor-container {
   width: 70%;
   height: 14em;
+  left: 50%;
+  transform: translate(-50%, 0%);
   border-left: 5px solid #001BB1;
   margin-top: 30px;
   position: relative;
@@ -138,23 +140,71 @@
 }
 
 .top-bar {
-  height: 65px;
+  height: 70px;
 }
 
 .listitem {
-  display: flex !important;
-  flex-direction: column;
+  display: block;
   align-items: center;
 }
 
 .filter-item {
+  display: flex;
   border-radius: 5px;
+
   border: 1px solid rgba(195, 195, 195, 0.3);
-  width: 10em;
+  min-width: 10em;
+  text-align: left;
   margin: 0.5em;
+  position: relative;
+  flex-flow: row;
+  font-family: NeutraText-Light !important;
+  justify-content: center;
+}
+
+.filter-item-content {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-flow: column;
+}
+
+.filter-item-content > .item-top {
+  color: rgba(195, 195, 195, 0.8);
+  font-size: 11px;
+
+  margin-left: 5%;
+  margin-right: 2em;
+}
+
+.filter-item-content > .item-bottom {
+  color: #001BB1;
+  font-size: 18px;
+  height: 1.5em;
+  margin-left: 5%;
+  margin-right: 2em;
+
+}
+
+
+
+.filter-item > .item-central {
+  color: rgba(195, 195, 195, 0.8);
+  font-size: 18px;
+  align-self: center;
+}
+
+.filter-item > .delete-button {
+  position: absolute;
+  right: 0;
+  margin-right: 0.3em;
+  top: 50%;
+  transform: translate(0%, -50%);
+    color: rgba(195, 195, 195, 0.8);
 }
 
 .filter-list {
+  flex: 1 1 auto;
   overflow-y: scroll;
 }
 
@@ -163,4 +213,44 @@
   left: 0;
   background-color: white;
   width: 400px;
+  height: 100%;
+}
+
+.content-container {
+  overflow-y: scroll;
+  position: relative;
+  flex: 1;
+}
+
+.flex-container {
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.button-group {
+  flex: 0 1 60px;
+  position: absolute !important;
+  bottom: 0;
+  width: 100%;
+}
+
+.blackout {
+  background-color: rgba(65, 65, 65, 0.3);
+}
+
+.sidebar-container {
+  display: flex;
+}
+
+.section-container {
+  display: block;
+  flex-flow: column;
+}
+
+.section-container > * {
+  padding: 1em;
+  text-align: left;
+  font-size: 20px;
 }

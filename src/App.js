@@ -47,7 +47,7 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <div className="app-flex">
         <div className="ui top attached tabular menu">
           <div className="item">
             <img src="/img/icon.png" height="40px"></img>
