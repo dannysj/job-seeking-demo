@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Sidebar, Checkbox, Segment, Menu, Icon, Button, Dropdown} from 'semantic-ui-react';
+import {Sidebar, Table, Checkbox, Segment, Menu, Icon, Button, Dropdown, Divider} from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import './mentor.css';
 import axios from "axios/index";
@@ -9,52 +9,9 @@ class Mentor extends Component {
     super(props);
 
     this.state = {
-      mentors: [
-        {
-          "id": 1,
-          "last": "A",
-          "first": "B",
-          "offer_company": "Microsoft",
-          "offer_title": "slacker",
-          "college_name": "UW-Madison",
-          "major": "CS",
-          "profile_pic": "/files/1522644897461-B_Business_Management_banner_template_01.jpg"
-        },
-        {
-          "id": 2,
-          "last": "12A",
-          "first": "fasB",
-          "offer_company": "Microsoft",
-          "offer_title": "slacker",
-          "college_name": "UW-Madison",
-          "major": "Computer Science",
-          "profile_pic": "/files/1522644897461-B_Business_Management_banner_template_01.jpg"
-        }
-        ,
-        {
-          "id": 13,
-          "last": "As",
-          "first": "saB",
-          "offer_company": "Microsoft",
-          "offer_title": "sla123cker",
-          "college_name": "Chicago",
-          "major": "CS",
-          "profile_pic": "/files/1522644897461-B_Business_Management_banner_template_01.jpg"
-        }
-        ,
-        {
-          "id": 5,
-          "last": "A11",
-          "first": "B",
-          "offer_company": "123Microsoft",
-          "offer_title": "slacker",
-          "college_name": "UW-Madison",
-          "major": "WTF",
-          "profile_pic": "/files/1522644897461-B_Business_Management_banner_template_01.jpg"
-        }
-      ],
-      majors: ["CS", "Computer Science", "WTF", "Hi"],
-      colleges: ["UW-Madison", "Chicago"],
+      mentors: [],
+      majors: [],
+      colleges: [],
       selected: {
         "Majors": [],
         "Colleges": []
@@ -66,7 +23,8 @@ class Mentor extends Component {
     this.handleCollegeChange = this.handleCollegeChange.bind(this);
     this.handleClearFilter = this.handleClearFilter.bind(this);
     this.filterBarPressed = this.filterBarPressed.bind(this);
-/*
+    this.handleRemoveButton = this.handleRemoveButton.bind(this);
+
     axios.post('/api/get_mentor_list').then(res => {
       if (res.data.code === 0) {
         let majorList = [];
@@ -83,8 +41,8 @@ class Mentor extends Component {
 
         let majors = [];
         let colleges = [];
-        majorList.forEach((e) => {majors.push({value: e, text: e});});
-        collegeList.forEach((e) => {colleges.push({value: e, text: e});});
+        majorList.forEach((e) => {majors.push(e);});
+        collegeList.forEach((e) => {colleges.push(e);});
 
         this.setState({
           mentors: res.data.list,
@@ -99,18 +57,20 @@ class Mentor extends Component {
         //TODO: Error Handling
       }
     });
-    */
+    
 
   }
 
   handleMajorChange(e, data){
     let curState = this.state;
     var majors = curState.selected.Majors;
+    var index = majors.indexOf(data.value);
     if (data.checked) {
-      majors.push(data.value);
-      console.log(data.value);
+      if (index < 0) {
+        majors.push(data.value);
+      }
     } else {
-      var index = majors.indexOf(data.value);
+
       if (index > -1) {
         majors.splice(index, 1);
       }
@@ -121,17 +81,31 @@ class Mentor extends Component {
   handleCollegeChange(e,data){
     let curState = this.state;
     var colleges = curState.selected.Colleges;
+    var index = colleges.indexOf(data.value);
     if (data.checked) {
-      colleges.push(data.value);
-      console.log(data.value);
+      if (index < 0) {
+        colleges.push(data.value);
+      }
     } else {
-      var index = colleges.indexOf(data.value);
+
       if (index > -1) {
         colleges.splice(index, 1);
       }
     }
 
     this.setState(curState);
+  }
+
+  handleRemoveButton(e,title, val) {
+    let curState = this.state;
+    var array = curState.selected[title]
+    var index = array.indexOf(val);
+    if (index > -1) {
+          array.splice(index, 1)
+    }
+
+    this.setState(curState);
+    e.stopPropagation();
   }
 
   handleClearFilter(e,data){
@@ -144,8 +118,6 @@ class Mentor extends Component {
   filterBarPressed(e) {
     let curState = this.state;
     curState.filterBarShown = !curState.filterBarShown;
-    console.log("Pressed");
-    console.log(curState.filterBarShown );
     this.setState(curState);
   }
 
@@ -158,13 +130,11 @@ class Mentor extends Component {
           {
             (this.state.selected.Majors.length > 0) ? (this.state.selected.Majors.map((el, index) => (
               <div className="filter-item" key={index} onClick={this.filterBarPressed}>
-                <div className="filter-item-content">
                   <div className="item-top">Major</div>
                   <div className="item-bottom">{el}</div>
-                </div>
-                <Icon className="delete-button" size="large" name='close' />
+                <Icon className="delete-button" size="large" name='close' onClick={(e)=> this.handleRemoveButton(e,"Majors", el)}/>
               </div>))
-            ) : (<div className="filter-item" onClick={this.filterBarPressed}>
+            ) : (<div className="filter-item filter-item-all" onClick={this.filterBarPressed}>
             <div className="item-central">All Majors</div>
             </div>)
 
@@ -174,37 +144,40 @@ class Mentor extends Component {
               <div className="filter-item" key={index} onClick={this.filterBarPressed}>
               <div className="item-top">College</div>
               <div className="item-bottom">{el}</div>
-              <Icon className="delete-button" size="large" name='close' />
+              <Icon className="delete-button" size="large" name='close' onClick={(e)=> this.handleRemoveButton(e,"Colleges", el)}/>
               </div>))
-            ) : (<div className="filter-item" onClick={this.filterBarPressed}>
+            ) : (<div className="filter-item filter-item-all" onClick={this.filterBarPressed}>
             <div className="item-central">All College</div>
             </div>)
           }
-            <div className="filter-item" onClick={this.filterBarPressed}>  <div className="item-central">More Filters</div></div>
+            <div className="filter-item filter-item-all" onClick={this.filterBarPressed}>  <div className="item-central">More Filters</div></div>
           </div>
         </div>
         <div className="content-container">
         <Sidebar.Pushable as={Segment}>
           <Sidebar as={Menu} animation='scale down' width='wide' visible={this.state.filterBarShown} icon='labeled' vertical className="sidebar-container">
-            <Menu.Item name='home'>
-              <Icon color="blue" size="big" name='code' /> Majors
+            <Menu.Item name='home' className="menu-container">
+              <div className="header-container">
+              <div className="section-header">Majors</div>
               <div className="section-container">
               {
                 this.state.majors.map((el, index) => (
-                  <Checkbox key={index} value={el} onChange={this.handleMajorChange} label={<label>{el}</label>} />
+                  <Checkbox key={index} checked={(this.state.selected.Majors.indexOf(el) > -1)} value={el} onChange={this.handleMajorChange} label={<label>{el}</label>} />
                 ))
               }
               </div>
-            </Menu.Item>
-            <Menu.Item name='gamepad'>
-              <Icon name='gamepad' />
-              Games
+              </div>
+              <Divider/>
+              <div className="header-container">
+              <div className="section-header">Colleges</div>
               <div className="section-container">
               {
-                this.state.colleges.map((el) => (
-                  <Checkbox value={el} onChange={this.handleCollegeChange} label={<label>{el}</label>} />
+                this.state.colleges.map((el, index) => (
+                  <Checkbox key={index} checked={(this.state.selected.Colleges.indexOf(el) > -1)}  value={el} onChange={this.handleCollegeChange} label={<label>{el}</label>} />
                 ))
               }
+
+              </div>
               </div>
             </Menu.Item>
             <Menu.Item name='buttons'  className="button-group">
@@ -213,7 +186,7 @@ class Mentor extends Component {
                 <Button.Or />
                 <Button onClick={this.handleClearFilter}>Reset</Button>
                 <Button.Or />
-                <Button color='green'>Submit</Button>
+                <Button onClick={this.filterBarPressed} color='green'>Submit</Button>
               </Button.Group>
             </Menu.Item>
           </Sidebar>
@@ -232,26 +205,43 @@ class Mentor extends Component {
                     </div>
                     <div className="vertical-divider"></div>
                     <div className="mentor-text">
-                      <table>
-                        <tbody>
-                          <tr>
-                            <th>Offer公司</th>
-                            <th>{el.offer_company}</th>
-                          </tr>
-                          <tr>
-                            <th>Offer职位</th>
-                            <th>{el.offer_title}</th>
-                          </tr>
-                          <tr>
-                            <th>院校</th>
-                            <th>{el.college_name}</th>
-                          </tr>
-                          <tr>
-                            <th>专业</th>
-                            <th>{el.major}</th>
-                          </tr>
-                        </tbody>
-                      </table>
+                    <Table className="table-clean-border" basic='very'>
+                      <Table.Body>
+                        <Table.Row>
+                          <Table.Cell>
+                            Offer公司
+                          </Table.Cell>
+                          <Table.Cell>
+                              {el.offer_company}
+                          </Table.Cell>
+                        </Table.Row>
+                        <Table.Row>
+                          <Table.Cell>
+                            Offer职位
+                          </Table.Cell>
+                          <Table.Cell>
+                              {el.offer_title}
+                          </Table.Cell>
+                        </Table.Row>
+                        <Table.Row>
+                          <Table.Cell>
+                            院校
+                          </Table.Cell>
+                          <Table.Cell>
+                              {el.college_name}
+                          </Table.Cell>
+                        </Table.Row>
+                        <Table.Row>
+                          <Table.Cell>
+                            专业
+                          </Table.Cell>
+                          <Table.Cell>
+                              {el.major}
+                          </Table.Cell>
+                        </Table.Row>
+                      </Table.Body>
+                    </Table>
+
                     </div>
 
                   </div>
