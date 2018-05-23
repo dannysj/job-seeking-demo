@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Button, Container } from 'semantic-ui-react';
+import { Button, Container, Divider } from 'semantic-ui-react';
 import axios from 'axios';
 import './news.css';
 
@@ -30,20 +30,61 @@ class News extends React.Component {
 
   render() {
     return(
-      <div>
-        <Container text>
+      <div className="new-container">
+        <Container>
+        <div className="container-sideline">
+        <div className="header-text">
+        <div className="container-block">
+          <div className="chinese-top">热 门 大 哥</div>
+          <div className="subtitle">Top picks</div>
+        </div>
+        </div>
+        <Divider hidden clearing />
+        <div className="news-detail-content">
+        {
+          this.state.news_list.map(el => (
+            <Link to={'/news/'+el.id}>
+            <div className="list-news-container new-big">
+              <img className="list-news-picture" src={el.thumbnail}/>
+              <div className="list-news-text">
+                <div className="list-news-title">{el.title}</div>
+                <div className="list-news-subtitle">{el.first + el.last + " · " + el.publish_time}</div>
+                <br />
+                <div className="cut-text" dangerouslySetInnerHTML={{__html:el.content}}/>
+              </div>
+            </div>
+            </Link>
+          ))
+        }
+        </div>
+        </div>
+
+          <div className="container-sideline">
+          <div className="header-text">
+          <div className="container-block">
+            <div className="chinese-top">最 新 动 态</div>
+            <div className="subtitle">Newest wow</div>
+          </div>
+          </div>
+          <Divider hidden clearing />
+          <div className="news-detail-content">
           {
             this.state.news_list.map(el => (
+              <Link to={'/news/'+el.id}>
               <div className="list-news-container">
                 <img className="list-news-picture" src={el.thumbnail}/>
                 <div className="list-news-text">
-                  <h4>{el.title}</h4>
-                  <p dangerouslySetInnerHTML={{__html:el.content}}/>
+                  <div className="list-news-title">{el.title}</div>
+                  <div className="list-news-subtitle">{el.first + el.last + " · " + el.publish_time}</div>
+                  <br />
+                  <div className="cut-text" dangerouslySetInnerHTML={{__html:el.content}}/>
                 </div>
-                <Link to={'/news/'+el.id}><Button floated='right'>点击查看细节>></Button></Link>
               </div>
+              </Link>
             ))
           }
+          </div>
+          </div>
         </Container>
       </div>
     );

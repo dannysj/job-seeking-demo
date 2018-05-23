@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Image, Segment } from 'semantic-ui-react';
+import { Image, Segment, Container } from 'semantic-ui-react';
 import './news.css';
 
 class NewsDetail extends Component {
@@ -31,14 +31,28 @@ class NewsDetail extends Component {
   // {this.props.match.params.mid}
 
   render() {
+    const backimgstyle = {
+      backgroundImage: 'url('+this.state.news.thumbnail+')',
+      backgroundPosition: 'center center no-repeat',
+      backgroundSize: 'cover',
+      };
     return (
-      <div className="news-detail-container">
-        <Image src={this.state.news.thumbnail} size='medium' rounded centered/>
-        <h3>{this.state.news.title}</h3>
-        <p>作者: {this.state.news.author_last+' '+this.state.news.author_first}</p>
-        <p>发布时间: {this.state.news.publish_time}</p>
-        <br /><br />
-        <div className="news-detail-content" dangerouslySetInnerHTML={{__html:this.state.news.content}}></div>
+      <div>
+        <div className="header-cover" style={backimgstyle}>
+        </div>
+        <div className="news-content">
+          <div className="news-sidebar">
+          </div>
+          <div className="news-detail-container">
+            <div className="author-format">{this.state.news.author_last+' '+this.state.news.author_first + " · " + this.state.news.publish_time}</div>
+            <h1>{this.state.news.title}</h1>
+            <div className="vertical-line-half"></div>
+            <br /><br />
+            <div className="news-detail-content" dangerouslySetInnerHTML={{__html:this.state.news.content}}></div>
+          </div>
+          <div className="news-sidebar">
+          </div>
+        </div>
       </div>
     );
   }
