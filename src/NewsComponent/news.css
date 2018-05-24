@@ -5,6 +5,7 @@
 
 .news-detail-content {
   width: 100%;
+  margin-top: 1.5em;
 }
 
 .list-news-container {
@@ -25,6 +26,7 @@
   width: 5em;
   margin: 1em 0em 1em 1em;
   order: 2;
+  object-fit: cover;
 }
 
 .list-news-text {
@@ -73,10 +75,13 @@
   width: 15%;
 }
 
-.list-news-container .new-big {
+.list-news-container.new-big {
   flex-flow: column;
   height: 200px;
   position: relative;
+  align-items: flex-start;
+  justify-content: space-around;
+  width: 280px;
 }
 
 .new-big > .list-news-picture {
@@ -84,10 +89,89 @@
   margin: 0 auto;
   width: 100%;
   height: 40%;
+  object-fit: cover;
 
 }
 
 .new-big > .list-news-text {
   order: 2;
-  
+
+}
+
+.author-format {
+  margin-top: 1.5em;
+  font-size: 0.8em;
+}
+
+
+.article-title {
+  margin-top: 0.5em;
+  font-size: 2rem;
+  margin-bottom: 0.5em;
+}
+
+.wechat-logo {
+  color: white;
+  background-color: #09b83e;
+}
+
+.weibo-logo {
+  color: white;
+  background-color: #df2029;
+}
+
+.facebook-logo {
+  color: white;
+  background-color: #3B5998;
+}
+
+.icon-sidebar {
+  display: flex;
+  flex-flow: column;
+  align-items: flex-end;
+  justify-content: space-around;
+}
+
+.icon-sidebar > * {
+  margin-top: 1em;
+  margin-right: 1.5em;
+}
+
+.icon-sidebar > *:nth-child(1) {
+  margin-top: 3em;
+}
+
+.loading-news-view {
+  text-align: center;
+  position: relative;
+  height: 100%;
+}
+
+.loading-news-view > * {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+.header-cover.main-cover {
+  background-color: none;
+}
+
+.like-button {
+  color: #09b83e;
+  background-color: white;
+  border-radius: 50%;
+  height: 4em;
+  width: 4em;
+  border: 1px solid #09b83e;
+  position: fixed;
+  right: 15%;
+  bottom: 50px;
+}
+
+.like-button > * {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
 }

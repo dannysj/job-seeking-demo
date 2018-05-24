@@ -191,6 +191,7 @@ exports.getNewsDetail = (nid, callback) => {
     select n.title as title,
       u.first as author_first,
       u.last as author_last,
+      u.profile_pic as profile_pic,
       n.type as type,
       n.publish_time as publish_time,
       n.thumbnail as thumbnail,
