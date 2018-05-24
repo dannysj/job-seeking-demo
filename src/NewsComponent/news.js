@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Container, Divider } from 'semantic-ui-react';
 import axios from 'axios';
+import Footer from '../Components/Footer';
 import './news.css';
 
 class News extends React.Component {
@@ -44,13 +45,14 @@ class News extends React.Component {
         {
           this.state.news_list.map(el => (
             <Link to={'/news/'+el.id}>
-            <div className="list-news-container new-big">
+            <div className="list-news-container new-big" key={el.id}>
               <img className="list-news-picture" src={el.thumbnail}/>
               <div className="list-news-text">
                 <div className="list-news-title">{el.title}</div>
-                <div className="list-news-subtitle">{el.first + el.last + " · " + el.publish_time}</div>
-                <br />
                 <div className="cut-text" dangerouslySetInnerHTML={{__html:el.content}}/>
+
+                <br />
+                <div className="list-news-subtitle">{el.first + el.last + " · " + el.publish_time}</div>
               </div>
             </div>
             </Link>
@@ -58,7 +60,7 @@ class News extends React.Component {
         }
         </div>
         </div>
-
+        <Divider hidden clearing />
           <div className="container-sideline">
           <div className="header-text">
           <div className="container-block">
@@ -71,13 +73,14 @@ class News extends React.Component {
           {
             this.state.news_list.map(el => (
               <Link to={'/news/'+el.id}>
-              <div className="list-news-container">
+              <div className="list-news-container" key={el.id}>
                 <img className="list-news-picture" src={el.thumbnail}/>
                 <div className="list-news-text">
                   <div className="list-news-title">{el.title}</div>
-                  <div className="list-news-subtitle">{el.first + el.last + " · " + el.publish_time}</div>
-                  <br />
                   <div className="cut-text" dangerouslySetInnerHTML={{__html:el.content}}/>
+                  <Divider hidden clearing />
+                  <div className="list-news-subtitle">{el.first + el.last + " · " + el.publish_time}</div>
+
                 </div>
               </div>
               </Link>
@@ -86,6 +89,8 @@ class News extends React.Component {
           </div>
           </div>
         </Container>
+        <Divider hidden clearing />
+        <Footer />
       </div>
     );
   }

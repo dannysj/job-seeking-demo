@@ -8,6 +8,7 @@ class ProfileFollow extends Component {
     super(props);
     this.state={
       user: this.props.user,
+      action: this.props.actionClicked
     };
   }
 
@@ -25,6 +26,7 @@ class ProfileFollow extends Component {
               color='blue'
               content='关注'
               icon='plus'
+              onClick={this.state.action}
             />
           </div>
           <div className="follow-subtitle">

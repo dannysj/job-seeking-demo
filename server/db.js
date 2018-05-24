@@ -193,7 +193,7 @@ exports.getNewsDetail = (nid, callback) => {
       u.last as author_last,
       u.profile_pic as profile_pic,
       n.type as type,
-      n.publish_time as publish_time,
+      to_char(n.publish_time,'DD Mon HH24:MI') as publish_time,
       n.thumbnail as thumbnail,
       n.content as content
     from news n, users u

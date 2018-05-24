@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Image, Segment, Container, Icon, Button } from 'semantic-ui-react';
+import { Image, Container, Icon, Button, Divider } from 'semantic-ui-react';
 import './news.css';
+import Footer from '../Components/Footer';
 import ProfileFollow from '../Components/ProfileFollow';
 
 class NewsDetail extends Component {
@@ -16,6 +17,10 @@ class NewsDetail extends Component {
       },
       loading:true
     };
+
+    this.likeButtonPressed = this.likeButtonPressed.bind(this);
+    this.followButtonPressed = this.followButtonPressed.bind(this);
+
     axios.post('/api/get_news_detail',
       {nid:this.props.match.params.nid}).then(res => {
 
@@ -29,6 +34,16 @@ class NewsDetail extends Component {
       else{
       }
     });
+
+
+  }
+
+  likeButtonPressed(e) {
+
+  }
+
+  followButtonPressed(e) {
+    console.log("Test");
   }
 
   // {this.props.match.params.mid}
@@ -71,15 +86,18 @@ class NewsDetail extends Component {
             <div className="article-title">{this.state.news.title}</div>
             <div className="vertical-line-half"></div>
             <div className="news-detail-content" dangerouslySetInnerHTML={{__html:this.state.news.content}}></div>
-            <ProfileFollow user={{"last": this.state.news.author_last, "first": this.state.news.author_first, "profile_pic": this.state.news.profile_pic}}/>
+              <Divider hidden clearing />
+            <ProfileFollow user={{"last": this.state.news.author_last, "first": this.state.news.author_first, "profile_pic": this.state.news.profile_pic}} actionClicked={this.followButtonPressed}/>
           </div>
           <div className="news-sidebar">
           </div>
 
         </div>
-        <div className="like-button">
+        <div className="like-button" onClick={this.likeButtonPressed}>
           <Icon name="like outline" />
         </div>
+        <Divider hidden clearing />
+        <Footer />
       </div>
     );
   }
