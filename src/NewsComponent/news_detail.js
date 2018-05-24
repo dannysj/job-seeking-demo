@@ -54,15 +54,15 @@ class NewsDetail extends Component {
         <div className="news-content">
           <div className="news-sidebar icon-sidebar">
             <a href="test" ><div className="circle-icon">
-                <Icon className="wechat-logo" circular={true} name="wechat" />
+                <Icon className="wechat-logo" circular={true}  size="large" name="wechat" />
               </div>
             </a>
             <a href="test" ><div className="circle-icon">
-                <Icon className="weibo-logo" circular={true} name="weibo" />
+                <Icon className="weibo-logo" circular={true} size="large" name="weibo" />
               </div>
             </a>
             <a href="test" ><div className="circle-icon">
-                <Icon className="facebook-logo" circular={true} name="facebook f" />
+                <Icon className="facebook-logo" circular={true} size="large" name="facebook f" />
               </div>
             </a>
           </div>

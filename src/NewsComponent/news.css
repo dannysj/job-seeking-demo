@@ -135,6 +135,7 @@
 .icon-sidebar > * {
   margin-top: 1em;
   margin-right: 1.5em;
+  box-shadow: none !important;
 }
 
 .icon-sidebar > *:nth-child(1) {
