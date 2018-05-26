@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Image, Segment } from 'semantic-ui-react';
+import { Image, Container, Icon, Button, Divider } from 'semantic-ui-react';
 import './news.css';
+import Footer from '../Components/Footer';
+import ProfileFollow from '../Components/ProfileFollow';
 
 class NewsDetail extends Component {
 
@@ -12,8 +14,13 @@ class NewsDetail extends Component {
     this.state={
       news:{
         thumbnail: '/img/loading.gif'
-      }
+      },
+      loading:true
     };
+
+    this.likeButtonPressed = this.likeButtonPressed.bind(this);
+    this.followButtonPressed = this.followButtonPressed.bind(this);
+
     axios.post('/api/get_news_detail',
       {nid:this.props.match.params.nid}).then(res => {
 
@@ -21,24 +28,76 @@ class NewsDetail extends Component {
         console.log(res.data);
         let curState = this.state;
         curState.news = res.data.news;
+        curState.loading = false;
         this.setState(curState);
       }
       else{
       }
     });
+
+
+  }
+
+  likeButtonPressed(e) {
+
+  }
+
+  followButtonPressed(e) {
+    console.log("Test");
   }
 
   // {this.props.match.params.mid}
 
   render() {
+    const backimgstyle = {
+      backgroundImage: 'url('+this.state.news.thumbnail+')',
+      backgroundPosition: 'center center no-repeat',
+      backgroundSize: 'cover',
+      };
+    if (this.state.loading) {
+      return (
+        <div className="loading-news-view">
+            <Button basic loading>Loading</Button>
+        </div>
+      );
+    }
+    else
     return (
-      <div className="news-detail-container">
-        <Image src={this.state.news.thumbnail} size='medium' rounded centered/>
-        <h3>{this.state.news.title}</h3>
-        <p>作者: {this.state.news.author_last+' '+this.state.news.author_first}</p>
-        <p>发布时间: {this.state.news.publish_time}</p>
-        <br /><br />
-        <div className="news-detail-content" dangerouslySetInnerHTML={{__html:this.state.news.content}}></div>
+      <div>
+        <div className="header-cover main-cover" style={backimgstyle}>
+        </div>
+        <div className="news-content">
+          <div className="news-sidebar icon-sidebar">
+            <a href="test" ><div className="circle-icon">
+                <Icon className="wechat-logo" circular={true}  size="large" name="wechat" />
+              </div>
+            </a>
+            <a href="test" ><div className="circle-icon">
+                <Icon className="weibo-logo" circular={true} size="large" name="weibo" />
+              </div>
+            </a>
+            <a href="test" ><div className="circle-icon">
+                <Icon className="facebook-logo" circular={true} size="large" name="facebook f" />
+              </div>
+            </a>
+          </div>
+          <div className="news-detail-container">
+            <div className="author-format">{this.state.news.author_last+' '+this.state.news.author_first + "  ·  " + this.state.news.publish_time}</div>
+            <div className="article-title">{this.state.news.title}</div>
+            <div className="vertical-line-half"></div>
+            <div className="news-detail-content" dangerouslySetInnerHTML={{__html:this.state.news.content}}></div>
+              <Divider hidden clearing />
+            <ProfileFollow user={{"last": this.state.news.author_last, "first": this.state.news.author_first, "profile_pic": this.state.news.profile_pic}} actionClicked={this.followButtonPressed}/>
+          </div>
+          <div className="news-sidebar">
+          </div>
+
+        </div>
+        <div className="like-button" onClick={this.likeButtonPressed}>
+          <Icon name="like outline" />
+        </div>
+        <Divider hidden clearing />
+        <Footer />
       </div>
     );
   }

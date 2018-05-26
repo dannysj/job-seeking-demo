@@ -191,8 +191,9 @@ exports.getNewsDetail = (nid, callback) => {
     select n.title as title,
       u.first as author_first,
       u.last as author_last,
+      u.profile_pic as profile_pic,
       n.type as type,
-      n.publish_time as publish_time,
+      to_char(n.publish_time,'DD Mon HH24:MI') as publish_time,
       n.thumbnail as thumbnail,
       n.content as content
     from news n, users u
@@ -208,7 +209,7 @@ exports.getNewsDetail = (nid, callback) => {
 };
 
 exports.getNewsList = (batch_size, batch_num, callback) => {
-  var query = `select n.*, to_char(n.publish_time,'DD Mon YYYY') as date, u.first as first, u.last as last from news n, users u where n.author_id = u.id  order by n.publish_time desc limit $2 offset $1;`;
+  var query = `select n.*, to_char(n.publish_time,'DD Mon HH24:MI') as date, u.first as first, u.last as last from news n, users u where n.author_id = u.id  order by n.publish_time desc limit $2 offset $1;`;
   db.query(query, [batch_num*batch_size,batch_size], (err, result)=>{
     if(err){
       callback(err);

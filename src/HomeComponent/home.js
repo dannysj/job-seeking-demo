@@ -5,6 +5,7 @@ import { Header, Container, Segment, Button, Divider } from 'semantic-ui-react';
 import NewsList from './news_list';
 import MentorList from './mentor_list';
 import styles from 'react-responsive-carousel/lib/styles/carousel.min.css';
+import Footer from '../Components/Footer';
 import './home.css';
 
 
@@ -81,16 +82,7 @@ class Home extends Component {
         <br />
         <br />
 
-        <footer className="main-footer">
-          <Container>
-            <div className="footer-container">
-            <p className="chinese-top">伙伴求职 Buddy Career</p>
-            <p>www.buddycareer.com</p>
-            <p>© 2018 Buddy Career | All Fucking Rights Reserved</p>
-            <p><Link to="about">About</Link> | <Link to="contact">Contact</Link></p>
-            </div>
-          </Container>
-        </footer>
+        <Footer />
       </div>
     );
   }

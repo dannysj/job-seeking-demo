@@ -32,6 +32,13 @@
 .App, .App * {
   text-align: center;
   font-family: NeutraText-Light;
+
+}
+
+.app-flex {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 
 body {
@@ -76,4 +83,8 @@ body {
 
 .chinese-top {
   font-family: Arita;
+}
+
+.ui.top.attached.tabular.menu {
+	flex: 0 0 75px;
 }

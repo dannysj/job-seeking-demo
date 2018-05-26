@@ -47,7 +47,7 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <div className="app-flex">
         <div className="ui top attached tabular menu">
           <div className="item">
             <img src="/img/icon.png" height="40px"></img>
@@ -81,7 +81,7 @@ class App extends Component {
           </NavLink>
           <UserStatus user={this.state.user}></UserStatus>
         </div>
-        <Switch onChwange={this.onRouteChange}>
+        <Switch onChange={this.onRouteChange}>
           <Route path='/login' render={()=><Login onSuccess={this.updateUser}></Login>} />
           <Route path='/signup' render={()=><Signup onSuccess={this.updateUser}></Signup>}  />
           <Route path='/account' render={()=><Account user={this.state.user} onSuccess={this.updateUser}></Account>} />

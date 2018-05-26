@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Button, Container } from 'semantic-ui-react';
+import { Button, Container, Divider } from 'semantic-ui-react';
 import axios from 'axios';
+import Footer from '../Components/Footer';
 import './news.css';
 
 class News extends React.Component {
@@ -30,21 +31,62 @@ class News extends React.Component {
 
   render() {
     return(
-      <div>
-        <Container text>
+      <div className="new-container">
+        <Container>
+        <div className="container-sideline">
+        <div className="header-text">
+        <div className="container-block">
+          <div className="chinese-top">热 门 大 哥</div>
+          <div className="subtitle">Top picks</div>
+        </div>
+        </div>
+        <div className="news-detail-content">
+        {
+          this.state.news_list.map(el => (
+            <Link to={'/news/'+el.id}>
+            <div className="list-news-container new-big" key={el.id}>
+              <img className="list-news-picture" src={el.thumbnail}/>
+              <div className="list-news-text">
+                <div className="list-news-title">{el.title}</div>
+                <div className="list-news-subtitle">{el.first + el.last}</div>
+                <br />
+                <div className="list-news-subtitle">{el.publish_time}</div>
+              </div>
+            </div>
+            </Link>
+          ))
+        }
+        </div>
+        </div>
+        <Divider hidden clearing />
+          <div className="container-sideline">
+          <div className="header-text">
+          <div className="container-block">
+            <div className="chinese-top">最 新 动 态</div>
+            <div className="subtitle">Newest wow</div>
+          </div>
+          </div>
+          <div className="news-detail-content">
           {
             this.state.news_list.map(el => (
-              <div className="list-news-container">
+              <Link to={'/news/'+el.id}>
+              <div className="list-news-container" key={el.id}>
                 <img className="list-news-picture" src={el.thumbnail}/>
                 <div className="list-news-text">
-                  <h4>{el.title}</h4>
-                  <p dangerouslySetInnerHTML={{__html:el.content}}/>
+                  <div className="list-news-title">{el.title}</div>
+                  <div className="list-news-subtitle">{el.first + el.last}</div>
+                  <br />
+                  <div className="list-news-subtitle">{el.publish_time}</div>
                 </div>
-                <Link to={'/news/'+el.id}><Button floated='right'>点击查看细节>></Button></Link>
               </div>
+              </Link>
             ))
           }
+          </div>
+          </div>
         </Container>
+        <Divider hidden clearing />
+        <Footer />
       </div>
     );
   }
