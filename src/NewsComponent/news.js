@@ -40,7 +40,6 @@ class News extends React.Component {
           <div className="subtitle">Top picks</div>
         </div>
         </div>
-        <Divider hidden clearing />
         <div className="news-detail-content">
         {
           this.state.news_list.map(el => (
@@ -49,10 +48,9 @@ class News extends React.Component {
               <img className="list-news-picture" src={el.thumbnail}/>
               <div className="list-news-text">
                 <div className="list-news-title">{el.title}</div>
-                <div className="cut-text" dangerouslySetInnerHTML={{__html:el.content}}/>
-
+                <div className="list-news-subtitle">{el.first + el.last}</div>
                 <br />
-                <div className="list-news-subtitle">{el.first + el.last + " · " + el.publish_time}</div>
+                <div className="list-news-subtitle">{el.publish_time}</div>
               </div>
             </div>
             </Link>
@@ -68,7 +66,6 @@ class News extends React.Component {
             <div className="subtitle">Newest wow</div>
           </div>
           </div>
-          <Divider hidden clearing />
           <div className="news-detail-content">
           {
             this.state.news_list.map(el => (
@@ -77,10 +74,9 @@ class News extends React.Component {
                 <img className="list-news-picture" src={el.thumbnail}/>
                 <div className="list-news-text">
                   <div className="list-news-title">{el.title}</div>
-                  <div className="cut-text" dangerouslySetInnerHTML={{__html:el.content}}/>
-                  <Divider hidden clearing />
-                  <div className="list-news-subtitle">{el.first + el.last + " · " + el.publish_time}</div>
-
+                  <div className="list-news-subtitle">{el.first + el.last}</div>
+                  <br />
+                  <div className="list-news-subtitle">{el.publish_time}</div>
                 </div>
               </div>
               </Link>
