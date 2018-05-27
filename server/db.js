@@ -126,6 +126,17 @@ exports.getMentorList = function(filter, callback){
   });
 };
 
+exports.getMentorComment = function (mid, callback){
+  var query = `select * from mentor_comment where mid=$1;`;
+  db.query(query, function(err, result){
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows);
+  });
+};
+
 // TODO: check and return proper error first if the user's email is duplicated
 exports.createUser = function(user, callback){
   var query = `insert into users (first,last,password,email,profile_pic,register_date,isadmin,ismentor) values($1,$2,$3,$4,'/img/sample_profile.jpg',now(),false,false) returning *;`;

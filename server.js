@@ -63,6 +63,17 @@ app.post('/api/get_mentor_list', function(req, res){
   });
 });
 
+app.post('/api/get_mentor_comment', function(req, res){
+  db.getMentorComment([], (err, list) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0, list: list});
+  });
+});
+
 app.post('/api/get_news_list', (req, res) => {
   db.getNewsList(req.body.batch_size, req.body.batch_num, (err, news_list) => {
     if(err){

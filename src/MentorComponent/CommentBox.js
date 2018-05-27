@@ -1,26 +1,21 @@
-var commentData = [
-  {
-    author:"Shawn Spencer",
-    text:"I've heard it both ways"
-  },
-  {
-    author:"Burton Guster",
-    text:"You hear about Pluto? That's messed up"
+import React, {Component} from 'react';
+import './CommentBox.css';
+
+class CommentBox extends  Component{
+  constructor (props) {
+    super(props);
+    this.state={data:[]};
+    this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
   }
-];
-var CommentBox = React.createClass({
-  getInitialState: function() {
-    return {
-      data: commentData
-    }
-  },
-  handleCommentSubmit: function(comment) {
+
+  handleCommentSubmit(comment) {
     this.props.data.push(comment);
     var comments = this.state.data;
     var newComments = comments.concat([comment]);
     this.setState({data: newComments});
-  },
-  render: function() {
+  }
+
+  render() {
     return (
       <div className="comment-box">
         <CommentForm data={this.props.data} onCommentSubmit={this.handleCommentSubmit} />
@@ -28,9 +23,9 @@ var CommentBox = React.createClass({
       </div>
     );
   }
-});
-var CommentList = React.createClass({
-  render: function() {
+}
+class CommentList extends Component{
+  render() {
     return (
       <div className="comment-list">
         {this.props.data.map(function(c){
@@ -41,10 +36,17 @@ var CommentList = React.createClass({
       </div>
     );
   }
-});
-var CommentForm = React.createClass({
-  handleSubmit: function(e) {
+}
+
+class CommentForm extends Component{
+  constructor (props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(e) {
     e.preventDefault();
+
     var authorVal = e.target[0].value.trim();
     var textVal = e.target[1].value.trim();
     if (!textVal || !authorVal) {
@@ -53,35 +55,35 @@ var CommentForm = React.createClass({
     this.props.onCommentSubmit({author: authorVal, text: textVal});
     e.target[0].value = '';
     e.target[1].value = '';
-    return;
-  },
-  render: function() {
+  }
+
+  render() {
     return(
-      <form className="comment-form form-group" onSubmit={this.handleSubmit}>
-        <div className="input-group">
-          <span className="input-group-addon">Name</span>
-          <input type="text" placeholder="Your name" className="form-control" />
+      <form className="comment-form" onSubmit={this.handleSubmit}>
+        <div>
+          <span className="ui text">Name</span>
+          <input type="text" placeholder="Your name" className="ui text" />
         </div>
-        <div className="input-group">
-          <span className="input-group-addon">Comment</span>
-          <input type="text" placeholder="Say something..." className="form-control" />
+        <div>
+          <span className="ui text">Comment</span>
+          <input type="text" placeholder="Say something..." className="ui text" />
         </div>
-        <input type="submit" value="Post" className="btn btn-primary" />
+
+        <input type="submit" value="Post" className="ui button" />
       </form>
     );
   }
-});
-var Comment = React.createClass({
-  render: function() {
+}
+
+class Comment extends Component {
+  render() {
     return (
       <div className="comment">
         <h2 className="author">{this.props.author}</h2>
-        {this.props.text}
+        <p className="comment-content">{this.props.text}</p>
       </div>
     );
   }
-});
-React.render(
-  <CommentBox data={commentData} />,
-  document.getElementById('app')
-);
+}
+
+export default CommentBox;
