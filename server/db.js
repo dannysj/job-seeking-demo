@@ -72,7 +72,8 @@ exports.reset = function(){
       offer_company varchar(255),
       bio text,
       service jsonb,
-      resume text
+      resume text,
+      num_weekly_slots int -- Number of slots available for a week
     );
     create table if not exists mentor_rel(
       id serial unique primary key,
@@ -264,7 +265,7 @@ exports.createMentorApp = (mentor_info, callback) => {
       offer_company,
       bio,
       service,
-      resume)
+      num_weekly_slots)
     values($1,false,now(),$2,$3,$4,$5,$6,$7);`
   db.query(query,
     [mentor_info.uid,
@@ -273,7 +274,31 @@ exports.createMentorApp = (mentor_info, callback) => {
     mentor_info.offer_company,
     mentor_info.bio,
     JSON.stringify(mentor_info.services),
-    mentor_info.resume], (err, result)=>{
+    mentor_info.num_weekly_slots], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+};
+
+exports.editMentorInfo = (mentor_info, callback) => {
+  var query = `update mentor_info set
+      cid=$1,
+      offer_title=$2,
+      offer_company=$3,
+      bio=$4,
+      service=$5,
+      num_weekly_slots=$6 where uid=$7;`
+  db.query(query,
+    [mentor_info.cid,
+    mentor_info.offer_title,
+    mentor_info.offer_company,
+    mentor_info.bio,
+    JSON.stringify(mentor_info.services),
+    mentor_info.num_weekly_slots,
+    mentor_info.uid], (err, result)=>{
     if(err){
       callback(err);
       return;
@@ -306,11 +331,38 @@ exports.getMentorDetail = (mid, callback) => {
       m.offer_company as offer_company,
       m.bio as bio,
       m.service as service,
-      m.resume as resume
+      m.num_weekly_slots as num_weekly_slots
     from users u, mentor_info m, college c
     where m.uid = u.id and m.cid = c.id and m.id = $1;
   `;
   db.query(query, [mid], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows[0]);
+  });
+};
+
+exports.getMentorDetailByUid = (uid, callback) => {
+  var query = `
+    select u.id as uid,
+      u.first as first,
+      u.last as last,
+      u.dob as dob,
+      u.profile_pic as profile_pic,
+      c.name as college_name,
+      c.id as cid,
+      m.id as mid,
+      m.offer_title as offer_title,
+      m.offer_company as offer_company,
+      m.bio as bio,
+      m.service as service,
+      m.num_weekly_slots as num_weekly_slots
+    from users u, mentor_info m, college c
+    where m.uid = u.id and m.cid = c.id and u.id = $1;
+  `;
+  db.query(query, [uid], (err, result) => {
     if(err){
       callback(err);
       return;

@@ -5,15 +5,11 @@ import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import '../account.css';
 
-//TODO: Bugs: Description text is not blank on next form input after submit edit
-//TODO: verification
 
-class AccountApply extends React.Component {
+class MentorEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hadApplied: false,
-      pendingApplication: false,
       mentor_info:
         {
           services: [],
@@ -58,29 +54,16 @@ class AccountApply extends React.Component {
       }
     });
 
-    axios.post('/api/get_application_status', {uid: this.props.user.id}).then(res => {
-      if (res.data.code === 0) {
-        if (res.data.status === 1) {
-          this.setState({hadApplied: true, pendingApplication: true});
-        }
-        else if (res.data.status === 2) {
-          this.setState({hadApplied: true, pendingApplication: false});
-        }
-      }
-      else {
-        NotificationManager.error('无法获取申请状态', '错误');
-      }
-    });
-
-    // TODO: use this to determine application status
     axios.post('/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
       if (res.data.code === 0) {
-        let mentor = res.data.mentor;
-        console.log(mentor);
-
+        console.log(res.data.mentor);
+        res.data.mentor.services = res.data.mentor.service; // sorry for the terrible naming.
+        this.setState({
+          mentor_info: res.data.mentor
+        });
       }
       else {
-        //TODO: Error Handling
+        NotificationManager.error('无法获取Mentor信息', '错误');
       }
     });
   }
@@ -147,14 +130,13 @@ class AccountApply extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     console.log(this.state.mentor_info);
-    axios.post('/api/mentor_apply', this.state.mentor_info).then(res => {
+    axios.post('/api/mentor_edit', this.state.mentor_info).then(res => {
       if (res.data.code === 0) {
-        alert('success');
-        this.context.router.history.push('/account');
-        // TODO:
+        NotificationManager.success('已经更改了您的信息', '成功');
+        this.context.router.history.push('/account/mentor_edit');
       }
       else {
-        //TODO: Error Handling
+        NotificationManager.error('无法连接到服务器', '错误');
       }
     });
   }
@@ -226,23 +208,23 @@ class AccountApply extends React.Component {
             <label>院校名称：</label>
             <b className="notification-msg">
               <Dropdown name='cid' placeholder='院校名称' fluid search selection options={this.state.college_list}
-                        onChange={this.handleChange} selectedValue={this.state.mentor.college_name}/>
+                        onChange={this.handleChange} selectedValue={this.state.mentor_info.college_name}/>
             </b>
           </div>
           <div className="field">
             <label>Offer职位：</label>
             <input type="text" name="offer_title" placeholder="Offer职位" onChange={this.handleChange}
-                   value={this.state.mentor.offer_title} required/>
+                   value={this.state.mentor_info.offer_title} required/>
           </div>
           <div className="field">
             <label>Offer企业：</label>
             <input type="text" name="offer_company" placeholder="Offer企业" onChange={this.handleChange}
-                   value={this.state.mentor.offer_company} required/>
+                   value={this.state.mentor_info.offer_company} required/>
           </div>
           <div className="field">
             <label>每周愿意服务次数：</label>
             <input type="number" name="num_weekly_slots" placeholder="服务次数" onChange={this.handleChange}
-                   value={this.state.mentor.num_weekly_slots} required/>
+                   value={this.state.mentor_info.num_weekly_slots} required/>
           </div>
           <div className="field">
             <label>提供服务：</label>
@@ -271,18 +253,17 @@ class AccountApply extends React.Component {
           </div>
           <div className="field">
             <label>自我介绍：</label>
-            <textarea rows="8" name="bio" onChange={this.handleChange} value={this.state.mentor.bio}/>
+            <textarea rows="8" name="bio" onChange={this.handleChange} value={this.state.mentor_info.bio}/>
           </div>
-          {this.state.hadApplied ? <button className="ui button" type="submit" onClick={this.handleSubmit}>更新</button> :
-            <button className="ui button" type="submit" onClick={this.handleSubmit}>提交</button>}
+          <button className="ui button" type="submit" onClick={this.handleSubmit}>更新</button>
         </form>
       </div>
     );
   }
 }
 
-AccountApply.contextTypes = {
+MentorEdit.contextTypes = {
   router: PropTypes.object
 };
 
-export default AccountApply;
+export default MentorEdit;
