@@ -10,11 +10,9 @@ var multer  = require('multer');
 var crypto = require('crypto');
 var paypal = require('paypal-rest-sdk');
 var nodemailer = require('nodemailer');
+const nocache = require('nocache');
 // create reusable transporter object using the default SMTP transport
 var transporter = nodemailer.createTransport(config.mail_config);
-
-
-
 
 paypal.configure({
   'mode': 'live', //sandbox or live
@@ -331,21 +329,6 @@ app.post('/api/poll_payment', function(req, res){
     }catch(e){}
     pendingPayments[req.body.order_id].res = null;
   }, 10000);
-  // setTimeout(function(){
-  //   db.addMentorShip(pendingPayments[req.body.order_id].uid,
-  //     pendingPayments[req.body.order_id].mid,
-  //     pendingPayments[req.body.order_id].service_name,
-  //     pendingPayments[req.body.order_id].service_price,
-  //     (err) => {
-  //       if(err){
-  //         console.log(err);
-  //         res.json({code: 1, errMsg: 'Database Error'});
-  //         return;
-  //       }
-  //       res.json({code:0});
-  //   });
-  //   pendingPayments[req.body.order_id] = null;
-  // }, 3000);
 });
 
 app.post('/api/get_rel_mentors', (req, res)=>{
@@ -417,50 +400,6 @@ app.post('/api/create_order', function(req, res){
     console.dir(payment);
     res.json({code: 0, url: redirect_url});
   });
-
-  // var value_in_whole = timestamp+'-'+req.body.uid+'-'+req.body.mid +
-  //   2+'http://job.y-l.me/callback/payment_complete'+timestamp+parseFloat(req.body.service_price).toFixed(2)+
-  //   'http://job.y-l.me/mentor'+process.env.PAY_TOKEN+process.env.PAY_UID;
-  // var md5hash = crypto.createHash('md5').update(value_in_whole).digest("hex");
-  // var postData = JSON.stringify({
-  //   uid: process.env.PAY_UID,
-  //   goodsname: timestamp+'-'+req.body.uid+'-'+req.body.mid,
-  //   istype: 2,
-  //   notify_url: 'http://job.y-l.me/callback/payment_complete',
-  //   orderid: timestamp,
-  //   price: parseFloat(req.body.service_price).toFixed(2),
-  //   return_url: 'http://job.y-l.me/mentor',
-  //   key: md5hash
-  // });
-  // let options = {
-  //   hostname: 'pay.paysapi.com',
-  //   port: 443,
-  //   path: '/?format=json',
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     'Content-Length': postData.length
-  //   }
-  // };
-  // console.log(postData);
-  // var reqp = https.request(options, (resp) => {
-  //   console.log('statusCode:', resp.statusCode);
-  //   console.log('headers:', resp.headers);
-  //
-  //   resp.on('data', (d) => {
-  //     var result = JSON.parse(d);
-  //     console.dir(result);
-  //     pendingPayments[result.data.orderid] = {uid: req.body.uid, mid: req.body.mid, service_name: req.body.service_name, service_price: req.body.service_price};
-  //     res.json({code: 0, order_id:result.data.orderid, qr_code: result.data.qrcode});
-  //   });
-  // });
-  //
-  // reqp.on('error', (e) => {
-  //   console.error(e);
-  // });
-  //
-  // reqp.write(postData);
-  // reqp.end();
 });
 
 app.get('/return/payment_complete', (req, res)=>{
@@ -520,7 +459,7 @@ app.post('/api/mentee_confirm', (req, res)=>{
 // Static resources
 app.use(express.static(__dirname + '/build'));
 
-app.get('/*', function(req, res) {
+app.get('/*', nocache(), function(req, res) {
   res.sendFile(__dirname + '/build/index.html');
 });
 
