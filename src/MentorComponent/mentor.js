@@ -57,7 +57,7 @@ class Mentor extends Component {
         //TODO: Error Handling
       }
     });
-    
+
 
   }
 
@@ -247,7 +247,7 @@ class Mentor extends Component {
                   </div>
                   <Link to={'/mentor/' + el.mid}>
                   <div className="connect-circle">
-                    <div>Connect</div>
+                    <div>详情</div>
                   </div>
                   </Link>
                   <Link to={'/mentor/' + el.mid}>
