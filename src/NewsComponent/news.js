@@ -48,10 +48,12 @@ class News extends React.Component {
               <img className="list-news-picture" src={el.thumbnail}/>
               <div className="list-news-text">
                 <div className="list-news-title">{el.title}</div>
-                <div className="list-news-subtitle">{el.first + el.last}</div>
-                <br />
-                <div className="list-news-subtitle">{el.publish_time}</div>
+                <div className="list-news-author-details">
+                  <div className="list-news-subtitle">{el.first + el.last}</div>
+                  <div className="list-news-subtitle">{el.date}</div>
+                </div>
               </div>
+
             </div>
             </Link>
           ))

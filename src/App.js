@@ -22,8 +22,11 @@ import About from './AboutComponent/about';
 class App extends Component {
   constructor(props){
     super(props);
-    this.state = {};
+    this.state = {
+      menu_open: false,
+    };
     this.updateUser = this.updateUser.bind(this);
+    this.menuToggled = this.menuToggled.bind(this);
 
     let uid = localStorage.getItem('uid');
     if(uid){
@@ -45,14 +48,23 @@ class App extends Component {
     localStorage.setItem('uid', user.id);
   }
 
+  menuToggled(e) {
+    this.setState({menu_open: !this.state.menu_open});
+  }
+
   render() {
+    var opened = "";
+    if (this.state.menu_open) {
+      opened = "opened";
+    }
     return (
       <div className="app-flex">
-        <div className="ui top attached tabular menu">
-          <div className="item">
+        <div className={"navbar " + opened}>
+          <div className="item logo-item" onClick={this.menuToggled}>
             <img src="/img/icon.png" height="40px"></img>
             <b>{' '}Buddy{'\n'}Career</b>
           </div>
+          <div className={"nav-list " + opened }>
           <NavLink to="/" ishorizontal={true} >
             <div className="Nav-item ">
               <div className="App-subtitle">Home</div>
@@ -79,8 +91,10 @@ class App extends Component {
             </div>
 
           </NavLink>
+          </div>
           <UserStatus user={this.state.user}></UserStatus>
         </div>
+        <div className="site-content">
         <Switch onChange={this.onRouteChange}>
           <Route path='/login' render={()=><Login onSuccess={this.updateUser}></Login>} />
           <Route path='/signup' render={()=><Signup onSuccess={this.updateUser}></Signup>}  />
@@ -92,6 +106,7 @@ class App extends Component {
           <Route path='/about' component={About}/>
           <Route path='/' component={Home}/>
         </Switch>
+        </div>
       </div>
     );
   }

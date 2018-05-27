@@ -54,7 +54,7 @@
 }
 
 .list-news-title {
-  font-size: 1.5em;
+  font-size: 1.1em;
 }
 
 .list-news-subtitle {
@@ -100,10 +100,19 @@
 
 .new-big > .list-news-text {
   max-width: 100%;
+  padding-top: 1em;
+  padding-bottom: 1em;
   padding-left: 0.5em;
   padding-right: 0.5em;
   order: 2;
+  flex: 1;
+  justify-content: space-between;
+  flex-flow: column;
+}
 
+.list-news-text {
+  display: flex;
+  flex-flow: column;
 }
 
 .author-format {

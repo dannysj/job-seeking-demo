@@ -62,8 +62,8 @@ body {
 }
 
 .App-subtitle {
-  font-size: 0.8em;
-  margin-bottom: 1em;
+	font-size: 0.9em;
+	margin-bottom: 0.5em;
 }
 
 .Nav-item {
@@ -85,6 +85,77 @@ body {
   font-family: Arita;
 }
 
-.ui.top.attached.tabular.menu {
+.nav-list {
+	display: flex;
+	flex: 1;
+}
+
+.navbar {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	left: 0;
+	align-items: center;
 	flex: 0 0 75px;
+	height: 75px;
+	display: flex;
+	background-color: white;
+	border-bottom: 1px solid #a0a0a0;
+	justify-content: space-between;
+}
+
+.navbar > * {
+	padding: 0em 1em;
+  height: 100%;
+	margin: 1em;
+}
+
+.logo-item > img {
+	margin-right: 1em;
+}
+
+.logo-item > b {
+	font-size: 1.3em;
+}
+
+.nav-list > .item {
+	margin: 0em 1em;
+}
+
+
+
+.item {
+	display: flex;
+	align-items: center;
+}
+.site-content {
+	padding-top: 75px;
+	height: 100%;
+}
+
+.Nav-item {
+	font-size: 1.1em;
+
+}
+
+.navbar > a {
+	color: black;
+}
+
+@media screen and (max-width: 767px) {
+	.nav-list {
+		flex-flow: column;
+		display: none;
+		background-color: white;
+		height: 80%;
+	}
+	.opened {
+		display: flex !important;
+	}
+	.logo-item > b {
+		display: none;
+	}
+	.ui.top.attached.tabular.menu.opened {
+		flex: 0 0 75px;
+	}
 }
