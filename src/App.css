@@ -127,9 +127,10 @@ body {
 .item {
 	display: flex;
 	align-items: center;
+	color: black;
 }
 
-.item > a {
+.item a {
 	color: black !important;
 }
 
