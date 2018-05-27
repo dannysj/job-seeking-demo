@@ -1,19 +1,19 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {Button, Image} from 'semantic-ui-react';
-import Disqus from './disqus.js';
 import PropTypes from 'prop-types';
 import './mentor.css';
+import CommentBox from "./CommentBox";
 
 class MentorDetail extends Component {
 
+
   constructor (props) {
     super(props);
-    this.state={mentor:{first:"", last:"", service:[]}, showAddServiceModal: false};
+    this.state = {mentor: {first: "", last: "", service: []}, showAddServiceModal: false, commentData: [{author: "Shawn", text: "Text"}]};
 
     axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
-        console.log(res.data.mentor);
         this.setState({mentor:res.data.mentor});
       }
       else{
@@ -21,6 +21,16 @@ class MentorDetail extends Component {
       }
     });
 
+    axios.post('/api/get_mentor_comment', {mid: this.props.match.params.mid}).then(res => {
+      if (res.data.code === 0) {
+
+        this.setState({commentData: res.data.commentData});
+      } else {
+        //TODO: Error Handling
+      }
+    });
+
+    console.log(this.state.commentData);
     this.initBuy = this.initBuy.bind(this);
   }
 
@@ -137,7 +147,7 @@ class MentorDetail extends Component {
               <div className="sub header">具体服务范围</div>
             </div>
           </h2>
-          <table class="ui celled table">
+          <table className="ui celled table">
             <thead>
               <tr><th>服务名称</th>
               <th>服务价格</th>
@@ -174,12 +184,9 @@ class MentorDetail extends Component {
             <i className="comment alternate outline icon"/>
             <div className="content">
                 过往评价
-                <Disqus id={this.state.mentor.id}
-                        title={this.state.mentor.id}
-                        path={"/mentor" + this.state.mentor.id}
-                />
             </div>
           </h2>
+          <CommentBox data={this.state.commentData}/>
         </div>
       </div>
 
