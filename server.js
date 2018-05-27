@@ -96,6 +96,28 @@ app.post('/api/mentor_apply', function(req, res){
   });
 });
 
+app.post('/api/mentor_edit', function(req, res){
+  db.editMentorInfo(req.body, (err) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0});
+  });
+});
+
+app.post('/api/get_mentor_detail_by_uid', function(req, res){
+  db.getMentorDetailByUid(req.body.uid, (err, mentor) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0, mentor: mentor});
+  });
+});
+
 app.post('/api/get_mentor_detail', function(req, res){
   db.getMentorDetail(req.body.mid, (err, mentor) => {
     if(err){
