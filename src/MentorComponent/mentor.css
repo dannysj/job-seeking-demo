@@ -177,12 +177,14 @@
   font-size: 1em;
   margin-left: 5%;
   margin-right: 50%;
+  flex: 1;
 }
 
 .filter-item > .item-bottom {
   color: #001BB1;
   font-size: 1.2em;
-  height: 1em;
+  flex: 1;
+  height: auto;
   margin-left: 5%;
   padding-right: 1em;
 
