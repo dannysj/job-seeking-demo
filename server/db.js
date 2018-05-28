@@ -255,6 +255,20 @@ exports.confirmVerification = (verification_code, callback) => {
   });
 };
 
+exports.verifyInfoCompletion = (uid, callback) => {
+  let query = `select (major is not null
+    and wechat is not null
+    and resume is not null) as res
+    from users where id=$1;`;
+  db.query(query, [uid], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows[0].res)
+  });
+}
+
 exports.createMentorApp = (mentor_info, callback) => {
   var query = `insert into mentor_info
     (uid,
@@ -353,6 +367,7 @@ exports.getMentorDetailByUid = (uid, callback) => {
       u.dob as dob,
       u.profile_pic as profile_pic,
       u.resume as resume,
+      u.ismentor as ismentor,
       c.name as college_name,
       c.id as cid,
       m.id as mid,
@@ -415,22 +430,6 @@ exports.disapproveMentor = (uid, mid, callback) => {
       return;
     }
     callback(null);
-  });
-};
-
-exports.getApplicationStatus = (uid, callback) => {
-  var query = `select u.ismentor,m.id as ismentor from users u, mentor_info m where m.uid=u.id and u.id=$1;`;
-  db.query(query, [uid], (err, result) => {
-    if(err){
-      callback(err);
-      return;
-    }
-    if(result.rows.length == 0){
-      callback(null, 0);
-    }
-    else{
-      callback(null, 1);
-    }
   });
 };
 

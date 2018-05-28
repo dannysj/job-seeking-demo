@@ -12,20 +12,14 @@ class AccountApply extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hadApplied: false,
-      pendingApplication: false,
+      statusChecked: false,
+      hasNotApplied: false,
       mentor_info:
         {
           services: [],
           uid: this.props.user.id
         },
       showAddServiceModal: false,
-      mentor: {
-        bio: null,
-        college_name: null,
-        offer_company: null,
-        offer_title: null
-      },
       editMode: false,
       editIndex: -1
     };
@@ -58,29 +52,20 @@ class AccountApply extends React.Component {
       }
     });
 
-    axios.post('/api/get_application_status', {uid: this.props.user.id}).then(res => {
-      if (res.data.code === 0) {
-        if (res.data.status === 1) {
-          this.setState({hadApplied: true, pendingApplication: true});
-        }
-        else if (res.data.status === 2) {
-          this.setState({hadApplied: true, pendingApplication: false});
-        }
-      }
-      else {
-        NotificationManager.error('无法获取申请状态', '错误');
-      }
-    });
-
-    // TODO: use this to determine application status
     axios.post('/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
       if (res.data.code === 0) {
         let mentor = res.data.mentor;
         console.log(mentor);
-
+        mentor.services = mentor.service; // Sorry for the terrible naming
+        this.setState({mentor_info: mentor, statusChecked:true, hasNotApplied: false});
       }
       else {
-        //TODO: Error Handling
+        if(res.data.code == 55){
+          this.setState({statusChecked: true, hasNotApplied: true});
+        }
+        else{
+          NotificationManager.error('数据库错误', '错误')
+        }
       }
     });
   }
@@ -147,14 +132,25 @@ class AccountApply extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     console.log(this.state.mentor_info);
-    axios.post('/api/mentor_apply', this.state.mentor_info).then(res => {
+    let apiUrl = '';
+    if(this.state.hasNotApplied){
+      apiUrl = '/api/mentor_apply';
+    }
+    else{
+      apiUrl = '/api/mentor_edit';
+    }
+
+    axios.post(apiUrl, this.state.mentor_info).then(res => {
       if (res.data.code === 0) {
-        alert('success');
-        this.context.router.history.push('/account');
-        // TODO:
+        NotificationManager.success('我们已收到您的表格','成功');
       }
       else {
-        //TODO: Error Handling
+        if(res.data.code == 45) {
+          NotificationManager.error('请先完善您的基础资料','错误');
+        }
+        else{
+          NotificationManager.error('数据库错误','错误');
+        }
       }
     });
   }
@@ -187,7 +183,8 @@ class AccountApply extends React.Component {
     var editDesc = this.tempService['description'];
 
     return (
-      <div>
+      !this.state.statusChecked?("请稍后..."):(
+        <div>
         <NotificationContainer />
         <div className={modalClassName}>
           <i className="close icon"/>
@@ -220,29 +217,30 @@ class AccountApply extends React.Component {
             </div>
           </div>
         </div>
-        <h4>申请成为导师</h4>
+        {!this.state.hasNotApplied ? <h4>我们已经收到了您的申请，您仍可以在此修改您的申请表格</h4>:
+          <h4>申请成为导师</h4>}
         <form className="ui form">
           <div className="field">
             <label>院校名称：</label>
             <b className="notification-msg">
               <Dropdown name='cid' placeholder='院校名称' fluid search selection options={this.state.college_list}
-                        onChange={this.handleChange} selectedValue={this.state.mentor.college_name}/>
+                        onChange={this.handleChange} selectedValue={this.state.mentor_info.college_name}/>
             </b>
           </div>
           <div className="field">
             <label>Offer职位：</label>
             <input type="text" name="offer_title" placeholder="Offer职位" onChange={this.handleChange}
-                   value={this.state.mentor.offer_title} required/>
+                   value={this.state.mentor_info.offer_title} required/>
           </div>
           <div className="field">
             <label>Offer企业：</label>
             <input type="text" name="offer_company" placeholder="Offer企业" onChange={this.handleChange}
-                   value={this.state.mentor.offer_company} required/>
+                   value={this.state.mentor_info.offer_company} required/>
           </div>
           <div className="field">
             <label>每周愿意服务次数：</label>
             <input type="number" name="num_weekly_slots" placeholder="服务次数" onChange={this.handleChange}
-                   value={this.state.mentor.num_weekly_slots} required/>
+                   value={this.state.mentor_info.num_weekly_slots} required/>
           </div>
           <div className="field">
             <label>提供服务：</label>
@@ -271,12 +269,12 @@ class AccountApply extends React.Component {
           </div>
           <div className="field">
             <label>自我介绍：</label>
-            <textarea rows="8" name="bio" onChange={this.handleChange} value={this.state.mentor.bio}/>
+            <textarea rows="8" name="bio" onChange={this.handleChange} value={this.state.mentor_info.bio}/>
           </div>
-          {this.state.hadApplied ? <button className="ui button" type="submit" onClick={this.handleSubmit}>更新</button> :
-            <button className="ui button" type="submit" onClick={this.handleSubmit}>提交</button>}
+          {!this.state.hasNotApplied ? <button className="ui button" type="submit" onClick={this.handleSubmit}>更新</button> :
+            <button className="ui button" type="submit" onClick={this.handleSubmit}>申请</button>}
         </form>
-      </div>
+      </div>)
     );
   }
 }

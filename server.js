@@ -84,13 +84,20 @@ app.post('/api/get_news_detail', function(req, res){
 });
 
 app.post('/api/mentor_apply', function(req, res){
-  db.createMentorApp(req.body, (err) => {
-    if(err){
-      console.log(err);
-      res.json({code: 1});
-      return;
+  db.verifyInfoCompletion(req.body.uid, (err, isCompleted)=>{
+    if(isCompleted){
+      db.createMentorApp(req.body, (err) => {
+        if(err){
+          console.log(err);
+          res.json({code: 1});
+          return;
+        }
+        res.json({code: 0});
+      });
     }
-    res.json({code: 0});
+    else{
+      res.json({code: 45});
+    }
   });
 });
 
@@ -112,7 +119,12 @@ app.post('/api/get_mentor_detail_by_uid', function(req, res){
       res.json({code: 1});
       return;
     }
-    res.json({code: 0, mentor: mentor});
+    if(mentor){
+      res.json({code: 0, mentor: mentor});
+    }
+    else{
+      res.json({code: 55})
+    }
   });
 });
 
@@ -282,17 +294,6 @@ app.post('/api/admin/decide_mentor_app', function(req, res){
       res.json({code:0});
     });
   }
-});
-
-app.post('/api/get_application_status', function(req, res){
-  db.getApplicationStatus(req.body.uid, (err, status_code) => {
-    if(err){
-      console.log(err);
-      res.json({code: 1, errMsg: 'Database Error'});
-      return;
-    }
-    res.json({code: 0, status: status_code});
-  });
 });
 
 var pendingPayments = {};

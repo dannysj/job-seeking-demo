@@ -62,7 +62,7 @@ class Account extends Component {
               {
                 !this.props.user.ismentor ? (
                   <NavLink to="/account/apply">
-                    成为导师
+                    申请成为导师
                   </NavLink>) : (
                     <NavLink to="/account/service">
                       我的Mentee

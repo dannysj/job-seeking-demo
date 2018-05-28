@@ -36,7 +36,7 @@ class News extends React.Component {
         <div className="container-sideline">
         <div className="header-text">
         <div className="container-block">
-          <div className="chinese-top">热 门 大 哥</div>
+          <div className="chinese-top">热 门 干 货</div>
           <div className="subtitle">Top picks</div>
         </div>
         </div>
