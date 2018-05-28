@@ -16,7 +16,7 @@
 }
 
 @media screen and (max-width: 767px) {
-  .user-inline.chinese-top {
+  .user-inline > .chinese-top {
     display: none;
   }
   .small-screen {
@@ -39,4 +39,10 @@
 .large-screen > .item {
   margin: 0em 1em;
   padding: 0em 1em;
+}
+
+.right-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
