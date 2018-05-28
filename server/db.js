@@ -360,7 +360,7 @@ exports.getMentorDetailByUid = (uid, callback) => {
       m.offer_company as offer_company,
       m.bio as bio,
       m.service as service,
-      m.num_weekly_slots as num_weekly_slots,
+      m.num_weekly_slots as num_weekly_slots
     from users u, mentor_info m, college c
     where m.uid = u.id and m.cid = c.id and u.id = $1;
   `;
