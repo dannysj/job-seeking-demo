@@ -64,13 +64,24 @@ app.post('/api/get_mentor_list', function(req, res){
 });
 
 app.post('/api/get_mentor_comment', function(req, res){
-  db.getMentorComment([], (err, list) => {
+  db.getMentorComment(req.body.mid, (err, list) => {
     if(err){
       console.log(err);
       res.json({code: 1});
       return;
     }
     res.json({code: 0, list: list});
+  });
+});
+
+app.post('/api/create_mentor_comment', function(req, res){
+  db.createMentorComment(req.body, (err) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0});
   });
 });
 

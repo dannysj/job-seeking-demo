@@ -3,6 +3,19 @@ var pg = require('pg');
 var uuidv4 = require('uuid/v4');
 var config = require('./config.js');
 var db = new pg.Pool(config.db);
+var fs = require('fs');
+
+exports.patch = () => {
+  // Patch mentor_comment
+  const sql = fs.readFileSync('./db_patches/mentor_comment.sql').toString();
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log('Table mentor_comment Created');
+  });
+};
 
 exports.reset = function(){
   // TODO: removal of all tables
@@ -117,17 +130,6 @@ exports.getMentorList = function(filter, callback){
     from users u, mentor_info m, college c
     where m.uid = u.id and m.cid = c.id and u.ismentor = true;
   `;
-  db.query(query, function(err, result){
-    if(err){
-      callback(err);
-      return;
-    }
-    callback(null, result.rows);
-  });
-};
-
-exports.getMentorComment = function (mid, callback){
-  var query = `select * from mentor_comment where mid=$1;`;
   db.query(query, function(err, result){
     if(err){
       callback(err);
@@ -328,6 +330,39 @@ exports.getMentorDetail = (mid, callback) => {
     }
     callback(null, result.rows[0]);
   });
+};
+
+exports.getMentorComment = (mid, callback) => {
+  const query = `select * from mentor_comment where mid=$1;`;
+  db.query(query, [mid], function(err, result){
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows);
+  });
+};
+
+exports.createMentorComment = (comment, callback) => {
+  const query = `insert into mentor_comment(
+    mid,
+    author,
+    text)
+    values($1, $2, $3)
+  `;
+  db.query(query,
+    [
+      comment.mid,
+      comment.author,
+      comment.text
+    ],
+    (err, result)=>{
+      if(err){
+        callback(err);
+        return;
+      }
+      callback(null);
+    });
 };
 
 exports.getMentorApplications = (callback) => {
