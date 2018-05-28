@@ -16,7 +16,7 @@
 }
 
 @media screen and (max-width: 767px) {
-  .user-inline.chinese-top {
+  .user-inline > .chinese-top {
     display: none;
   }
   .small-screen {
