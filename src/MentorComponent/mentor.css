@@ -183,8 +183,9 @@
 .filter-item > .item-bottom {
   color: #001BB1;
   font-size: 1.2em;
-  flex: 1;
-  height: auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   margin-left: 5%;
   padding-right: 1em;
 
