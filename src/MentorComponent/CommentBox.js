@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './CommentBox.css';
 
-class CommentBox extends  Component{
+class CommentBox extends Component{
   constructor (props) {
     super(props);
     this.state={data:[]};
@@ -10,8 +10,9 @@ class CommentBox extends  Component{
 
   handleCommentSubmit(comment) {
     this.props.data.push(comment);
-    var comments = this.state.data;
-    var newComments = comments.concat([comment]);
+    this.props.newComment(comment);
+    const comments = this.state.data;
+    const newComments = comments.concat([comment]);
     this.setState({data: newComments});
   }
 
@@ -47,8 +48,8 @@ class CommentForm extends Component{
   handleSubmit(e) {
     e.preventDefault();
 
-    var authorVal = e.target[0].value.trim();
-    var textVal = e.target[1].value.trim();
+    let authorVal = e.target[0].value.trim();
+    let textVal = e.target[1].value.trim();
     if (!textVal || !authorVal) {
       return;
     }
