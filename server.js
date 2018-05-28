@@ -1,15 +1,15 @@
-var express = require('express');
-var pg = require('pg');
-var path = require('path');
-var bodyParser = require('body-parser');
-var db = require('./server/db.js');
-var config = require('./server/config.js');
-var http = require('http');
-var https = require('https');
-var multer  = require('multer');
-var crypto = require('crypto');
-var paypal = require('paypal-rest-sdk');
-var nodemailer = require('nodemailer');
+const express = require('express');
+const pg = require('pg');
+const path = require('path');
+const bodyParser = require('body-parser');
+const db = require('./server/db.js');
+const config = require('./server/config.js');
+const http = require('http');
+const https = require('https');
+const multer  = require('multer');
+const crypto = require('crypto');
+const paypal = require('paypal-rest-sdk');
+const nodemailer = require('nodemailer');
 const nocache = require('nocache');
 // create reusable transporter object using the default SMTP transport
 var transporter = nodemailer.createTransport(config.mail_config);
@@ -460,17 +460,19 @@ app.post('/api/mentee_confirm', (req, res)=>{
 // Static resources
 app.use(express.static(__dirname + '/build'));
 
-app.get('/*', nocache(), function(req, res) {
+const send_index = (req, res) => {
   res.sendFile(__dirname + '/build/index.html');
-});
+}
 
-function server() {
+app.use(send_index);
+
+const server = () => {
   app.listen(PORT, function() {
     console.log('Listening on port %d', PORT);
   });
 }
 
-function main() {
+const main = () => {
   if (process.env.INSTALL === 'yes') {
     db.reset();
   }
