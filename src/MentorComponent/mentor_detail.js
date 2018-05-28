@@ -33,13 +33,17 @@ class MentorDetail extends Component {
   }
 
   newComment(comment) {
-    axios.post('/api/create_order',
+    console.log("new comment");
+    console.log(comment);
+    axios.post('/api/create_mentor_comment',
       {
-        uid:this.props.user.id,
-        mid:this.props.match.params.mid,
-        service_name: service_name,
-        service_price: service_price
-      })
+        mid: this.props.match.params.mid,
+        author: comment.author,
+        text: comment.text
+      }).then(res => {
+      console.log(res.data);
+      // TODO: Error Handling
+    });
   }
 
   initBuy(service_name, service_price){
