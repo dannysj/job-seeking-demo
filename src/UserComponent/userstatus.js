@@ -25,7 +25,7 @@ class UserStatus extends Component {
   render() {
     if(this.props.user){
       return (
-        <div className="right-menu">  
+        <div className="right-menu">
             <Link to="/account">
               <div className="user-inline">
                 <div className="chinese-top">我的账号</div>
@@ -36,7 +36,7 @@ class UserStatus extends Component {
       );
     }
     return (
-      <div className="right menu">
+      <div className="right-menu">
         <div className="large-screen">
         <div className="item">
           <Link className="item" to="/login">

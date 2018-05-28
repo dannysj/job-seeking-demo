@@ -40,3 +40,9 @@
   margin: 0em 1em;
   padding: 0em 1em;
 }
+
+.right-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
