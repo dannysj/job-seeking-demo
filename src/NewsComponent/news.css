@@ -125,6 +125,7 @@
   margin-top: 0.5em;
   font-size: 2rem;
   margin-bottom: 0.5em;
+  line-height: normal;
 }
 
 .wechat-logo {
@@ -201,4 +202,29 @@
 .like-button:hover {
   color: white;
   background-color: #09b83e;
+}
+
+@media screen and (max-width: 991px) {
+  .container-sideline {
+    margin-left: 2em;
+    margin-right: 2em;
+  }
+
+  .list-news-container {
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .list-news-container {
+    width: 85%;
+  }
+  .container-sideline {
+    margin-left: 1em;
+    margin-right: 1em;
+  }
+  .list-news-container.new-big {
+    height: 13em;
+    width: 90%;
+  }
 }

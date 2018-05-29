@@ -155,6 +155,7 @@ body {
 		display: none;
 		background-color: white;
 		height: 80%;
+		opacity: 0;
 	}
 	.opened {
 		display: flex !important;
@@ -163,7 +164,7 @@ body {
 		display: none;
 	}
 	.ui.top.attached.tabular.menu.opened {
-		flex: 0 0 75px;
+		flex: 0 0 65px;
 	}
 
 	.navbar.opened {
@@ -173,7 +174,7 @@ body {
 	}
 
 	.navbar.opened > .item, .navbar.opened > .right-menu {
-		height: 55px;
+		height: 40px;
 	}
 
 	.navbar.opened > .item.title {
@@ -182,8 +183,11 @@ body {
 
 	.nav-list.opened {
 		position: absolute;
-		top: 85px;
+		top: 65px;
 		width: 90%;
+		height: auto;
+		opacity: 1;
+		transition: opacity 0.8s;
 	}
 
 	.Nav-item {
@@ -210,5 +214,14 @@ body {
 	.item > .chinese-top {
 		font-size: 1.5em;
 		color: gray;
+	}
+
+	.navbar {
+		flex: 0 0 65px;
+		height: 65px;
+	}
+	.site-content {
+		padding-top: 65px;
+
 	}
 }

@@ -25,7 +25,7 @@ class Home extends Component {
             <div className="container-sideline">
             <div className="header-text">
               <div className="container-block">
-                <div className="chinese-top">求 职 路 上&nbsp;&nbsp;&nbsp;&nbsp;<strong>你</strong> 并 不 孤 单</div>
+                <div className="chinese-top home-title">求 职 路 上&nbsp;&nbsp;&nbsp;&nbsp;<strong>你</strong> 并 不 孤 单</div>
                 <div className="subtitle">Share Connect Succeed</div>
               </div>
             </div>
