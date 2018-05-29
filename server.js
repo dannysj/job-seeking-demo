@@ -355,52 +355,65 @@ app.post('/api/get_rel_mentees', (req, res)=>{
 });
 
 app.post('/api/create_order', function(req, res){
-  var timestamp = new Date().getTime();
-
-  var create_payment_json = {
-    "intent": "sale",
-    "payer": {
-        "payment_method": "paypal"
-    },
-    "redirect_urls": {
-        "return_url": "http://job.y-l.me/return/payment_complete",
-        "cancel_url": "http://job.y-l.me/return/payment_cancel"
-    },
-    "transactions": [{
-        "item_list": {
-            "items": [{
-                "name": req.body.service_name,
-                "sku": req.body.service_name,
-                "price": req.body.service_price,
-                "currency": "USD",
-                "quantity": 1
-            }]
-        },
-        "amount": {
-            "currency": "USD",
-            "total": req.body.service_price
-        },
-        "description": "Buddy Career 提供的服务"
-    }]
-};
-
-  paypal.payment.create(create_payment_json, function (err, payment) {
-    if (err) {
-      console.log(err);
-      res.json({code: 2, errMsg: 'Paypal API Error'});
-      return;
-    }
-
-    var redirect_url = '';
-    payment.links.forEach(function(el){
-      if(el.rel == 'approval_url')
-        redirect_url = el.href;
-    });
-
-    pendingPayments[payment.id] = {uid: req.body.uid, mid: req.body.mid, service_name: req.body.service_name, service_price: req.body.service_price};
-    console.dir(payment);
-    res.json({code: 0, url: redirect_url});
+  // Temporary code for internal testing.
+  // No payment required, get straight through as if payment confirmed
+  db.addMentorShip(req.body.uid,
+    req.body.mid,
+    req.body.service_name,
+    req.body.service_price,
+    (err) => {
+      if(err){
+        console.log(err);
+        res.json({code: 1});
+      }
+      res.json({code: 0, url: '/account/mentor'});
   });
+//   var timestamp = new Date().getTime();
+//
+//   var create_payment_json = {
+//     "intent": "sale",
+//     "payer": {
+//         "payment_method": "paypal"
+//     },
+//     "redirect_urls": {
+//         "return_url": "http://job.y-l.me/return/payment_complete",
+//         "cancel_url": "http://job.y-l.me/return/payment_cancel"
+//     },
+//     "transactions": [{
+//         "item_list": {
+//             "items": [{
+//                 "name": req.body.service_name,
+//                 "sku": req.body.service_name,
+//                 "price": req.body.service_price,
+//                 "currency": "USD",
+//                 "quantity": 1
+//             }]
+//         },
+//         "amount": {
+//             "currency": "USD",
+//             "total": req.body.service_price
+//         },
+//         "description": "Buddy Career 提供的服务"
+//     }]
+// };
+//
+//   paypal.payment.create(create_payment_json, function (err, payment) {
+//     if (err) {
+//       console.log(err);
+//       res.json({code: 2, errMsg: 'Paypal API Error'});
+//       return;
+//     }
+//
+//     var redirect_url = '';
+//     payment.links.forEach(function(el){
+//       if(el.rel == 'approval_url')
+//         redirect_url = el.href;
+//     });
+//
+//     pendingPayments[payment.id] = {uid: req.body.uid, mid: req.body.mid, service_name: req.body.service_name, service_price: req.body.service_price};
+//     console.dir(payment);
+//     res.json({code: 0, url: redirect_url});
+//   });
 });
 
 app.get('/return/payment_complete', (req, res)=>{

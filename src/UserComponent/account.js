@@ -48,25 +48,21 @@ class Account extends Component {
               </NavLink>
               {
                 this.props.user.ismentor ? (
-                   <NavLink to="/account/mentor_edit">
+                   <div><NavLink to="/account/mentor_edit">
                      我的公开档案
-                    </NavLink>):(
-                    <NavLink to="/account/mentor">
-                     我的导师
-                    </NavLink>)
-              }
-
-              <NavLink to="/account/balance">
-                我的余额
-              </NavLink>
-              {
-                !this.props.user.ismentor ? (
-                  <NavLink to="/account/apply">
-                    申请成为导师
-                  </NavLink>) : (
+                    </NavLink>
+                    <NavLink to="/account/balance">
+                      我的余额
+                    </NavLink>
                     <NavLink to="/account/service">
                       我的Mentee
-                    </NavLink>)
+                    </NavLink></div>):(
+                    <div><NavLink to="/account/mentor">
+                     我的导师
+                   </NavLink>
+                    <NavLink to="/account/apply">
+                      申请成为导师
+                    </NavLink></div>)
               }
               {
                 this.props.user.isadmin && (
