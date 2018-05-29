@@ -1,7 +1,6 @@
 .comment-form{
   position: fixed;
-  bottom: 50px;
-  right: 75px;
+  right: 20%;
 }
 
 .form-author-img {
@@ -34,6 +33,7 @@
   font-weight: bold;
   display: inline-block;
   line-height: 200%;
+  margin-left:10px;
 }
 
 .comment-time{
@@ -44,7 +44,7 @@
 
 
 .comment-content{
-  margin-left: 50px;
+  margin-left: 60px;
   padding: 5px 10px;
   background-color: lightgray;
   border-radius: 10px;

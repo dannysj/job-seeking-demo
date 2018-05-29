@@ -9,6 +9,7 @@ class CommentBox extends Component{
   }
 
   handleCommentSubmit(comment) {
+    console.log(comment);
     this.props.comments.push(comment);
     this.props.onCommentSubmit(comment);
     this.setState({comments: [...this.state.comments, comment]});
@@ -17,8 +18,8 @@ class CommentBox extends Component{
   render() {
     return (
       <div className="comment-box">
-        {this.props.user?<CommentForm onCommentSubmit={this.handleCommentSubmit} user={this.props.user} />:<div/>}
         {this.props.comments.length === 0? <div>暂无评价</div> : <CommentList comments={this.props.comments} />}
+        {this.props.user?<CommentForm onCommentSubmit={this.handleCommentSubmit} user={this.props.user} />:<div/>}
       </div>
     );
   }
@@ -55,7 +56,7 @@ class CommentForm extends Component{
       last: this.props.user.last,
       time_added: new Date().toGMTString(),
       profile_pic: this.props.user.profile_pic,
-      uid:  this.props.user.uid
+      uid:  this.props.user.id
     });
 
     e.target[0].value = '';
@@ -77,7 +78,8 @@ class Comment extends Component {
     return (
       <div className="comment">
         <img className="comment-img" src={this.props.comment.profile_pic}/>
-        <div className="comment-author">{this.props.comment.first + this.props.comment.last}</div>  <div className="comment-time">{this.props.comment.time_added}</div>
+        <div className="comment-author">{this.props.comment.first + this.props.comment.last}</div>
+        <div className="comment-time">{new Date(this.props.comment.time_added).toLocaleString()}</div>
         <div className="comment-content">{this.props.comment.text}</div>
       </div>
     );

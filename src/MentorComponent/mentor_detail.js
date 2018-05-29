@@ -190,7 +190,7 @@ class MentorDetail extends Component {
                 过往评价
             </div>
           </h2>
-          <CommentBox comments={this.state.comments} user={this.props.user} onCommentSubmit={(comment) => this.handleCommentSubmit(comment)}/>
+          <CommentBox comments={this.state.comments} user={this.props.user} onCommentSubmit={this.handleCommentSubmit}/>
         </div>
       </div>
 
