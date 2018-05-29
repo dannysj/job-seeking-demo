@@ -1,8 +1,3 @@
-.comment-form{
-  position: fixed;
-  right: 20%;
-}
-
 .form-author-img {
   height: 50px;
   width: 50px;
@@ -12,7 +7,12 @@
 }
 
 .form-comment-input{
-  margin-right: 15px;
+  margin: 0 30px;
+  width: 100%;
+}
+
+.form-comment-submit{
+  margin: 5px 30px !important;
 }
 
 .comment{
@@ -33,7 +33,7 @@
   font-weight: bold;
   display: inline-block;
   line-height: 200%;
-  margin-left:10px;
+  margin:0 10px;
 }
 
 .comment-time{

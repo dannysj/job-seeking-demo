@@ -8,7 +8,7 @@ import CommentBox from "./CommentBox";
 class MentorDetail extends Component {
   constructor (props) {
     super(props);
-    this.state = {mentor: {first: "", last: "", service: []}, showAddServiceModal: false, comments: []};
+    this.state = {mentor: {first: "", last: "", service: []}, showAddServiceModal: false};
 
     axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
@@ -19,23 +19,7 @@ class MentorDetail extends Component {
       }
     });
 
-    axios.post('/api/get_mentor_comment', {mid: this.props.match.params.mid}).then(res => {
-      if (res.data.code === 0) {
-        this.setState({comments: res.data.list});
-      } else {
-        //TODO: Error Handling
-      }
-    });
-
     this.initBuy = this.initBuy.bind(this);
-    this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
-  }
-
-  handleCommentSubmit(comment) {
-    comment.mid = this.props.match.params.mid;
-    axios.post('/api/create_mentor_comment', comment).then(res => {
-      // TODO: Error Handling
-    });
   }
 
   initBuy(service_name, service_price){
@@ -190,7 +174,7 @@ class MentorDetail extends Component {
                 过往评价
             </div>
           </h2>
-          <CommentBox comments={this.state.comments} user={this.props.user} onCommentSubmit={this.handleCommentSubmit}/>
+          <CommentBox user={this.props.user} mid={this.props.match.params.mid}/>
         </div>
       </div>
 

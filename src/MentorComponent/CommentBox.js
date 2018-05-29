@@ -1,24 +1,35 @@
 import React, {Component} from 'react';
 import './CommentBox.css';
+import axios from "axios/index";
 
 class CommentBox extends Component{
   constructor (props) {
     super(props);
     this.state={comments:[]};
     this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
+
+    axios.post('/api/get_mentor_comment', {mid: this.props.mid}).then(res => {
+      if (res.data.code === 0) {
+        this.setState({comments: res.data.list});
+      } else {
+        //TODO: Error Handling
+      }
+    });
   }
 
   handleCommentSubmit(comment) {
-    console.log(comment);
-    this.props.comments.push(comment);
-    this.props.onCommentSubmit(comment);
     this.setState({comments: [...this.state.comments, comment]});
+
+    comment.mid = this.props.mid;
+    axios.post('/api/create_mentor_comment', comment).then(res => {
+      // TODO: Error Handling
+    });
   }
 
   render() {
     return (
       <div className="comment-box">
-        {this.props.comments.length === 0? <div>暂无评价</div> : <CommentList comments={this.props.comments} />}
+        {!this.props.hideComment && (this.state.comments.length === 0? <div>暂无评价</div> : <CommentList comments={this.state.comments} />)}
         {this.props.user?<CommentForm onCommentSubmit={this.handleCommentSubmit} user={this.props.user} />:<div/>}
       </div>
     );
@@ -65,8 +76,9 @@ class CommentForm extends Component{
   render() {
     return(
       <form className="comment-form" onSubmit={this.handleSubmit}>
-        <input className="form-comment-input" type="text" placeholder="说点什么吧......" />
-        <input type="submit" value="提交" className="ui button" />
+
+        <textarea rows="8" className="form-comment-input" placeholder="说点什么吧......" />
+        <input className="form-comment-submit ui button" type="submit" value="提交" />
       </form>
     );
   }
