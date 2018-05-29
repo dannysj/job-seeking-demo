@@ -165,4 +165,50 @@ body {
 	.ui.top.attached.tabular.menu.opened {
 		flex: 0 0 75px;
 	}
+
+	.navbar.opened {
+		height: 80%;
+		transition: height 0.5s;
+		align-items: flex-start;
+	}
+
+	.navbar.opened > .item, .navbar.opened > .right-menu {
+		height: 55px;
+	}
+
+	.navbar.opened > .item.title {
+		display: none;
+	}
+
+	.nav-list.opened {
+		position: absolute;
+		top: 85px;
+		width: 90%;
+	}
+
+	.Nav-item {
+		display: inline-flex;
+
+	}
+
+	.nav-list > .item {
+		margin: 0.5em 0em;
+		color: gray
+	}
+	.item.active-custom {
+		color: black;
+	}
+	.App-subtitle {
+		order: 2;
+
+	}
+	.chinese-top {
+		order: 1;
+		margin-right: 0.5em;
+	}
+
+	.item > .chinese-top {
+		font-size: 1.5em;
+		color: gray;
+	}
 }
