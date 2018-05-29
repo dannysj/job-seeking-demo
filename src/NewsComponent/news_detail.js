@@ -87,7 +87,12 @@ class NewsDetail extends Component {
             <div className="vertical-line-half"></div>
             <div className="news-detail-content" dangerouslySetInnerHTML={{__html:this.state.news.content}}></div>
               <Divider hidden clearing />
-            <ProfileFollow user={{"last": this.state.news.author_last, "first": this.state.news.author_first, "profile_pic": this.state.news.profile_pic}} actionClicked={this.followButtonPressed}/>
+            <ProfileFollow user={{
+                  "last": this.state.news.author_last, 
+                  "first": this.state.news.author_first,
+                  "profile_pic": this.state.news.profile_pic,
+                  "cover": this.state.news.author_cover
+                }} actionClicked={this.followButtonPressed}/>
           </div>
           <div className="news-sidebar">
           </div>

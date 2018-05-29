@@ -30,7 +30,8 @@ class ProfileFollow extends Component {
             />
           </div>
           <div className="follow-subtitle">
-            {"我是大哥 请叫我大佬"}
+            {this.state.user.cover?
+              this.state.user.cover:'该作者并未留下自我介绍'}
           </div>
         </div>
       </div>

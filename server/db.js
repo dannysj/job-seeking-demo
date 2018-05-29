@@ -193,6 +193,7 @@ exports.getNewsDetail = (nid, callback) => {
       u.first as author_first,
       u.last as author_last,
       u.profile_pic as profile_pic,
+      u.cover as author_cover,
       n.type as type,
       to_char(n.publish_time,'DD Mon HH24:MI') as publish_time,
       n.thumbnail as thumbnail,
