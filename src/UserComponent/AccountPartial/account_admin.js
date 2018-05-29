@@ -88,7 +88,7 @@ class AccountAdmin extends React.Component {
   handleSubmitNews(){
     let data = this.state.news;
     data.author_id = this.props.user.id;
-    axios.post('/api/admin/create_news',data).then(res => {
+    axios.post('/api/create_news',data).then(res => {
       if(res.data.code===0){
         console.log(res.data.nid);
         alert('success'); // TODO: change this

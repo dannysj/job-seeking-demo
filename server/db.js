@@ -13,6 +13,7 @@ exports.reset = function(){
     drop table if exists industry;
     drop table if exists user_college;
     drop table if exists college;
+    drop table if exists message;
     drop table if exists users;
     create table if not exists users (
       id serial unique primary key,
@@ -31,6 +32,13 @@ exports.reset = function(){
       wechat text,
       resume text,
       isactivated
+    );
+    create table if not exists message (
+      id serial unique primary key,
+      origin int references users(id), -- Currently not used. Will be used when between-user messaging is implemented
+      destination int references users(id),
+      type int, -- 1 for text
+      content text
     );
     create table if not exists industry (
       id serial unique primary key,

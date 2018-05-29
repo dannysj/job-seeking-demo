@@ -150,9 +150,9 @@ app.post('/api/get_college_list', function(req, res){
   });
 });
 
-app.post('/api/admin/create_news', function(req, res){
+app.post('/api/create_news', function(req, res){
   // TODO: Authentication
-  req.body.type=0; // News submitted by admin
+  req.body.type=0; // News submitted by admin (Obselated, remove if necessary)
   db.createNews(req.body, (err, nid) => {
     if(err){
       console.log(err);
