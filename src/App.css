@@ -214,6 +214,7 @@ body {
 	.item > .chinese-top {
 		font-size: 1.5em;
 		color: gray;
+		margin-right: 0;
 	}
 
 	.navbar {

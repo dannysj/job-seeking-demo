@@ -190,6 +190,7 @@
   position: fixed;
   right: 50px;
   bottom: 50px;
+  z-index: 15;
 }
 
 .like-button > * {
@@ -226,5 +227,24 @@
   .list-news-container.new-big {
     height: 13em;
     width: 90%;
+  }
+
+  .news-content {
+    flex-flow: column;
+    align-items: center;
+  }
+  .news-detail-container {
+    width: 90%;
+    order: 1;
+  }
+
+  .icon-sidebar {
+    order: 2;
+    flex-flow: row;
+  }
+
+  .like-button {
+    right: 2em;
+    bottom: 2em;
   }
 }

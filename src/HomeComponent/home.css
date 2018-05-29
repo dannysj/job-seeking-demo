@@ -161,4 +161,8 @@
   .home-title {
     font-size: 0.8em;
   }
+  .footer-container {
+    margin-left: 2em;
+    margin-right: 2em;
+  }
 }
