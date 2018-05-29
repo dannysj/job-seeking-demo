@@ -126,7 +126,7 @@ class Mentor extends Component {
     return (
       <div className="flex-container">
         <div className="ui top attached tabular menu top-bar">
-          <div className="ui container">
+          <div className="ui container inner-topbar">
           {
             (this.state.selected.Majors.length > 0) ? (this.state.selected.Majors.map((el, index) => (
               <div className="filter-item" key={index} onClick={this.filterBarPressed}>

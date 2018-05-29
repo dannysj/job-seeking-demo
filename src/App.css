@@ -155,6 +155,7 @@ body {
 		display: none;
 		background-color: white;
 		height: 80%;
+		opacity: 0;
 	}
 	.opened {
 		display: flex !important;
@@ -163,6 +164,65 @@ body {
 		display: none;
 	}
 	.ui.top.attached.tabular.menu.opened {
-		flex: 0 0 75px;
+		flex: 0 0 65px;
+	}
+
+	.navbar.opened {
+		height: 80%;
+		transition: height 0.5s;
+		align-items: flex-start;
+	}
+
+	.navbar.opened > .item, .navbar.opened > .right-menu {
+		height: 40px;
+	}
+
+	.navbar.opened > .item.title {
+		display: none;
+	}
+
+	.nav-list.opened {
+		position: absolute;
+		top: 65px;
+		width: 90%;
+		height: auto;
+		opacity: 1;
+		transition: opacity 0.8s;
+	}
+
+	.Nav-item {
+		display: inline-flex;
+
+	}
+
+	.nav-list > .item {
+		margin: 0.5em 0em;
+		color: gray
+	}
+	.item.active-custom {
+		color: black;
+	}
+	.App-subtitle {
+		order: 2;
+
+	}
+	.chinese-top {
+		order: 1;
+		margin-right: 0.5em;
+	}
+
+	.item > .chinese-top {
+		font-size: 1.5em;
+		color: gray;
+		margin-right: 0;
+	}
+
+	.navbar {
+		flex: 0 0 65px;
+		height: 65px;
+	}
+	.site-content {
+		padding-top: 65px;
+
 	}
 }
