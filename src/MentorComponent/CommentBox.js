@@ -64,7 +64,6 @@ class CommentForm extends Component{
   render() {
     return(
       <form className="comment-form" onSubmit={this.handleSubmit}>
-        <img className="form-author-img" src={this.props.user.profile_pic}/>
         <input className="form-comment-input" type="text" placeholder="说点什么吧......" />
         <input type="submit" value="提交" className="ui button" />
       </form>
