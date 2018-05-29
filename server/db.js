@@ -346,7 +346,9 @@ exports.getMentorDetail = (mid, callback) => {
       m.offer_company as offer_company,
       m.bio as bio,
       m.service as service,
-      m.num_weekly_slots as num_weekly_slots
+      m.num_weekly_slots as num_weekly_slots,
+      m.num_weekly_slots - (select count(*) from mentor_rel
+        where mid=m.id and now()-start_time<'1 week') as num_availability
     from users u, mentor_info m, college c
     where m.uid = u.id and m.cid = c.id and m.id = $1;
   `;

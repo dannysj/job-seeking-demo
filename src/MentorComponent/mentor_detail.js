@@ -135,6 +135,10 @@ class MentorDetail extends Component {
               <div className="sub header">具体服务范围</div>
             </div>
           </h2>
+          <p>
+            <b>{this.state.mentor.last+this.state.mentor.first}</b>
+            本周还可提供{this.state.mentor.num_availability}次服务
+          </p>
           <table class="ui celled table">
             <thead>
               <tr><th>服务名称</th>
