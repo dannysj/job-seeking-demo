@@ -4,40 +4,37 @@ import './CommentBox.css';
 class CommentBox extends Component{
   constructor (props) {
     super(props);
-    this.state={data:[]};
+    this.state={comments:[]};
     this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
   }
 
   handleCommentSubmit(comment) {
-    this.props.data.push(comment);
-    this.props.newComment(comment);
-    const comments = this.state.data;
-    const newComments = comments.concat([comment]);
-    this.setState({data: newComments});
+    this.props.comments.push(comment);
+    this.props.onCommentSubmit(comment);
+    this.setState({comments: [...this.state.comments, comment]});
   }
 
   render() {
     return (
       <div className="comment-box">
-        <CommentForm data={this.props.data} onCommentSubmit={this.handleCommentSubmit} />
-        <CommentList data={this.props.data} />
+        {this.props.user?<CommentForm onCommentSubmit={this.handleCommentSubmit} user={this.props.user} />:<div/>}
+        {this.props.comments.length === 0? <div>暂无评价</div> : <CommentList comments={this.props.comments} />}
       </div>
     );
   }
 }
+
+
 class CommentList extends Component{
   render() {
     return (
       <div className="comment-list">
-        {this.props.data.map(function(c){
-          return (
-            <Comment author={c.author} text={c.text} />
-          );
-        })}
+        {this.props.comments.map(comment => (<Comment comment={comment}/>))}
       </div>
     );
   }
 }
+
 
 class CommentForm extends Component{
   constructor (props) {
@@ -48,40 +45,42 @@ class CommentForm extends Component{
   handleSubmit(e) {
     e.preventDefault();
 
-    let authorVal = e.target[0].value.trim();
-    let textVal = e.target[1].value.trim();
-    if (!textVal || !authorVal) {
+    const text = e.target[0].value.trim();
+    if (!text) {
       return;
     }
-    this.props.onCommentSubmit({author: authorVal, text: textVal});
+    this.props.onCommentSubmit({
+      text: text,
+      first: this.props.user.first,
+      last: this.props.user.last,
+      time_added: new Date().toGMTString(),
+      profile_pic: this.props.user.profile_pic,
+      uid:  this.props.user.uid
+    });
+
     e.target[0].value = '';
-    e.target[1].value = '';
   }
 
   render() {
     return(
       <form className="comment-form" onSubmit={this.handleSubmit}>
-        <div>
-          <span className="ui text">Name</span>
-          <input type="text" placeholder="Your name" className="ui text" />
-        </div>
-        <div>
-          <span className="ui text">Comment</span>
-          <input type="text" placeholder="Say something..." className="ui text" />
-        </div>
-
-        <input type="submit" value="Post" className="ui button" />
+        <img className="form-author-img" src={this.props.user.profile_pic}/>
+        <input className="form-comment-input" type="text" placeholder="说点什么吧......" />
+        <input type="submit" value="提交" className="ui button" />
       </form>
     );
   }
 }
 
+
 class Comment extends Component {
   render() {
     return (
       <div className="comment">
-        <h2 className="author">{this.props.author}</h2>
-        <p className="comment-content">{this.props.text}</p>
+        <img className="comment-img" src={this.props.comment.profile_pic}/>
+        <div className="comment-author">{this.props.comment.first + this.props.comment.last}</div>
+        <div className="comment-content">{this.props.comment.text}</div>
+        <div className="comment-time">{this.props.comment.time_added}</div>
       </div>
     );
   }

@@ -333,7 +333,17 @@ exports.getMentorDetail = (mid, callback) => {
 };
 
 exports.getMentorComment = (mid, callback) => {
-  const query = `select * from mentor_comment where mid=$1;`;
+  const query = `select
+    c.id as id,
+    c.mid as mid,
+    c.time_added as time_added,
+    c.text as text,
+    c.id as uid,
+    u.first as first,
+    u.last as last,
+    u.profile_pic as profile_pic
+    from users u, mentor_comment c
+    where c.mid=$1 and c.uid=u.id;`;
   db.query(query, [mid], function(err, result){
     if(err){
       callback(err);
@@ -346,15 +356,15 @@ exports.getMentorComment = (mid, callback) => {
 exports.createMentorComment = (comment, callback) => {
   const query = `insert into mentor_comment(
     mid,
-    author,
-    text)
+    text,
+    uid)
     values($1, $2, $3)
   `;
   db.query(query,
     [
       comment.mid,
-      comment.author,
-      comment.text
+      comment.text,
+      comment.uid,
     ],
     (err, result)=>{
       if(err){

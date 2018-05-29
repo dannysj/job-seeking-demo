@@ -1,3 +1,33 @@
+.form-author-img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  display: block;
+}
+.form-comment-input{
+
+}
+
+.comment-img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  float: left;
+  display: block;
+}
+
+.comment-author{
+  font-size: 18px;
+  font-weight: bold;
+  display: block;
+}
+
+.comment{
+  padding: 30px 20px;
+  background-color: lightgray;
+}
+
 .comment-content{
-  /*padding-left: 16px;*/
+  padding-left: 30px;
+  width: fit-content;
 }

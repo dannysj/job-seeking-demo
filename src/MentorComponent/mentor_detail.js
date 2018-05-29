@@ -8,7 +8,7 @@ import CommentBox from "./CommentBox";
 class MentorDetail extends Component {
   constructor (props) {
     super(props);
-    this.state = {mentor: {first: "", last: "", service: []}, showAddServiceModal: false, commentData: []};
+    this.state = {mentor: {first: "", last: "", service: []}, showAddServiceModal: false, comments: []};
 
     axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
@@ -21,27 +21,19 @@ class MentorDetail extends Component {
 
     axios.post('/api/get_mentor_comment', {mid: this.props.match.params.mid}).then(res => {
       if (res.data.code === 0) {
-        console.log(res.data);
-        this.setState({commentData: res.data.list});
+        this.setState({comments: res.data.list});
       } else {
         //TODO: Error Handling
       }
     });
 
     this.initBuy = this.initBuy.bind(this);
-    this.newComment = this.newComment.bind(this);
+    this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
   }
 
-  newComment(comment) {
-    console.log("new comment");
-    console.log(comment);
-    axios.post('/api/create_mentor_comment',
-      {
-        mid: this.props.match.params.mid,
-        author: comment.author,
-        text: comment.text
-      }).then(res => {
-      console.log(res.data);
+  handleCommentSubmit(comment) {
+    comment.mid = this.props.match.params.mid;
+    axios.post('/api/create_mentor_comment', comment).then(res => {
       // TODO: Error Handling
     });
   }
@@ -198,7 +190,7 @@ class MentorDetail extends Component {
                 过往评价
             </div>
           </h2>
-          <CommentBox data={this.state.commentData} newComment={(comment)=>this.newComment(comment)}/>
+          <CommentBox comments={this.state.comments} user={this.props.user} onCommentSubmit={(comment) => this.handleCommentSubmit(comment)}/>
         </div>
       </div>
 
