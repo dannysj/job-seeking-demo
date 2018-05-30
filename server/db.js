@@ -339,6 +339,7 @@ exports.getMentorComment = (mid, callback) => {
     c.time_added as time_added,
     c.text as text,
     c.id as uid,
+    c.reply as reply,
     u.first as first,
     u.last as last,
     u.profile_pic as profile_pic

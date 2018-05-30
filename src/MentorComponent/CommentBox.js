@@ -28,10 +28,11 @@ class CommentBox extends Component{
   }
 
   handleCommentReply(comment){
-    console.log(comment);
-    this.setState({comments: [...this.state.comments, comment]});
+    let comments = this.state.comments;
+    comments[comments.findIndex(item => item.id === comment.id)].reply = comment.reply;
 
-    comment.mid = this.props.mid;
+    this.setState({comments: comments});
+
     axios.post('/api/create_mentor_reply', comment).then(res => {
       // TODO: Error Handling
     });
@@ -117,19 +118,13 @@ class Comment extends Component {
     }
 
     this.props.onCommentReply({
-      text: this.props.comment.text,
-      first: this.props.user.first,
-      last: this.props.user.last,
-      time_added: new Date().toGMTString(),
-      profile_pic: this.props.user.profile_pic,
-      uid:  this.props.user.id,
       id: this.props.comment.id,
       reply: reply
     });
 
-    console.log(reply);
-
     e.target[0].value = '';
+    this.handleDisplayCommentReply();
+
   }
 
   handleDisplayCommentReply(){
@@ -144,8 +139,13 @@ class Comment extends Component {
         <div className="comment-time">{new Date(this.props.comment.time_added).toLocaleString()}</div>
         <div className="comment-content">{this.props.comment.text}</div>
 
-        {this.props.comment.reply ? <div className="comment-reply">{this.props.comment.reply}</div> :
+        {this.props.comment.reply ? (
+            <div className="comment-reply">
+              <span>Mentor回复: </span>
+              {this.props.comment.reply}
+            </div>) :
           <div onClick={this.handleDisplayCommentReply}>回复</div>}
+
         {this.state.displayCommentReply ? (
           <form className="reply-form" onSubmit={this.handleSubmit}>
             <textarea rows="8" className="reply-input" placeholder="回复此评论"/>

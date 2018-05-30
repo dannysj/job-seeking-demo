@@ -85,6 +85,17 @@ app.post('/api/create_mentor_comment', function(req, res){
   });
 });
 
+app.post('/api/create_mentor_reply', function(req, res){
+  db.createMentorReply(req.body, (err) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0});
+  });
+});
+
 app.post('/api/get_news_list', (req, res) => {
   db.getNewsList(req.body.batch_size, req.body.batch_num, (err, news_list) => {
     if(err){
