@@ -375,6 +375,22 @@ exports.createMentorComment = (comment, callback) => {
     });
 };
 
+exports.createMentorReply = (comment, callback) => {
+  const query = `update mentor_comment set reply = $2 where id=$1`;
+  db.query(query,
+    [
+      comment.id,
+      comment.reply
+    ],
+    (err, result)=>{
+      if(err){
+        callback(err);
+        return;
+      }
+      callback(null);
+    });
+};
+
 exports.getMentorApplications = (callback) => {
   var query = `
     select u.first as first,
