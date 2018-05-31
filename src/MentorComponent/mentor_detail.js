@@ -174,7 +174,7 @@ class MentorDetail extends Component {
                 过往评价
             </div>
           </h2>
-          <CommentBox user={this.props.user} mid={this.props.match.params.mid}/>
+          <CommentBox user={this.props.user} mid={this.props.match.params.mid} displayCommentReplyButton={true}/>
         </div>
       </div>
 

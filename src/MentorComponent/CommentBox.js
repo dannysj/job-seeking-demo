@@ -42,22 +42,19 @@ class CommentBox extends Component{
     return (
       <div className="comment-box">
         {!this.props.hideComment &&
-          (this.state.comments.length === 0 ?
-            <div>暂无评价</div> :
-            <CommentList comments={this.state.comments} onCommentReply={this.handleCommentReply} user={this.props.user}/>)
-        }
-        {this.props.user ? <CommentForm onCommentSubmit={this.handleCommentSubmit} user={this.props.user}/> : <div/>}
-      </div>
-    );
-  }
-}
+        (this.state.comments.length === 0 ? (
+          <div style={{display: 'flex', justifyContent: 'center', lineHeight: '200%'}}>暂无评价</div>
+        ) : (
+          <div className="comment-list">
+            {this.state.comments.map(comment => (
+              <Comment comment={comment}
+                       onCommentReply={this.handleCommentReply}
+                       displayCommentReplyButton={this.props.displayCommentReplyButton}/>
+            ))}
+          </div>
+        ))}
 
-
-class CommentList extends Component{
-  render() {
-    return (
-      <div className="comment-list">
-        {this.props.comments.map(comment => (<Comment comment={comment} onCommentReply={this.props.onCommentReply} user={this.props.user}/>))}
+        {this.props.user.id && <CommentForm onCommentSubmit={this.handleCommentSubmit} user={this.props.user}/>}
       </div>
     );
   }
@@ -83,8 +80,7 @@ class CommentForm extends Component{
       last: this.props.user.last,
       time_added: new Date().toGMTString(),
       profile_pic: this.props.user.profile_pic,
-      uid:  this.props.user.id,
-      id: this.props.comment.id
+      uid:  this.props.user.id
     });
 
     e.target[0].value = '';
@@ -140,17 +136,22 @@ class Comment extends Component {
         <div className="comment-content">{this.props.comment.text}</div>
 
         {this.props.comment.reply ? (
-            <div className="comment-reply">
-              <span>Mentor回复: </span>
+          <div className="comment-reply comment-content">
+              <span style={{fontWeight: 'Bold'}}>Mentor回复: </span>
               {this.props.comment.reply}
-            </div>) :
-          <div onClick={this.handleDisplayCommentReply}>回复</div>}
-
-        {this.state.displayCommentReply ? (
-          <form className="reply-form" onSubmit={this.handleSubmit}>
-            <textarea rows="8" className="reply-input" placeholder="回复此评论"/>
-            <input className="reply-submit ui button" type="submit" value="提交"/>
-          </form>) : <div/>}
+            </div>
+          ):(
+            this.props.displayCommentReplyButton &&
+              <div>
+                <div onClick={this.handleDisplayCommentReply}>回复</div>
+                {this.state.displayCommentReply &&
+                  <form className="reply-form" onSubmit={this.handleSubmit}>
+                    <textarea rows="8" className="reply-input" placeholder="回复此评论"/>
+                    <input className="reply-submit ui button" type="submit" value="提交"/>
+                  </form>
+                }
+              </div>
+        )}
       </div>
     );
   }
