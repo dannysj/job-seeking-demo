@@ -1,4 +1,5 @@
-create table if not exists mentor_comment
+-- auto-generated definition
+create table mentor_comment
 (
   id          serial  not null
     constraint mentor_comment_id_pk
