@@ -1,20 +1,18 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {Button, Image} from 'semantic-ui-react';
-import Disqus from './disqus.js';
 import PropTypes from 'prop-types';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import './mentor.css';
+import CommentBox from "./CommentBox";
 
 class MentorDetail extends Component {
-
   constructor (props) {
     super(props);
-    this.state={mentor:{first:"", last:"", service:[]}, showAddServiceModal: false};
+    this.state = {mentor: {first: "", last: "", service: []}, showAddServiceModal: false};
 
     axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
-        console.log(res.data.mentor);
         this.setState({mentor:res.data.mentor});
       }
       else{
@@ -176,12 +174,9 @@ class MentorDetail extends Component {
             <i className="comment alternate outline icon"/>
             <div className="content">
                 过往评价
-                <Disqus id={this.state.mentor.id}
-                        title={this.state.mentor.id}
-                        path={"/mentor" + this.state.mentor.id}
-                />
             </div>
           </h2>
+          <CommentBox user={this.props.user} mid={this.props.match.params.mid} displayCommentReplyButton={true}/>
         </div>
       </div>
 

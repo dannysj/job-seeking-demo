@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Modal, Button, Image, Header, Input, Segment } from 'semantic-ui-react';
+import {Button} from 'semantic-ui-react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import CommentBox from "../../MentorComponent/CommentBox";
 
 class AccountMentor extends React.Component {
   constructor(props) {
@@ -63,7 +63,8 @@ class AccountMentor extends React.Component {
                 </div>
                 {el.status==1 && <Button floated='right' disabled>服务进行中</Button>}
                 {el.status==2 && <Button floated='right' positive onClick={() => this.handleConfirm(el.mid)}>确认完成</Button>}
-                {el.status==3 && <Button floated='right' onClick={() => this.handleAppDecision(el.uid, el.mid, false)}>评价导师</Button>}
+                {el.status==3 && <Button floated='right'>评价导师</Button> }
+                {el.status==3 && <CommentBox className="comment-box" user={this.props.user} mid={el.id} hideComment={true}/>}
               </div>
             ))}
           </div>

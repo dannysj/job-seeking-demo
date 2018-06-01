@@ -1,0 +1,49 @@
+.comment-box{
+  margin: 0 30px;
+}
+
+.comment-input{
+  width: 100%;
+}
+
+.comment-submit{
+
+}
+
+.comment{
+  padding: 10px 20px;
+  font-size: 18px;
+}
+
+.comment-img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  float: left;
+  display: block;
+}
+
+.comment-author{
+  font-size: 20px;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 200%;
+  margin:0 10px;
+}
+
+.comment-time{
+  display: inline-block;
+  color: gray;
+  line-height: 200%;
+}
+
+
+.comment-content{
+  margin: 10px 0 10px 60px;
+  padding: 5px 10px;
+  background-color: lightgray;
+  border-radius: 10px;
+  clear: both;
+  line-height: 200%;
+  width: fit-content;
+}

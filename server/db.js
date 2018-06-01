@@ -3,6 +3,19 @@ var pg = require('pg');
 var uuidv4 = require('uuid/v4');
 var config = require('./config.js');
 var db = new pg.Pool(config.db);
+var fs = require('fs');
+
+exports.patch = () => {
+  // Patch mentor_comment
+  const sql = fs.readFileSync('./db_patches/mentor_comment.sql').toString();
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log('Table mentor_comment Created');
+  });
+};
 
 exports.reset = function(){
   // TODO: removal of all tables
@@ -370,7 +383,66 @@ exports.getMentorDetail = (mid, callback) => {
   });
 };
 
-exports.getMentorDetailByUid = (uid, callback) => {
+exports.getMentorComment = (mid, callback) => {
+  const query = `select
+    c.id as id,
+    c.mid as mid,
+    c.time_added as time_added,
+    c.text as text,
+    c.id as uid,
+    c.reply as reply,
+    u.first as first,
+    u.last as last,
+    u.profile_pic as profile_pic
+    from users u, mentor_comment c
+    where c.mid=$1 and c.uid=u.id;`;
+  db.query(query, [mid], function(err, result){
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows);
+  });
+};
+
+exports.createMentorComment = (comment, callback) => {
+  const query = `insert into mentor_comment(
+    mid,
+    text,
+    uid)
+    values($1, $2, $3)
+  `;
+  db.query(query,
+    [
+      comment.mid,
+      comment.text,
+      comment.uid,
+    ],
+    (err, result)=>{
+      if(err){
+        callback(err);
+        return;
+      }
+      callback(null);
+    });
+};
+
+exports.createMentorReply = (comment, callback) => {
+  const query = `update mentor_comment set reply = $2 where id=$1`;
+  db.query(query,
+    [
+      comment.id,
+      comment.reply
+    ],
+    (err, result)=>{
+      if(err){
+        callback(err);
+        return;
+      }
+      callback(null);
+    });
+};
+  exports.getMentorDetailByUid = (uid, callback) => {
   var query = `
     select u.id as uid,
       u.first as first,
@@ -391,10 +463,6 @@ exports.getMentorDetailByUid = (uid, callback) => {
     where m.uid = u.id and m.cid = c.id and u.id = $1;
   `;
   db.query(query, [uid], (err, result) => {
-    if(err){
-      callback(err);
-      return;
-    }
     callback(null, result.rows[0]);
   });
 };
