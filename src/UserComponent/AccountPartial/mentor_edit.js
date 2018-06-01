@@ -5,21 +5,23 @@ import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import '../account.css';
 
-//TODO: Bugs: Description text is not blank on next form input after submit edit
-//TODO: verification
 
-class AccountApply extends React.Component {
+class MentorEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      statusChecked: false,
-      hasNotApplied: false,
       mentor_info:
         {
           services: [],
           uid: this.props.user.id
         },
       showAddServiceModal: false,
+      mentor: {
+        bio: null,
+        college_name: null,
+        offer_company: null,
+        offer_title: null
+      },
       editMode: false,
       editIndex: -1
     };
@@ -54,18 +56,14 @@ class AccountApply extends React.Component {
 
     axios.post('/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
       if (res.data.code === 0) {
-        let mentor = res.data.mentor;
-        console.log(mentor);
-        mentor.services = mentor.service; // Sorry for the terrible naming
-        this.setState({mentor_info: mentor, statusChecked:true, hasNotApplied: false});
+        console.log(res.data.mentor);
+        res.data.mentor.services = res.data.mentor.service; // sorry for the terrible naming.
+        this.setState({
+          mentor_info: res.data.mentor
+        });
       }
       else {
-        if(res.data.code == 55){
-          this.setState({statusChecked: true, hasNotApplied: true});
-        }
-        else{
-          NotificationManager.error('数据库错误', '错误')
-        }
+        NotificationManager.error('无法获取Mentor信息', '错误');
       }
     });
   }
@@ -132,25 +130,13 @@ class AccountApply extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     console.log(this.state.mentor_info);
-    let apiUrl = '';
-    if(this.state.hasNotApplied){
-      apiUrl = '/api/mentor_apply';
-    }
-    else{
-      apiUrl = '/api/mentor_edit';
-    }
-
-    axios.post(apiUrl, this.state.mentor_info).then(res => {
+    axios.post('/api/mentor_edit', this.state.mentor_info).then(res => {
       if (res.data.code === 0) {
-        NotificationManager.success('我们已收到您的表格','成功');
+        NotificationManager.success('已经更改了您的信息', '成功');
+        this.context.router.history.push('/account/mentor_edit');
       }
       else {
-        if(res.data.code == 45) {
-          NotificationManager.error('请先完善您的基础资料','错误');
-        }
-        else{
-          NotificationManager.error('数据库错误','错误');
-        }
+        NotificationManager.error('无法连接到服务器', '错误');
       }
     });
   }
@@ -183,8 +169,7 @@ class AccountApply extends React.Component {
     var editDesc = this.tempService['description'];
 
     return (
-      !this.state.statusChecked?("请稍后..."):(
-        <div>
+      <div>
         <NotificationContainer />
         <div className={modalClassName}>
           <i className="close icon"/>
@@ -217,8 +202,7 @@ class AccountApply extends React.Component {
             </div>
           </div>
         </div>
-        {!this.state.hasNotApplied ? <h4>我们已经收到了您的申请，您仍可以在此修改您的申请表格</h4>:
-          <h4>申请成为导师</h4>}
+        <h4>申请成为导师</h4>
         <form className="ui form">
           <div className="field">
             <label>院校名称：</label>
@@ -271,16 +255,15 @@ class AccountApply extends React.Component {
             <label>自我介绍：</label>
             <textarea rows="8" name="bio" onChange={this.handleChange} value={this.state.mentor_info.bio}/>
           </div>
-          {!this.state.hasNotApplied ? <button className="ui button" type="submit" onClick={this.handleSubmit}>更新</button> :
-            <button className="ui button" type="submit" onClick={this.handleSubmit}>申请</button>}
+          <button className="ui button" type="submit" onClick={this.handleSubmit}>更新</button>
         </form>
-      </div>)
+      </div>
     );
   }
 }
 
-AccountApply.contextTypes = {
+MentorEdit.contextTypes = {
   router: PropTypes.object
 };
 
-export default AccountApply;
+export default MentorEdit;

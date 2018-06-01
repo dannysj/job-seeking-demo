@@ -57,7 +57,7 @@ class Mentor extends Component {
         //TODO: Error Handling
       }
     });
-    
+
 
   }
 
@@ -126,7 +126,7 @@ class Mentor extends Component {
     return (
       <div className="flex-container">
         <div className="ui top attached tabular menu top-bar">
-          <div className="ui container">
+          <div className="ui container inner-topbar">
           {
             (this.state.selected.Majors.length > 0) ? (this.state.selected.Majors.map((el, index) => (
               <div className="filter-item" key={index} onClick={this.filterBarPressed}>
@@ -247,7 +247,7 @@ class Mentor extends Component {
                   </div>
                   <Link to={'/mentor/' + el.mid}>
                   <div className="connect-circle">
-                    <div>Connect</div>
+                    <div>详情</div>
                   </div>
                   </Link>
                   <Link to={'/mentor/' + el.mid}>

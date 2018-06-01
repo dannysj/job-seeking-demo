@@ -14,9 +14,9 @@ import AccountService from './AccountPartial/account_service';
 import AccountAdmin from './AccountPartial/account_admin';
 import AccountLogout from "./AccountPartial/account_logout";
 import AccountForbidden from "./AccountPartial/account_forbidden";
+import MentorEdit from "./AccountPartial/mentor_edit";
+import CreateArticle from "./AccountPartial/create_article";
 
-
-// TODO: Modify the structure of navlink
 
 class Account extends Component {
 
@@ -35,27 +35,36 @@ class Account extends Component {
         <div className="ui grid">
           <div className="four wide column">
             <div className="ui vertical fluid tabular menu">
+              <div>
+                您的账号状态：{this.props.user.ismentor ? "Mentor":"Mentee"}
+              </div>
               <Link to="/account/"><div className="item">
                 <img className="ui medium circular image" src={this.props.user.profile_pic}/>
-
               </div></Link>
+
               <NavLink to="/account/">
                 基础资料
               </NavLink>
-              <NavLink to="/account/mentor">
-                我的导师
-              </NavLink>
-              <NavLink to="/account/balance">
-                我的余额
-              </NavLink>
               {
-                !this.props.user.ismentor ? (
-                  <NavLink to="/account/apply">
-                    成为导师
-                  </NavLink>) : (
+                this.props.user.ismentor ? (
+                   <div><NavLink to="/account/mentor_edit">
+                     编辑导师档案
+                    </NavLink>
+                    <NavLink to="/account/balance">
+                      我的余额
+                    </NavLink>
                     <NavLink to="/account/service">
-                      我的服务
-                    </NavLink>)
+                      我的Mentee
+                    </NavLink>
+                    <NavLink to="/account/create_article">
+                      编写干货
+                    </NavLink></div>):(
+                    <div><NavLink to="/account/mentor">
+                     我的导师
+                   </NavLink>
+                    <NavLink to="/account/apply">
+                      申请成为导师
+                    </NavLink></div>)
               }
               {
                 this.props.user.isadmin && (
@@ -76,6 +85,8 @@ class Account extends Component {
                   <Route path='/account/balance' render={()=><AccountBalance user={this.props.user}/>} />
                   <Route path='/account/apply' render={()=><AccountApply user={this.props.user}/>} />
                   <Route path='/account/service' render={()=><AccountService user={this.props.user}/>} />
+                  <Route path='/account/mentor_edit' render={()=><MentorEdit user={this.props.user}/>} />
+                  <Route path='/account/create_article' render={()=><CreateArticle user={this.props.user}/>} />
                   <Route path='/account/admin' render={()=><AccountAdmin user={this.props.user}/>} />
                   <Route path='/account/logout' render={()=><AccountLogout/>} />
                   <Route path='/account/' render={()=><AccountProfile user={this.props.user} onUpdate={this.props.onSuccess}/>} />

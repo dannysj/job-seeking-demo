@@ -26,6 +26,7 @@ exports.reset = function(){
     drop table if exists industry;
     drop table if exists user_college;
     drop table if exists college;
+    drop table if exists message;
     drop table if exists users;
     create table if not exists users (
       id serial unique primary key,
@@ -44,6 +45,13 @@ exports.reset = function(){
       wechat text,
       resume text,
       isactivated
+    );
+    create table if not exists message (
+      id serial unique primary key,
+      origin int references users(id), -- Currently not used. Will be used when between-user messaging is implemented
+      destination int references users(id),
+      type int, -- 1 for text
+      content text
     );
     create table if not exists industry (
       id serial unique primary key,
@@ -85,7 +93,8 @@ exports.reset = function(){
       offer_company varchar(255),
       bio text,
       service jsonb,
-      resume text
+      resume text,
+      num_weekly_slots int -- Number of slots available for a week
     );
     create table if not exists mentor_rel(
       id serial unique primary key,
@@ -205,6 +214,7 @@ exports.getNewsDetail = (nid, callback) => {
       u.first as author_first,
       u.last as author_last,
       u.profile_pic as profile_pic,
+      u.cover as author_cover,
       n.type as type,
       to_char(n.publish_time,'DD Mon HH24:MI') as publish_time,
       n.thumbnail as thumbnail,
@@ -267,6 +277,20 @@ exports.confirmVerification = (verification_code, callback) => {
   });
 };
 
+exports.verifyInfoCompletion = (uid, callback) => {
+  let query = `select (major is not null
+    and wechat is not null
+    and resume is not null) as res
+    from users where id=$1;`;
+  db.query(query, [uid], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows[0].res)
+  });
+}
+
 exports.createMentorApp = (mentor_info, callback) => {
   var query = `insert into mentor_info
     (uid,
@@ -277,7 +301,7 @@ exports.createMentorApp = (mentor_info, callback) => {
       offer_company,
       bio,
       service,
-      resume)
+      num_weekly_slots)
     values($1,false,now(),$2,$3,$4,$5,$6,$7);`
   db.query(query,
     [mentor_info.uid,
@@ -286,7 +310,31 @@ exports.createMentorApp = (mentor_info, callback) => {
     mentor_info.offer_company,
     mentor_info.bio,
     JSON.stringify(mentor_info.services),
-    mentor_info.resume], (err, result)=>{
+    mentor_info.num_weekly_slots], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+};
+
+exports.editMentorInfo = (mentor_info, callback) => {
+  var query = `update mentor_info set
+      cid=$1,
+      offer_title=$2,
+      offer_company=$3,
+      bio=$4,
+      service=$5,
+      num_weekly_slots=$6 where uid=$7;`
+  db.query(query,
+    [mentor_info.cid,
+    mentor_info.offer_title,
+    mentor_info.offer_company,
+    mentor_info.bio,
+    JSON.stringify(mentor_info.services),
+    mentor_info.num_weekly_slots,
+    mentor_info.uid], (err, result)=>{
     if(err){
       callback(err);
       return;
@@ -313,13 +361,16 @@ exports.getMentorDetail = (mid, callback) => {
       u.last as last,
       u.dob as dob,
       u.profile_pic as profile_pic,
+      u.resume as resume,
       c.name as college_name,
       m.id as mid,
       m.offer_title as offer_title,
       m.offer_company as offer_company,
       m.bio as bio,
       m.service as service,
-      m.resume as resume
+      m.num_weekly_slots as num_weekly_slots,
+      m.num_weekly_slots - (select count(*) from mentor_rel
+        where mid=m.id and now()-start_time<'1 week') as num_availability
     from users u, mentor_info m, college c
     where m.uid = u.id and m.cid = c.id and m.id = $1;
   `;
@@ -391,6 +442,30 @@ exports.createMentorReply = (comment, callback) => {
       callback(null);
     });
 };
+  exports.getMentorDetailByUid = (uid, callback) => {
+  var query = `
+    select u.id as uid,
+      u.first as first,
+      u.last as last,
+      u.dob as dob,
+      u.profile_pic as profile_pic,
+      u.resume as resume,
+      u.ismentor as ismentor,
+      c.name as college_name,
+      c.id as cid,
+      m.id as mid,
+      m.offer_title as offer_title,
+      m.offer_company as offer_company,
+      m.bio as bio,
+      m.service as service,
+      m.num_weekly_slots as num_weekly_slots
+    from users u, mentor_info m, college c
+    where m.uid = u.id and m.cid = c.id and u.id = $1;
+  `;
+  db.query(query, [uid], (err, result) => {
+    callback(null, result.rows[0]);
+  });
+};
 
 exports.getMentorApplications = (callback) => {
   var query = `
@@ -434,22 +509,6 @@ exports.disapproveMentor = (uid, mid, callback) => {
       return;
     }
     callback(null);
-  });
-};
-
-exports.getApplicationStatus = (uid, callback) => {
-  var query = `select u.ismentor,m.id as ismentor from users u, mentor_info m where m.uid=u.id and u.id=$1;`;
-  db.query(query, [uid], (err, result) => {
-    if(err){
-      callback(err);
-      return;
-    }
-    if(result.rows.length == 0){
-      callback(null, 0);
-    }
-    else{
-      callback(null, 1);
-    }
   });
 };
 

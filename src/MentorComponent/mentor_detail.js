@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import {Button, Image} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 import './mentor.css';
 import CommentBox from "./CommentBox";
 
@@ -15,7 +16,7 @@ class MentorDetail extends Component {
         this.setState({mentor:res.data.mentor});
       }
       else{
-        //TODO: Error Handling
+        NotificationManager.error('无法获得Mentor信息', '错误');
       }
     });
 
@@ -36,14 +37,11 @@ class MentorDetail extends Component {
       service_price: service_price
     }).then(res => {
       console.log(res.data);
-        if (res.data.code === 0) {
-        // handler.setState({showAddServiceModal: true, qr_code: 'https://pan.baidu.com/share/qrcode?w=280&h=280&url='+res.data.qr_code});
-        // handler.pollPayment(res.data.order_id);
+      if (res.data.code === 0) {
         window.location.href = res.data.url;
-        // window.open(res.data.url,"Paypal", "width=800,height=1200");
       }
       else{
-        //TODO: Error Handling
+        NotificationManager.error('数据库错误','错误');
       }
     });
   }
@@ -70,7 +68,6 @@ class MentorDetail extends Component {
     });
   }
 
-  // {this.props.match.params.mid}
 
   render() {
     let modalClassName='ui modal';
@@ -81,6 +78,7 @@ class MentorDetail extends Component {
 
       return (
       <div className="mentor-detail-container">
+        <NotificationContainer />
         <div className={modalClassName}>
             <i className="close icon"/>
           <div className="header">
@@ -135,7 +133,11 @@ class MentorDetail extends Component {
               <div className="sub header">具体服务范围</div>
             </div>
           </h2>
-          <table className="ui celled table">
+          <p>
+            <b>{this.state.mentor.last+this.state.mentor.first}</b>
+            本周还可提供{this.state.mentor.num_availability}次服务
+          </p>
+          <table class="ui celled table">
             <thead>
               <tr><th>服务名称</th>
               <th>服务价格</th>
@@ -149,7 +151,7 @@ class MentorDetail extends Component {
                     <td>{el.name}</td>
                     <td>{el.price+' USD'}</td>
                     <td>{el.description}</td>
-                    <td><Button positive onClick={()=>this.initBuy(el.name, el.price)}>购买</Button></td>
+                    <td><Button positive onClick={()=>this.initBuy(el.name, el.price)}>免费试用</Button></td>
                   </tr>
                 )
               )}

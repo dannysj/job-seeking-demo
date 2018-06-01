@@ -6,3 +6,43 @@
 .user-inline > img {
   margin-left: 1em;
 }
+
+.large-screen {
+  height: 100%;
+}
+
+.small-screen {
+  height: 100%;
+}
+
+@media screen and (max-width: 767px) {
+  .user-inline > .chinese-top {
+    display: none;
+  }
+  .small-screen {
+    display: flex;
+  }
+  .large-screen {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .small-screen {
+    display: none;
+  }
+  .large-screen {
+    display: flex;
+  }
+}
+
+.large-screen > .item {
+  margin: 0em 1em;
+  padding: 0em 1em;
+}
+
+.right-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

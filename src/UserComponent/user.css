@@ -2,3 +2,8 @@
   width: 400px;
   margin: 50px auto;
 }
+@media screen and (max-width: 767px) {
+  .login-signup-container {
+    width: 80%;
+  }
+}
