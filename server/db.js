@@ -18,7 +18,6 @@ exports.patch = () => {
 };
 
 exports.reset = function(){
-  // TODO: removal of all tables
   var query = `
     drop table if exists mentor_rel;
     drop table if exists mentor_info;
@@ -48,10 +47,12 @@ exports.reset = function(){
     );
     create table if not exists message (
       id serial unique primary key,
-      origin int references users(id), -- Currently not used. Will be used when between-user messaging is implemented
+      origin int, -- Currently not used. Will be used when between-user messaging is implemented
       destination int references users(id),
       type int, -- 1 for text
-      content text
+      content text,
+      timestamp timestamp with time zone,
+      is_read boolean
     );
     create table if not exists industry (
       id serial unique primary key,
@@ -267,13 +268,13 @@ exports.addUserVerificationCode = (email, verification_code, callback) => {
 };
 
 exports.confirmVerification = (verification_code, callback) => {
-  let query = `update users set isactivated=true where id=(select uid from user_verification where verification_code=$1);`;
+  let query = `update users set isactivated=true where id=(select uid from user_verification where verification_code=$1) returning id;`;
   db.query(query, [verification_code], (err, result) => {
     if(err){
       callback(err);
       return;
     }
-    callback(null);
+    callback(null, result.rows[0].id);
   });
 };
 
@@ -645,6 +646,39 @@ exports.activateAccount = (code, callback)=>{
     callback(null);
   });
 };
+
+exports.createMessage = (origin, dest, type, content, callback) =>{
+  var query = `
+    insert into message (origin,destination,type,content,timestamp,is_read)
+    values($1,$2,$3,$4,now(),false);
+  `;
+  db.query(query, [origin, dest, type, content], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+}
+
+exports.getNotificationsByUid = (uid, callback)=>{
+  let query = `select * from message where origin=0 and destination=$1 order by timestamp desc;`;
+  db.query(query, [uid], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows);
+  });
+}
+
+exports.setNotificationsAsRead = (uid, callback) => {
+  let query = `update message set is_read=true where origin=0 and destination=$1;`;
+  db.query(query, [uid], (err, result)=>{
+    if(callback)
+      callback(err);
+  });
+}
 
 exports.checkActivation = (code, callback)=>{
 var query = `

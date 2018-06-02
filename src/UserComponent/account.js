@@ -16,6 +16,7 @@ import AccountLogout from "./AccountPartial/account_logout";
 import AccountForbidden from "./AccountPartial/account_forbidden";
 import MentorEdit from "./AccountPartial/mentor_edit";
 import CreateArticle from "./AccountPartial/create_article";
+import AccountNotification from "./AccountPartial/account_message";
 
 
 class Account extends Component {
@@ -66,6 +67,9 @@ class Account extends Component {
                       申请成为导师
                     </NavLink></div>)
               }
+              <NavLink to="/account/notification">
+                系统通知
+              </NavLink>
               {
                 this.props.user.isadmin && (
                   <NavLink to="/account/admin">
@@ -87,6 +91,7 @@ class Account extends Component {
                   <Route path='/account/service' render={()=><AccountService user={this.props.user}/>} />
                   <Route path='/account/mentor_edit' render={()=><MentorEdit user={this.props.user}/>} />
                   <Route path='/account/create_article' render={()=><CreateArticle user={this.props.user}/>} />
+                  <Route path='/account/notification' render={()=><AccountNotification user={this.props.user}/>} />
                   <Route path='/account/admin' render={()=><AccountAdmin user={this.props.user}/>} />
                   <Route path='/account/logout' render={()=><AccountLogout/>} />
                   <Route path='/account/' render={()=><AccountProfile user={this.props.user} onUpdate={this.props.onSuccess}/>} />
