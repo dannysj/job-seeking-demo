@@ -27,7 +27,8 @@ class App extends Component {
       menu_open: false,
       width: 0,
       height: 0,
-      current_page: "主 页"
+      current_page: "主 页",
+      num_notifications: 0
     };
     this.updateUser = this.updateUser.bind(this);
     this.menuToggled = this.menuToggled.bind(this);
@@ -44,6 +45,18 @@ class App extends Component {
         }
         else{
           alert('Database Error'); // TODO: proper err
+        }
+      });
+
+      axios.post('/api/get_system_notifications', {uid: uid}).then(res => {
+        if(res.data.code === 0){
+          console.log(res.data);
+          this.setState({num_notifications:res.data.messages.length});
+        }
+        else{
+          // TODO: error handling
+          alert('Database Error');
+          console.log(res.data);
         }
       });
     }
@@ -162,7 +175,7 @@ class App extends Component {
 
             </NavLink>
             </div>
-            <UserStatus user={this.state.user}></UserStatus>
+            <UserStatus user={this.state.user} numnotifications={this.state.num_notifications}></UserStatus>
           </div>
         )
       }
