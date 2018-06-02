@@ -14,9 +14,9 @@
 
 .mentor-overview_container {
   width: 30%;
-  text-align: center;
   display: inline-block;
   margin: 0.5em;
+  position: relative;
 }
 
 .mentor-overview_container:after {
