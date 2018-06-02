@@ -463,6 +463,10 @@ exports.createMentorReply = (comment, callback) => {
     where m.uid = u.id and m.cid = c.id and u.id = $1;
   `;
   db.query(query, [uid], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
     callback(null, result.rows[0]);
   });
 };

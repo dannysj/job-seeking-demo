@@ -54,7 +54,7 @@ class CommentBox extends Component{
           </div>
         ))}
 
-        {this.props.user.id && <CommentForm onCommentSubmit={this.handleCommentSubmit} user={this.props.user}/>}
+        {this.props.user && this.props.user.id && <CommentForm onCommentSubmit={this.handleCommentSubmit} user={this.props.user}/>}
       </div>
     );
   }
