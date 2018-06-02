@@ -11,6 +11,8 @@ const crypto = require('crypto');
 const paypal = require('paypal-rest-sdk');
 const nodemailer = require('nodemailer');
 const nocache = require('nocache');
+const msg = require('./server/message.js');
+const messageDispatch = new msg(db);
 // create reusable transporter object using the default SMTP transport
 var transporter = nodemailer.createTransport(config.mail_config);
 
@@ -264,11 +266,12 @@ app.post('/api/verify_user', function(req, res){
 app.get('/activate', function(req, res) {
   console.log("GET verify user called")
 
-  db.confirmVerification(req.query.code, error => {
+  db.confirmVerification(req.query.code, (error, uid) => {
     if (error) {
       res.redirect('/');
       return;
     }
+    messageDispatch(uid, "欢迎来到伙伴求职。在这里您将接触到最好的求职干货和导师资源。如有任何疑问 ，可发送邮件至help@buddycareer.com联系我们");
     res.redirect('/account');
   });
 
@@ -314,6 +317,7 @@ app.post('/api/admin/decide_mentor_app', function(req, res){
         res.json({code: 1, errMsg: 'Database Error'});
         return;
       }
+      messageDispatch.sendSystemMessage(req.body.uid, "您的导师申请已被通过。您的账户已成为导师账户，请经常查看系统通知并为Mentee提供优质服务");
       res.json({code:0});
     });
   }
@@ -324,6 +328,7 @@ app.post('/api/admin/decide_mentor_app', function(req, res){
         res.json({code: 1, errMsg: 'Database Error'});
         return;
       }
+      messageDispatch.sendSystemMessage(req.body.uid, "我们抱歉地通知您，您的导师申请未被通过。您可以联系我们获得具体原因");
       res.json({code:0});
     });
   }
@@ -502,6 +507,21 @@ app.post('/api/mentee_confirm', (req, res)=>{
     res.json({code:0});
   });
 });
+
+app.post('/api/get_system_notifications', (req, res)=>{
+  messageDispatch.getNotifications(req.body.uid, (err, notifications)=>{
+    if(err){
+      res.json({code: 1, errMsg: 'Database Error'});
+      return;
+    }
+    res.json({code: 0, messages:notifications});
+  });
+});
+
+app.post('/api/read_system_notification', (req, res)=>{
+  messageDispatch.readNotifications();
+  res.json({code: 0});
+})
 
 // Static resources
 app.use(express.static(__dirname + '/build'));
