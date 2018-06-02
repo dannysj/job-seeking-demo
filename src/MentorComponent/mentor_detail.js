@@ -120,7 +120,7 @@ class MentorDetail extends Component {
               <div className="sub header">关于导师的自我介绍</div>
             </div>
           </h2>
-          <div>
+          <div className="bio-display">
             {this.state.mentor.bio}
           </div>
         </div>

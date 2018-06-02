@@ -130,6 +130,12 @@ class MentorEdit extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     console.log(this.state.mentor_info);
+
+    if(this.state.mentor_info.num_weekly_slots < 0){
+      NotificationManager.error('每周愿意服务次数必须为自然数','错误');
+      return;
+    }
+
     axios.post('/api/mentor_edit', this.state.mentor_info).then(res => {
       if (res.data.code === 0) {
         NotificationManager.success('已经更改了您的信息', '成功');

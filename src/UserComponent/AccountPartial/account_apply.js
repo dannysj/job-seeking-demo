@@ -132,6 +132,12 @@ class AccountApply extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     console.log(this.state.mentor_info);
+
+    if(this.state.mentor_info.num_weekly_slots < 0){
+      NotificationManager.error('每周愿意服务次数必须为自然数','错误');
+      return;
+    }
+
     let apiUrl = '';
     if(this.state.hasNotApplied){
       apiUrl = '/api/mentor_apply';
