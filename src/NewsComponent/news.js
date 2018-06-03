@@ -31,7 +31,7 @@ class News extends React.Component {
 
   render() {
     return(
-      <div className="new-container">
+      <div className="news-container">
         <Container>
         <div className="container-sideline">
         <div className="header-text">
@@ -49,7 +49,7 @@ class News extends React.Component {
               <div className="list-news-text">
                 <div className="list-news-title">{el.title}</div>
                 <div className="list-news-author-details">
-                  <div className="list-news-subtitle">{el.first + el.last}</div>
+                  <div className="list-news-subtitle">{el.last + el.first}</div>
                   <div className="list-news-subtitle">{el.date}</div>
                 </div>
               </div>
@@ -76,9 +76,8 @@ class News extends React.Component {
                 <img className="list-news-picture" src={el.thumbnail}/>
                 <div className="list-news-text">
                   <div className="list-news-title">{el.title}</div>
-                  <div className="list-news-subtitle">{el.first + el.last}</div>
+                  <div className="list-news-subtitle">{el.last + el.first}</div>
                   <br />
-                  <div className="list-news-subtitle">{el.publish_time}</div>
                   <div className="list-news-subtitle">{el.date}</div>
                 </div>
               </div>

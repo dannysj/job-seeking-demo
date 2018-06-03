@@ -132,7 +132,7 @@ class Comment extends Component {
     return (
       <div className="comment">
         <img className="comment-img" src={this.props.comment.profile_pic}/>
-        <div className="comment-author">{this.props.comment.first + this.props.comment.last}</div>
+        <div className="comment-author">{this.props.comment.last + this.props.comment.first}</div>
         <div className="comment-time">{this.props.comment.time_added}</div>
         <div className="comment-content">{this.props.comment.text}</div>
 
