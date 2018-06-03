@@ -38,25 +38,13 @@ class App extends Component {
     let uid = localStorage.getItem('uid');
     if(uid){
       this.state = {user: {id: uid}};
-      var handler = this;
       axios.post('/api/get_user_info',{uid:uid}).then(res => {
         if(res.data.code==0){
-          handler.updateUser(res.data.user);
+          console.log(res.data.user);
+          this.updateUser(res.data.user);
         }
         else{
           alert('Database Error'); // TODO: proper err
-        }
-      });
-
-      axios.post('/api/get_system_notifications', {uid: uid}).then(res => {
-        if(res.data.code === 0){
-          console.log(res.data);
-          this.setState({num_notifications:res.data.messages.length});
-        }
-        else{
-          // TODO: error handling
-          alert('Database Error');
-          console.log(res.data);
         }
       });
     }

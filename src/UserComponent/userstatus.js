@@ -28,7 +28,13 @@ class UserStatus extends Component {
         <div className="right-menu">
             <Link to="/account">
               <div className="user-inline">
-                <div className="chinese-top">我的账号</div>
+                <div className="chinese-top">
+                  我的账号
+                  {
+                    (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications!=0) &&
+                      ('('+this.props.user.num_notifications+'条未读通知)')
+                  }
+                </div>
                 <img className="ui mini circular image" src={this.props.user.profile_pic}/>
               </div>
             </Link>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
+import { Label } from 'semantic-ui-react';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import axios from 'axios';
 import PropTypes from 'prop-types';
@@ -16,7 +17,7 @@ import AccountLogout from "./AccountPartial/account_logout";
 import AccountForbidden from "./AccountPartial/account_forbidden";
 import MentorEdit from "./AccountPartial/mentor_edit";
 import CreateArticle from "./AccountPartial/create_article";
-import AccountNotification from "./AccountPartial/account_message";
+import AccountNotification from "./AccountPartial/account_notification";
 
 
 class Account extends Component {
@@ -69,6 +70,13 @@ class Account extends Component {
               }
               <NavLink to="/account/notification">
                 系统通知
+                {
+                  (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications!=0) &&
+                    (<Label color='red' horizontal>
+                      {'('+this.props.user.num_notifications+'条未读通知)'}
+                    </Label>)
+                }
+
               </NavLink>
               {
                 this.props.user.isadmin && (
@@ -91,7 +99,7 @@ class Account extends Component {
                   <Route path='/account/service' render={()=><AccountService user={this.props.user}/>} />
                   <Route path='/account/mentor_edit' render={()=><MentorEdit user={this.props.user}/>} />
                   <Route path='/account/create_article' render={()=><CreateArticle user={this.props.user}/>} />
-                  <Route path='/account/notification' render={()=><AccountNotification user={this.props.user}/>} />
+                  <Route path='/account/notification' render={()=><AccountNotification onUpdate={this.props.onSuccess} user={this.props.user}/>} />
                   <Route path='/account/admin' render={()=><AccountAdmin user={this.props.user}/>} />
                   <Route path='/account/logout' render={()=><AccountLogout/>} />
                   <Route path='/account/' render={()=><AccountProfile user={this.props.user} onUpdate={this.props.onSuccess}/>} />
