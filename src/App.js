@@ -24,13 +24,13 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      menu_open: false,
+
       width: 0,
       height: 0,
       current_page: "主 页"
     };
     this.updateUser = this.updateUser.bind(this);
-    this.menuToggled = this.menuToggled.bind(this);
+
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.updateCurrentPage = this.updateCurrentPage.bind(this);
 
@@ -54,9 +54,6 @@ class App extends Component {
     localStorage.setItem('uid', user.id);
   }
 
-  menuToggled(e) {
-    this.setState({menu_open: !this.state.menu_open});
-  }
 
   updateCurrentPage(name) {
     this.setState({current_page: name, menu_open: false});
@@ -79,93 +76,51 @@ class App extends Component {
   }
 
   render() {
-    var opened = "";
-    if (this.state.menu_open) {
-      opened = "opened";
-    }
     return (
       <div className="app-flex">
-      {
-        (this.state.width < 768 ) ? (
-          <div className={"navbar " + opened}>
-            <div className="item logo-item" onClick={this.menuToggled}>
-            {
-              (this.state.menu_open) ? (<Icon name='close' color="grey" size='big' />) : (<img src="/img/icon.png" height="40px"></img>)
-            }
+        <input type="checkbox" id="reveal-menu" role="button"></input>
+        <div className={"navbar "}>
 
-              <b>{' '}Buddy{'\n'}Career</b>
-            </div>
-            <div className="item title">
-              <div className="chinese-top">{this.state.current_page}</div>
-            </div>
-            <div className={"nav-list " + opened }>
-            <NavLink to="/" ishorizontal={true} onClick={() => {this.updateCurrentPage("主 页")}}>
-              <div className="Nav-item ">
-                <div className="App-subtitle">Home</div>
-                <div className="chinese-top">主页</div>
-              </div>
-            </NavLink>
-            <NavLink to="/mentor" ishorizontal={true} onClick={() => {this.updateCurrentPage("导 师")}}>
-              <div className="Nav-item ">
-                <div className="App-subtitle">Tutors</div>
-                <div className="chinese-top">导师</div>
-              </div>
-            </NavLink>
-            <NavLink to="/news" ishorizontal={true} onClick={() => {this.updateCurrentPage("就 业 干 货")}}>
-              <div className="Nav-item ">
-                <div className="App-subtitle">Careers</div>
-                <div className="chinese-top">就业干货</div>
-              </div>
-
-            </NavLink>
-            <NavLink to="/about" ishorizontal={true} onClick={() => {this.updateCurrentPage("关 于")}}>
-              <div className="Nav-item ">
-                <div className="App-subtitle">About</div>
-                <div className="chinese-top">关于</div>
-              </div>
-
-            </NavLink>
-            </div>
-            <UserStatus user={this.state.user}></UserStatus>
-          </div>
-        ) : (
-          <div className={"navbar "}>
-            <div className="item logo-item" onClick={this.menuToggled}>
+            <div className="item logo-item" >
               <img src="/img/icon.png" height="40px"></img>
-              <b>{' '}Buddy{'\n'}Career</b>
+              <b className="title">{' '}Buddy{'\n'}Career</b>
+
+              <label for="reveal-menu" className="menu-icon">
+                <span className="bread bread-top">
+                </span>
+
+                <span className="bread bread-bottom">
+                </span>
+              </label>
             </div>
             <div className={"nav-list " }>
-            <NavLink to="/" ishorizontal={true} >
-              <div className="Nav-item ">
-                <div className="App-subtitle">Home</div>
-                <div className="chinese-top">主页</div>
-              </div>
-            </NavLink>
-            <NavLink to="/mentor" ishorizontal={true}>
-              <div className="Nav-item ">
-                <div className="App-subtitle">Tutors</div>
-                <div className="chinese-top">导师</div>
-              </div>
-            </NavLink>
-            <NavLink to="/news" ishorizontal={true}>
-              <div className="Nav-item ">
-                <div className="App-subtitle">Careers</div>
-                <div className="chinese-top">就业干货</div>
-              </div>
-
-            </NavLink>
-            <NavLink to="/about" ishorizontal={true}>
-              <div className="Nav-item ">
-                <div className="App-subtitle">About</div>
-                <div className="chinese-top">关于</div>
-              </div>
-
-            </NavLink>
+              <NavLink to="/" ishorizontal={true} >
+                <div className="Nav-item ">
+                  <div className="App-subtitle">Home</div>
+                  <div className="chinese-top">主页</div>
+                </div>
+              </NavLink>
+              <NavLink to="/mentor" ishorizontal={true}>
+                <div className="Nav-item ">
+                  <div className="App-subtitle">Tutors</div>
+                  <div className="chinese-top">导师</div>
+                </div>
+              </NavLink>
+              <NavLink to="/news" ishorizontal={true}>
+                <div className="Nav-item ">
+                  <div className="App-subtitle">Careers</div>
+                  <div className="chinese-top">就业干货</div>
+                </div>
+              </NavLink>
+              <NavLink to="/about" ishorizontal={true}>
+                <div className="Nav-item ">
+                  <div className="App-subtitle">About</div>
+                  <div className="chinese-top">关于</div>
+                </div>
+              </NavLink>
             </div>
             <UserStatus user={this.state.user}></UserStatus>
           </div>
-        )
-      }
 
         <div className="site-content">
           <Switch onChange={this.onRouteChange}>

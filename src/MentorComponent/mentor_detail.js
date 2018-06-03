@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Button, Image} from 'semantic-ui-react';
+import {Button, Image, Divider} from 'semantic-ui-react';
 import Disqus from './disqus.js';
 import PropTypes from 'prop-types';
 import './mentor.css';
@@ -9,8 +9,29 @@ class MentorDetail extends Component {
 
   constructor (props) {
     super(props);
-    this.state={mentor:{first:"", last:"", service:[]}, showAddServiceModal: false};
-
+    this.state={mentor:{first:"我的天", last:"噢", english:"my god", bio:"HIHIHI i am dasdfasdfas fasdsfasdfa asdfasdfasfdf asdfasf",college_name:"Uni of WCDSF", offer_company:"Lucid", offer_title:"Test",
+    service:[{
+      name: "简历修改",
+      price: "100",
+      description: "我帮你改简历，你给我钱，ok?",
+    },
+    {
+      name: "Test",
+      price: "100",
+      description: "Hey whatcha yoi doing?",
+    },
+    {
+      name: "Test",
+      price: "100",
+      description: "Hey whatcha yoi doing?",
+    },
+    {
+      name: "Test",
+      price: "100",
+      description: "Hey whatcha yoi doing?",
+    }
+  ]}, showAddServiceModal: false};
+/*
     axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
         console.log(res.data.mentor);
@@ -20,7 +41,7 @@ class MentorDetail extends Component {
         //TODO: Error Handling
       }
     });
-
+*/
     this.initBuy = this.initBuy.bind(this);
   }
 
@@ -76,6 +97,12 @@ class MentorDetail extends Component {
 
   render() {
     let modalClassName='ui modal';
+    var test_url = '/img/banner.jpg';
+    const backimgstyle = {
+      backgroundImage: 'url('+test_url+')',
+      backgroundPosition: 'center center no-repeat',
+      backgroundSize: 'cover',
+      };
     if(this.state.showAddServiceModal){
       modalClassName += ' payment-qr-container';
     }
@@ -95,68 +122,75 @@ class MentorDetail extends Component {
           </div>
         </div>
 
-        <div className="ui grid">
-          <div className="six wide column">
-              <img className="mentor-img" src={this.state.mentor.profile_pic}/>
-          </div>
-          <div className="ten wide column">
-            <h2 className="ui header">
-                <i className="address card icon"/>
-              <div className="content">
-                导师介绍
-                <div className="sub header">{this.state.mentor.last+this.state.mentor.first}的详细资料</div>
+        <div className="mentor-background-image" style={backimgstyle}>
+          <div className="ui container">
+            <div className="mentor-name">
+              <div className="chinese-top">{this.state.mentor.last+this.state.mentor.first}</div>
+              <div className="App-subtitle">{"English name"}</div>
+              <Divider hidden clearing />
+              <div className="small-bio" dangerouslySetInnerHTML={{__html:this.state.mentor.bio}}>
+
               </div>
-            </h2>
-            <div>
-              <p><b>在读院校：</b>{this.state.mentor.college_name}</p>
-              <p><b>offer公司：</b>{this.state.mentor.offer_company}</p>
-              <p><b>offer职位：</b>{this.state.mentor.offer_title}</p>
-              <p><b>年龄：</b>{parseInt((new Date() - new Date(this.state.mentor.dob))/(365*24*3600*1000))}</p>
             </div>
           </div>
         </div>
-
-        <div className="detail-section">
-          <h2 className="ui header">
-              <i className="id badge outline icon"/>
-            <div className="content">
-              自我介绍
-              <div className="sub header">关于导师的自我介绍</div>
+        <div className="mentor-detail-info-container">
+          <div className="item detail-item">
+            <div className="title">
+              在读院校
             </div>
-          </h2>
-          <div>
-            {this.state.mentor.bio}
+            <div className="subtitle" dangerouslySetInnerHTML={{__html:this.state.mentor.college_name}}>
+            </div>
           </div>
-        </div>
+          <div className="item detail-item">
 
-        <div className="detail-section">
-          <h2 className="ui header">
-              <i className="calendar outline icon"/>
-            <div className="content">
-              服务介绍
-              <div className="sub header">具体服务范围</div>
+            <div className="title">
+              offer公司
             </div>
-          </h2>
-          <table class="ui celled table">
-            <thead>
-              <tr><th>服务名称</th>
-              <th>服务价格</th>
-              <th>具体介绍</th>
-              <th></th>
-            </tr></thead>
-            <tbody>
-              {
-                this.state.mentor.service.map(el => (
-                  <tr>
-                    <td>{el.name}</td>
-                    <td>{el.price+' USD'}</td>
-                    <td>{el.description}</td>
-                    <td><Button positive onClick={()=>this.initBuy(el.name, el.price)}>购买</Button></td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </table>
+            <div className="subtitle" dangerouslySetInnerHTML={{__html:this.state.mentor.offer_company}}>
+            </div>
+
+          </div>
+          <div className="item detail-item">
+
+            <div className="title">
+              offer职位
+            </div>
+            <div className="subtitle" dangerouslySetInnerHTML={{__html:this.state.mentor.offer_title}}>
+            </div>
+
+          </div>
+          <div className="item detail-item">
+            <div className="title">
+              年龄
+            </div>
+            <div className="subtitle">{parseInt((new Date() - new Date(this.state.mentor.dob))/(365*24*3600*1000))}</div>
+
+          </div>
+
+        </div>
+        <div className="mentor-service-overview">
+          <div className="title">
+            服务介绍
+
+          </div>
+          <div className="mentor-service-container">
+          {
+            this.state.mentor.service.map(el => (
+              <div className="service-border" style={backimgstyle}>
+                <div className="service-item" >
+                  <div className="service-title">
+                    <div className="service-name">{el.name}</div>
+                    <div className="service-price">{el.price+' USD'}</div>
+                  </div>
+                  <div className="service-description">{el.description}</div>
+                  <div className="buy-button"><Button positive onClick={()=>this.initBuy(el.name, el.price)}>购买</Button></div>
+                </div>
+              </div>
+
+            )
+          )}
+          </div>
         </div>
 
         <div className="detail-section">

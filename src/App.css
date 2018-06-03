@@ -149,46 +149,105 @@ body {
 	color: black;
 }
 
+.navbar .menu-icon {
+	display: none;
+}
+
+#reveal-menu {
+	display: none;
+}
+
 @media screen and (max-width: 767px) {
+	input[type=checkbox] {
+  display: none;
+	}
+
+	input[type=checkbox]:checked ~ .navbar .bread-top {
+	  transform:
+	    translateX(2px) rotate(45deg);
+	}
+
+	input[type=checkbox]:checked ~ .navbar .bread-bottom {
+	  transform: translateY(4px) rotate(-45deg);
+	}
+
+	input[type=checkbox]:checked ~ .navbar .nav-list {
+		height: auto;
+		opacity: 1;
+		visibility: visible;
+	}
+
+	input[type=checkbox]:checked ~ .site-content {
+	}
+
+	input[type=checkbox]:checked ~ .navbar{
+		height: 80%;
+
+	}
+
+	.bread {
+	  position: absolute;
+	  width: 17px;
+	  height: 2px;
+	  background-color: black;
+	  display: block;
+	  transform: rotate(0);
+	  transition: transform 0.25s 0.25s;
+	  transform-origin: 0% 0%;
+	  border-radius: 1px;
+	}
+
+	.navbar>*:not(.nav-list) {
+    padding: 0 1em;
+    height: 65px;
+    margin: 0em 1em;
+		position: relative;
+	}
+
+	.menu-icon {
+	  cursor:pointer;
+	  position: absolute;
+	  height: 50px;
+	  width: 50px;
+	  display: flex !important;
+		left: 25px;
+		bottom: 2px;
+	  justify-content: center;
+
+
+	}
+
+	.bread-top {
+	  top: 20px;
+	}
+
+	.bread-bottom {
+	  bottom: 20px;
+	}
+
+
 	.nav-list {
 		flex-flow: column;
-		display: none;
+		display: flex;
+		visibility: hidden;
 		background-color: white;
 		height: 80%;
 		opacity: 0;
+		position: absolute;
+		top: 65px;
+		width: 90%;
+		transition: opacity 0.5s, visibility 0.5s;
 	}
-	.opened {
-		display: flex !important;
-	}
+
+
 	.logo-item > b {
 		display: none;
-	}
-	.ui.top.attached.tabular.menu.opened {
-		flex: 0 0 65px;
-	}
-
-	.navbar.opened {
-		height: 80%;
-		transition: height 0.5s;
-		align-items: flex-start;
-	}
-
-	.navbar.opened > .item, .navbar.opened > .right-menu {
-		height: 40px;
 	}
 
 	.navbar.opened > .item.title {
 		display: none;
 	}
 
-	.nav-list.opened {
-		position: absolute;
-		top: 65px;
-		width: 90%;
-		height: auto;
-		opacity: 1;
-		transition: opacity 0.8s;
-	}
 
 	.Nav-item {
 		display: inline-flex;
@@ -220,6 +279,8 @@ body {
 	.navbar {
 		flex: 0 0 65px;
 		height: 65px;
+		transition: height 0.5s;
+		align-items: flex-start;
 	}
 	.site-content {
 		padding-top: 65px;
