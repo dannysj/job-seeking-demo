@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './CommentBox.css';
 import axios from "axios/index";
+import dateformat from "dateformat";
 
 class CommentBox extends Component{
   constructor (props) {
@@ -78,7 +79,7 @@ class CommentForm extends Component{
       text: text,
       first: this.props.user.first,
       last: this.props.user.last,
-      time_added: new Date().toGMTString(),
+      time_added: dateformat(new Date(),"DD Mon HH24:MI"),
       profile_pic: this.props.user.profile_pic,
       uid:  this.props.user.id
     });
@@ -132,7 +133,7 @@ class Comment extends Component {
       <div className="comment">
         <img className="comment-img" src={this.props.comment.profile_pic}/>
         <div className="comment-author">{this.props.comment.first + this.props.comment.last}</div>
-        <div className="comment-time">{new Date(this.props.comment.time_added).toLocaleString()}</div>
+        <div className="comment-time">{this.props.comment.time_added}</div>
         <div className="comment-content">{this.props.comment.text}</div>
 
         {this.props.comment.reply ? (

@@ -396,7 +396,7 @@ exports.getMentorComment = (mid, callback) => {
   const query = `select
     c.id as id,
     c.mid as mid,
-    c.time_added as time_added,
+    to_char(c.time_added,'DD Mon HH24:MI') as time_added,
     c.text as text,
     c.id as uid,
     c.reply as reply,

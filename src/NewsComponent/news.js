@@ -79,6 +79,7 @@ class News extends React.Component {
                   <div className="list-news-subtitle">{el.first + el.last}</div>
                   <br />
                   <div className="list-news-subtitle">{el.publish_time}</div>
+                  <div className="list-news-subtitle">{el.date}</div>
                 </div>
               </div>
               </Link>
