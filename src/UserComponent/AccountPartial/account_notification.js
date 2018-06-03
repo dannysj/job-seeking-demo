@@ -32,6 +32,10 @@ class AccountNotification extends React.Component {
     });
 
     axios.post('/api/read_system_notification', {uid: this.props.user.id}).then(res => {
+      if(res.data.code == 0){
+        this.props.user.num_notifications = 0;
+        this.props.onUpdate(this.props.user);
+      }
     });
   }
 

@@ -43,7 +43,7 @@ exports.reset = function(){
       balance numeric(8,2) default 0.00,
       wechat text,
       resume text,
-      isactivated
+      isactivated boolean
     );
     create table if not exists message (
       id serial unique primary key,
@@ -192,9 +192,17 @@ exports.getUserInfo = (uid, callback) => {
       callback('No such email found');
       return;
     }
-    var userAccount = result.rows[0];
+    let userAccount = result.rows[0];
     userAccount.password = null;
-    callback(null, userAccount);
+    let query = `select count(*) as count from message where is_read=false and destination=$1`;
+    db.query(query, [uid], (err, result)=>{
+      if(err){
+        callback(err);
+        return;
+      }
+      userAccount.num_notifications = result.rows[0].count;
+      callback(null, userAccount);
+    });
   });
 }
 
@@ -675,6 +683,9 @@ exports.getNotificationsByUid = (uid, callback)=>{
 exports.setNotificationsAsRead = (uid, callback) => {
   let query = `update message set is_read=true where origin=0 and destination=$1;`;
   db.query(query, [uid], (err, result)=>{
+    if(err){
+      console.log(err);
+    }
     if(callback)
       callback(err);
   });
