@@ -78,9 +78,9 @@ export default class ImgCrop extends Component {
     var splitName = this.state.dataUrl.split('\\').pop().split('/').pop();
     this.setState({
       crop: makeAspectCrop({
-        x: 20,
-        y: 5,
-        aspect: 4 / 3,
+        x: 0,
+        y: 0,
+        aspect: 1,
         height: 20,
       }, image.naturalWidth / image.naturalHeight),
       image
