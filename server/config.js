@@ -13,8 +13,8 @@ if (process.env.DATABASE_URL) {
     max: 20,
     idleTimeoutMillis: 30000
   };
-}
-else {
+} else {
+  console.log("Warning: DATABASE_URL should be passed as environment variable")
   self.db = {
     user: 'postgres',
     database: 'db',
