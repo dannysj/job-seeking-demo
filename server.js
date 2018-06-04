@@ -15,6 +15,7 @@ const msg = require('./server/message.js');
 const messageDispatch = new msg(db);
 // create reusable transporter object using the default SMTP transport
 var transporter = nodemailer.createTransport(config.mail_config);
+var cors = require('cors')
 
 paypal.configure({
   'mode': 'live', //sandbox or live
@@ -34,6 +35,7 @@ var app = express();
 var args = process.argv.slice(2);
 var PORT = process.env.PORT || 3005;
 
+app.use(cors())
 app.use(express.static(__dirname + '/static'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));

@@ -9,7 +9,7 @@ class UserStatus extends Component {
     super(props);
 
     // no such api
-    // axios.post('/api/all_mentor_list',{}).then(res => {
+    // axios.post(process.env.REACT_APP_API_HOST + '/api/all_mentor_list',{}).then(res => {
     //   console.log(res);
     //   if(res.data.code==0){
     //     console.log(res.data.list);

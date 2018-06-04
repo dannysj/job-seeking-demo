@@ -19,7 +19,7 @@ class AccountNotification extends React.Component {
   }
 
   retrieveMessage(){
-    axios.post('/api/get_system_notifications', {uid: this.props.user.id}).then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_system_notifications', {uid: this.props.user.id}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         this.setState({messages:res.data.messages});
@@ -31,7 +31,7 @@ class AccountNotification extends React.Component {
       }
     });
 
-    axios.post('/api/read_system_notification', {uid: this.props.user.id}).then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/read_system_notification', {uid: this.props.user.id}).then(res => {
       if(res.data.code == 0){
         this.props.user.num_notifications = 0;
         this.props.onUpdate(this.props.user);

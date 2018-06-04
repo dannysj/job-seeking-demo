@@ -17,7 +17,6 @@ import MentorDetail from './MentorComponent/mentor_detail';
 import News from './NewsComponent/news';
 import NewsDetail from './NewsComponent/news_detail';
 import About from './AboutComponent/about';
-// import Signup from './UserComponent/signup';
 
 
 class App extends Component {
@@ -38,7 +37,7 @@ class App extends Component {
     let uid = localStorage.getItem('uid');
     if(uid){
       this.state = {user: {id: uid}};
-      axios.post('/api/get_user_info',{uid:uid}).then(res => {
+      axios.post(process.env.REACT_APP_API_HOST + '/api/get_user_info',{uid:uid}).then(res => {
         if(res.data.code==0){
           console.log(res.data.user);
           this.updateUser(res.data.user);

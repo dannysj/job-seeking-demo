@@ -10,7 +10,7 @@ class CommentBox extends Component{
     this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
     this.handleCommentReply = this.handleCommentReply.bind(this);
 
-    axios.post('/api/get_mentor_comment', {mid: this.props.mid}).then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_comment', {mid: this.props.mid}).then(res => {
       if (res.data.code === 0) {
         this.setState({comments: res.data.list});
       } else {
@@ -23,7 +23,7 @@ class CommentBox extends Component{
     this.setState({comments: [...this.state.comments, comment]});
 
     comment.mid = this.props.mid;
-    axios.post('/api/create_mentor_comment', comment).then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/create_mentor_comment', comment).then(res => {
       // TODO: Error Handling
     });
   }
@@ -34,7 +34,7 @@ class CommentBox extends Component{
 
     this.setState({comments: comments});
 
-    axios.post('/api/create_mentor_reply', comment).then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/create_mentor_reply', comment).then(res => {
       // TODO: Error Handling
     });
   }

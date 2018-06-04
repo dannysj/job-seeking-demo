@@ -36,7 +36,7 @@ class AccountApply extends React.Component {
     this.deleteRowAt = this.deleteRowAt.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
 
-    axios.post('/api/get_college_list').then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_college_list').then(res => {
       if (res.data.code === 0) {
         let college_list = [];
         res.data.list.forEach((college) => {
@@ -52,7 +52,7 @@ class AccountApply extends React.Component {
       }
     });
 
-    axios.post('/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
       if (res.data.code === 0) {
         let mentor = res.data.mentor;
         console.log(mentor);
@@ -146,7 +146,7 @@ class AccountApply extends React.Component {
       apiUrl = '/api/mentor_edit';
     }
 
-    axios.post(apiUrl, this.state.mentor_info).then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + apiUrl, this.state.mentor_info).then(res => {
       if (res.data.code === 0) {
         NotificationManager.success('我们已收到您的表格','成功');
       }

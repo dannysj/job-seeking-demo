@@ -41,7 +41,7 @@ class AccountProfile extends React.Component {
     console.log(this.state.attr_val);
     const key = this.state.attr_key;
     const value = this.state.attr_val;
-    axios.post('/api/update_user',{uid:this.props.user.id,attr:this.state.attr_key,val:this.state.attr_val}).then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/update_user',{uid:this.props.user.id,attr:this.state.attr_key,val:this.state.attr_val}).then(res => {
       if(res.data.code===0){
         this.props.user[key] = value;
         this.props.onUpdate(this.props.user);
@@ -67,7 +67,7 @@ class AccountProfile extends React.Component {
     data.append('file', e.target.files[0]);
     let handler = this;
 
-    axios.post('/api/file/general_upload', data).then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/file/general_upload', data).then(res => {
       if(res.data.code === 0){
         console.log("Res is 0, successfully upload resume");
         this.setState({fileName: res.data.url});
@@ -76,7 +76,7 @@ class AccountProfile extends React.Component {
         handler.props.onUpdate(handler.props.user);
         console.log(handler.props.user)
         console.log("Hmm")
-        axios.post('/api/update_user',{uid:this.props.user.id,attr:'resume',val:res.data.url}).then(res => {
+        axios.post(process.env.REACT_APP_API_HOST + '/api/update_user',{uid:this.props.user.id,attr:'resume',val:res.data.url}).then(res => {
           if(res.data.code===0){
             console.log("Res is 0, successfully changed image")
             NotificationManager.success('简历上传成功','完成啦');
@@ -128,14 +128,14 @@ class AccountProfile extends React.Component {
     data.append('file', img);
     let handler = this;
 
-    axios.post('/api/file/general_upload', data).then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/file/general_upload', data).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         console.log("Calling upload")
         handler.props.user.profile_pic = res.data.url;
         this.setState({showImgCrop: false})
         handler.props.onUpdate(handler.props.user);
-        axios.post('/api/update_user',{uid:this.props.user.id,attr:'profile_pic',val:res.data.url}).then(res => {
+        axios.post(process.env.REACT_APP_API_HOST + '/api/update_user',{uid:this.props.user.id,attr:'profile_pic',val:res.data.url}).then(res => {
           if(res.data.code===0){
             console.log("Res is 0, successfully changed image")
             NotificationManager.success('头像上传成功','上传成功');

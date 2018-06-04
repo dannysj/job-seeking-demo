@@ -14,7 +14,7 @@ class News extends React.Component {
     };
     this.batch_size = 10;
     this.batch_num = 0;
-    axios.post('/api/get_news_list',
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_news_list',
       {batch_size: this.batch_size, batch_num:this.batch_num}).then(res => {
       if(res.data.code===0){
         this.batch_num++;

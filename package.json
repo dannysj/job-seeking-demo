@@ -34,6 +34,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "cors": "^2.8.4",
     "npm-watch": "^0.3.0"
   }
 }
