@@ -506,7 +506,11 @@ font-size: 2em;
     .connect-circle > * {
       font-size: 1em;
     }
-
+  .service-border {
+    width: 100%;
+    padding-bottom: 80%;
+    margin: 1.5em;
+  }
 
 }
 
@@ -518,7 +522,6 @@ font-size: 2em;
 
   .service-border {
     width: 100%;
-    /* height: 15em; */
     padding-bottom: 100%;
     margin: 1.5em;
   }

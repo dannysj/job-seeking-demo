@@ -25,13 +25,13 @@ class UserStatus extends Component {
   render() {
     if(this.props.user){
       return (
-        <div className="right-menu">
-            <Link to="/account">
-              <div className="user-inline">
+        <div className="right-menu" onClick={this.props.onClick}>
+
+              <label className="user-inline" forName={this.props.passFor}>
                 <div className="chinese-top">我的账号</div>
                 <img className="ui mini circular image" src={this.props.user.profile_pic}/>
-              </div>
-            </Link>
+              </label>
+
         </div>
       );
     }
@@ -52,7 +52,11 @@ class UserStatus extends Component {
         <div className="small-screen">
           <div className="item">
             <Link to="/login">
+            <label forName={this.props.passFor}>
+              <div>
               <Icon name='user circle' color="blue" size='big' />
+              </div>
+              </label>
             </Link>
           </div>
         </div>
