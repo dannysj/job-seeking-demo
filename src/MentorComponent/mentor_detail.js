@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Button, Image, Divider} from 'semantic-ui-react';
+import {Button, Image, Divider, Icon} from 'semantic-ui-react';
 import Disqus from './disqus.js';
 import PropTypes from 'prop-types';
 import './mentor.css';
@@ -135,7 +135,9 @@ class MentorDetail extends Component {
           </div>
         </div>
         <div className="mentor-detail-info-container">
+
           <div className="item detail-item">
+            <Icon name='graduation cap' />
             <div className="title">
               在读院校
             </div>
@@ -143,7 +145,7 @@ class MentorDetail extends Component {
             </div>
           </div>
           <div className="item detail-item">
-
+            <Icon name='pin' />
             <div className="title">
               offer公司
             </div>
@@ -151,8 +153,9 @@ class MentorDetail extends Component {
             </div>
 
           </div>
-          <div className="item detail-item">
 
+          <div className="item detail-item">
+            <Icon name='fax' />
             <div className="title">
               offer职位
             </div>
@@ -160,7 +163,9 @@ class MentorDetail extends Component {
             </div>
 
           </div>
+
           <div className="item detail-item">
+            <Icon name='male' />
             <div className="title">
               年龄
             </div>
@@ -169,7 +174,8 @@ class MentorDetail extends Component {
           </div>
 
         </div>
-        <div className="mentor-service-overview">
+
+        <div className="mentor-service-overview detail-section">
           <div className="title">
             服务介绍
 
@@ -194,12 +200,9 @@ class MentorDetail extends Component {
         </div>
 
         <div className="detail-section">
-          <h2 className="ui header">
-            <i className="file alternate outline icon"/>
-            <div className="content">
+          <div className="title">
               简历
             </div>
-          </h2>
           <embed className="resume-holder" src={this.state.mentor.resume} width="100%" type='application/pdf'/>
         </div>
 

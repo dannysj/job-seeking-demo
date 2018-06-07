@@ -1,0 +1,107 @@
+/* Font */
+@font-face {
+	font-family: HYSHANGWEIQINGCHATIW;
+	src:
+		url('/fonts/ChiFonts/hyswqc.ttf') format('truetype'),
+}
+
+.about-container {
+  position: relative;
+  height: 100%;
+}
+
+.parallax {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  flex-flow: row;
+  /* padding: 3em; */
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+}
+
+.dark {
+  color: white;
+  background-color: hsla(200,18%,46%,1);
+  background-blend-mode: overlay;
+}
+
+.light {
+  color: gray;
+  background-color: hsla(0,0%,100%,0.70);
+  background-blend-mode: overlay;
+}
+
+.cali-title {
+  font-family: HYSHANGWEIQINGCHATIW;
+  font-size: 2.5em;
+}
+
+.cali-title .small {
+  font-size: 1em;
+}
+
+.cali-title .medium {
+  font-size: 1.5em;
+}
+
+.share-container {
+  display: flex;
+
+}
+
+.share-box {
+  border: 2px solid white;
+  color: white;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+    margin: 1em;
+}
+
+.share-box > .title {
+  color: #b0dbff;
+  font-size: 1.2em;
+  padding-bottom: 1em;
+  text-align: center;
+  font-family: HYYakuHei-GEW;
+}
+
+.vertical-text {
+  writing-mode: tb-rl;
+  display: inline-block;
+}
+
+
+.cali-group {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  padding: 0em 3em;
+}
+
+.cali-group .hori {
+
+}
+
+.share-box > .description {
+  font-family: Arita;
+}
+
+.about-sub {
+    width: 400px;
+}
+
+.about-divide {
+  height: 80px;
+  background-color: white;
+  text-align: center;
+  font-family: Arita;
+}
+
+.parallel .hori {
+  flex-flow: column;
+}

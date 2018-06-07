@@ -12,6 +12,7 @@
 
 .detail-section {
   margin-top: 3em;
+  text-align: center;
 }
 
 .account-partial-container > .list > .item {
@@ -353,7 +354,8 @@
 .detail-item > .subtitle {
 
   font-size: 2em;
-    padding: 2em;
+  padding: 1.5em 2em;
+  padding-bottom: 0;
 }
 .mentor-service-overview {
     padding: 5em 10%;
@@ -361,12 +363,20 @@
 }
 
 .mentor-service-overview > .title {
-  font-family: HYYakuHei-GEW;
+  font-family: HYYakuHei-DEW;
+  color: gray;
+  display: inline-block;
+  padding-bottom: 2em;
+font-size: 2em;
+
+}
+
+.detail-section > .title {
+  font-family: HYYakuHei-DEW;
   color: gray;
   display: inline-block;
   padding-bottom: 3em;
 font-size: 2em;
-
 }
 .mentor-service-container {
   display: flex;
@@ -462,6 +472,10 @@ font-size: 2em;
 
 .service-item > .buy-button {
   z-index: 3;
+}
+
+.detail-item > i {
+  font-size: 2em;
 }
 
 @media screen and (max-width: 991px) {
