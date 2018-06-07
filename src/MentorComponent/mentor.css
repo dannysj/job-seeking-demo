@@ -476,6 +476,11 @@ font-size: 2em;
 
 .detail-item > i {
   font-size: 2em;
+  margin-bottom: 0.3em;
+}
+
+.mentor-service-overview.detail-section {
+  margin-top: 0;
 }
 
 @media screen and (max-width: 991px) {

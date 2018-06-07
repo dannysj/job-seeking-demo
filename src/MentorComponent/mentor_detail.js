@@ -9,29 +9,8 @@ class MentorDetail extends Component {
 
   constructor (props) {
     super(props);
-    this.state={mentor:{first:"我的天", last:"噢", english:"my god", bio:"HIHIHI i am dasdfasdfas fasdsfasdfa asdfasdfasfdf asdfasf",college_name:"Uni of WCDSF", offer_company:"Lucid", offer_title:"Test",
-    service:[{
-      name: "简历修改",
-      price: "100",
-      description: "我帮你改简历，你给我钱，ok?",
-    },
-    {
-      name: "Test",
-      price: "100",
-      description: "Hey whatcha yoi doing?",
-    },
-    {
-      name: "Test",
-      price: "100",
-      description: "Hey whatcha yoi doing?",
-    },
-    {
-      name: "Test",
-      price: "100",
-      description: "Hey whatcha yoi doing?",
-    }
-  ]}, showAddServiceModal: false};
-/*
+    this.state={mentor:{}, showAddServiceModal: false};
+
     axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
         console.log(res.data.mentor);
@@ -41,7 +20,7 @@ class MentorDetail extends Component {
         //TODO: Error Handling
       }
     });
-*/
+
     this.initBuy = this.initBuy.bind(this);
   }
 

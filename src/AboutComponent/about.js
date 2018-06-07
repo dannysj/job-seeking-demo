@@ -61,7 +61,7 @@ class About extends React.Component {
           </div>
         </div>
 
-        <div className="parallax light hori" style={backimgstyle2}>
+        <div className="parallax light" style={backimgstyle2}>
           <div className="cali-group">
             <div className="cali-title small">
               我们的
@@ -92,7 +92,7 @@ class About extends React.Component {
           </div>
         </div>
 
-        <div className="parallax light" style={backimgstyle1}>
+        <div className="parallax light hori" style={backimgstyle1}>
           <div className="cali-group hori">
             <div className="cali-title intro">
               成为一个Mentor
