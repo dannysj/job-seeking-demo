@@ -2,7 +2,7 @@
 @font-face {
 	font-family: HYSHANGWEIQINGCHATIW;
 	src:
-		url('/fonts/ChiFonts/hyswqc.ttf') format('truetype'),
+		url('/fonts/ChiFonts/hyswqc.woff') format('woff');
 }
 
 .about-container {
@@ -37,15 +37,18 @@
 
 .cali-title {
   font-family: HYSHANGWEIQINGCHATIW;
-  font-size: 2.5em;
+  font-size: 11em;
 }
 
-.cali-title .small {
-  font-size: 1em;
+.cali-title.small {
+  font-size: 2em;
+  transform: rotate(-15deg);
+  display: inline-block;
 }
 
-.cali-title .medium {
-  font-size: 1.5em;
+.cali-title.medium {
+  font-size: 5em;
+  padding: 0.7em 0em;
 }
 
 .share-container {
@@ -59,8 +62,12 @@
   display: flex;
   flex-flow: column;
   justify-content: center;
-    margin: 1em;
+    margin: 0.5em;
+    padding: 1em;
+    height: 200px;
+  width: 130px;
 }
+
 
 .share-box > .title {
   color: #b0dbff;
@@ -73,6 +80,7 @@
 .vertical-text {
   writing-mode: tb-rl;
   display: inline-block;
+  padding: 0em 0.7em;
 }
 
 
@@ -80,11 +88,11 @@
   display: flex;
   flex-flow: column;
   justify-content: center;
-  padding: 0em 3em;
+  align-items: center;
 }
 
-.cali-group .hori {
-
+.parallax.hori {
+  flex-flow: column;
 }
 
 .share-box > .description {
@@ -93,6 +101,14 @@
 
 .about-sub {
     width: 400px;
+    line-height: 2em;
+    font-size: 1.1em;
+}
+.cali-title.intro {
+  font-family: HYYakuHei-DEW;
+  font-size: 2em;
+  align-self: flex-start;
+  padding: 0em 3em;
 }
 
 .about-divide {
@@ -102,6 +118,6 @@
   font-family: Arita;
 }
 
-.parallel .hori {
+.parallel.hori {
   flex-flow: column;
 }

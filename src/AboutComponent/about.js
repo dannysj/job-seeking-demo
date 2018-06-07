@@ -60,8 +60,7 @@ class About extends React.Component {
             帮助更多后来人取得求职上的成功。
           </div>
         </div>
-        <div className="about-divide">
-        </div>
+
         <div className="parallax light hori" style={backimgstyle2}>
           <div className="cali-group">
             <div className="cali-title small">
@@ -77,8 +76,7 @@ class About extends React.Component {
             依旧能得到丰富的行业信息和经验分享。
           </div>
         </div>
-        <div className="about-divide">
-        </div>
+
         <div className="parallax dark" style={backimgstyle3}>
           <div className="cali-group">
             <div className="cali-title small">
@@ -93,11 +91,10 @@ class About extends React.Component {
             我们希望通过搭建一个留学生之间的求职互助平台，为留学生求职打开另一扇门。
           </div>
         </div>
-        <div className="about-divide">
-        </div>
+
         <div className="parallax light" style={backimgstyle1}>
           <div className="cali-group hori">
-            <div className="cali-title small">
+            <div className="cali-title intro">
               成为一个Mentor
             </div>
           </div>
