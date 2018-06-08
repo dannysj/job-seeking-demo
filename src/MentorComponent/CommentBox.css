@@ -1,5 +1,5 @@
 .comment-box{
-  margin: 0 30px;
+      margin: 0 25%;
 }
 
 .comment-input{
@@ -11,8 +11,24 @@
 }
 
 .comment{
+  margin: 1em 0em;
   padding: 10px 20px;
   font-size: 18px;
+  display: flex;
+  flex-flow: row;
+
+}
+
+.comment > .left {
+  flex: 0;
+  width: 20%
+}
+
+.comment > .right {
+  flex: 1;
+  display: flex;
+  flex-flow: column;
+text-align: left;
 }
 
 .comment-img {
@@ -26,24 +42,26 @@
 .comment-author{
   font-size: 20px;
   font-weight: bold;
-  display: inline-block;
-  line-height: 200%;
-  margin:0 10px;
+  line-height: 150%;
 }
 
 .comment-time{
-  display: inline-block;
+  display: block;
   color: gray;
-  line-height: 200%;
+  line-height: 150%;
 }
 
 
 .comment-content{
-  margin: 10px 0 10px 60px;
-  padding: 5px 10px;
-  background-color: lightgray;
+
+  padding: 1em 0em;
   border-radius: 10px;
-  clear: both;
   line-height: 200%;
   width: fit-content;
+}
+
+@media screen and (max-width: 767px) {
+  .comment-box{
+    margin: 0 30px;
+  }
 }

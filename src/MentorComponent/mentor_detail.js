@@ -103,6 +103,7 @@ class MentorDetail extends Component {
               <div className="chinese-top">{this.state.mentor.last+this.state.mentor.first}</div>
               <div className="App-subtitle">{"English name"}</div>
               <Divider hidden clearing />
+              <Divider hidden clearing />
               <div className="small-bio" dangerouslySetInnerHTML={{__html:this.state.mentor.bio}}>
 
               </div>
@@ -112,16 +113,18 @@ class MentorDetail extends Component {
         <div className="mentor-detail-info-container">
 
           <div className="item detail-item">
-            <Icon name='graduation cap' />
+
             <div className="title">
+            <Icon className="title-icon" name='graduation cap' />
               在读院校
             </div>
             <div className="subtitle" dangerouslySetInnerHTML={{__html:this.state.mentor.college_name}}>
             </div>
           </div>
           <div className="item detail-item">
-            <Icon name='pin' />
+
             <div className="title">
+              <Icon className="title-icon" name='pin' />
               offer公司
             </div>
             <div className="subtitle" dangerouslySetInnerHTML={{__html:this.state.mentor.offer_company}}>
@@ -130,8 +133,9 @@ class MentorDetail extends Component {
           </div>
 
           <div className="item detail-item">
-            <Icon name='fax' />
+
             <div className="title">
+              <Icon className="title-icon" name='fax' />
               offer职位
             </div>
             <div className="subtitle" dangerouslySetInnerHTML={{__html:this.state.mentor.offer_title}}>
@@ -140,8 +144,9 @@ class MentorDetail extends Component {
           </div>
 
           <div className="item detail-item">
-            <Icon name='male' />
+
             <div className="title">
+              <Icon className="title-icon" name='male' />
               年龄
             </div>
             <div className="subtitle">{parseInt((new Date() - new Date(this.state.mentor.dob))/(365*24*3600*1000))}</div>
@@ -150,33 +155,43 @@ class MentorDetail extends Component {
 
         </div>
 
-        <div className="mentor-service-overview detail-section">
-          <div className="title">
-            服务介绍
-
-          </div>
-          <div className="mentor-service-container">
           {
-            this.state.mentor.service.map(el => (
-              <div className="service-border" style={backimgstyle}>
-                <div className="service-item" >
-                  <div className="service-title">
-                    <div className="service-name">{el.name}</div>
-                    <div className="service-price">{el.price+' USD'}</div>
-                  </div>
-                  <div className="service-description">{el.description}</div>
-                  <div className="buy-button"><Button positive onClick={()=>this.initBuy(el.name, el.price)}>购买</Button></div>
-                </div>
-              </div>
+            (this.state.mentor.service.length > 0) ? (
+              <div className="mentor-service-overview detail-section">
+                <div className="title">
+                  服务介绍
 
-            )
-          )}
-          </div>
-          <p>
-            <b>{this.state.mentor.last+this.state.mentor.first}</b>
-            本周还可提供{this.state.mentor.num_availability}次服务
-          </p>
-        </div>
+                </div>
+              <div className="para-medium">
+                <b>{this.state.mentor.last+this.state.mentor.first}</b>
+                本周还可提供{this.state.mentor.num_availability}次服务
+              </div>
+              <div className="mentor-service-container">
+              {
+                this.state.mentor.service.map(el => (
+                  <div className="service-border" style={backimgstyle}>
+                    <div className="service-item" >
+                      <div className="service-title">
+                        <div className="service-name">{el.name}</div>
+                        <div className="service-price">{el.price+' USD'}</div>
+                      </div>
+                      <div className="service-description">{el.description}</div>
+                      <div className="buy-button"><Button positive onClick={()=>this.initBuy(el.name, el.price)}>购买</Button></div>
+                    </div>
+                  </div>
+
+                )
+
+              )}
+              </div>
+            </div>
+            ) : (
+            <div className="para-large">
+              <b>{this.state.mentor.last+this.state.mentor.first}</b>
+              本周尚未提供服务
+            </div>
+          )
+        }
 
         <div className="detail-section">
           <div className="title">
@@ -186,12 +201,10 @@ class MentorDetail extends Component {
         </div>
 
         <div className="detail-section">
-          <h2 className="ui header">
-            <i className="comment alternate outline icon"/>
-            <div className="content">
+            <div className="title">
                 过往评价
             </div>
-          </h2>
+
           <CommentBox user={this.props.user} mid={this.props.match.params.mid} displayCommentReplyButton={true}/>
         </div>
       </div>

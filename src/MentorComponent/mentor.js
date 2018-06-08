@@ -207,7 +207,7 @@ class Mentor extends Component {
                     <div className="mentor-text">
                     <Table className="table-clean-border" basic='very'>
                       <Table.Body>
-                        <Table.Row>
+                        <Table.Row className="table-clean-row">
                           <Table.Cell>
                             Offer公司
                           </Table.Cell>
@@ -215,7 +215,7 @@ class Mentor extends Component {
                               {el.offer_company}
                           </Table.Cell>
                         </Table.Row>
-                        <Table.Row>
+                        <Table.Row className="table-clean-row">
                           <Table.Cell>
                             Offer职位
                           </Table.Cell>
@@ -223,7 +223,7 @@ class Mentor extends Component {
                               {el.offer_title}
                           </Table.Cell>
                         </Table.Row>
-                        <Table.Row>
+                        <Table.Row className="table-clean-row">
                           <Table.Cell>
                             院校
                           </Table.Cell>
@@ -231,7 +231,7 @@ class Mentor extends Component {
                               {el.college_name}
                           </Table.Cell>
                         </Table.Row>
-                        <Table.Row>
+                        <Table.Row className="table-clean-row">
                           <Table.Cell>
                             专业
                           </Table.Cell>

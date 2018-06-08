@@ -306,7 +306,7 @@
 
 .mentor-background-image {
   width: 100%;
-  height: 500px;
+  height: 600px;
   object-fit: cover;
   display: flex;
   align-items: center;
@@ -324,7 +324,7 @@
 
 .mentor-name > .App-subtitle {
   padding-top: 0.5em;
-  font-size: 2em;
+  font-size: 1em;
 }
 
 .mentor-name > .small-bio {
@@ -346,6 +346,7 @@
   justify-content: space-around;
   align-items: center;
   flex-flow: column;
+  flex: 0;
 }
 
 .detail-item > .title {
@@ -357,8 +358,8 @@
 
 .detail-item > .subtitle {
 
-  font-size: 2em;
-  padding: 1.5em 2em;
+  font-size: 1em;
+  padding: 2em 2em;
   padding-bottom: 0;
 }
 .mentor-service-overview {
@@ -371,7 +372,7 @@
   color: gray;
   display: inline-block;
   padding-bottom: 2em;
-font-size: 2em;
+  font-size: 2em;
 
 }
 
@@ -379,7 +380,7 @@ font-size: 2em;
   font-family: HYYakuHei-DEW;
   color: gray;
   display: inline-block;
-  padding-bottom: 3em;
+  padding-bottom: 2em;
 font-size: 2em;
 }
 .mentor-service-container {
@@ -478,13 +479,29 @@ font-size: 2em;
   z-index: 3;
 }
 
-.detail-item > i {
+.title > .title-icon {
   font-size: 2em;
-  margin-bottom: 0.3em;
+  margin: 0 auto;
+  display: block;
+  padding-bottom: 1.5em;
 }
 
 .mentor-service-overview.detail-section {
   margin-top: 0;
+}
+
+.table-clean-row > td:nth-child(2) {
+  padding-left: 1em;
+}
+
+.para-large {
+  text-align: center;
+  font-size: 2em;
+}
+
+.para-medium {
+  text-align: center;
+  font-size: 1.3em;
 }
 
 @media screen and (max-width: 991px) {
@@ -605,7 +622,7 @@ font-size: 2em;
     display: none;
   }
 
-  tr > td:nth-child(1) {
+.table-clean-row > td:nth-child(1) {
     display: none;
   }
 
@@ -617,5 +634,13 @@ font-size: 2em;
 
   .ui.top.attached.tabular.menu.top-bar {
     flex: 0 0 60px;
+  }
+
+  .container > .item {
+    min-width: 25%;
+  }
+  .mentor-detail-info-container {
+    padding: 5em 2%;
+
   }
 }

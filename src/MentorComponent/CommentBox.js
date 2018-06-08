@@ -131,11 +131,14 @@ class Comment extends Component {
   render() {
     return (
       <div className="comment">
+        <div className="left">
         <img className="comment-img" src={this.props.comment.profile_pic}/>
+        </div>
+        <div className="right">
         <div className="comment-author">{this.props.comment.last + this.props.comment.first}</div>
         <div className="comment-time">{this.props.comment.time_added}</div>
         <div className="comment-content">{this.props.comment.text}</div>
-
+        </div>
         {this.props.comment.reply ? (
           <div className="comment-reply comment-content">
               <span style={{fontWeight: 'Bold'}}>Mentor回复: </span>
