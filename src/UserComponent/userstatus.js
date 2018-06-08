@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Link} from 'react-router-dom';
-import { Icon } from 'semantic-ui-react';
+import { Icon, Label } from 'semantic-ui-react';
 import './userstatus.css';
 class UserStatus extends Component {
 
@@ -9,7 +9,7 @@ class UserStatus extends Component {
     super(props);
 
     // no such api
-    // axios.post('/api/all_mentor_list',{}).then(res => {
+    // axios.post(process.env.REACT_APP_API_HOST + '/api/all_mentor_list',{}).then(res => {
     //   console.log(res);
     //   if(res.data.code==0){
     //     console.log(res.data.list);
@@ -28,7 +28,13 @@ class UserStatus extends Component {
         <div className="right-menu" onClick={this.props.onClick}>
 
               <label className="user-inline" forName={this.props.passFor}>
-                <div className="chinese-top">我的账号</div>
+                <div className="chinese-top">
+                我的账号
+                  {
+                    (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications!=0) &&
+                      ('('+this.props.user.num_notifications+'条未读通知)')
+                  }
+                </div>
                 <img className="ui mini circular image" src={this.props.user.profile_pic}/>
               </label>
 

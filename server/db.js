@@ -3,9 +3,21 @@ var pg = require('pg');
 var uuidv4 = require('uuid/v4');
 var config = require('./config.js');
 var db = new pg.Pool(config.db);
+var fs = require('fs');
+
+exports.patch = () => {
+  // Patch mentor_comment
+  const sql = fs.readFileSync('./db_patches/mentor_comment.sql').toString();
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log('Table mentor_comment Created');
+  });
+};
 
 exports.reset = function(){
-  // TODO: removal of all tables
   var query = `
     drop table if exists mentor_rel;
     drop table if exists mentor_info;
@@ -13,6 +25,7 @@ exports.reset = function(){
     drop table if exists industry;
     drop table if exists user_college;
     drop table if exists college;
+    drop table if exists message;
     drop table if exists users;
     create table if not exists users (
       id serial unique primary key,
@@ -30,7 +43,16 @@ exports.reset = function(){
       balance numeric(8,2) default 0.00,
       wechat text,
       resume text,
-      isactivated
+      isactivated boolean
+    );
+    create table if not exists message (
+      id serial unique primary key,
+      origin int, -- Currently not used. Will be used when between-user messaging is implemented
+      destination int references users(id),
+      type int, -- 1 for text
+      content text,
+      timestamp timestamp with time zone,
+      is_read boolean
     );
     create table if not exists industry (
       id serial unique primary key,
@@ -72,7 +94,8 @@ exports.reset = function(){
       offer_company varchar(255),
       bio text,
       service jsonb,
-      resume text
+      resume text,
+      num_weekly_slots int -- Number of slots available for a week
     );
     create table if not exists mentor_rel(
       id serial unique primary key,
@@ -169,9 +192,17 @@ exports.getUserInfo = (uid, callback) => {
       callback('No such email found');
       return;
     }
-    var userAccount = result.rows[0];
+    let userAccount = result.rows[0];
     userAccount.password = null;
-    callback(null, userAccount);
+    let query = `select count(*) as count from message where is_read=false and destination=$1`;
+    db.query(query, [uid], (err, result)=>{
+      if(err){
+        callback(err);
+        return;
+      }
+      userAccount.num_notifications = result.rows[0].count;
+      callback(null, userAccount);
+    });
   });
 }
 
@@ -192,6 +223,7 @@ exports.getNewsDetail = (nid, callback) => {
       u.first as author_first,
       u.last as author_last,
       u.profile_pic as profile_pic,
+      u.cover as author_cover,
       n.type as type,
       to_char(n.publish_time,'DD Mon HH24:MI') as publish_time,
       n.thumbnail as thumbnail,
@@ -244,15 +276,29 @@ exports.addUserVerificationCode = (email, verification_code, callback) => {
 };
 
 exports.confirmVerification = (verification_code, callback) => {
-  let query = `update users set isactivated=true where id=(select uid from user_verification where verification_code=$1);`;
+  let query = `update users set isactivated=true where id=(select uid from user_verification where verification_code=$1) returning id;`;
   db.query(query, [verification_code], (err, result) => {
     if(err){
       callback(err);
       return;
     }
-    callback(null);
+    callback(null, result.rows[0].id);
   });
 };
+
+exports.verifyInfoCompletion = (uid, callback) => {
+  let query = `select (major is not null
+    and wechat is not null
+    and resume is not null) as res
+    from users where id=$1;`;
+  db.query(query, [uid], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows[0].res)
+  });
+}
 
 exports.createMentorApp = (mentor_info, callback) => {
   var query = `insert into mentor_info
@@ -264,7 +310,7 @@ exports.createMentorApp = (mentor_info, callback) => {
       offer_company,
       bio,
       service,
-      resume)
+      num_weekly_slots)
     values($1,false,now(),$2,$3,$4,$5,$6,$7);`
   db.query(query,
     [mentor_info.uid,
@@ -273,7 +319,31 @@ exports.createMentorApp = (mentor_info, callback) => {
     mentor_info.offer_company,
     mentor_info.bio,
     JSON.stringify(mentor_info.services),
-    mentor_info.resume], (err, result)=>{
+    mentor_info.num_weekly_slots], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+};
+
+exports.editMentorInfo = (mentor_info, callback) => {
+  var query = `update mentor_info set
+      cid=$1,
+      offer_title=$2,
+      offer_company=$3,
+      bio=$4,
+      service=$5,
+      num_weekly_slots=$6 where uid=$7;`
+  db.query(query,
+    [mentor_info.cid,
+    mentor_info.offer_title,
+    mentor_info.offer_company,
+    mentor_info.bio,
+    JSON.stringify(mentor_info.services),
+    mentor_info.num_weekly_slots,
+    mentor_info.uid], (err, result)=>{
     if(err){
       callback(err);
       return;
@@ -300,17 +370,108 @@ exports.getMentorDetail = (mid, callback) => {
       u.last as last,
       u.dob as dob,
       u.profile_pic as profile_pic,
+      u.resume as resume,
       c.name as college_name,
       m.id as mid,
       m.offer_title as offer_title,
       m.offer_company as offer_company,
       m.bio as bio,
       m.service as service,
-      m.resume as resume
+      m.num_weekly_slots as num_weekly_slots,
+      m.num_weekly_slots - (select count(*) from mentor_rel
+        where mid=m.id and now()-start_time<'1 week') as num_availability
     from users u, mentor_info m, college c
     where m.uid = u.id and m.cid = c.id and m.id = $1;
   `;
   db.query(query, [mid], (err, result) => {
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows[0]);
+  });
+};
+
+exports.getMentorComment = (mid, callback) => {
+  const query = `select
+    c.id as id,
+    c.mid as mid,
+    to_char(c.time_added,'DD Mon HH24:MI') as time_added,
+    c.text as text,
+    c.id as uid,
+    c.reply as reply,
+    u.first as first,
+    u.last as last,
+    u.profile_pic as profile_pic
+    from users u, mentor_comment c
+    where c.mid=$1 and c.uid=u.id;`;
+  db.query(query, [mid], function(err, result){
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows);
+  });
+};
+
+exports.createMentorComment = (comment, callback) => {
+  const query = `insert into mentor_comment(
+    mid,
+    text,
+    uid)
+    values($1, $2, $3)
+  `;
+  db.query(query,
+    [
+      comment.mid,
+      comment.text,
+      comment.uid,
+    ],
+    (err, result)=>{
+      if(err){
+        callback(err);
+        return;
+      }
+      callback(null);
+    });
+};
+
+exports.createMentorReply = (comment, callback) => {
+  const query = `update mentor_comment set reply = $2 where id=$1`;
+  db.query(query,
+    [
+      comment.id,
+      comment.reply
+    ],
+    (err, result)=>{
+      if(err){
+        callback(err);
+        return;
+      }
+      callback(null);
+    });
+};
+  exports.getMentorDetailByUid = (uid, callback) => {
+  var query = `
+    select u.id as uid,
+      u.first as first,
+      u.last as last,
+      u.dob as dob,
+      u.profile_pic as profile_pic,
+      u.resume as resume,
+      u.ismentor as ismentor,
+      c.name as college_name,
+      c.id as cid,
+      m.id as mid,
+      m.offer_title as offer_title,
+      m.offer_company as offer_company,
+      m.bio as bio,
+      m.service as service,
+      m.num_weekly_slots as num_weekly_slots
+    from users u, mentor_info m, college c
+    where m.uid = u.id and m.cid = c.id and u.id = $1;
+  `;
+  db.query(query, [uid], (err, result) => {
     if(err){
       callback(err);
       return;
@@ -361,22 +522,6 @@ exports.disapproveMentor = (uid, mid, callback) => {
       return;
     }
     callback(null);
-  });
-};
-
-exports.getApplicationStatus = (uid, callback) => {
-  var query = `select u.ismentor,m.id as ismentor from users u, mentor_info m where m.uid=u.id and u.id=$1;`;
-  db.query(query, [uid], (err, result) => {
-    if(err){
-      callback(err);
-      return;
-    }
-    if(result.rows.length == 0){
-      callback(null, 0);
-    }
-    else{
-      callback(null, 1);
-    }
   });
 };
 
@@ -509,6 +654,42 @@ exports.activateAccount = (code, callback)=>{
     callback(null);
   });
 };
+
+exports.createMessage = (origin, dest, type, content, callback) =>{
+  var query = `
+    insert into message (origin,destination,type,content,timestamp,is_read)
+    values($1,$2,$3,$4,now(),false);
+  `;
+  db.query(query, [origin, dest, type, content], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+}
+
+exports.getNotificationsByUid = (uid, callback)=>{
+  let query = `select * from message where origin=0 and destination=$1 order by timestamp desc;`;
+  db.query(query, [uid], (err, result)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    callback(null, result.rows);
+  });
+}
+
+exports.setNotificationsAsRead = (uid, callback) => {
+  let query = `update message set is_read=true where origin=0 and destination=$1;`;
+  db.query(query, [uid], (err, result)=>{
+    if(err){
+      console.log(err);
+    }
+    if(callback)
+      callback(err);
+  });
+}
 
 exports.checkActivation = (code, callback)=>{
 var query = `

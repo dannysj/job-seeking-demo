@@ -1,20 +1,21 @@
-var express = require('express');
-var pg = require('pg');
-var path = require('path');
-var bodyParser = require('body-parser');
-var db = require('./server/db.js');
-var config = require('./server/config.js');
-var http = require('http');
-var https = require('https');
-var multer  = require('multer');
-var crypto = require('crypto');
-var paypal = require('paypal-rest-sdk');
-var nodemailer = require('nodemailer');
+const express = require('express');
+const pg = require('pg');
+const path = require('path');
+const bodyParser = require('body-parser');
+const db = require('./server/db.js');
+const config = require('./server/config.js');
+const http = require('http');
+const https = require('https');
+const multer  = require('multer');
+const crypto = require('crypto');
+const paypal = require('paypal-rest-sdk');
+const nodemailer = require('nodemailer');
+const nocache = require('nocache');
+const msg = require('./server/message.js');
+const messageDispatch = new msg(db);
 // create reusable transporter object using the default SMTP transport
 var transporter = nodemailer.createTransport(config.mail_config);
-
-
-
+var cors = require('cors')
 
 paypal.configure({
   'mode': 'live', //sandbox or live
@@ -34,6 +35,7 @@ var app = express();
 var args = process.argv.slice(2);
 var PORT = process.env.PORT || 3005;
 
+app.use(cors())
 app.use(express.static(__dirname + '/static'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
@@ -63,6 +65,39 @@ app.post('/api/get_mentor_list', function(req, res){
   });
 });
 
+app.post('/api/get_mentor_comment', function(req, res){
+  db.getMentorComment(req.body.mid, (err, list) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0, list: list});
+  });
+});
+
+app.post('/api/create_mentor_comment', function(req, res){
+  db.createMentorComment(req.body, (err) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0});
+  });
+});
+
+app.post('/api/create_mentor_reply', function(req, res){
+  db.createMentorReply(req.body, (err) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0});
+  });
+});
+
 app.post('/api/get_news_list', (req, res) => {
   db.getNewsList(req.body.batch_size, req.body.batch_num, (err, news_list) => {
     if(err){
@@ -86,13 +121,47 @@ app.post('/api/get_news_detail', function(req, res){
 });
 
 app.post('/api/mentor_apply', function(req, res){
-  db.createMentorApp(req.body, (err) => {
+  db.verifyInfoCompletion(req.body.uid, (err, isCompleted)=>{
+    if(isCompleted){
+      db.createMentorApp(req.body, (err) => {
+        if(err){
+          console.log(err);
+          res.json({code: 1});
+          return;
+        }
+        res.json({code: 0});
+      });
+    }
+    else{
+      res.json({code: 45});
+    }
+  });
+});
+
+app.post('/api/mentor_edit', function(req, res){
+  db.editMentorInfo(req.body, (err) => {
     if(err){
       console.log(err);
       res.json({code: 1});
       return;
     }
     res.json({code: 0});
+  });
+});
+
+app.post('/api/get_mentor_detail_by_uid', function(req, res){
+  db.getMentorDetailByUid(req.body.uid, (err, mentor) => {
+    if(err){
+      console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    if(mentor){
+      res.json({code: 0, mentor: mentor});
+    }
+    else{
+      res.json({code: 55})
+    }
   });
 });
 
@@ -118,9 +187,9 @@ app.post('/api/get_college_list', function(req, res){
   });
 });
 
-app.post('/api/admin/create_news', function(req, res){
+app.post('/api/create_news', function(req, res){
   // TODO: Authentication
-  req.body.type=0; // News submitted by admin
+  req.body.type=0; // News submitted by admin (Obselated, remove if necessary)
   db.createNews(req.body, (err, nid) => {
     if(err){
       console.log(err);
@@ -199,11 +268,12 @@ app.post('/api/verify_user', function(req, res){
 app.get('/activate', function(req, res) {
   console.log("GET verify user called")
 
-  db.confirmVerification(req.query.code, error => {
+  db.confirmVerification(req.query.code, (error, uid) => {
     if (error) {
       res.redirect('/');
       return;
     }
+    messageDispatch(uid, "欢迎来到伙伴求职。在这里您将接触到最好的求职干货和导师资源。如有任何疑问 ，可发送邮件至help@buddycareer.com联系我们");
     res.redirect('/account');
   });
 
@@ -249,6 +319,7 @@ app.post('/api/admin/decide_mentor_app', function(req, res){
         res.json({code: 1, errMsg: 'Database Error'});
         return;
       }
+      messageDispatch.sendSystemMessage(req.body.uid, "您的导师申请已被通过。您的账户已成为导师账户，请经常查看系统通知并为Mentee提供优质服务");
       res.json({code:0});
     });
   }
@@ -259,20 +330,10 @@ app.post('/api/admin/decide_mentor_app', function(req, res){
         res.json({code: 1, errMsg: 'Database Error'});
         return;
       }
+      messageDispatch.sendSystemMessage(req.body.uid, "我们抱歉地通知您，您的导师申请未被通过。您可以联系我们获得具体原因");
       res.json({code:0});
     });
   }
-});
-
-app.post('/api/get_application_status', function(req, res){
-  db.getApplicationStatus(req.body.uid, (err, status_code) => {
-    if(err){
-      console.log(err);
-      res.json({code: 1, errMsg: 'Database Error'});
-      return;
-    }
-    res.json({code: 0, status: status_code});
-  });
 });
 
 var pendingPayments = {};
@@ -309,21 +370,6 @@ app.post('/api/poll_payment', function(req, res){
     }catch(e){}
     pendingPayments[req.body.order_id].res = null;
   }, 10000);
-  // setTimeout(function(){
-  //   db.addMentorShip(pendingPayments[req.body.order_id].uid,
-  //     pendingPayments[req.body.order_id].mid,
-  //     pendingPayments[req.body.order_id].service_name,
-  //     pendingPayments[req.body.order_id].service_price,
-  //     (err) => {
-  //       if(err){
-  //         console.log(err);
-  //         res.json({code: 1, errMsg: 'Database Error'});
-  //         return;
-  //       }
-  //       res.json({code:0});
-  //   });
-  //   pendingPayments[req.body.order_id] = null;
-  // }, 3000);
 });
 
 app.post('/api/get_rel_mentors', (req, res)=>{
@@ -349,96 +395,65 @@ app.post('/api/get_rel_mentees', (req, res)=>{
 });
 
 app.post('/api/create_order', function(req, res){
-  var timestamp = new Date().getTime();
-
-  var create_payment_json = {
-    "intent": "sale",
-    "payer": {
-        "payment_method": "paypal"
-    },
-    "redirect_urls": {
-        "return_url": "http://job.y-l.me/return/payment_complete",
-        "cancel_url": "http://job.y-l.me/return/payment_cancel"
-    },
-    "transactions": [{
-        "item_list": {
-            "items": [{
-                "name": req.body.service_name,
-                "sku": req.body.service_name,
-                "price": req.body.service_price,
-                "currency": "USD",
-                "quantity": 1
-            }]
-        },
-        "amount": {
-            "currency": "USD",
-            "total": req.body.service_price
-        },
-        "description": "Buddy Career 提供的服务"
-    }]
-};
-
-  paypal.payment.create(create_payment_json, function (err, payment) {
-    if (err) {
-      console.log(err);
-      res.json({code: 2, errMsg: 'Paypal API Error'});
-      return;
-    }
-
-    var redirect_url = '';
-    payment.links.forEach(function(el){
-      if(el.rel == 'approval_url')
-        redirect_url = el.href;
-    });
-
-    pendingPayments[payment.id] = {uid: req.body.uid, mid: req.body.mid, service_name: req.body.service_name, service_price: req.body.service_price};
-    console.dir(payment);
-    res.json({code: 0, url: redirect_url});
+  // Temporary code for internal testing.
+  // No payment required, get straight through as if payment confirmed
+  db.addMentorShip(req.body.uid,
+    req.body.mid,
+    req.body.service_name,
+    req.body.service_price,
+    (err) => {
+      if(err){
+        console.log(err);
+        res.json({code: 1});
+      }
+      res.json({code: 0, url: '/account/mentor'});
   });
-
-  // var value_in_whole = timestamp+'-'+req.body.uid+'-'+req.body.mid +
-  //   2+'http://job.y-l.me/callback/payment_complete'+timestamp+parseFloat(req.body.service_price).toFixed(2)+
-  //   'http://job.y-l.me/mentor'+process.env.PAY_TOKEN+process.env.PAY_UID;
-  // var md5hash = crypto.createHash('md5').update(value_in_whole).digest("hex");
-  // var postData = JSON.stringify({
-  //   uid: process.env.PAY_UID,
-  //   goodsname: timestamp+'-'+req.body.uid+'-'+req.body.mid,
-  //   istype: 2,
-  //   notify_url: 'http://job.y-l.me/callback/payment_complete',
-  //   orderid: timestamp,
-  //   price: parseFloat(req.body.service_price).toFixed(2),
-  //   return_url: 'http://job.y-l.me/mentor',
-  //   key: md5hash
-  // });
-  // let options = {
-  //   hostname: 'pay.paysapi.com',
-  //   port: 443,
-  //   path: '/?format=json',
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     'Content-Length': postData.length
-  //   }
-  // };
-  // console.log(postData);
-  // var reqp = https.request(options, (resp) => {
-  //   console.log('statusCode:', resp.statusCode);
-  //   console.log('headers:', resp.headers);
-  //
-  //   resp.on('data', (d) => {
-  //     var result = JSON.parse(d);
-  //     console.dir(result);
-  //     pendingPayments[result.data.orderid] = {uid: req.body.uid, mid: req.body.mid, service_name: req.body.service_name, service_price: req.body.service_price};
-  //     res.json({code: 0, order_id:result.data.orderid, qr_code: result.data.qrcode});
-  //   });
-  // });
-  //
-  // reqp.on('error', (e) => {
-  //   console.error(e);
-  // });
-  //
-  // reqp.write(postData);
-  // reqp.end();
+//   var timestamp = new Date().getTime();
+//
+//   var create_payment_json = {
+//     "intent": "sale",
+//     "payer": {
+//         "payment_method": "paypal"
+//     },
+//     "redirect_urls": {
+//         "return_url": "http://job.y-l.me/return/payment_complete",
+//         "cancel_url": "http://job.y-l.me/return/payment_cancel"
+//     },
+//     "transactions": [{
+//         "item_list": {
+//             "items": [{
+//                 "name": req.body.service_name,
+//                 "sku": req.body.service_name,
+//                 "price": req.body.service_price,
+//                 "currency": "USD",
+//                 "quantity": 1
+//             }]
+//         },
+//         "amount": {
+//             "currency": "USD",
+//             "total": req.body.service_price
+//         },
+//         "description": "Buddy Career 提供的服务"
+//     }]
+// };
+//
+//   paypal.payment.create(create_payment_json, function (err, payment) {
+//     if (err) {
+//       console.log(err);
+//       res.json({code: 2, errMsg: 'Paypal API Error'});
+//       return;
+//     }
+//
+//     var redirect_url = '';
+//     payment.links.forEach(function(el){
+//       if(el.rel == 'approval_url')
+//         redirect_url = el.href;
+//     });
+//
+//     pendingPayments[payment.id] = {uid: req.body.uid, mid: req.body.mid, service_name: req.body.service_name, service_price: req.body.service_price};
+//     console.dir(payment);
+//     res.json({code: 0, url: redirect_url});
+//   });
 });
 
 app.get('/return/payment_complete', (req, res)=>{
@@ -495,20 +510,37 @@ app.post('/api/mentee_confirm', (req, res)=>{
   });
 });
 
+app.post('/api/get_system_notifications', (req, res)=>{
+  messageDispatch.getNotifications(req.body.uid, (err, notifications)=>{
+    if(err){
+      res.json({code: 1, errMsg: 'Database Error'});
+      return;
+    }
+    res.json({code: 0, messages:notifications});
+  });
+});
+
+app.post('/api/read_system_notification', (req, res)=>{
+  messageDispatch.readNotifications();
+  res.json({code: 0});
+})
+
 // Static resources
 app.use(express.static(__dirname + '/build'));
 
-app.get('/*', function(req, res) {
+const send_index = (req, res) => {
   res.sendFile(__dirname + '/build/index.html');
-});
+}
 
-function server() {
+app.use(send_index);
+
+const server = () => {
   app.listen(PORT, function() {
     console.log('Listening on port %d', PORT);
   });
 }
 
-function main() {
+const main = () => {
   if (process.env.INSTALL === 'yes') {
     db.reset();
   }

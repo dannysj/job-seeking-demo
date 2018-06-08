@@ -25,7 +25,7 @@ class Mentor extends Component {
     this.filterBarPressed = this.filterBarPressed.bind(this);
     this.handleRemoveButton = this.handleRemoveButton.bind(this);
 
-    axios.post('/api/get_mentor_list').then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_list').then(res => {
       if (res.data.code === 0) {
         let majorList = [];
         let collegeList = [];

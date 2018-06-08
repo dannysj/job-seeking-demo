@@ -1,23 +1,22 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {Button, Image, Divider, Icon} from 'semantic-ui-react';
-import Disqus from './disqus.js';
 import PropTypes from 'prop-types';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 import './mentor.css';
+import CommentBox from "./CommentBox";
 
 class MentorDetail extends Component {
-
   constructor (props) {
     super(props);
-    this.state={mentor:{}, showAddServiceModal: false};
+    this.state = {mentor: {first: "", last: "", service: []}, showAddServiceModal: false};
 
-    axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
-        console.log(res.data.mentor);
         this.setState({mentor:res.data.mentor});
       }
       else{
-        //TODO: Error Handling
+        NotificationManager.error('无法获得Mentor信息', '错误');
       }
     });
 
@@ -30,7 +29,7 @@ class MentorDetail extends Component {
       return;
     }
     var handler = this;
-    axios.post('/api/create_order',
+    axios.post(process.env.REACT_APP_API_HOST + '/api/create_order',
     {
       uid:this.props.user.id,
       mid:this.props.match.params.mid,
@@ -38,21 +37,18 @@ class MentorDetail extends Component {
       service_price: service_price
     }).then(res => {
       console.log(res.data);
-        if (res.data.code === 0) {
-        // handler.setState({showAddServiceModal: true, qr_code: 'https://pan.baidu.com/share/qrcode?w=280&h=280&url='+res.data.qr_code});
-        // handler.pollPayment(res.data.order_id);
+      if (res.data.code === 0) {
         window.location.href = res.data.url;
-        // window.open(res.data.url,"Paypal", "width=800,height=1200");
       }
       else{
-        //TODO: Error Handling
+        NotificationManager.error('数据库错误','错误');
       }
     });
   }
 
   pollPayment(order_id){
     var handler = this;
-    axios.post('/api/poll_payment',
+    axios.post(process.env.REACT_APP_API_HOST + '/api/poll_payment',
     {
       uid:this.props.user.id,
       order_id:order_id
@@ -72,7 +68,6 @@ class MentorDetail extends Component {
     });
   }
 
-  // {this.props.match.params.mid}
 
   render() {
     let modalClassName='ui modal';
@@ -89,6 +84,7 @@ class MentorDetail extends Component {
 
       return (
       <div className="mentor-detail-container">
+        <NotificationContainer />
         <div className={modalClassName}>
             <i className="close icon"/>
           <div className="header">
@@ -176,6 +172,10 @@ class MentorDetail extends Component {
             )
           )}
           </div>
+          <p>
+            <b>{this.state.mentor.last+this.state.mentor.first}</b>
+            本周还可提供{this.state.mentor.num_availability}次服务
+          </p>
         </div>
 
         <div className="detail-section">
@@ -190,12 +190,9 @@ class MentorDetail extends Component {
             <i className="comment alternate outline icon"/>
             <div className="content">
                 过往评价
-                <Disqus id={this.state.mentor.id}
-                        title={this.state.mentor.id}
-                        path={"/mentor" + this.state.mentor.id}
-                />
             </div>
           </h2>
+          <CommentBox user={this.props.user} mid={this.props.match.params.mid} displayCommentReplyButton={true}/>
         </div>
       </div>
 

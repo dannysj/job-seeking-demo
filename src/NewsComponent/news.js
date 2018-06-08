@@ -14,7 +14,7 @@ class News extends React.Component {
     };
     this.batch_size = 10;
     this.batch_num = 0;
-    axios.post('/api/get_news_list',
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_news_list',
       {batch_size: this.batch_size, batch_num:this.batch_num}).then(res => {
       if(res.data.code===0){
         this.batch_num++;
@@ -31,12 +31,12 @@ class News extends React.Component {
 
   render() {
     return(
-      <div className="new-container">
+      <div className="news-container">
         <Container>
         <div className="container-sideline">
         <div className="header-text">
         <div className="container-block">
-          <div className="chinese-top">热 门 大 哥</div>
+          <div className="chinese-top">热 门 干 货</div>
           <div className="subtitle">Top picks</div>
         </div>
         </div>
@@ -49,7 +49,7 @@ class News extends React.Component {
               <div className="list-news-text">
                 <div className="list-news-title">{el.title}</div>
                 <div className="list-news-author-details">
-                  <div className="list-news-subtitle">{el.first + el.last}</div>
+                  <div className="list-news-subtitle">{el.last + el.first}</div>
                   <div className="list-news-subtitle">{el.date}</div>
                 </div>
               </div>
@@ -76,9 +76,9 @@ class News extends React.Component {
                 <img className="list-news-picture" src={el.thumbnail}/>
                 <div className="list-news-text">
                   <div className="list-news-title">{el.title}</div>
-                  <div className="list-news-subtitle">{el.first + el.last}</div>
+                  <div className="list-news-subtitle">{el.last + el.first}</div>
                   <br />
-                  <div className="list-news-subtitle">{el.publish_time}</div>
+                  <div className="list-news-subtitle">{el.date}</div>
                 </div>
               </div>
               </Link>

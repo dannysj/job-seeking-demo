@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Modal, Button, Image, Header, Input, Segment } from 'semantic-ui-react';
+import {Button} from 'semantic-ui-react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import CommentBox from "../../MentorComponent/CommentBox";
 
 class AccountMentor extends React.Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class AccountMentor extends React.Component {
 
   updateInfo(){
     let handler = this;
-    axios.post('/api/get_rel_mentors', {uid: this.props.user.id}).then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_rel_mentors', {uid: this.props.user.id}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         handler.setState({mentors:res.data.mentors});
@@ -33,7 +33,7 @@ class AccountMentor extends React.Component {
 
   handleConfirm(mid) {
     let handler = this;
-    axios.post('/api/mentee_confirm', {uid: this.props.user.id, mid: mid}).then(res => {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/mentee_confirm', {uid: this.props.user.id, mid: mid}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         handler.updateInfo();
@@ -63,7 +63,8 @@ class AccountMentor extends React.Component {
                 </div>
                 {el.status==1 && <Button floated='right' disabled>服务进行中</Button>}
                 {el.status==2 && <Button floated='right' positive onClick={() => this.handleConfirm(el.mid)}>确认完成</Button>}
-                {el.status==3 && <Button floated='right' onClick={() => this.handleAppDecision(el.uid, el.mid, false)}>评价导师</Button>}
+                {el.status==3 && <Button floated='right'>评价导师</Button> }
+                {el.status==3 && <CommentBox className="comment-box" user={this.props.user} mid={el.id} hideComment={true}/>}
               </div>
             ))}
           </div>

@@ -2,6 +2,10 @@
   margin: 7em;
 }
 
+.bio-display {
+  white-space: pre-line;
+}
+
 .mentor-img {
   width: 90%;
 }
