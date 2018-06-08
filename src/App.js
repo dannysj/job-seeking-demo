@@ -23,7 +23,8 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      menu_open: false,
+      is_checked: false,
+      is_user_checked: false,
       width: 0,
       height: 0,
       current_page: "主 页",
@@ -31,6 +32,7 @@ class App extends Component {
     };
     this.updateUser = this.updateUser.bind(this);
     this.menuToggled = this.menuToggled.bind(this);
+    this.user_menuToggled = this.user_menuToggled.bind(this);
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.updateCurrentPage = this.updateCurrentPage.bind(this);
 
@@ -50,17 +52,25 @@ class App extends Component {
   }
 
   updateUser(user) {
-    this.setState({user: user});
+    this.setState({user: user, is_checked: false});
     localStorage.setItem('uid', user.id);
   }
 
-  menuToggled(e) {
-    this.setState({menu_open: !this.state.menu_open});
-  }
 
   updateCurrentPage(name) {
     this.setState({current_page: name, menu_open: false});
 
+  }
+
+  menuToggled(e) {
+    let check = this.state.is_checked;
+    this.setState({is_checked: !check});
+  }
+
+  user_menuToggled(e) {
+    let check = this.state.is_user_checked;
+    this.setState({is_checked: false, is_user_checked: !check});
+    // FIXME:
   }
 
   /* for window dimension purpose */
@@ -79,93 +89,96 @@ class App extends Component {
   }
 
   render() {
-    var opened = "";
-    if (this.state.menu_open) {
-      opened = "opened";
-    }
     return (
       <div className="app-flex">
-      {
-        (this.state.width < 768 ) ? (
-          <div className={"navbar " + opened}>
-            <div className="item logo-item" onClick={this.menuToggled}>
-            {
-              (this.state.menu_open) ? (<Icon name='close' color="grey" size='big' />) : (<img src="/img/icon.png" height="40px"></img>)
-            }
+        <input type="checkbox" id="reveal-menu" className="reveal-m" role="button" checked={this.state.is_checked ? "checked" : ""}></input>
+        <input type="checkbox" id="reveal-user-menu" className="reveal-um" role="button" checked={this.state.is_user_checked ? "checked" : ""}></input>
+        <div className={"navbar "}>
 
-              <b>{' '}Buddy{'\n'}Career</b>
-            </div>
-            <div className="item title">
-              <div className="chinese-top">{this.state.current_page}</div>
-            </div>
-            <div className={"nav-list " + opened }>
-            <NavLink to="/" ishorizontal={true} onClick={() => {this.updateCurrentPage("主 页")}}>
+          <div className="item logo-item" >
+            <img src="/img/icon.png" height="40px"></img>
+            <b className="title">{' '}Buddy{'\n'}Career</b>
+
+            <label forName="reveal-menu" className="menu-icon" onClick={this.menuToggled}>
+                <span className="bread bread-top">
+                </span>
+
+              <span className="bread bread-bottom">
+                </span>
+            </label>
+          </div>
+          <div className={"nav-list " }>
+            <NavLink to="/" ishorizontal={true} onClick={this.menuToggled}>
               <div className="Nav-item ">
                 <div className="App-subtitle">Home</div>
                 <div className="chinese-top">主页</div>
               </div>
             </NavLink>
-            <NavLink to="/mentor" ishorizontal={true} onClick={() => {this.updateCurrentPage("导 师")}}>
+            <NavLink to="/mentor" ishorizontal={true} onClick={this.menuToggled}>
               <div className="Nav-item ">
                 <div className="App-subtitle">Tutors</div>
                 <div className="chinese-top">导师</div>
               </div>
             </NavLink>
-            <NavLink to="/news" ishorizontal={true} onClick={() => {this.updateCurrentPage("就 业 干 货")}}>
+            <NavLink to="/news" ishorizontal={true} onClick={this.menuToggled}>
               <div className="Nav-item ">
                 <div className="App-subtitle">Careers</div>
                 <div className="chinese-top">就业干货</div>
               </div>
-
             </NavLink>
-            <NavLink to="/about" ishorizontal={true} onClick={() => {this.updateCurrentPage("关 于")}}>
+            <NavLink to="/about" ishorizontal={true} onClick={this.menuToggled}>
               <div className="Nav-item ">
                 <div className="App-subtitle">About</div>
                 <div className="chinese-top">关于</div>
               </div>
-
             </NavLink>
-            </div>
-            <UserStatus user={this.state.user}></UserStatus>
           </div>
-        ) : (
-          <div className={"navbar "}>
-            <div className="item logo-item" onClick={this.menuToggled}>
-              <img src="/img/icon.png" height="40px"></img>
-              <b>{' '}Buddy{'\n'}Career</b>
+          <UserStatus user={this.state.user} onClick={this.user_menuToggled} passFor="reveal-user-menu" numnotifications={this.state.num_notifications}></UserStatus>
+        </div>
+        {
+          (this.state.user) ? (
+            <div className="user-menu">
+              <div className="item" onClick={this.user_menuToggled}>
+                {
+                  this.state.user.last+this.state.user.first
+                }
+              </div>
+              <div className="item">
+                <Icon link name='bitcoin' />
+                {
+                  "$ 7.99"
+                }
+              </div>
+              <NavLink to="/account/" onClick={this.user_menuToggled}>
+                基础资料
+              </NavLink>
+              <NavLink to="/account/mentor" onClick={this.user_menuToggled}>
+                我的导师
+              </NavLink>
+              <NavLink to="/account/balance" onClick={this.user_menuToggled}>
+                我的余额
+              </NavLink>
+              {
+                !this.state.user.ismentor ? (
+                  <NavLink to="/account/apply" onClick={this.user_menuToggled}>
+                    成为导师
+                  </NavLink>) : (
+                  <NavLink to="/account/service" onClick={this.user_menuToggled}>
+                    我的服务
+                  </NavLink>)
+              }
+              {
+                this.state.user.isadmin && (
+                  <NavLink to="/account/admin" onClick={this.user_menuToggled}>
+                    管理员页面
+                  </NavLink>)
+              }
+              <NavLink to="/account/logout" onClick={this.user_menuToggled}>
+                注销
+              </NavLink>
             </div>
-            <div className={"nav-list " }>
-            <NavLink to="/" ishorizontal={true} >
-              <div className="Nav-item ">
-                <div className="App-subtitle">Home</div>
-                <div className="chinese-top">主页</div>
-              </div>
-            </NavLink>
-            <NavLink to="/mentor" ishorizontal={true}>
-              <div className="Nav-item ">
-                <div className="App-subtitle">Tutors</div>
-                <div className="chinese-top">导师</div>
-              </div>
-            </NavLink>
-            <NavLink to="/news" ishorizontal={true}>
-              <div className="Nav-item ">
-                <div className="App-subtitle">Careers</div>
-                <div className="chinese-top">就业干货</div>
-              </div>
-
-            </NavLink>
-            <NavLink to="/about" ishorizontal={true}>
-              <div className="Nav-item ">
-                <div className="App-subtitle">About</div>
-                <div className="chinese-top">关于</div>
-              </div>
-
-            </NavLink>
-            </div>
-            <UserStatus user={this.state.user} numnotifications={this.state.num_notifications}></UserStatus>
-          </div>
-        )
-      }
+          ) : (<div></div>)
+        }
 
         <div className="site-content">
           <Switch onChange={this.onRouteChange}>
