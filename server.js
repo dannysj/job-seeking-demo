@@ -1,21 +1,17 @@
 const express = require('express');
-const pg = require('pg');
 const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('./server/db.js');
 const config = require('./server/config.js');
-const http = require('http');
-const https = require('https');
 const multer  = require('multer');
-const crypto = require('crypto');
 const paypal = require('paypal-rest-sdk');
 const nodemailer = require('nodemailer');
-const nocache = require('nocache');
 const msg = require('./server/message.js');
 const messageDispatch = new msg(db);
+const cors = require('cors');
 // create reusable transporter object using the default SMTP transport
 var transporter = nodemailer.createTransport(config.mail_config);
-var cors = require('cors')
+
 
 paypal.configure({
   'mode': 'live', //sandbox or live
