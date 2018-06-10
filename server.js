@@ -39,8 +39,8 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.post('/api/industry_list', function(req, res){
-  db.getIndustryList((err, list) => {
+app.post('/api/get_major_list', function(req, res){
+  db.getMajorList((err, list) => {
     if(err){
       console.log(err);
       res.json({code: 1});

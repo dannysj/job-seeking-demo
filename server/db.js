@@ -54,7 +54,7 @@ exports.reset = function(){
       timestamp timestamp with time zone,
       is_read boolean
     );
-    create table if not exists industry (
+    create table if not exists major (
       id serial unique primary key,
       name varchar(255)
     );
@@ -116,8 +116,8 @@ exports.reset = function(){
   });
 };
 
-exports.getIndustryList = function(callback){
-  var query = 'select * from industry;';
+exports.getMajorList = function(callback){
+  var query = 'select id as value, name as text from major;';
   db.query(query, function(err, result){
     if(err){
       callback(err);
@@ -126,6 +126,7 @@ exports.getIndustryList = function(callback){
     callback(null, result.rows);
   });
 };
+
 
 
 exports.getMentorList = function(filter, callback){
