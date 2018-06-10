@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, Icon, Image} from 'semantic-ui-react';
+import {Button, Icon, Image, Dropdown} from 'semantic-ui-react';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
 import '../account.css';
 import ImgCrop from './ImgCrop/imgcrop.js';
 
-// import { Document, Page } from 'react-pdf';
 
 class AccountProfile extends React.Component {
   constructor(props) {
@@ -15,9 +14,22 @@ class AccountProfile extends React.Component {
     this.state = {
       showAddServiceModal: false,
       showImgCrop: false,
-      fileName: this.props.user.resume
+      fileName: this.props.user.resume,
+      attr_key: '',
+      attr_val: '',
+      attr_display_name: '',
+      major_list : [],
+      editMode: false,
     };
     this.tempService = {};
+
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_major_list').then(res => {
+      if (res.data.code === 0) {
+        this.setState({major_list: res.data.list});
+      }  else {
+        NotificationManager.error('无法获取专业列表', '错误');
+      }
+    });
 
     // This binding is necessary to make `this` work in the callback
     this.initAttrChange = this.initAttrChange.bind(this);
@@ -37,8 +49,7 @@ class AccountProfile extends React.Component {
   confirmAttrChange(e) {
     e.preventDefault();
     // TODO: Process and upload data
-    this.setState({showAddServiceModal : false});
-    console.log(this.state.attr_val);
+    this.setState({showAddServiceModal : false, editMode: false});
     const key = this.state.attr_key;
     const value = this.state.attr_val;
     axios.post(process.env.REACT_APP_API_HOST + '/api/update_user',{uid:this.props.user.id,attr:this.state.attr_key,val:this.state.attr_val}).then(res => {
@@ -54,8 +65,8 @@ class AccountProfile extends React.Component {
   }
 
   handleResume(e) {
-    var fileType = e.target.files[0]["type"];
-    var validTypes = ["application/pdf"];
+    const fileType = e.target.files[0]["type"];
+    const validTypes = ["application/pdf"];
     if (validTypes.indexOf(fileType) < 0) {
       // invalid file type code goes here.
       NotificationManager.error('简历格式必须为pdf', '错误');
@@ -97,17 +108,17 @@ class AccountProfile extends React.Component {
 
   handleHeader(e){
     // check legit files
-    var fileType = e.target.files[0]["type"];
-    var ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
+    const fileType = e.target.files[0]["type"];
+    const ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
     if (ValidImageTypes.indexOf(fileType) < 0) {
       // invalid file type code goes here.
       NotificationManager.error('必须是图片文件', '错误');
       return;
     }
 
-    var file = e.target.files[0];
-    var fileReader = new FileReader();
-    var handler = this;
+    const file = e.target.files[0];
+    const fileReader = new FileReader();
+    const handler = this;
     fileReader.onloadend = function (e2) {
       handler.setState({showImgCrop: true, imgCropDataUrl: e2.target.result, imgCropName: file.name})
     };
@@ -233,8 +244,31 @@ class AccountProfile extends React.Component {
 
               <div className="item">
                 <div className="content">
-                  <div className="header">专业<Button floated='right' onClick={()=>this.initAttrChange('major','专业')}><Icon name='write' size='small' /></Button></div>
-                  <div className="info">{this.props.user.major ? this.props.user.major : '暂无资料'}</div>
+                  <div className="header">
+                    专业
+                    {this.state.editMode?
+                      <Button floated='right' onClick={this.confirmAttrChange}>
+                        <i className="checkmark icon positive ui"/>
+                      </Button>
+                      :
+                      <Button floated='right' onClick={()=>this.setState({attr_key: 'major', editMode: true})}>
+                        <Icon name='write' size='small' />
+                      </Button>
+                    }
+                  </div>
+                  <div className="info">
+                    {this.state.attr_key === 'major' && this.state.editMode?
+                      <Dropdown name='major' placeholder='专业' search selection allowAdditions
+                                options={this.state.major_list}
+                                onChange={(e, data) => this.setState({attr_val: this.state.major_list[data.value - 1].text})} // TODO: Use major id instead of major name
+                                selectedValue={this.state.attr_val}/>
+
+                    :
+                      this.props.user.major ? this.props.user.major : '暂无资料'
+                    }
+
+
+                  </div>
                 </div>
               </div>
               <div className="item">
