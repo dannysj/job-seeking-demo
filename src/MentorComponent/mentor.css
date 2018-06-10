@@ -15,7 +15,7 @@
 }
 
 .detail-section {
-  margin-top: 3em;
+  padding: 3em 0em;
   text-align: center;
 }
 
@@ -33,8 +33,8 @@
 }
 
 .resume-holder {
-  width: 100%;
-  height: 500px;
+  width: 80%;
+  flex: 1;
   border: 0px;
 }
 
@@ -45,6 +45,16 @@
   left: 50%;
   margin-left: -145px;
   z-index: 1001;
+}
+
+.resume-name {
+  flex: 0;
+  color: white;
+  margin-top: 3em;
+}
+
+.triangle-open {
+  display: block;
 }
 
 .Industry-showmore {
@@ -95,6 +105,20 @@
   height: 9em;
   width: 9em;
   object-fit: cover;
+}
+
+input[type=checkbox].reveal-resume:checked ~ .resume-section {
+	height: 90vh;
+}
+
+.resume-section {
+  position: relative;
+  height: 50vh;
+  transition: height 0.25s;
+  background: linear-gradient(45deg, rgba(51,51,51,1) 0%, rgba(18,18,18,0.5718662464985995) 36%, rgba(15,15,15,0.6334908963585435) 63%, rgba(80,80,80,1) 100%);
+  display: flex;
+  flex-flow: column;
+  align-items: center;
 }
 
 .vertical-divider {
@@ -306,7 +330,8 @@
 
 .mentor-background-image {
   width: 100%;
-  height: 600px;
+  min-height: 600px;
+  padding: 3em 0em;
   object-fit: cover;
   display: flex;
   align-items: center;
@@ -328,11 +353,12 @@
 }
 
 .mentor-name > .small-bio {
-  font-size: 1.5em;
+  font-size: 1.1em;
+  line-height: 1.5;
 }
 
 .mentor-detail-info-container {
-  background-color: hsla(0,0%,100%,0.70);
+  background: linear-gradient(45deg, rgba(200,200,200,1) 0%, rgba(250,250,255,0.3925945378151261) 36%, rgba(246,246,246,1) 74%, rgba(219,219,219,1) 100%);
   padding: 5em 10%;
   text-align: center;
   display: flex;
@@ -343,10 +369,12 @@
 
 .mentor-detail-info-container > .item {
   display: flex;
-  justify-content: space-around;
+
   align-items: center;
   flex-flow: column;
   flex: 0;
+  min-width: 20%;
+  min-height: 130px;
 }
 
 .detail-item > .title {
@@ -359,12 +387,13 @@
 .detail-item > .subtitle {
 
   font-size: 1em;
-  padding: 2em 2em;
-  padding-bottom: 0;
+  padding: 2em 2em 0em 2em;
+
 }
 .mentor-service-overview {
     padding: 5em 10%;
     text-align: center;
+    background: linear-gradient(45deg, rgba(200,200,200,1) 0%, rgba(250,250,255,0.3925945378151261) 36%, rgba(246,246,246,1) 74%, rgba(219,219,219,1) 100%);
 }
 
 .mentor-service-overview > .title {
@@ -387,10 +416,22 @@ font-size: 2em;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 5em 0em 0em 0em;
+}
+
+.ui.button.buy-button-ani {
+  background-color: white;
+  color: #a0a0a0;
+  font-family: HYYakuHei-GEW;
+  width: 100%;
+}
+
+.buy-button {
+  width: 90%;
 }
 
 .mentor-service-container > .service-border {
-  width: 200px;
+  width: 230px;
   height: 350px;
   border-radius: 10px;
   background-color: hsla(0,0%,100%,0.70);
@@ -480,7 +521,7 @@ font-size: 2em;
 }
 
 .title > .title-icon {
-  font-size: 2em;
+
   margin: 0 auto;
   display: block;
   padding-bottom: 1.5em;
@@ -494,9 +535,16 @@ font-size: 2em;
   padding-left: 1em;
 }
 
+.resume-section > .title {
+  flex: 0;
+  color: white;
+}
+
 .para-large {
   text-align: center;
   font-size: 2em;
+  padding: 3em 0em;
+  background: linear-gradient(45deg, rgba(200,200,200,1) 0%, rgba(250,250,255,0.3925945378151261) 36%, rgba(246,246,246,1) 74%, rgba(219,219,219,1) 100%);
 }
 
 .para-medium {
@@ -510,6 +558,7 @@ font-size: 2em;
     padding: 5em 5%;
 
   }
+
 
   .mentor-container {
     width: 90%;
@@ -548,22 +597,35 @@ font-size: 2em;
     }
   .service-border {
     width: 100%;
-    padding-bottom: 80%;
     margin: 1.5em;
   }
-
+  .resume-holder {
+    width: 90%;
+    flex: 1;
+    border: 0px;
+  }
 }
 
 @media screen and (max-width: 767px) {
+  .resume-holder {
+    width: 100%;
+    flex: 1;
+    border: 0px;
+  }
+
+  .resume-section {
+    height: 60vh;
+  }
+
   .inner-topbar {
     align-items: center !important;
     justify-content: center;
   }
 
   .service-border {
-    width: 100%;
+    width: 100% !important;
     padding-bottom: 100%;
-    margin: 1.5em;
+    margin: 1em 0em !important;
   }
 
   .service-description {
@@ -572,6 +634,9 @@ font-size: 2em;
 
   .mentor-service-container {
     flex-flow: column;
+    padding: 2em 0em 0em 0em;
+
+
   }
 
   .mentor-service-overview > .title {
@@ -637,10 +702,28 @@ font-size: 2em;
   }
 
   .container > .item {
-    min-width: 25%;
+    min-width: 45%;
   }
   .mentor-detail-info-container {
-    padding: 5em 2%;
+    padding: 5em calc(2% - 2em);
+    flex-wrap: wrap;
+  }
+
+  .service-item::before, .service-item::after {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .service-item > .service-title {
+    transform: translate3d(0,30px,0);
+  }
+  .service-item > .service-description {
+    opacity: 1;
+  }
+
+  .mentor-detail-info-container>.item  {
+
+    padding-top: 2em;
 
   }
 }

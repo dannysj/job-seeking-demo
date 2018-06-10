@@ -1,5 +1,5 @@
 .comment-box{
-      margin: 0 25%;
+      margin: 0 20%;
 }
 
 .comment-input{
@@ -15,16 +15,34 @@
   padding: 10px 20px;
   font-size: 18px;
   display: flex;
-  flex-flow: row;
-
+  flex-flow: column;
+  position: relative;
 }
 
-.comment > .left {
+.comment-top > .left {
   flex: 0;
   width: 20%
 }
 
-.comment > .right {
+.comment-top {
+  display: flex;
+}
+
+.comment-reply.comment-content {
+  padding-left: calc(1em + 50px);
+  display: flex;
+  align-items: center;
+}
+
+.mentor-reply-img {
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+  margin-right: 1em;
+}
+
+.comment-top > .right {
   flex: 1;
   display: flex;
   flex-flow: column;
@@ -35,8 +53,9 @@ text-align: left;
   height: 50px;
   width: 50px;
   border-radius: 50%;
-  float: left;
+  margin-right: 1em;
   display: block;
+  object-fit: cover;
 }
 
 .comment-author{
@@ -51,7 +70,9 @@ text-align: left;
   line-height: 150%;
 }
 
+.reply-right {
 
+}
 .comment-content{
 
   padding: 1em 0em;
@@ -60,8 +81,65 @@ text-align: left;
   width: fit-content;
 }
 
+.comment-reply-overview {
+  padding: 0.5em 0em;
+  padding-left: calc(1em + 50px);
+}
+
+.comment-reply-section {
+  display: flex;
+  align-items: center;
+}
+
+.like-section {
+  display: flex;
+  margin-right: 1em;
+}
+
+.like-section > * {
+
+  min-width: 2em;
+}
+
+.reply-logo{
+  margin: 0em 1em;
+}
+
+.reply-input {
+  border: solid 1px lightgray;
+  border-radius: 5px;
+  padding: 0.5em;
+  width: 70%;
+  margin-right: 1em;
+}
+
+.reply-submit {
+  display: none;
+}
+
+.like-comment {
+
+}
+
+.reply-form {
+  text-align: left;
+  margin-top: 1.5em;
+  display: flex;
+}
+
+.reply-form > button {
+  height: 4em;
+  width: 4em;
+}
+
 @media screen and (max-width: 767px) {
   .comment-box{
-    margin: 0 30px;
+    margin: 0 2% !important;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .comment-box{
+    margin: 0 12%;
   }
 }

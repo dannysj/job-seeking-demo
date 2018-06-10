@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Icon, Button } from 'semantic-ui-react';
 import './CommentBox.css';
 import axios from "axios/index";
 import dateformat from "dateformat";
@@ -50,6 +51,7 @@ class CommentBox extends Component{
             {this.state.comments.map(comment => (
               <Comment comment={comment}
                        onCommentReply={this.handleCommentReply}
+                       mentor={this.props.mentor}
                        displayCommentReplyButton={this.props.displayCommentReplyButton}/>
             ))}
           </div>
@@ -70,7 +72,7 @@ class CommentForm extends Component{
 
   handleSubmit(e) {
     e.preventDefault();
-
+    console.log("Submit called")
     const text = e.target[0].value.trim();
     if (!text) {
       return;
@@ -91,7 +93,7 @@ class CommentForm extends Component{
     return(
       <form className="comment-form" onSubmit={this.handleSubmit}>
         <textarea rows="8" className="comment-input" placeholder="说点什么吧......" />
-        <input className="comment-submit ui button" type="submit" value="提交" />
+        <input className="comment-submit " type="submit" />
       </form>
     );
   }
@@ -131,31 +133,48 @@ class Comment extends Component {
   render() {
     return (
       <div className="comment">
-        <div className="left">
-        <img className="comment-img" src={this.props.comment.profile_pic}/>
+        <div className="comment-top">
+          <div className="left">
+            <img className="comment-img" src={this.props.comment.profile_pic}/>
+          </div>
+          <div className="right">
+            <div className="comment-author">{this.props.comment.last + this.props.comment.first}
+            <label></label>
+            </div>
+            <div className="comment-time">{this.props.comment.time_added}</div>
+            <div className="comment-content">{this.props.comment.text}</div>
+          </div>
         </div>
-        <div className="right">
-        <div className="comment-author">{this.props.comment.last + this.props.comment.first}</div>
-        <div className="comment-time">{this.props.comment.time_added}</div>
-        <div className="comment-content">{this.props.comment.text}</div>
-        </div>
+        <div className="comment-bottom">
         {this.props.comment.reply ? (
           <div className="comment-reply comment-content">
-              <span style={{fontWeight: 'Bold'}}>Mentor回复: </span>
+              <div style={{fontWeight: 'Bold'}}><img className="mentor-reply-img" src={this.props.mentor.profile_pic}></img> </div>
               {this.props.comment.reply}
             </div>
           ):(
             this.props.displayCommentReplyButton &&
-              <div>
-                <div onClick={this.handleDisplayCommentReply}>回复</div>
+              <div className="comment-reply-overview">
+                <div className="comment-reply-section">
+                <div className="like-section">
+                  <div className="like-comment"><Icon color='red' name='like' /></div>
+                  <div className="like-count">9</div>
+
+                </div>
+                <div onClick={this.handleDisplayCommentReply} className="reply-right"><Icon className="reply-logo" color='blue' name='reply' />回复</div>
+                </div>
                 {this.state.displayCommentReply &&
                   <form className="reply-form" onSubmit={this.handleSubmit}>
-                    <textarea rows="8" className="reply-input" placeholder="回复此评论"/>
-                    <input className="reply-submit ui button" type="submit" value="提交"/>
+                    <textarea className="reply-input" placeholder="回复此评论"/>
+                    <Button type="submit" circular color='teal' icon>
+                      <Icon circular inverted color='teal' name='send' forName="submit-button" size='large'/>
+                    </Button>
+
                   </form>
                 }
               </div>
         )}
+        </div>
+
       </div>
     );
   }

@@ -61,6 +61,8 @@ class News extends React.Component {
         </div>
         </div>
         <Divider hidden clearing />
+        <Divider hidden clearing />
+        <Divider hidden clearing />
           <div className="container-sideline">
           <div className="header-text">
           <div className="container-block">

@@ -116,13 +116,13 @@
 }
 
 .news-overview-stamp {
-  text-align: right;
+  text-align: left;
   font-size: 1em;
   color: #a0a0a0;
   margin-top: 1em;
 }
 .news-overview-second{
-  margin: 1em;
+  margin: 1em 0em;
   text-align: left;
 }
 
