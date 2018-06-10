@@ -41,7 +41,7 @@ class Account extends Component {
                 您的账号状态：{this.props.user.ismentor ? "Mentor":"Mentee"}
               </div>
               <Link to="/account/"><div className="item">
-                <img className="ui medium circular image" src={this.props.user.profile_pic}/>
+                <img className="ui medium circular image account-image" src={this.props.user.profile_pic}/>
               </div></Link>
 
               <NavLink to="/account/">

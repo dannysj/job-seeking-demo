@@ -5,6 +5,8 @@
 
 .user-inline > img {
   margin-left: 1em;
+  height: 35px;
+  object-fit: cover;
 }
 
 .large-screen {

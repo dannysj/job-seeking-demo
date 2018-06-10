@@ -31,6 +31,10 @@
   text-align: left;
 }
 
+.account-image {
+  height: 300px;
+}
+
 .app-mentor-picture {
   border-radius: 10px;
   height: 40%;

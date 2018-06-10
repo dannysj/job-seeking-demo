@@ -35,6 +35,7 @@ class App extends Component {
     this.user_menuToggled = this.user_menuToggled.bind(this);
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.updateCurrentPage = this.updateCurrentPage.bind(this);
+    this.toggle_outside = this.toggle_outside.bind(this);
 
     let uid = localStorage.getItem('uid');
     if(uid){
@@ -63,14 +64,20 @@ class App extends Component {
   }
 
   menuToggled(e) {
+    e.stopPropagation();
     let check = this.state.is_checked;
     this.setState({is_checked: !check});
   }
 
   user_menuToggled(e) {
+    e.stopPropagation();
     let check = this.state.is_user_checked;
     this.setState({is_checked: false, is_user_checked: !check});
     // FIXME:
+  }
+
+  toggle_outside(e) {
+    this.setState({is_checked: false, is_user_checked: false});
   }
 
   /* for window dimension purpose */
@@ -93,7 +100,7 @@ class App extends Component {
       <div className="app-flex">
         <input type="checkbox" id="reveal-menu" className="reveal-m" role="button" checked={this.state.is_checked ? "checked" : ""}></input>
         <input type="checkbox" id="reveal-user-menu" className="reveal-um" role="button" checked={this.state.is_user_checked ? "checked" : ""}></input>
-        <div className={"navbar "}>
+        <div className={"navbar "} onClick={this.toggle_outside}>
 
           <div className="item logo-item" >
             <img src="/img/icon.png" height="40px"></img>
@@ -180,7 +187,7 @@ class App extends Component {
           ) : (<div></div>)
         }
 
-        <div className="site-content">
+        <div className="site-content" onClick={this.toggle_outside}>
           <Switch onChange={this.onRouteChange}>
             <Route path='/login' render={()=><Login onSuccess={this.updateUser}></Login>} />
             <Route path='/signup' render={()=><Signup onSuccess={this.updateUser}></Signup>}  />

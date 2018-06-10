@@ -81,7 +81,7 @@ class MentorDetail extends Component {
     let modalClassName='ui modal';
     var test_url = '/img/banner.jpg';
     const backimgstyle = {
-      backgroundImage: 'url('+test_url+')',
+      backgroundImage: 'url('+this.state.mentor.profile_pic+')',
       backgroundPosition: 'center center no-repeat',
       backgroundSize: 'cover',
       };
