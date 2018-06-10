@@ -122,16 +122,8 @@ class AccountApply extends React.Component {
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_college_list', {query: this.state.collegeQuery}).then(res => {
       if (res.data.code === 0) {
-        let college_list = [];
-        res.data.list.forEach((college) => {
-          college_list.push({
-            value: college.id,
-            text: college.name
-          });
-        });
-        this.setState({college_list: college_list});
-      }
-      else {
+        this.setState({college_list: res.data.list});
+      } else {
         NotificationManager.error('无法获取大学列表', '错误');
       }
       this.setState({isLoadingCollegeList : false})

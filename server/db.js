@@ -127,6 +127,7 @@ exports.getIndustryList = function(callback){
   });
 };
 
+
 exports.getMentorList = function(filter, callback){
   var query = `
     select u.first as first,
@@ -353,7 +354,7 @@ exports.editMentorInfo = (mentor_info, callback) => {
 };
 
 exports.getCollegeList = (search, callback) => {
-  var query = `select * from college where UPPER(name) like UPPER($1) LIMIT 15;`;
+  var query = `select id as value, name as text from college where UPPER(name) like UPPER($1) LIMIT 15;`;
   db.query(query, ['%' + search + '%'], (err, result)=>{
     if(err){
       callback(err);
