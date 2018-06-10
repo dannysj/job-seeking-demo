@@ -173,7 +173,7 @@ app.post('/api/get_mentor_detail', function(req, res){
 });
 
 app.post('/api/get_college_list', function(req, res){
-  db.getCollegeList((err, list) => {
+  db.getCollegeList(req.body.query, (err, list) => {
     if(err){
       console.log(err);
       res.json({code: 1});

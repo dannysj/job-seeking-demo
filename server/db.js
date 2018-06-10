@@ -352,9 +352,9 @@ exports.editMentorInfo = (mentor_info, callback) => {
   });
 };
 
-exports.getCollegeList = (callback) => {
-  var query = `select * from college;`;
-  db.query(query, (err, result)=>{
+exports.getCollegeList = (search, callback) => {
+  var query = `select * from college where UPPER(name) like UPPER($1) LIMIT 15;`;
+  db.query(query, ['%' + search + '%'], (err, result)=>{
     if(err){
       callback(err);
       return;
