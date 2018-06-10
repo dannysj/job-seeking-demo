@@ -48,7 +48,7 @@ class AccountProfile extends React.Component {
       }
       else{
         alert(res.data.errMsg);
-        //TODO: Error Handling
+        NotificationManager.error('资料更新失败', '错误');
       }
     });
   }
@@ -69,28 +69,23 @@ class AccountProfile extends React.Component {
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/file/general_upload', data).then(res => {
       if(res.data.code === 0){
-        console.log("Res is 0, successfully upload resume");
         this.setState({fileName: res.data.url});
 
         handler.props.user.resume = res.data.url;
         handler.props.onUpdate(handler.props.user);
-        console.log(handler.props.user)
-        console.log("Hmm")
         axios.post(process.env.REACT_APP_API_HOST + '/api/update_user',{uid:this.props.user.id,attr:'resume',val:res.data.url}).then(res => {
           if(res.data.code===0){
             console.log("Res is 0, successfully changed image")
             NotificationManager.success('简历上传成功','完成啦');
           }
           else{
-            alert(res.data.errMsg);
-            //TODO: Error Handling
+            NotificationManager.error('资料更新失败', '错误');
           }
         });
 
       }
       else{
-        // TODO: error handling
-        alert('PDF Error');
+        NotificationManager.error('简历上传失败', '错误');
       }
     });
   }
@@ -142,13 +137,12 @@ class AccountProfile extends React.Component {
           }
           else{
             alert(res.data.errMsg);
-            //TODO: Error Handling
+            NotificationManager.error('资料更新失败', '错误');
           }
         });
       }
       else{
-        // TODO: error handling
-        alert('Header Error');
+        NotificationManager.error('头像上传失败', '错误');
       }
     });
   }
@@ -260,11 +254,7 @@ class AccountProfile extends React.Component {
                   </label>
                   <input type="file" accept="application/pdf" className="input-file" id="resume-input" onChange={this.handleResume}/>
                   {this.state.fileName ? (<embed className="resume-holder" src={this.state.fileName} width="100%"
-                                                 type='application/pdf'/>) : (<div></div>)}
-                  {/*{this.state.fileName ? (*/}
-                    {/*<Document file={this.state.fileName} onLoadSuccess={this.onDocumentLoad}> <Page*/}
-                      {/*pageNumber={this.state.pageNumber}/>*/}
-                    {/*</Document>) : (<div></div>)}*/}
+                                                 type='application/pdf'/>) : (<div/>)}
                 </div>
               </div>
 
