@@ -156,7 +156,7 @@ class Comment extends Component {
               <div className="comment-reply-overview">
                 <div className="comment-reply-section">
                 <div className="like-section">
-                  <div className="like-comment"><Icon color='red' name='like' /></div>
+                  <div className="like-comment"><Icon color={this.props.comment.like ? 'red' : 'black' } name={this.props.comment.like ? 'heart' : 'heart outline'} /></div>
                   <div className="like-count">9</div>
 
                 </div>

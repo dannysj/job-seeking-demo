@@ -165,40 +165,28 @@ class AccountProfile extends React.Component {
   }
 
     render() {
-      let modalClassName='ui modal';
-      if(this.state.showAddServiceModal){
-        modalClassName += ' add-service-container';
-      }
-
-
         return(
             <div className="ui large celled list">
               <NotificationContainer />
-              <div className={modalClassName}>
-                <i className="close icon"/>
-                <div className="header">
-
-                  {this.state.attr_display_name}
-                </div>
-                <div className="add-service-form-container">
-                  <form className="ui form">
-                    <div className="field">
-                      <label>{this.state.attr_display_name}：</label>
-                      <input type="text" name="name" value={this.state.attr_val} onChange={this.handleInputChange} />
-                    </div>
-                  </form>
-                </div>
-                <div className="actions">
-                  <div className="ui black deny button" onClick={this.cancelAttrChange}>
-                    取消
+                <div className="category">
+                  <div className="title">
+                    基础资料
                   </div>
-                  <div className="ui positive right labeled icon button" onClick={this.confirmAttrChange}>
-                    确认
-                    <i className="checkmark icon"/>
+                  <div className="subtitle">
+                    基础设定资料、账号安全
                   </div>
                 </div>
-              </div>
-              <div className="item">
+                <div className="category">
+                <div className="subheader">
+                  <div className="title">
+                    账户设置
+                  </div>
+                  <div className="subtitle">
+                    名字、密码、专业、自我介绍以及头像设置
+                  </div>
+                </div>
+              <div className="item center">
+                <div className="img-crop-item">
                 {this.state.showImgCrop ? ( <ImgCrop dataUrl={this.state.imgCropDataUrl} fileName={this.state.imgCropName} onSuccess={this.onSuccessCrop}/> )
                   :
                   ( <div className="imgContainer">
@@ -209,47 +197,85 @@ class AccountProfile extends React.Component {
                     <input type="file" accept="image/*" className="input-file" id="header-input" onChange={this.handleHeader} />
                     </div>
                   )}
+                  </div>
               </div>
               <div className="item">
                 <div className="content">
-                  <div className="header">姓{' '}<Button floated='right' onClick={()=>this.initAttrChange('last','姓')}><Icon name='write' size='small' /></Button></div>
+                  <div className="header">姓{' '}</div>
                   <div className="info">{this.props.user.last}</div>
                 </div>
-              </div>
-              <div className="item">
                 <div className="content">
-                  <div className="header">名<Button floated='right' onClick={()=>this.initAttrChange('first','名')}><Icon name='write' size='small' /></Button></div>
+                  <div className="header">名</div>
                   <div className="info">{this.props.user.first}</div>
                 </div>
-              </div>
-
-              <div className="item">
-                <div className="content">
-                  <div className="header">Email<Button floated='right' onClick={()=>this.initAttrChange('email','Email')}><Icon name='write' size='small' /></Button></div>
-                  <div className="info">{this.props.user.email}</div>
+                <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
+                  编辑
                 </div>
               </div>
 
               <div className="item">
                 <div className="content">
-                  <div className="header">微信<Button floated='right' onClick={()=>this.initAttrChange('wechat','微信')}><Icon name='write' size='small' /></Button></div>
-                  <div className="info">{this.props.user.wechat ? this.props.user.wechat : '暂无资料'}</div>
-                </div>
-              </div>
-
-              <div className="item">
-                <div className="content">
-                  <div className="header">专业<Button floated='right' onClick={()=>this.initAttrChange('major','专业')}><Icon name='write' size='small' /></Button></div>
+                  <div className="header">专业</div>
                   <div className="info">{this.props.user.major ? this.props.user.major : '暂无资料'}</div>
                 </div>
+
+                <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
+                  编辑
+                </div>
               </div>
               <div className="item">
                 <div className="content">
-                  <div className="header">自我介绍<Button floated='right' onClick={()=>this.initAttrChange('cover','自我介绍')}><Icon name='write' size='small' /></Button></div>
+                  <div className="header">自我介绍</div>
                   <div className="info">{this.props.user.cover ? this.props.user.cover : '暂无资料'}</div>
+                </div>
+
+                <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
+                  编辑
+                </div>
+
+              </div>
+
+              </div>
+
+              <div className="category">
+              <div className="subheader">
+                <div className="title">
+                  联络
+                </div>
+                <div className="subtitle">
+                  邮件、微信绑定设置
+                </div>
+              </div>
+              <div className="item">
+                <div className="content">
+                  <div className="header">Email</div>
+                  <div className="info">{this.props.user.email}</div>
+                </div>
+                <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
+                  编辑
                 </div>
               </div>
 
+              <div className="item">
+                <div className="content">
+                  <div className="header">微信</div>
+                  <div className="info">{this.props.user.wechat ? this.props.user.wechat : '暂无资料'}</div>
+                </div>
+                <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
+                  编辑
+                </div>
+              </div>
+
+              </div>
+              <div className="category">
+              <div className="subheader">
+                <div className="title">
+                  简历设置
+                </div>
+                <div className="subtitle">
+                  这里展示你的简历噢
+                </div>
+              </div>
               <div className="item">
                 <div className="content">
                   <div className="header">简历</div>
@@ -266,6 +292,7 @@ class AccountProfile extends React.Component {
                       {/*pageNumber={this.state.pageNumber}/>*/}
                     {/*</Document>) : (<div></div>)}*/}
                 </div>
+              </div>
               </div>
 
 
