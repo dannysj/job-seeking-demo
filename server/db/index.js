@@ -1,11 +1,11 @@
 module.exports = {
-  ...require('./module/admin.js'),
-  ...require('./module/apply_mentor.js'),
-  ...require('./module/login_signup.js'),
-  ...require('./module/mentor_mentee.js'),
-  ...require('./module/news.js'),
-  ...require('./module/order.js'),
-  ...require('./module/system.js'),
-  ...require('./module/user_info.js'),
-  ...require('./module/view_mentor.js')
+  ...require('./module/admin.js'),        // approve/disapprove mentor, notifications, get mentor applications
+  ...require('./module/apply_mentor.js'), // create/edit mentor application, college list, verify info completion
+  ...require('./module/login_signup.js'), // create/verify user, verification code
+  ...require('./module/mentor_mentee.js'),// getRelMentors, getRelMentees, setConfirm
+  ...require('./module/news.js'),         // create/get news
+  ...require('./module/order.js'),        // addMentorShip
+  ...require('./module/system.js'),       // patch, reset
+  ...require('./module/user_info.js'),    // getUserInfo, updateUser, getMajorList
+  ...require('./module/view_mentor.js')   // MentorDetail, MentorComment
 };
