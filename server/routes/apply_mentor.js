@@ -1,23 +1,24 @@
-const db = require('../db.js');
+const db = require('../db/index.js');
 const express = require('express');
 const app = express.Router();
 
 
-app.post('/api/apply.js', (req, res) => {
+app.post('/api/mentor_apply', (req, res) => {
   db.verifyInfoCompletion(req.body.uid, (err, isCompleted) => {
-    if (isCompleted) {
-      db.createMentorApp(req.body, (err) => {
-        if (err) {
-          console.log(err);
-          res.json({code: 1});
-          return;
-        }
-        res.json({code: 0});
-      });
-    }
-    else {
+    if (!isCompleted) {
       res.json({code: 45});
+      return;
     }
+
+    db.createMentorApp(req.body, (err) => {
+      if (err) {
+        console.log(err);
+        res.json({code: 1});
+        return;
+      }
+      res.json({code: 0});
+    });
+
   });
 });
 

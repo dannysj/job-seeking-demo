@@ -19,7 +19,9 @@ class AccountProfile extends React.Component {
       attr_display_name: '',
       major_list: [],
       editMode: false,
+      isLoadingMajorList: false
     };
+    this.timer = null;
   }
 
   componentDidMount() {
@@ -156,6 +158,48 @@ class AccountProfile extends React.Component {
     this.setState({attr_val: e.target.value})
   };
 
+
+  handleSearchChange = (e, {searchQuery}) =>{
+    clearTimeout(this.timer);
+
+    this.setState({majorQuery: searchQuery});
+
+    this.timer = setTimeout(this.triggerSearch, 500);
+  };
+
+  triggerSearch = () =>{
+    this.setState({isLoadingMajorList : true});
+
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_major_list', {query: this.state.majorQuery}).then(res => {
+      if (res.data.code === 0) {
+        this.setState({major_list: res.data.list});
+      } else {
+        NotificationManager.error('无法获取专业列表', '错误');
+      }
+      this.setState({isLoadingMajorList : false})
+    });
+  };
+
+  confirmMajorChange = (e) => {
+    e.preventDefault();
+    this.setState({showAddServiceModal: false, editMode: false});
+    const key = this.state.attr_key;
+    const value = this.state.attr_val;
+    axios.post(process.env.REACT_APP_API_HOST + '/api/update_user', {
+      uid: this.props.user.id,
+      attr: this.state.attr_key,
+      val: this.state.attr_val
+    }).then(res => {
+      if (res.data.code === 0) {
+        this.props.user[key] = this.state.major_list.find(e => e.value === value).text;
+        this.props.onUpdate(this.props.user);
+      }
+      else {
+        NotificationManager.error('资料更新失败', '错误');
+      }
+    });
+  };
+
   render() {
     let modalClassName = 'ui modal';
     if (this.state.showAddServiceModal) {
@@ -251,7 +295,7 @@ class AccountProfile extends React.Component {
             <div className="header">
               专业
               {this.state.editMode ?
-                <Button floated='right' onClick={this.confirmAttrChange}>
+                <Button floated='right' onClick={this.confirmMajorChange}>
                   <i className="checkmark icon positive ui"/>
                 </Button>
                 :
@@ -262,15 +306,16 @@ class AccountProfile extends React.Component {
             </div>
             <div className="info">
               {this.state.attr_key === 'major' && this.state.editMode ?
-                <Dropdown name='major' placeholder='专业' search selection allowAdditions
+                <Dropdown name='major' placeholder='专业' search selection
                           options={this.state.major_list}
-                          onChange={(e, data) => this.setState({attr_val: this.state.major_list[data.value - 1].text})} // TODO: Use major id instead of major name
-                          selectedValue={this.state.attr_val}/>
+                          onChange={(e, data) => this.setState({attr_val: data.value})}
+                          selectedValue={this.state.attr_val}
+                          noResultsMessage={null}
+                          onSearchChange={this.handleSearchChange}
+                          loading={this.state.isLoadingMajorList}/>
                 :
                 this.props.user.major ? this.props.user.major : '暂无资料'
               }
-
-
             </div>
           </div>
         </div>

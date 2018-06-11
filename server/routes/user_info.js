@@ -1,4 +1,4 @@
-const db = require('../db.js');
+const db = require('../db/index.js');
 const express = require('express');
 const app = express.Router();
 
@@ -28,7 +28,7 @@ app.post('/api/update_user', (req, res) => {
 
 
 app.post('/api/get_major_list', (req, res) => {
-  db.getMajorList((err, list) => {
+  db.getMajorList(req.body.query, (err, list) => {
     if (err) {
       console.log(err);
       res.json({code: 1});

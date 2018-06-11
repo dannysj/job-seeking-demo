@@ -1,4 +1,4 @@
-const db = require('../db.js');
+const db = require('../db/index.js');
 const express = require('express');
 const app = express.Router();
 const paypal = require('paypal-rest-sdk');

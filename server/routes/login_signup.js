@@ -1,4 +1,4 @@
-const db = require('../db.js');
+const db = require('../db/index.js');
 const express = require('express');
 const app = express.Router();
 const nodemailer = require('nodemailer');
@@ -72,7 +72,6 @@ app.get('/activate', (req, res) => {
     messageDispatch(uid, "欢迎来到伙伴求职。在这里您将接触到最好的求职干货和导师资源。如有任何疑问 ，可发送邮件至help@buddycareer.com联系我们");
     res.redirect('/account');
   });
-
 });
 
 module.exports = app;
