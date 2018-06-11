@@ -105,10 +105,15 @@
   flex-flow: row;
   justify-content: space-between;
   padding: 1.5em 0em;
+  padding-top: 0em;
 }
 
 .action > * {
   margin-right: 1em;
+}
+
+.category:nth-child(2) > .content {
+  border-top: none;
 }
 
 .form-text > input[type=text] {

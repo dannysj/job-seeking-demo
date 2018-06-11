@@ -56,7 +56,7 @@ class MentorEdit extends React.Component {
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
       if (res.data.code === 0) {
-        console.log(res.data.mentor);
+
         res.data.mentor.services = res.data.mentor.service; // sorry for the terrible naming.
         this.setState({
           mentor_info: res.data.mentor
@@ -80,7 +80,7 @@ class MentorEdit extends React.Component {
     let curServices = this.state.mentor_info.services.slice();
     let curState = this.state;
     let service = Object.assign({}, this.tempService);
-    console.log(service);
+
     let curInfo = this.state.mentor_info;
     if (curState.editMode) {
       curServices[curState.editIndex] = service;
@@ -129,7 +129,7 @@ class MentorEdit extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    console.log(this.state.mentor_info);
+    
 
     if(this.state.mentor_info.num_weekly_slots < 0){
       NotificationManager.error('每周愿意服务次数必须为自然数','错误');

@@ -55,7 +55,6 @@ class AccountApply extends React.Component {
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
       if (res.data.code === 0) {
         let mentor = res.data.mentor;
-        console.log(mentor);
         mentor.services = mentor.service; // Sorry for the terrible naming
         this.setState({mentor_info: mentor, statusChecked:true, hasNotApplied: false});
       }
@@ -82,7 +81,6 @@ class AccountApply extends React.Component {
     let curServices = this.state.mentor_info.services.slice();
     let curState = this.state;
     let service = Object.assign({}, this.tempService);
-    console.log(service);
     let curInfo = this.state.mentor_info;
     if (curState.editMode) {
       curServices[curState.editIndex] = service;
@@ -131,7 +129,6 @@ class AccountApply extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    console.log(this.state.mentor_info);
 
     if(this.state.mentor_info.num_weekly_slots < 0){
       NotificationManager.error('每周愿意服务次数必须为自然数','错误');

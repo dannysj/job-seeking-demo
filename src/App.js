@@ -42,7 +42,6 @@ class App extends Component {
       this.state = {user: {id: uid}};
       axios.post(process.env.REACT_APP_API_HOST + '/api/get_user_info',{uid:uid}).then(res => {
         if(res.data.code==0){
-          console.log(res.data.user);
           this.updateUser(res.data.user);
         }
         else{

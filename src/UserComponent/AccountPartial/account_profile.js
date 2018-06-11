@@ -58,10 +58,12 @@ class AccountProfile extends React.Component {
       if(res.data.code===0){
         this.props.user[key] = value;
         this.props.onUpdate(this.props.user);
-        delete curState.attr_keys[key];
+        delete curState.attr_key[key];
         this.setState({curState})
       }
       else{
+        console.log("at key")
+        console.log(key);
         alert(res.data.errMsg);
         //TODO: Error Handling
       }
@@ -169,24 +171,21 @@ class AccountProfile extends React.Component {
     });
   }
 
-  cancelAttrChange(e) {
+  cancelAttrChange(key_name) {
     //e.preventDefault();
     let curState = this.state;
     curState.showAddServiceModal = false;
-    delete curState.attr_keys[e.target.name];
+    delete curState.attr_key[key_name];
     this.setState(curState);
   }
 
   handleInputChange(e, data) {
     let attr_keys = this.state.attr_key;
-    attr_keys[e.target.name] = e.traget.value
+    attr_keys[e.target.name] = e.target.value
     this.setState({attr_key:attr_keys});
   }
 
     render() {
-      console.log("testing")
-      console.log(this.state.attr_key.hasOwnProperty('last'));
-      console.log(this.state.attr_key);
         return(
             <div className="ui large celled list">
               <NotificationContainer />
@@ -247,7 +246,10 @@ class AccountProfile extends React.Component {
                     <div className="padding-text"></div>
                   </div>
                   <div className="actions">
-                    <div className="ui gray deny button" onClick={this.cancelAttrChange}>
+                    <div className="ui gray deny button" onClick={() => {
+                      this.cancelAttrChange("last");
+                      this.cancelAttrChange("first");
+                    }}>
                       取消
                     </div>
                     <div className="ui blue right labeled icon button" onClick={this.confirmAttrChange}>
@@ -258,26 +260,63 @@ class AccountProfile extends React.Component {
                 </div>
               </div>
 
-              <div className="item">
+              <div className={"item " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")} >
                 <div className="content">
+                  <div className="inner-content">
                   <div className="header">专业</div>
                   <div className="info">{this.props.user.major ? this.props.user.major : '暂无资料'}</div>
-                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
+                  </div>
+                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('major')}>
                     编辑
                   </div>
+
                 </div>
 
-
+                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")}>
+                  <div className="form-text">
+                    <input type="text" name="major" value={this.state.attr_key.major} onChange={this.handleInputChange}/>
+                    <div className="padding-text"></div>
+                  </div>
+                  <div className="actions">
+                    <div className="ui gray deny button" onClick={() => {
+                      this.cancelAttrChange("major");
+                    }}>
+                      取消
+                    </div>
+                    <div className="ui blue right labeled icon button" onClick={this.confirmAttrChange}>
+                      确认
+                      <i className="checkmark icon"/>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="item">
+              <div className={"item " + ((this.state.attr_key.hasOwnProperty('cover')) ? "is-expanded" : "")}>
                 <div className="content">
+                  <div className="inner-content">
                   <div className="header">自我介绍</div>
                   <div className="info">{this.props.user.cover ? this.props.user.cover : '暂无资料'}</div>
-                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
+                  </div>
+                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('cover')}>
                     编辑
                   </div>
                 </div>
-
+                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('cover')) ? "is-expanded" : "")}>
+                  <div className="form-text">
+                    <input type="text" name="cover" value={this.state.attr_key.cover} onChange={this.handleInputChange}/>
+                    <div className="padding-text"></div>
+                  </div>
+                  <div className="actions">
+                    <div className="ui gray deny button" onClick={() => {
+                      this.cancelAttrChange("cover");
+                    }}>
+                      取消
+                    </div>
+                    <div className="ui blue right labeled icon button" onClick={this.confirmAttrChange}>
+                      确认
+                      <i className="checkmark icon"/>
+                    </div>
+                  </div>
+                </div>
 
 
               </div>
@@ -293,28 +332,64 @@ class AccountProfile extends React.Component {
                   邮件、微信绑定设置
                 </div>
               </div>
-              <div className="item">
+              <div className={"item "+ ((this.state.attr_key.hasOwnProperty('email')) ? "is-expanded" : "")}>
                 <div className="content">
+                  <div className="inner-content">
                   <div className="header">Email</div>
                   <div className="info">{this.props.user.email}</div>
-                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
+                  </div>
+                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('email')}>
                     编辑
                   </div>
                 </div>
 
-                <div className="expandable-content">
+                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('email')) ? "is-expanded" : "")}>
+                  <div className="form-text">
+                    <input type="text" name="email" value={this.state.attr_key.email} onChange={this.handleInputChange}/>
+                    <div className="padding-text"></div>
+                  </div>
+                  <div className="actions">
+                    <div className="ui gray deny button" onClick={() => {
+                      this.cancelAttrChange("email");
+                    }}>
+                      取消
+                    </div>
+                    <div className="ui blue right labeled icon button" onClick={this.confirmAttrChange}>
+                      确认
+                      <i className="checkmark icon"/>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <div className="item">
                 <div className="content">
+                  <div className="inner-content">
                   <div className="header">微信</div>
                   <div className="info">{this.props.user.wechat ? this.props.user.wechat : '暂无资料'}</div>
-                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
+                  </div>
+                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('wechat')}>
                     编辑
                   </div>
-                </div>
 
+                </div>
+                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('wechat')) ? "is-expanded" : "")}>
+                  <div className="form-text">
+                    <input type="text" name="wechat" value={this.state.attr_key.wechat} onChange={this.handleInputChange}/>
+                    <div className="padding-text"></div>
+                  </div>
+                  <div className="actions">
+                    <div className="ui gray deny button" onClick={() => {
+                      this.cancelAttrChange("wechat");
+                    }}>
+                      取消
+                    </div>
+                    <div className="ui blue right labeled icon button" onClick={this.confirmAttrChange}>
+                      确认
+                      <i className="checkmark icon"/>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               </div>
@@ -329,6 +404,7 @@ class AccountProfile extends React.Component {
               </div>
               <div className="item">
                 <div className="content">
+                <div className="inner-content">
                   <div className="header">简历</div>
                   <div className="info">{this.state.fileName ? '' : '暂无资料'}</div>
                   <label htmlFor="resume-input" className={this.state.fileName ? 'ui button positive' : 'ui button'}>
@@ -342,6 +418,7 @@ class AccountProfile extends React.Component {
                     {/*<Document file={this.state.fileName} onLoadSuccess={this.onDocumentLoad}> <Page*/}
                       {/*pageNumber={this.state.pageNumber}/>*/}
                     {/*</Document>) : (<div></div>)}*/}
+                </div>
                 </div>
               </div>
               </div>
