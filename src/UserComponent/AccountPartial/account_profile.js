@@ -15,7 +15,8 @@ class AccountProfile extends React.Component {
     this.state = {
       showAddServiceModal: false,
       showImgCrop: false,
-      fileName: this.props.user.resume
+      fileName: this.props.user.resume,
+      attr_key: {"hi":""},
     };
     this.tempService = {};
 
@@ -30,27 +31,42 @@ class AccountProfile extends React.Component {
 
   }
 
-  initAttrChange (key_name, display_name) {
-    this.setState({attr_key:key_name, attr_val:'', attr_display_name:display_name, showAddServiceModal:true});
+  initAttrChange (key_name) {
+    let curState = this.state;
+    if (curState.showAddServiceModal) {
+
+    }
+    let attr_keys = curState.attr_key;
+    let list = curState.attr_list;
+
+
+    attr_keys[key_name] = "";
+
+    this.setState({attr_key:attr_keys, showAddServiceModal:true});
   }
 
   confirmAttrChange(e) {
     e.preventDefault();
     // TODO: Process and upload data
+    let curState = this.state;
+    let attr_keys = curState.attr_key;
+    curState.showAddServiceModal = false
     this.setState({showAddServiceModal : false});
-    console.log(this.state.attr_val);
-    const key = this.state.attr_key;
-    const value = this.state.attr_val;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/update_user',{uid:this.props.user.id,attr:this.state.attr_key,val:this.state.attr_val}).then(res => {
+    //FIXME: Fixe bunches data update
+    for (const [key, value] of Object.entries(attr_keys)) {
+      axios.post(process.env.REACT_APP_API_HOST + '/api/update_user',{uid:this.props.user.id,attr:key,val:value}).then(res => {
       if(res.data.code===0){
         this.props.user[key] = value;
         this.props.onUpdate(this.props.user);
+        delete curState.attr_keys[key];
+        this.setState({curState})
       }
       else{
         alert(res.data.errMsg);
         //TODO: Error Handling
       }
     });
+    }
   }
 
   handleResume(e) {
@@ -154,26 +170,34 @@ class AccountProfile extends React.Component {
   }
 
   cancelAttrChange(e) {
-    e.preventDefault();
+    //e.preventDefault();
     let curState = this.state;
     curState.showAddServiceModal = false;
+    delete curState.attr_keys[e.target.name];
     this.setState(curState);
   }
 
   handleInputChange(e, data) {
-    this.setState({attr_val:e.target.value});
+    let attr_keys = this.state.attr_key;
+    attr_keys[e.target.name] = e.traget.value
+    this.setState({attr_key:attr_keys});
   }
 
     render() {
+      console.log("testing")
+      console.log(this.state.attr_key.hasOwnProperty('last'));
+      console.log(this.state.attr_key);
         return(
             <div className="ui large celled list">
               <NotificationContainer />
                 <div className="category">
-                  <div className="title">
-                    基础资料
-                  </div>
-                  <div className="subtitle">
-                    基础设定资料、账号安全
+                  <div className="header">
+                    <div className="title">
+                      基础资料
+                    </div>
+                    <div className="subtitle">
+                      基础设定资料、账号安全
+                    </div>
                   </div>
                 </div>
                 <div className="category">
@@ -199,17 +223,38 @@ class AccountProfile extends React.Component {
                   )}
                   </div>
               </div>
-              <div className="item">
+              <div className={"item " + ((this.state.attr_key.hasOwnProperty('last')) ? "is-expanded" : "")}>
                 <div className="content">
-                  <div className="header">姓{' '}</div>
-                  <div className="info">{this.props.user.last}</div>
+                  <div className="inner-content">
+                    <div className="header">姓{' '}</div>
+                    <div className="info">{this.props.user.last}</div>
+                  </div>
+                  <div className="inner-content">
+                    <div className="header">名</div>
+                    <div className="info">{this.props.user.first}</div>
+                  </div>
+                  <div className="edit-toggle"  onClick={()=> {
+                    this.initAttrChange('last');
+                    this.initAttrChange('first');
+                  }}>
+                    编辑
+                  </div>
                 </div>
-                <div className="content">
-                  <div className="header">名</div>
-                  <div className="info">{this.props.user.first}</div>
-                </div>
-                <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
-                  编辑
+                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('last')) ? "is-expanded" : "")}>
+                  <div className="form-text">
+                    <input type="text" name="last" value={this.state.attr_key.last} onChange={this.handleInputChange}/>
+                    <input type="text" name="first" value={this.state.attr_key.first} onChange={this.handleInputChange}/>
+                    <div className="padding-text"></div>
+                  </div>
+                  <div className="actions">
+                    <div className="ui gray deny button" onClick={this.cancelAttrChange}>
+                      取消
+                    </div>
+                    <div className="ui blue right labeled icon button" onClick={this.confirmAttrChange}>
+                      确认
+                      <i className="checkmark icon"/>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -217,21 +262,23 @@ class AccountProfile extends React.Component {
                 <div className="content">
                   <div className="header">专业</div>
                   <div className="info">{this.props.user.major ? this.props.user.major : '暂无资料'}</div>
+                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
+                    编辑
+                  </div>
                 </div>
 
-                <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
-                  编辑
-                </div>
+
               </div>
               <div className="item">
                 <div className="content">
                   <div className="header">自我介绍</div>
                   <div className="info">{this.props.user.cover ? this.props.user.cover : '暂无资料'}</div>
+                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
+                    编辑
+                  </div>
                 </div>
 
-                <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
-                  编辑
-                </div>
+
 
               </div>
 
@@ -250,9 +297,12 @@ class AccountProfile extends React.Component {
                 <div className="content">
                   <div className="header">Email</div>
                   <div className="info">{this.props.user.email}</div>
+                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
+                    编辑
+                  </div>
                 </div>
-                <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
-                  编辑
+
+                <div className="expandable-content">
                 </div>
               </div>
 
@@ -260,10 +310,11 @@ class AccountProfile extends React.Component {
                 <div className="content">
                   <div className="header">微信</div>
                   <div className="info">{this.props.user.wechat ? this.props.user.wechat : '暂无资料'}</div>
+                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
+                    编辑
+                  </div>
                 </div>
-                <div className="edit-toggle"  onClick={()=>this.initAttrChange('last','姓')}>
-                  编辑
-                </div>
+
               </div>
 
               </div>
