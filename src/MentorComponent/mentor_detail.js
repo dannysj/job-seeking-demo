@@ -158,9 +158,9 @@ class MentorDetail extends Component {
 
             <div className="title">
               <img className="title-icon"  alt="age" src={ageIcon} height={50}/>
-              年龄
+              本周服务次数
             </div>
-            <div className="subtitle">{parseInt((new Date() - new Date(this.state.mentor.dob))/(365*24*3600*1000))}</div>
+            <div className="subtitle">{this.state.mentor.service_amount}</div>
 
           </div>
 

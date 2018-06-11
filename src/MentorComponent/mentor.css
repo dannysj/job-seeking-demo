@@ -722,9 +722,11 @@ font-size: 2em;
     opacity: 1;
   }
 
+  .mentor-detail-info-container {
+    flex-wrap: wrap;
+  }
   .mentor-detail-info-container>.item  {
-
-    padding-top: 2em;
-
+    min-width: 40%;
+    margin: 1em 0em;
   }
 }

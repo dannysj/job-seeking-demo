@@ -112,7 +112,7 @@
   margin-right: 1em;
 }
 
-.category:nth-child(2) > .content {
+.item.first > .content {
   border-top: none;
 }
 

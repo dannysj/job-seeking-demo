@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, Icon, Image} from 'semantic-ui-react';
+import {Button, Icon, Image, Dropdown} from 'semantic-ui-react';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
@@ -16,7 +16,7 @@ class AccountProfile extends React.Component {
       showAddServiceModal: false,
       showImgCrop: false,
       fileName: this.props.user.resume,
-      attr_key: {"hi":""},
+      attr_key: {},
     };
     this.tempService = {};
 
@@ -274,8 +274,18 @@ class AccountProfile extends React.Component {
 
                 <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")}>
                   <div className="form-text">
-                    <input type="text" name="major" value={this.state.attr_key.major} onChange={this.handleInputChange}/>
+
+                      <Dropdown name='major' placeholder='专业' search selection
+                                options={this.state.major_list}
+                                onChange={(e, data) => this.setState({attr_key: {
+                                  major: data.value}})}
+                                selectedValue={this.state.attr_key.major}
+                                noResultsMessage={null}
+                                onSearchChange={this.handleSearchChange}
+                                loading={this.state.isLoadingMajorList}/>
+
                     <div className="padding-text"></div>
+
                   </div>
                   <div className="actions">
                     <div className="ui gray deny button" onClick={() => {
@@ -332,7 +342,7 @@ class AccountProfile extends React.Component {
                   邮件、微信绑定设置
                 </div>
               </div>
-              <div className={"item "+ ((this.state.attr_key.hasOwnProperty('email')) ? "is-expanded" : "")}>
+              <div className={"item first "+ ((this.state.attr_key.hasOwnProperty('email')) ? "is-expanded" : "")}>
                 <div className="content">
                   <div className="inner-content">
                   <div className="header">Email</div>
@@ -402,7 +412,7 @@ class AccountProfile extends React.Component {
                   这里展示你的简历噢
                 </div>
               </div>
-              <div className="item">
+              <div className="item first">
                 <div className="content">
                 <div className="inner-content">
                   <div className="header">简历</div>

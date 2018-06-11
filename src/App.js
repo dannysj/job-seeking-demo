@@ -143,8 +143,8 @@ class App extends Component {
         </div>
         {
           (this.state.user) ? (
-            <div className="user-menu">
-              <div className="item name" onClick={this.user_menuToggled}>
+            <div className="user-menu" onClick={this.user_menuToggled}>
+              <div className="item name" >
                 <div className="user-name">{
                   this.state.user.last+this.state.user.first
                 }</div>
