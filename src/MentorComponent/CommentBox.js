@@ -72,7 +72,6 @@ class CommentForm extends Component{
 
   handleSubmit(e) {
     e.preventDefault();
-    console.log("Submit called")
     const text = e.target[0].value.trim();
     if (!text) {
       return;

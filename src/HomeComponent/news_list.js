@@ -17,7 +17,7 @@ class NewsList extends Component {
       {batch_size: this.batch_size, batch_num:this.batch_num}).then(res => {
       if(res.data.code==0){
         this.batch_num++;
-        console.log(res.data);
+
         let curState = this.state;
         curState.news_list = res.data.news_list.slice(0,6);
         this.setState(curState);

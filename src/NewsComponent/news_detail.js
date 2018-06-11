@@ -25,7 +25,6 @@ class NewsDetail extends Component {
       {nid:this.props.match.params.nid}).then(res => {
 
       if(res.data.code==0){
-        console.log(res.data);
         let curState = this.state;
         curState.news = res.data.news;
         curState.loading = false;
@@ -88,7 +87,7 @@ class NewsDetail extends Component {
             <div className="news-detail-content" dangerouslySetInnerHTML={{__html:this.state.news.content}}></div>
               <Divider hidden clearing />
             <ProfileFollow user={{
-                  "last": this.state.news.author_last, 
+                  "last": this.state.news.author_last,
                   "first": this.state.news.author_first,
                   "profile_pic": this.state.news.profile_pic,
                   "cover": this.state.news.author_cover

@@ -44,7 +44,6 @@ class MentorDetail extends Component {
       service_name: service_name,
       service_price: service_price
     }).then(res => {
-      console.log(res.data);
       if (res.data.code === 0) {
         window.location.href = res.data.url;
       }
@@ -61,7 +60,6 @@ class MentorDetail extends Component {
       uid:this.props.user.id,
       order_id:order_id
     }).then(res => {
-      console.log(res.data);
       if(res.data.code==0){
         // handler.setState({showAddServiceModal: false, qr_code: ''});
         alert('支付成功'); //TODO Notification System
