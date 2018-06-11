@@ -5,6 +5,20 @@ const db = require('../pool.js');
 // follower_uid
 // followee_uid
 
+
+// whole idea
+// In get mentor list, given a uid, and ask it get mentor list contains a list of follow user
+// when rendering the segment, consult the user list. If user in the follow list, then show followed
+//  If not, then show follow
+
+// For follow button click
+// get the uid and mentor uid, and call the api
+// Add this user into the follow list
+
+// For unfollow button click
+// get the uid and mentor uid, call the delete api
+// Delete this user from the follow list
+
 /**************************************/
 // Follower functions 
 /************************************ */
