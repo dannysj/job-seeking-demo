@@ -6,6 +6,7 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 import './mentor.css';
 import CommentBox from "./CommentBox";
 import Arrow from "../Components/Arrow";
+import Footer from '../Components/Footer';
 
 class MentorDetail extends Component {
   constructor (props) {
@@ -222,6 +223,8 @@ class MentorDetail extends Component {
 
           <CommentBox user={this.props.user} mentor={this.state.mentor} mid={this.props.match.params.mid} displayCommentReplyButton={true}/>
         </div>
+
+        <Footer />
       </div>
 
 
