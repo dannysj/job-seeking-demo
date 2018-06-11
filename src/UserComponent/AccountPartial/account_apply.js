@@ -109,10 +109,9 @@ class AccountApply extends React.Component {
 
 
   handleSearchChange = (e, {searchQuery}) =>{
-
     clearTimeout(this.timer);
 
-    this.setState({collegeQuery: searchQuery})
+    this.setState({collegeQuery: searchQuery});
 
     this.timer = setTimeout(this.triggerSearch, 500);
   };
