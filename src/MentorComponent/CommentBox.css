@@ -4,6 +4,9 @@
 
 .comment-input{
   width: 100%;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  margin-right: 1em;
 }
 
 .comment-submit{
@@ -119,6 +122,14 @@ text-align: left;
 
 .like-comment {
 
+}
+
+.comment-form {
+  display: flex;
+  width: 70%;
+  margin: auto;
+  margin-bottom: 1.5em;
+  margin-top: 1.5em;
 }
 
 .reply-form {

@@ -375,6 +375,7 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
   flex: 0;
   min-width: 20%;
   min-height: 130px;
+  justify-content: space-between;
 }
 
 .detail-item > .title {
@@ -387,7 +388,7 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
 .detail-item > .subtitle {
 
   font-size: 1em;
-  padding: 2em 2em 0em 2em;
+  padding: 0em 2em;
 
 }
 .mentor-service-overview {
@@ -434,7 +435,7 @@ font-size: 2em;
   width: 230px;
   height: 350px;
   border-radius: 10px;
-  background-color: hsla(0,0%,100%,0.70);
+  background-color: hsla(0, 0%, 40%, 0.75);
   margin: 0em 1.5em;
   position: relative;
     background-blend-mode: overlay;
@@ -508,7 +509,7 @@ font-size: 2em;
 .service-title> .service-price {
   font-weight: bold;
   font-size: 1.2em;
-  color: gray;
+  color: white;
 }
 
 .service-item > .service-description {

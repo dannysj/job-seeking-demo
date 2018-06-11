@@ -47,8 +47,13 @@
   margin: 0 1em;
 }
 
-.account-status {
-  padding: .92857143em 1.42857143em;
+.account-partial-container > * {
+  padding: 1.5em 0em;
+
+}
+
+.account-side-no-container .account-status {
+  padding: 2em 1.42857143em;
 }
 
 .input-file {
@@ -71,6 +76,14 @@
 .category > .title {
   font-size: 1.2em;
 
+}
+
+.account-partial-container > .category:nth-child(1) {
+  padding: 0em 0em;
+}
+
+.account-side-no-container .item {
+  padding: 1.3em 1.42857143em !important;
 }
 
 .category > .subtitle, .subheader > .subtitle {

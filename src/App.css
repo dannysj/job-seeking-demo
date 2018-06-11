@@ -173,14 +173,20 @@ body {
   right: 1em;
 }
 
-.user-menu > * {
-	padding: 1.5em 2em;
-}
-.user-menu > .item {
+.user-menu  .item {
 	display: flex;
 	flex-flow: row;
 	align-items: center;
-	justify-content: space-between;
+	padding: 1.5em 2em;
+}
+
+.item.name {
+	flex-flow: column;
+	border-bottom: 1px solid #e8e8e8;
+}
+
+.item > .user-name {
+	font-size: 1.2em;
 }
 input[type=checkbox] {
 	display: none;

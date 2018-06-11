@@ -92,8 +92,10 @@ class CommentForm extends Component{
   render() {
     return(
       <form className="comment-form" onSubmit={this.handleSubmit}>
-        <textarea rows="8" className="comment-input" placeholder="说点什么吧......" />
-        <input className="comment-submit " type="submit" />
+        <textarea rows="1" className="comment-input" placeholder="说点什么吧......" />
+        <Button type="submit" circular color='teal' icon>
+          <Icon circular inverted color='teal' name='send' forName="submit-button" size='large'/>
+        </Button>
       </form>
     );
   }

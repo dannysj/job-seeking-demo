@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router';
-import { Icon } from 'semantic-ui-react';
+import { Icon, Label} from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import logo from './logo.svg';
 import axios from 'axios';
@@ -145,43 +145,71 @@ class App extends Component {
         {
           (this.state.user) ? (
             <div className="user-menu">
-              <div className="item" onClick={this.user_menuToggled}>
-                {
+              <div className="item name" onClick={this.user_menuToggled}>
+                <div className="user-name">{
                   this.state.user.last+this.state.user.first
-                }
-              </div>
-              <div className="item">
-                <Icon link name='bitcoin' />
+                }</div>
+                <div>
                 {
-                  "$ 7.99"
+                  this.state.user.email
                 }
+                </div>
               </div>
-              <NavLink to="/account/" onClick={this.user_menuToggled}>
+              <div className="item account-status">
+                <Icon name='graduation'  color="blue" className="menu-icon" />
+                {this.state.user.ismentor ? "Mentor":"Mentee"}
+              </div>
+
+              {
+                this.state.user.ismentor ? (
+                   <NavLink to="/account/balance">
+                    <Icon name='dollar' className="menu-icon" />{this.state.user.balance}
+                  </NavLink>
+                ) : (<div></div>)
+              }
+
+
+              <NavLink to="/account/">
+              <Icon name='info'  className="menu-icon" />
                 基础资料
               </NavLink>
-              <NavLink to="/account/mentor" onClick={this.user_menuToggled}>
-                我的导师
-              </NavLink>
-              <NavLink to="/account/balance" onClick={this.user_menuToggled}>
-                我的余额
-              </NavLink>
               {
-                !this.state.user.ismentor ? (
-                  <NavLink to="/account/apply" onClick={this.user_menuToggled}>
-                    成为导师
-                  </NavLink>) : (
-                  <NavLink to="/account/service" onClick={this.user_menuToggled}>
-                    我的服务
-                  </NavLink>)
+                this.state.user.ismentor ? (<div>
+                   <NavLink to="/account/mentor_edit">
+                     <Icon name='edit'  className="menu-icon" />编辑导师档案
+                    </NavLink>
+                    <NavLink to="/account/service">
+                      <Icon name='users'  className="menu-icon" />我的Mentee
+                    </NavLink>
+                    <NavLink to="/account/create_article">
+                      <Icon name='write'  className="menu-icon" />编写干货
+                    </NavLink></div>):(<div>
+                    <NavLink to="/account/mentor">
+                     <Icon name='user secret'  className="menu-icon" />我的导师
+                   </NavLink>
+                    <NavLink to="/account/apply">
+                      <Icon name='add user'  className="menu-icon" />申请成为导师
+                    </NavLink></div>)
               }
+              <NavLink to="/account/notification">
+                <Icon name='chat' className="menu-icon" />
+                系统通知
+                {
+                  (!isNaN(this.state.user.num_notifications) && this.state.user.num_notifications!=0) &&
+                    (<Label color='red' floating>
+                      {this.state.user.num_notifications}
+                    </Label>)
+                }
+
+              </NavLink>
               {
                 this.state.user.isadmin && (
-                  <NavLink to="/account/admin" onClick={this.user_menuToggled}>
-                    管理员页面
+                  <NavLink to="/account/admin">
+                    <Icon name='user secret'  className="menu-icon" />管理员页面
                   </NavLink>)
               }
-              <NavLink to="/account/logout" onClick={this.user_menuToggled}>
-                注销
+              <NavLink to="/account/logout">
+                <Icon name='log out'  className="menu-icon" />注销
               </NavLink>
             </div>
           ) : (<div></div>)
