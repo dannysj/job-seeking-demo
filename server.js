@@ -12,6 +12,7 @@ const newsRouter = require('./server/routes/news.js');                  // creat
 const orderRouter = require('./server/routes/order.js');                // create order, payment
 const userInfoRouter = require('./server/routes/user_info.js');         // get user info, update user, major list
 const viewMentorRouter = require('./server/routes/view_mentor.js');     // mentor detail, mentor list, mentor comment
+const followRelationRouter = require('./server/routes/follow_relation.js')
 
 const app = express();
 const args = process.argv.slice(2);
@@ -35,7 +36,7 @@ app.use('/', newsRouter);
 app.use('/', orderRouter);
 app.use('/', userInfoRouter);
 app.use('/', viewMentorRouter);
-
+app.use('/'. followRelationRouter);
 
 
 const send_index = (req, res) => {

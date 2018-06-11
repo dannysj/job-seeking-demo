@@ -7,5 +7,6 @@ module.exports = {
   ...require('./module/order.js'),        // addMentorShip
   ...require('./module/system.js'),       // patch, reset
   ...require('./module/user_info.js'),    // getUserInfo, updateUser, getMajorList
-  ...require('./module/view_mentor.js')   // MentorDetail, MentorComment
+  ...require('./module/view_mentor.js'),   // MentorDetail, MentorComment
+  ...require('./module/follow_relation.js') // create follow and followee rel
 };
