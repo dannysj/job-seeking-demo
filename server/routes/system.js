@@ -70,8 +70,14 @@ app.post('/api/get_system_notifications', (req, res) => {
 });
 
 app.post('/api/read_system_notification', (req, res) => {
-  messageDispatch.readNotifications();
-  res.json({code: 0});
+  messageDispatch.readNotifications(req.body.uid, (err)=>{
+    if(err){
+      res.json({code: 1, errMsg: 'Database Error'});
+    }
+    else{
+      res.json({code: 0});
+    }
+  });
 });
 
 module.exports = app;
