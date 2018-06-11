@@ -145,9 +145,7 @@ class App extends Component {
               </div>
               <div className="item">
                 <Icon link name='bitcoin' />
-                {
-                  "$ 7.99"
-                }
+                $ {this.state.user.balance}
               </div>
               <NavLink to="/account/" onClick={this.user_menuToggled}>
                 基础资料
