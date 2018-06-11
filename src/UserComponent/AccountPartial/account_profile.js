@@ -187,7 +187,7 @@ class AccountProfile extends React.Component {
     const value = this.state.attr_val;
     axios.post(process.env.REACT_APP_API_HOST + '/api/update_user', {
       uid: this.props.user.id,
-      attr: this.state.attr_key,
+      attr: this.state.attr_key + "_id",
       val: this.state.attr_val
     }).then(res => {
       if (res.data.code === 0) {
