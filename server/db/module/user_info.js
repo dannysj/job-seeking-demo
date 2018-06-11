@@ -1,4 +1,4 @@
-const db = require('../db_pool.js');
+const db = require('../pool.js');
 
 exports.getUserInfo = (uid, callback) => {
   const query = `select * from users where id=$1;`;

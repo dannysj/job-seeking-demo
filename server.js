@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const db = require('./server/db.js');
+const db = require('./server/db/index.js');
 const cors = require('cors');
 
 const adminRouter = require('./server/routes/admin.js');                // upload, admin, notification

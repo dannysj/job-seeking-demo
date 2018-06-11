@@ -1,9 +1,9 @@
 const fs = require('fs');
-const db = require('../db_pool.js');
+const db = require('../pool.js');
 
 exports.patch = () => {
   // Patch mentor_comment
-  const sql = fs.readFileSync('./db_patches/mentor_comment.sql').toString();
+  const sql = fs.readFileSync('./patch/mentor_comment.sql').toString();
   db.query(sql, (err, result) => {
     if (err) {
       console.log(err);
