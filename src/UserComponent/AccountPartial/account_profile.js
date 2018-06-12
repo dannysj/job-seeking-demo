@@ -272,25 +272,25 @@ class AccountProfile extends React.Component {
                 </div>
               </div>
 
-              <div className={"item " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")} >
+              <div className={"item " + ((this.state.attr_key.hasOwnProperty('major_id')) ? "is-expanded" : "")} >
                 <div className="content">
                   <div className="inner-content">
                   <div className="header">专业</div>
                   <div className="info">{this.props.user.major ? this.props.user.major : '暂无资料'}</div>
                   </div>
-                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('major')}>
+                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('major_id')}>
                     编辑
                   </div>
 
                 </div>
 
-                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")}>
+                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('major_id')) ? "is-expanded" : "")}>
                   <div className="form-text">
 
-                      <Dropdown name='major' placeholder='专业' search selection
+                      <Dropdown name='major_id' placeholder='专业' search selection
                                 options={this.state.major_list}
                                 onChange={(e, data) => this.setState({attr_key: {
-                                  major: data.value}})}
+                                  major_id: data.value}})}
                                 selectedValue={this.state.attr_key.major}
                                 noResultsMessage={null}
                                 onSearchChange={this.handleSearchChange}
@@ -301,7 +301,7 @@ class AccountProfile extends React.Component {
                   </div>
                   <div className="actions">
                     <div className="ui gray deny button" onClick={() => {
-                      this.cancelAttrChange("major");
+                      this.cancelAttrChange("major_id");
                     }}>
                       取消
                     </div>
