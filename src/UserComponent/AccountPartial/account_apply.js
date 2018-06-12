@@ -21,10 +21,14 @@ class AccountApply extends React.Component {
         },
       showAddServiceModal: false,
       editMode: false,
-      editIndex: -1
+      editIndex: -1,
+      college_list : [],
+      collegeQuery: "",
+      isLoadingCollegeList: false
     };
     this.tempService = {};
     this.formRef = null;
+    this.timer = null;
 
     // This binding is necessary to make `this` work in the callback
     this.addService = this.addService.bind(this);
@@ -35,22 +39,6 @@ class AccountApply extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.deleteRowAt = this.deleteRowAt.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
-
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_college_list').then(res => {
-      if (res.data.code === 0) {
-        let college_list = [];
-        res.data.list.forEach((college) => {
-          college_list.push({
-            value: college.id,
-            text: college.name
-          });
-        });
-        this.setState({college_list: college_list});
-      }
-      else {
-        NotificationManager.error('无法获取大学列表', '错误');
-      }
-    });
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
       if (res.data.code === 0) {
@@ -116,6 +104,29 @@ class AccountApply extends React.Component {
     this.tempService[e.target.name] = e.target.value;
   }
 
+
+
+  handleSearchChange = (e, {searchQuery}) =>{
+    clearTimeout(this.timer);
+
+    this.setState({collegeQuery: searchQuery});
+
+    this.timer = setTimeout(this.triggerSearch, 500);
+  };
+
+  triggerSearch = () =>{
+    this.setState({isLoadingCollegeList : true});
+
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_college_list', {query: this.state.collegeQuery}).then(res => {
+      if (res.data.code === 0) {
+        this.setState({college_list: res.data.list});
+      } else {
+        NotificationManager.error('无法获取大学列表', '错误');
+      }
+      this.setState({isLoadingCollegeList : false})
+    });
+  }
+
   handleChange(e, data) {
     let curState = this.state;
     if (data) {
@@ -135,13 +146,7 @@ class AccountApply extends React.Component {
       return;
     }
 
-    let apiUrl = '';
-    if(this.state.hasNotApplied){
-      apiUrl = '/api/mentor_apply';
-    }
-    else{
-      apiUrl = '/api/mentor_edit';
-    }
+    const apiUrl = this.state.hasNotApplied ? '/api/mentor_apply' : '/api/mentor_edit';
 
     axios.post(process.env.REACT_APP_API_HOST + apiUrl, this.state.mentor_info).then(res => {
       if (res.data.code === 0) {
@@ -168,7 +173,6 @@ class AccountApply extends React.Component {
 
   handleEdit(index) {
     let curServices = this.state.mentor_info.services.slice();
-    let curServices2 = this.state.mentor_info.services.slice(index, index+1);
     this.tempService = curServices[index]
 
     this.setState({editMode: true, editIndex: index, showAddServiceModal: true});
@@ -226,8 +230,13 @@ class AccountApply extends React.Component {
           <div className="field">
             <label>院校名称：</label>
             <b className="notification-msg">
-              <Dropdown name='cid' placeholder='院校名称' fluid search selection options={this.state.college_list}
-                        onChange={this.handleChange} selectedValue={this.state.mentor_info.college_name}/>
+              <Dropdown name='cid' placeholder='院校名称' fluid search selection
+                        loading={this.state.isLoadingCollegeList}
+                        noResultsMessage={null}
+                        options={this.state.college_list}
+                        onChange={this.handleChange}
+                        selectedValue={this.state.mentor_info.college_name}
+                        onSearchChange={this.handleSearchChange}/>
             </b>
           </div>
           <div className="field">

@@ -1,4 +1,6 @@
 module.exports = class MessageDispatch {
+  // This class deals with function related to System Message.
+  // It reads notification from db, and also set notification (another type of message) to is_read
   constructor(db) {
     this.db = db;
   }
@@ -17,4 +19,6 @@ module.exports = class MessageDispatch {
   readNotifications(uid, callback){
     this.db.setNotificationsAsRead(uid, callback);
   }
+
+  
 };

@@ -147,12 +147,15 @@ class App extends Component {
               <div className="item name" >
                 <div className="user-name">{
                   this.state.user.last+this.state.user.first
+
                 }</div>
                 <div>
                 {
                   this.state.user.email
                 }
                 </div>
+
+
               </div>
               <div className="item account-status">
                 <Icon name='graduation'  color="blue" className="tab menu-icon" />
@@ -221,7 +224,7 @@ class App extends Component {
             <Route path='/account' render={()=><Account user={this.state.user} onSuccess={this.updateUser} width={this.state.width} height={this.state.height}></Account>} />
             <Route path="/mentor/:mid" render={(props)=><MentorDetail {...props} user={this.state.user}></MentorDetail>} />
             <Route path='/mentor' component={Mentor}/>
-            <Route path='/news/:nid' component={NewsDetail}/>
+      <Route path='/news/:nid'   render={(props)=><NewsDetail {...props} loggedInUser={this.state.user}></NewsDetail> } />
             <Route path='/news' component={News}/>
             <Route path='/about' component={About}/>
             <Route path='/' component={Home}/>

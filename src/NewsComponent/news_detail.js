@@ -32,7 +32,7 @@ class NewsDetail extends Component {
       }
       else{
       }
-    });
+    }).catch(err => console.log(err)  )  ;
 
 
   }
@@ -43,9 +43,15 @@ class NewsDetail extends Component {
 
   followButtonPressed(e) {
     console.log("Test");
+    // User id, props.loggedInUser.uid
+    // The other one. this.state.news.author_id
+    // call the function 
+    axios.post(process.env.REACT_APP_API_HOST + '/api/follow_user',
+     {follower_uid: this.props.loggedInUser.id , followee_uid: this.state.news.author_id}).then(res=>{
+        console.log("follow")    
+    }).catch(err=> console.log(err))
   }
 
-  // {this.props.match.params.mid}
 
   render() {
     const backimgstyle = {
@@ -90,8 +96,11 @@ class NewsDetail extends Component {
                   "last": this.state.news.author_last,
                   "first": this.state.news.author_first,
                   "profile_pic": this.state.news.profile_pic,
-                  "cover": this.state.news.author_cover
-                }} actionClicked={this.followButtonPressed}/>
+                  "cover": this.state.news.author_cover,
+                }}
+                loggedInUser={this.props.loggedInUser} 
+                author_id = {this.state.news.author_id}
+                />
           </div>
           <div className="news-sidebar">
           </div>

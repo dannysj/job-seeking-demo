@@ -1,10 +1,9 @@
-var url = require('url');
-var self = this;
+const url = require('url');
 
 if (process.env.DATABASE_URL) {
-  var db_params = url.parse(process.env.DATABASE_URL);
-  var db_auth = db_params.auth.split(':');
-  self.db = {
+  const db_params = url.parse(process.env.DATABASE_URL);
+  const db_auth = db_params.auth.split(':');
+  exports.db = {
     user: db_auth[0],
     password: db_auth[1],
     host: db_params.hostname,
@@ -14,8 +13,8 @@ if (process.env.DATABASE_URL) {
     idleTimeoutMillis: 30000
   };
 } else {
-  console.log("Warning: DATABASE_URL should be passed as environment variable")
-  self.db = {
+  console.log("Warning: DATABASE_URL should be passed as environment variable");
+  exports.db = {
     user: 'postgres',
     database: 'db',
     password: 'dannychew7',
@@ -26,9 +25,9 @@ if (process.env.DATABASE_URL) {
   };
 }
 
-self.jwtSecret = 'y8$8HBH+du6H3a[C7ticMF)Pf{]8tBDM';
+exports.jwtSecret = 'y8$8HBH+du6H3a[C7ticMF)Pf{]8tBDM';
 
-self.root_admin = {
+exports.root_admin = {
   email: 'asampaioemello@gmail.com',
   password: 'Fontelonga1$',
   info: {
@@ -37,7 +36,7 @@ self.root_admin = {
   }
 };
 
-self.mail_config = {
+exports.mail_config = {
   host: 'smtp.zoho.com',
   port: 465,
   secure: true,
@@ -45,6 +44,4 @@ self.mail_config = {
     user: 'non-reply@y-l.me',
     pass: 'nonreply123',
   }
-}
-
-exports.self;
+};

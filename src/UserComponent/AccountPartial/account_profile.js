@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, Icon, Image, Dropdown} from 'semantic-ui-react';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {Button, Dropdown, Icon, Image} from 'semantic-ui-react';
 import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
 import '../account.css';
 import ImgCrop from './ImgCrop/imgcrop.js';
 
-// import { Document, Page } from 'react-pdf';
 
 class AccountProfile extends React.Component {
   constructor(props) {
@@ -17,20 +16,12 @@ class AccountProfile extends React.Component {
       showImgCrop: false,
       fileName: this.props.user.resume,
       attr_key: {},
+      major_list: [],
     };
-    this.tempService = {};
-
-    // This binding is necessary to make `this` work in the callback
-    this.initAttrChange = this.initAttrChange.bind(this);
-    this.confirmAttrChange = this.confirmAttrChange.bind(this);
-    this.cancelAttrChange = this.cancelAttrChange.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleHeader = this.handleHeader.bind(this);
-    this.handleResume = this.handleResume.bind(this);
-    this.onDocumentLoad = this.onDocumentLoad.bind(this);
-
+    this.timer = null;
   }
 
+// Conflict 1.:
   initAttrChange (key_name) {
     let curState = this.state;
     if (curState.showAddServiceModal) {
@@ -43,9 +34,17 @@ class AccountProfile extends React.Component {
     attr_keys[key_name] = "";
 
     this.setState({attr_key:attr_keys, showAddServiceModal:true});
+  componentDidMount() {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_major_list').then(res => {
+      if (res.data.code === 0) {
+        this.setState({major_list: res.data.list});
+      } else {
+        NotificationManager.error('无法获取专业列表', '错误');
+      }
+    });
   }
 
-  confirmAttrChange(e) {
+  confirmAttrChange = (e) => {
     e.preventDefault();
     // TODO: Process and upload data
     let curState = this.state;
@@ -56,24 +55,24 @@ class AccountProfile extends React.Component {
     for (const [key, value] of Object.entries(attr_keys)) {
       axios.post(process.env.REACT_APP_API_HOST + '/api/update_user',{uid:this.props.user.id,attr:key,val:value}).then(res => {
       if(res.data.code===0){
+
         this.props.user[key] = value;
         this.props.onUpdate(this.props.user);
         delete curState.attr_key[key];
         this.setState({curState})
       }
-      else{
-        console.log("at key")
-        console.log(key);
-        alert(res.data.errMsg);
-        //TODO: Error Handling
+
+      else {
+        NotificationManager.error('资料更新失败', '错误');
       }
     });
-    }
-  }
+  };
+ }
 
-  handleResume(e) {
-    var fileType = e.target.files[0]["type"];
-    var validTypes = ["application/pdf"];
+
+  handleResume = (e) => {
+    const fileType = e.target.files[0]["type"];
+    const validTypes = ["application/pdf"];
     if (validTypes.indexOf(fileType) < 0) {
       // invalid file type code goes here.
       NotificationManager.error('简历格式必须为pdf', '错误');
@@ -86,56 +85,48 @@ class AccountProfile extends React.Component {
     let handler = this;
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/file/general_upload', data).then(res => {
-      if(res.data.code === 0){
-        console.log("Res is 0, successfully upload resume");
+      if (res.data.code === 0) {
         this.setState({fileName: res.data.url});
 
         handler.props.user.resume = res.data.url;
         handler.props.onUpdate(handler.props.user);
-        console.log(handler.props.user)
-        console.log("Hmm")
-        axios.post(process.env.REACT_APP_API_HOST + '/api/update_user',{uid:this.props.user.id,attr:'resume',val:res.data.url}).then(res => {
-          if(res.data.code===0){
-            console.log("Res is 0, successfully changed image")
-            NotificationManager.success('简历上传成功','完成啦');
-          }
-          else{
-            alert(res.data.errMsg);
-            //TODO: Error Handling
-          }
-        });
 
+        axios.post(process.env.REACT_APP_API_HOST + '/api/update_user', {
+          uid: this.props.user.id,
+          attr: 'resume',
+          val: res.data.url
+        }).then(res => {
+          if (res.data.code === 0)
+            NotificationManager.success('简历上传成功', '完成啦');
+          else
+            NotificationManager.error('资料更新失败', '错误');
+        });
       }
-      else{
-        // TODO: error handling
-        alert('PDF Error');
+      else {
+        NotificationManager.error('简历上传失败', '错误');
       }
     });
-  }
+  };
 
-  onDocumentLoad = ({ numPages }) => {
-  this.setState({ numPages });
-  this.setState({pageNumber: 1});
-}
 
-  handleHeader(e){
+  handleHeader = (e) => {
     // check legit files
-    var fileType = e.target.files[0]["type"];
-    var ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
+    const fileType = e.target.files[0]["type"];
+    const ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
     if (ValidImageTypes.indexOf(fileType) < 0) {
       // invalid file type code goes here.
       NotificationManager.error('必须是图片文件', '错误');
       return;
     }
 
-    var file = e.target.files[0];
-    var fileReader = new FileReader();
-    var handler = this;
+    const file = e.target.files[0];
+    const fileReader = new FileReader();
+    const handler = this;
     fileReader.onloadend = function (e2) {
       handler.setState({showImgCrop: true, imgCropDataUrl: e2.target.result, imgCropName: file.name})
     };
     fileReader.readAsDataURL(file);
-  }
+  };
 
   onSuccessCrop = (img) => {
     if (!img) {
@@ -147,29 +138,49 @@ class AccountProfile extends React.Component {
     let handler = this;
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/file/general_upload', data).then(res => {
-      if(res.data.code === 0){
-        console.log(res.data);
-        console.log("Calling upload")
+      if (res.data.code === 0) {
         handler.props.user.profile_pic = res.data.url;
-        this.setState({showImgCrop: false})
+        this.setState({showImgCrop: false});
         handler.props.onUpdate(handler.props.user);
-        axios.post(process.env.REACT_APP_API_HOST + '/api/update_user',{uid:this.props.user.id,attr:'profile_pic',val:res.data.url}).then(res => {
-          if(res.data.code===0){
-            console.log("Res is 0, successfully changed image")
-            NotificationManager.success('头像上传成功','上传成功');
+        axios.post(process.env.REACT_APP_API_HOST + '/api/update_user', {
+          uid: this.props.user.id,
+          attr: 'profile_pic',
+          val: res.data.url
+        }).then(res => {
+          if (res.data.code === 0) {
+            NotificationManager.success('头像上传成功', '上传成功');
           }
-          else{
-            alert(res.data.errMsg);
-            //TODO: Error Handling
+          else {
+            NotificationManager.error('资料更新失败', '错误');
           }
         });
       }
-      else{
-        // TODO: error handling
-        alert('Header Error');
+      else {
+        NotificationManager.error('头像上传失败', '错误');
       }
     });
-  }
+  };
+
+  handleSearchChange = (e, {searchQuery}) =>{
+    clearTimeout(this.timer);
+
+    this.setState({majorQuery: searchQuery});
+
+    this.timer = setTimeout(this.triggerSearch, 500);
+  };
+
+  triggerSearch = () =>{
+    this.setState({isLoadingMajorList : true});
+
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_major_list', {query: this.state.majorQuery}).then(res => {
+      if (res.data.code === 0) {
+        this.setState({major_list: res.data.list});
+      } else {
+        NotificationManager.error('无法获取专业列表', '错误');
+      }
+      this.setState({isLoadingMajorList : false})
+    });
+  };
 
   cancelAttrChange(key_name) {
     //e.preventDefault();
@@ -434,15 +445,11 @@ class AccountProfile extends React.Component {
               </div>
 
 
-            </div>
+      </div>
 
 
-        );
-    }
+    );
+  }
 }
-
-AccountProfile.contextTypes = {
-    router: PropTypes.object
-};
 
 export default AccountProfile;
