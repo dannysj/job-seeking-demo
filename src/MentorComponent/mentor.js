@@ -124,6 +124,10 @@ class Mentor extends Component {
 
   render() {
     //var blackout = this.state.search ? "blackout " : "";
+    const companyIcon = '/icons/company.png'
+    const schoolIcon = '/icons/school.png'
+    const posiIcon = '/icons/position.png'
+    const ageIcon = '/icons/age.png'
     return (
       <div className="flex-container">
         <div className="ui top attached tabular menu top-bar">
@@ -213,6 +217,7 @@ class Mentor extends Component {
                             Offer公司
                           </Table.Cell>
                           <Table.Cell>
+                            <img className="title-icon"  alt="position" src={companyIcon} ></img>
                               {el.offer_company}
                           </Table.Cell>
                         </Table.Row>
@@ -221,6 +226,7 @@ class Mentor extends Component {
                             Offer职位
                           </Table.Cell>
                           <Table.Cell>
+                          <img className="title-icon"  alt="position" src={posiIcon} ></img>
                               {el.offer_title}
                           </Table.Cell>
                         </Table.Row>
@@ -229,6 +235,7 @@ class Mentor extends Component {
                             院校
                           </Table.Cell>
                           <Table.Cell>
+                          <img className="title-icon"  alt="position" src={schoolIcon} ></img>
                               {el.college_name}
                           </Table.Cell>
                         </Table.Row>
@@ -237,6 +244,7 @@ class Mentor extends Component {
                             专业
                           </Table.Cell>
                           <Table.Cell>
+                          <img className="title-icon"  alt="position" src={ageIcon} ></img>
                               {el.major}
                           </Table.Cell>
                         </Table.Row>

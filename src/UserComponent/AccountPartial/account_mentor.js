@@ -47,7 +47,7 @@ class AccountMentor extends React.Component {
 
     render() {
         return(
-          <div>
+          <div className="account-inner-spacing">
             {this.state.mentors.length===0 && '您暂时并无导师签约'}
             {this.state.mentors.map(el => (
               <div className="app-mentor-container" key={el.id}>

@@ -155,43 +155,43 @@ class App extends Component {
                 </div>
               </div>
               <div className="item account-status">
-                <Icon name='graduation'  color="blue" className="menu-icon" />
+                <Icon name='graduation'  color="blue" className="tab menu-icon" />
                 {this.state.user.ismentor ? "Mentor":"Mentee"}
               </div>
 
               {
                 this.state.user.ismentor ? (
                    <NavLink to="/account/balance">
-                    <Icon name='dollar' className="menu-icon" />{this.state.user.balance}
+                    <Icon name='dollar' className="tab menu-icon" />{this.state.user.balance}
                   </NavLink>
                 ) : (<div></div>)
               }
 
 
               <NavLink to="/account/">
-              <Icon name='info'  className="menu-icon" />
+              <Icon name='info'  className="tab menu-icon" />
                 基础资料
               </NavLink>
               {
                 this.state.user.ismentor ? (<div>
                    <NavLink to="/account/mentor_edit">
-                     <Icon name='edit'  className="menu-icon" />编辑导师档案
+                     <Icon name='edit'  className="tab menu-icon" />编辑导师档案
                     </NavLink>
                     <NavLink to="/account/service">
-                      <Icon name='users'  className="menu-icon" />我的Mentee
+                      <Icon name='users'  className="tab menu-icon" />我的Mentee
                     </NavLink>
                     <NavLink to="/account/create_article">
-                      <Icon name='write'  className="menu-icon" />编写干货
+                      <Icon name='write'  className="tab menu-icon" />编写干货
                     </NavLink></div>):(<div>
                     <NavLink to="/account/mentor">
-                     <Icon name='user secret'  className="menu-icon" />我的导师
+                     <Icon name='user secret'  className="tab menu-icon" />我的导师
                    </NavLink>
                     <NavLink to="/account/apply">
-                      <Icon name='add user'  className="menu-icon" />申请成为导师
+                      <Icon name='add user'  className="tab menu-icon" />申请成为导师
                     </NavLink></div>)
               }
               <NavLink to="/account/notification">
-                <Icon name='chat' className="menu-icon" />
+                <Icon name='chat' className="tab menu-icon" />
                 系统通知
                 {
                   (!isNaN(this.state.user.num_notifications) && this.state.user.num_notifications!=0) &&
@@ -204,11 +204,11 @@ class App extends Component {
               {
                 this.state.user.isadmin && (
                   <NavLink to="/account/admin">
-                    <Icon name='user secret'  className="menu-icon" />管理员页面
+                    <Icon name='user secret'  className="tab menu-icon" />管理员页面
                   </NavLink>)
               }
               <NavLink to="/account/logout">
-                <Icon name='log out'  className="menu-icon" />注销
+                <Icon name='log out'  className="tab menu-icon" />注销
               </NavLink>
             </div>
           ) : (<div></div>)
@@ -218,7 +218,7 @@ class App extends Component {
           <Switch onChange={this.onRouteChange}>
             <Route path='/login' render={()=><Login onSuccess={this.updateUser}></Login>} />
             <Route path='/signup' render={()=><Signup onSuccess={this.updateUser}></Signup>}  />
-            <Route path='/account' render={()=><Account user={this.state.user} onSuccess={this.updateUser}></Account>} />
+            <Route path='/account' render={()=><Account user={this.state.user} onSuccess={this.updateUser} width={this.state.width} height={this.state.height}></Account>} />
             <Route path="/mentor/:mid" render={(props)=><MentorDetail {...props} user={this.state.user}></MentorDetail>} />
             <Route path='/mentor' component={Mentor}/>
             <Route path='/news/:nid' component={NewsDetail}/>

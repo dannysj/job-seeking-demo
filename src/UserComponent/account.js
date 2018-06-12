@@ -35,6 +35,8 @@ class Account extends Component {
       <div className="back-container">
       <div className="ui container account-main-container">
         <div className="ui grid">
+        {
+          (this.props.width > 767) ? (
           <div className="four wide column account-side-container">
             <div className="ui vertical fluid tabular menu account-side-no-container">
               <div className="account-status">
@@ -88,8 +90,9 @@ class Account extends Component {
                 <Icon name='log out'  className="menu-icon" />注销
               </NavLink>
             </div>
-          </div>
-          <div className="twelve wide stretched column">
+          </div>) : (<div></div>)
+          }
+          <div className= {((this.props.width > 767) ? "twelve" : "sixteen") + " wide stretched column " }>
             <div className="account-partial-container">
               {this.props.user.isactivated ? (
                 <Switch onChange={this.onRouteChange}>

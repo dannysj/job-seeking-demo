@@ -554,6 +554,10 @@ font-size: 2em;
   font-size: 1.3em;
 }
 
+.ui.basic.table tbody tr td .title-icon {
+  display: none;
+}
+
 @media screen and (max-width: 991px) {
 
   .mentor-detail-info-container {
@@ -609,6 +613,20 @@ font-size: 2em;
 }
 
 @media screen and (max-width: 767px) {
+  .ui.basic.table tbody tr {
+    border-bottom: none !important;
+    box-shadow: none !important;
+    padding-top: 0;
+    padding-bottom: 0.5em;
+  }
+  .ui.basic.table tbody tr td:nth-child(1) {
+      display: none !important;
+    }
+    .ui.basic.table tbody tr td .title-icon {
+      height: auto;
+      display: inline-block;
+      margin-right: 1em;
+    }
   .resume-holder {
     width: 100%;
     flex: 1;

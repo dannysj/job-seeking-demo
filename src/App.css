@@ -246,15 +246,19 @@ input[type=checkbox].reveal-um:checked ~ .user-menu {
 
 	.menu-icon {
 	  cursor:pointer;
-	  position: absolute;
 	  height: 50px;
 	  width: 50px;
 	  display: flex !important;
 		left: 25px;
 		bottom: 2px;
 	  justify-content: center;
+		position: absolute;
 
+	}
 
+	.tab.menu-icon {
+		height: auto !important;
+		position: inherit;
 	}
 
 	.bread-top {
@@ -326,4 +330,5 @@ input[type=checkbox].reveal-um:checked ~ .user-menu {
 		padding-top: 65px;
 
 	}
+
 }

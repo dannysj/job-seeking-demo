@@ -187,7 +187,7 @@ class AccountApply extends React.Component {
 
     return (
       !this.state.statusChecked?("请稍后..."):(
-        <div>
+        <div className="account-inner-spacing">
         <NotificationContainer />
         <div className={modalClassName}>
           <i className="close icon"/>

@@ -179,7 +179,7 @@
 }
 
 .img-crop-item {
-  width: 300px;
+  width: 60%;
   margin: 1.5em 0em;
 }
 
@@ -194,6 +194,11 @@
 }
 .item.center {
   justify-content: center;
+}
+
+.account-inner-spacing {
+  margin-left: 0;
+  margin-right: 1em;
 }
 
 .add-service-form-container {
@@ -264,4 +269,10 @@
   cursor: pointer;
   pointer-events: none;
   transform: translate(-50%, -50%);
+}
+
+@media screen and (max-width: 767px) {
+  .account-partial-container {
+    margin-left: 0;
+  }
 }

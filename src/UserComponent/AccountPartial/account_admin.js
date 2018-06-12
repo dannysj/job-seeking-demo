@@ -125,7 +125,7 @@ class AccountAdmin extends React.Component {
       return (<h1>您没有权限访问本页，别给老子瞎搞</h1>);
     }
     return(
-      <div>
+      <div className="account-inner-spacing">
         <Segment>
           <h4>编写干货:</h4>
           标题: {' '}<Input placeholder='标题' onChange={this.handleTitleChange}/>
