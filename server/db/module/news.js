@@ -23,7 +23,8 @@ exports.getNewsDetail = (nid, callback) => {
       n.type as type,
       to_char(n.publish_time,'DD Mon HH24:MI') as publish_time,
       n.thumbnail as thumbnail,
-      n.content as content
+      n.content as content,
+      n.author_id as author_id
     from news n, users u
     where n.author_id = u.id
       and n.id = $1`;

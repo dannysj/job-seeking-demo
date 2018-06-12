@@ -3,6 +3,7 @@ import {Sidebar, Table, Checkbox, Segment, Menu, Icon, Button, Dropdown, Divider
 import {Link} from 'react-router-dom';
 import './mentor.css';
 import axios from "axios/index";
+//import { createFollowerFolloweeRelationship } from '../../server/db/module/follow_relation';
 
 class Mentor extends Component {
   constructor(props) {
@@ -17,15 +18,36 @@ class Mentor extends Component {
         "Colleges": []
       },
       filterBarShown: false,
+      followees: [],
     };
-
+    this.uid = 0;
     this.handleMajorChange = this.handleMajorChange.bind(this);
     this.handleCollegeChange = this.handleCollegeChange.bind(this);
     this.handleClearFilter = this.handleClearFilter.bind(this);
     this.filterBarPressed = this.filterBarPressed.bind(this);
     this.handleRemoveButton = this.handleRemoveButton.bind(this);
+    this.renderFollowButton = this.renderFollowButton.bind(this);
+    this.follow_action = this.follow_action.bind(this);
+    this.unfollow_action = this.unfollow_action.bind(this);
+    /*axios.post(process.env.REACT_APP_API_HOST + '/api/get_followees_by_uid', {account: 0}.then( 
+      res =>{
+        if (res.data.code === 0){
+          this.setState({
+            followees = res.data.followees 
+          })
+        }
+        else{
+          this.setState ({
+            followees = []
+          })
+        }
+        }
+      ) 
+    )*/
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_list', {"account_uid": 0} ).then(res => {
+    
+
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_list' ).then(res => {
       if (res.data.code === 0) {
         let majorList = [];
         let collegeList = [];
@@ -47,7 +69,8 @@ class Mentor extends Component {
         this.setState({
           mentors: res.data.list,
           majors: majors,
-          colleges: colleges
+          colleges: colleges,
+          followees: [1,4]
         });
 
 
@@ -119,6 +142,53 @@ class Mentor extends Component {
     let curState = this.state;
     curState.filterBarShown = !curState.filterBarShown;
     this.setState(curState);
+  }
+  
+ follow_action(uid, mentor_uid){
+    // axios.post(process.env.REACT_APP_API_HOST + '/api/create_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
+    //      .then(res=> ())
+    //      .catch(err => console.log(err))
+    console.log("Button click")
+    let followees = this.state.followees;
+    followees.push(mentor_uid);
+    this.setState({followees: followees})
+ }
+
+unfollow_action(uid, mentor_uid){
+    // axios.post(process.env.REACT_APP_API_HOST + '/api/delete_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
+    //      .then(res=> ())
+    //      .catch(err => console.log(err))
+    let followees = this.state.followees;
+    let index = followees.indexOf(mentor_uid)
+    if (index > -1){
+      followees.splice(index, 1);
+    }
+    this.setState({followees: followees})
+
+}
+
+  renderFollowButton(mentor_uid){
+    let followee_list = this.state.followees;
+    if (followee_list.includes(mentor_uid)){
+      return (
+        // Need add onclick to delete the mentor_uid to table and reset state
+        // onclick = {create}
+
+        <button class="ui active button" onClick={()=>this.unfollow_action(0, mentor_uid)} >
+        <i class="user icon"></i>
+        Unfollow
+        </button>
+      )
+    }
+    else {
+      // Need add onclick to add the mentor_uid to table and reset state
+      return (
+        <button class="ui active button" onClick={()=>this.follow_action(0, mentor_uid)}>
+        <i class="user icon"></i>
+        Follow
+        </button>
+      ) 
+    }
   }
 
   render() {
@@ -250,6 +320,7 @@ class Mentor extends Component {
                     <div>详情</div>
                   </div>
                   </Link>
+
                   <Link to={'/mentor/' + el.mid}>
                     <div className="btm-more">
                       <div className="">More</div>

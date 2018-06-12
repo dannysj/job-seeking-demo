@@ -185,7 +185,7 @@ class App extends Component {
             <Route path='/account' render={()=><Account user={this.state.user} onSuccess={this.updateUser}></Account>} />
             <Route path="/mentor/:mid" render={(props)=><MentorDetail {...props} user={this.state.user}></MentorDetail>} />
             <Route path='/mentor' component={Mentor}/>
-            <Route path='/news/:nid' component={NewsDetail}/>
+      <Route path='/news/:nid'   render={(props)=><NewsDetail {...props} loggedInUser={this.state.user}></NewsDetail> } />
             <Route path='/news' component={News}/>
             <Route path='/about' component={About}/>
             <Route path='/' component={Home}/>

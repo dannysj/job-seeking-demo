@@ -13,7 +13,7 @@ app.post('/api/create_news', function(req, res){
         return;
       }
   
-             
+    /*         
     db.findFollowersByAuthorID(req.body.author_id, (err, result) =>{
       followerIDs = result
       for (followerID in followerIDs){
@@ -29,7 +29,7 @@ app.post('/api/create_news', function(req, res){
   
         })
         }
-     } );
+     } );*/
       res.json({code: 0, nid: nid});
     });
   });
@@ -51,16 +51,18 @@ app.post('/api/create_news', function(req, res){
   
   app.post('/api/whether_followed', (req, res) => {
     // Request body. req.body{follower_uid, followee_uid"}
-    db.whether_followed(req.body.follower_uid, req.body.followee_uid,  (err, whether_followed) =>{
+    db.whether_followed(req.body.follower_uid, req.body.followee_uid,  (err, whetherFollowed) =>{
       if (err) {
         console.log(err);
         res.json({code: 1, errMsg: 'Database Error'});
         return;
       }
-      if (whether_followed){
-        res.json({whether_followed: "true"})
-      }else{ res.json({whether_followed: "false"}) }
+      if (whetherFollowed){
+        res.json({whetherFollowed: true})
+      }else{ res.json({whetherFollowed: false}) }
     }
   )
   
   })
+
+  module.exports = app;

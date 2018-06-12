@@ -37,9 +37,21 @@ app.post('/api/get_mentor_list', (req, res) => {
       res.json({code: 1});
       return;
     }
+
     res.json({code: 0, list: list});
   });
 });
+
+app.post('/api/get_followees_by_uid', (req, res) =>{
+  db.getFolloweesForFollower(req.body.uid, (err, list) => {
+      if (err){
+        console.log(err);
+        res.json({code:1});
+        return;
+      }
+      res.json({code:0, followees: list})
+  })
+} )
 
 app.post('/api/get_mentor_comment', (req, res) => {
   db.getMentorComment(req.body.mid, (err, list) => {

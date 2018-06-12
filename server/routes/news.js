@@ -1,17 +1,36 @@
 const db = require('../db/index.js');
 const express = require('express');
 const app = express.Router();
+const msg = require('../message.js');
+const messageDispatch = new msg(db);
 
-
-app.post('/api/create_news', function (req, res) {
+app.post('/api/create_news', function(req, res){
   // TODO: Authentication
-  req.body.type = 0; // News submitted by admin (Obselated, remove if necessary)
+  req.body.type=0; // News submitted by admin (Obselated, remove if necessary)
   db.createNews(req.body, (err, nid) => {
-    if (err) {
+    if(err){
       console.log(err);
       res.json({code: 1});
       return;
     }
+
+           
+  db.findFollowersByAuthorID(req.body.author_id, (err, result) =>{
+    followerIDs = result
+    for (followerID in followerIDs){
+      // Create message for each follower
+      db.getUserInfo(followerID, (err, followerAccount) => {
+
+           // userAccount contains: id, first, last, dob, ismentor, isadmin, email, 
+           followerName  = followerAccount.last + followerAccount.first 
+           messageDispatch.sendSystemMessage(followerID
+                                                                                       , "你关注的"+ followerName + "发了一篇文章 ：\"" + req.body.title + "\"。请阅读"
+                                                                                       , (err)=>  console.log(err)
+                                                                                       )
+
+      })
+      }
+   } );
     res.json({code: 0, nid: nid});
   });
 });

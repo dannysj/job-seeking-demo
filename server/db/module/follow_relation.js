@@ -30,16 +30,18 @@ exports.createFollowerFolloweeRelationship= (follower_uid, followee_uid, callbac
    //Check duplicate
    var attemptToSelectQuery = `SELECT * FROM follow_rel WHERE follower_uid = $1 AND followee_uid = $2;`;
    db.query(attemptToSelectQuery, [follower_uid, followee_uid])
-       .then(res => {if (res.rowCount == 0) return 1})
-       .catch(err => callback(err));
-    
-   // insert if none duplicate    
-    var insertRelQuery = `INSERT INTO follow_rel (follower_uid, followee_uid, timestamp) 
-           VALUES  ($1, $2, now()); `;
-   db.query(insertRelQuery, [follower_uid, followee_uid ] )
-       .then(res => callback(null) )
-       .catch(err => callback(err) );
-   }
+       .then(res => {if (res.rowCount == 0) {
+                   // insert if none duplicate    
+                   var insertRelQuery = `INSERT INTO follow_rel (follower_uid, followee_uid, timestamp) 
+                     VALUES  ($1, $2, now()); `;
+                   db.query(insertRelQuery, [follower_uid, followee_uid ] )
+                   .then(res => callback(null) )
+                   .catch(err => callback(err) );
+          }
+       }
+      )
+      .catch(err => callback(err));
+}
    
    exports.deleteFollowerFolloweeRelationship= (follower_uid, followee_uid)=>{
      var deleteQuery = "DELETE FROM follow_rel WHERE follower_uid = $1 AND followee_uid = $2";
@@ -57,7 +59,7 @@ exports.createFollowerFolloweeRelationship= (follower_uid, followee_uid, callbac
           .catch( err => callback(err, []) )
    }
    
-   exports.whether_followed = (follower_id, followee_uid, callback) =>{
+   exports.whetherFollowed = (follower_id, followee_uid, callback) =>{
      var selectFolloweesQuery = "SELECT * FROM follow_rel WHERE follower_uid = $1 AND followee_uid = $2";
      db.query(selectFolloweesQuery, [follower_id, followee_uid] )
        .then(res =>{
@@ -70,9 +72,16 @@ exports.createFollowerFolloweeRelationship= (follower_uid, followee_uid, callbac
        .catch(err => callback(err, false))
    }
    
-   exports.get_followers_for_followee  = (followee_id, dealWithFollowers) =>{
+   exports.getFollowersForFollowee  = (followee_id, dealWithFollowers) =>{
      var selectFollowersQuery = "SELECT follower_uid FROM  follow_rel WHERE followee_uid = $1";
      db.query(selectFollowersQuery, [followee_id])
        .then( res =>  dealWithFollowers(null, res.rows.map(dic=>dic["follower_uid"])) )
+       .catch(err => dealWithFollowers(err, []))
+   }
+
+   exports.getFolloweesForFollower = (followee_uid, callback)=>{
+    var selectFolloweesQuery = "SELECT followee_uid FROM  follow_rel WHERE follower_uid = $1";
+     db.query(selectFollowersQuery, [followee_uid])
+       .then( res =>  callback(null, res.rows.map(dic=>dic["followee_uid"])) )
        .catch(err => dealWithFollowers(err, []))
    }

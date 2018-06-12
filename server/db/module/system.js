@@ -102,7 +102,13 @@ exports.reset = function () {
       start_time timestamp,
       end_time timestamp,
       status int -- 1 for in progress, 2 for mentor confirmation, 3 for mentee confirmation
-    );`;
+    );
+    create table if not exists follow_rel(
+      follower_uid int references users(id), 
+      followee_uid int references users(id),
+      timestamp timestamp
+    );
+    `;
   db.query(query, function (err, result) {
     if (err) {
       console.log(err);
