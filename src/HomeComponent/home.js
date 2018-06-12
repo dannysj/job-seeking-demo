@@ -56,8 +56,10 @@ class Home extends Component {
           </Link>
           </div>
         </Container>
-        <br />
-        <br />
+        <Divider hidden clearing />
+        <Divider hidden clearing />
+        <Divider hidden clearing />
+      
         <Container>
           <div className="container-sideline">
               <div className="header-text">

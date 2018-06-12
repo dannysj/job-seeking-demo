@@ -5,6 +5,7 @@ import './mentor.css';
 import axios from "axios/index";
 //import { createFollowerFolloweeRelationship } from '../../server/db/module/follow_relation';
 
+
 class Mentor extends Component {
   constructor(props) {
     super(props);
@@ -193,6 +194,10 @@ unfollow_action(uid, mentor_uid){
 
   render() {
     //var blackout = this.state.search ? "blackout " : "";
+    const companyIcon = '/icons/company.png'
+    const schoolIcon = '/icons/school.png'
+    const posiIcon = '/icons/position.png'
+    const ageIcon = '/icons/age.png'
     return (
       <div className="flex-container">
         <div className="ui top attached tabular menu top-bar">
@@ -277,35 +282,39 @@ unfollow_action(uid, mentor_uid){
                     <div className="mentor-text">
                     <Table className="table-clean-border" basic='very'>
                       <Table.Body>
-                        <Table.Row>
+                        <Table.Row className="table-clean-row">
                           <Table.Cell>
                             Offer公司
                           </Table.Cell>
                           <Table.Cell>
+                            <img className="title-icon"  alt="position" src={companyIcon} ></img>
                               {el.offer_company}
                           </Table.Cell>
                         </Table.Row>
-                        <Table.Row>
+                        <Table.Row className="table-clean-row">
                           <Table.Cell>
                             Offer职位
                           </Table.Cell>
                           <Table.Cell>
+                          <img className="title-icon"  alt="position" src={posiIcon} ></img>
                               {el.offer_title}
                           </Table.Cell>
                         </Table.Row>
-                        <Table.Row>
+                        <Table.Row className="table-clean-row">
                           <Table.Cell>
                             院校
                           </Table.Cell>
                           <Table.Cell>
+                          <img className="title-icon"  alt="position" src={schoolIcon} ></img>
                               {el.college_name}
                           </Table.Cell>
                         </Table.Row>
-                        <Table.Row>
+                        <Table.Row className="table-clean-row">
                           <Table.Cell>
                             专业
                           </Table.Cell>
                           <Table.Cell>
+                          <img className="title-icon"  alt="position" src={ageIcon} ></img>
                               {el.major}
                           </Table.Cell>
                         </Table.Row>
@@ -334,6 +343,7 @@ unfollow_action(uid, mentor_uid){
           </Sidebar.Pusher>
         </Sidebar.Pushable>
         </div>
+
       </div>
     );
   }

@@ -35,14 +35,12 @@ class CreateArticle extends React.Component {
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/file/general_upload', data).then(res => {
       if(res.data.code === 0){
-        console.log(res.data);
         let curState = handler.state;
         curState['news']['thumbnail'] = res.data.url;
         handler.setState(curState);
       }
       else{
         NotificationManager.error('无法上传图片','错误');
-        console.log(res.data);
       }
     });
   }
@@ -58,7 +56,6 @@ class CreateArticle extends React.Component {
     data.author_id = this.props.user.id;
     axios.post(process.env.REACT_APP_API_HOST + '/api/create_news',data).then(res => {
       if(res.data.code===0){
-        console.log(res.data.nid);
         NotificationManager.success('上传成功，点击查看','成功',5000,()=>{
           this.context.router.history.push('/news/'+res.data.nid);
         });

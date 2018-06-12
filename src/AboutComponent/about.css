@@ -121,3 +121,8 @@
 .parallel.hori {
   flex-flow: column;
 }
+@media screen and (max-width: 767px) {
+	.parallax {
+		flex-flow: column;
+	}
+}

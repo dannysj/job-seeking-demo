@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Label } from 'semantic-ui-react';
+import { Label, Icon } from 'semantic-ui-react';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import axios from 'axios';
 import PropTypes from 'prop-types';
@@ -24,7 +24,6 @@ class Account extends Component {
 
   constructor (props) {
     super(props);
-    console.log(this.props);
   }
 
   render() {
@@ -33,47 +32,50 @@ class Account extends Component {
       return;
     }
     return (
-      <div className="ui container">
+      <div className="back-container">
+      <div className="ui container account-main-container">
         <div className="ui grid">
-          <div className="four wide column">
-            <div className="ui vertical fluid tabular menu">
-              <div>
+        {
+          (this.props.width > 767) ? (
+          <div className="four wide column account-side-container">
+            <div className="ui vertical fluid tabular menu account-side-no-container">
+              <div className="account-status">
+                <Icon name='graduation'  color="blue" className="menu-icon" />
                 您的账号状态：{this.props.user.ismentor ? "Mentor":"Mentee"}
               </div>
-              <Link to="/account/"><div className="item">
-                <img className="ui medium circular image" src={this.props.user.profile_pic}/>
-              </div></Link>
 
               <NavLink to="/account/">
+              <Icon name='info'  className="menu-icon" />
                 基础资料
               </NavLink>
               {
                 this.props.user.ismentor ? (
                    <div><NavLink to="/account/mentor_edit">
-                     编辑导师档案
+                     <Icon name='edit'  className="menu-icon" />编辑导师档案
                     </NavLink>
                     <NavLink to="/account/balance">
-                      我的余额
+                      <Icon name='dollar' className="menu-icon" />我的余额
                     </NavLink>
                     <NavLink to="/account/service">
-                      我的Mentee
+                      <Icon name='users'  className="menu-icon" />我的Mentee
                     </NavLink>
                     <NavLink to="/account/create_article">
-                      编写干货
+                      <Icon name='write'  className="menu-icon" />编写干货
                     </NavLink></div>):(
                     <div><NavLink to="/account/mentor">
-                     我的导师
+                     <Icon name='user secret'  className="menu-icon" />我的导师
                    </NavLink>
                     <NavLink to="/account/apply">
-                      申请成为导师
+                      <Icon name='add user'  className="menu-icon" />申请成为导师
                     </NavLink></div>)
               }
               <NavLink to="/account/notification">
+                <Icon name='chat' className="menu-icon" />
                 系统通知
                 {
                   (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications!=0) &&
-                    (<Label color='red' horizontal>
-                      {'('+this.props.user.num_notifications+'条未读通知)'}
+                    (<Label color='red' floating>
+                      {this.props.user.num_notifications}
                     </Label>)
                 }
 
@@ -81,15 +83,16 @@ class Account extends Component {
               {
                 this.props.user.isadmin && (
                   <NavLink to="/account/admin">
-                    管理员页面
+                    <Icon name='user secret'  className="menu-icon" />管理员页面
                   </NavLink>)
               }
               <NavLink to="/account/logout">
-                注销
+                <Icon name='log out'  className="menu-icon" />注销
               </NavLink>
             </div>
-          </div>
-          <div className="twelve wide stretched column">
+          </div>) : (<div></div>)
+          }
+          <div className= {((this.props.width > 767) ? "twelve" : "sixteen") + " wide stretched column " }>
             <div className="account-partial-container">
               {this.props.user.isactivated ? (
                 <Switch onChange={this.onRouteChange}>
@@ -110,6 +113,7 @@ class Account extends Component {
             </div>
           </div>
         </div>
+      </div>
       </div>
     );
   }

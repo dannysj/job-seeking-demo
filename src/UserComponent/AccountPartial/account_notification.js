@@ -21,7 +21,7 @@ class AccountNotification extends React.Component {
   retrieveMessage(){
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_system_notifications', {uid: this.props.user.id}).then(res => {
       if(res.data.code === 0){
-        console.log(res.data);
+
         this.setState({messages:res.data.messages});
       }
       else{
@@ -42,7 +42,7 @@ class AccountNotification extends React.Component {
 
   render() {
     return(
-      <div>
+      <div className="account-inner-spacing">
         {this.state.messages.map(el=>(
           <Segment>
             <Image avatar src='/img/icon.png' />

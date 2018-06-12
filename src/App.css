@@ -158,7 +158,7 @@ body {
 }
 
 .user-menu {
-	position: absolute;
+	position: fixed;
   z-index: 900;
   top: 55px;
   display: none;
@@ -173,14 +173,20 @@ body {
   right: 1em;
 }
 
-.user-menu > * {
-	padding: 1.5em 2em;
-}
-.user-menu > .item {
+.user-menu  .item {
 	display: flex;
 	flex-flow: row;
 	align-items: center;
-	justify-content: space-between;
+	padding: 1.5em 2em;
+}
+
+.item.name {
+	flex-flow: column;
+	border-bottom: 1px solid #e8e8e8;
+}
+
+.item > .user-name {
+	font-size: 1.2em;
 }
 input[type=checkbox] {
 	display: none;
@@ -240,15 +246,19 @@ input[type=checkbox].reveal-um:checked ~ .user-menu {
 
 	.menu-icon {
 	  cursor:pointer;
-	  position: absolute;
 	  height: 50px;
 	  width: 50px;
 	  display: flex !important;
 		left: 25px;
 		bottom: 2px;
 	  justify-content: center;
+		position: absolute;
 
+	}
 
+	.tab.menu-icon {
+		height: auto !important;
+		position: inherit;
 	}
 
 	.bread-top {
@@ -320,4 +330,5 @@ input[type=checkbox].reveal-um:checked ~ .user-menu {
 		padding-top: 65px;
 
 	}
+
 }

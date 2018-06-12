@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router';
-import { Icon } from 'semantic-ui-react';
+import { Icon, Label} from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import logo from './logo.svg';
 import axios from 'axios';
@@ -35,13 +35,13 @@ class App extends Component {
     this.user_menuToggled = this.user_menuToggled.bind(this);
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.updateCurrentPage = this.updateCurrentPage.bind(this);
+    this.toggle_outside = this.toggle_outside.bind(this);
 
     let uid = localStorage.getItem('uid');
     if(uid){
       this.state = {user: {id: uid}};
       axios.post(process.env.REACT_APP_API_HOST + '/api/get_user_info',{uid:uid}).then(res => {
         if(res.data.code==0){
-          console.log(res.data.user);
           this.updateUser(res.data.user);
         }
         else{
@@ -63,14 +63,20 @@ class App extends Component {
   }
 
   menuToggled(e) {
+    e.stopPropagation();
     let check = this.state.is_checked;
     this.setState({is_checked: !check});
   }
 
   user_menuToggled(e) {
+    e.stopPropagation();
     let check = this.state.is_user_checked;
     this.setState({is_checked: false, is_user_checked: !check});
     // FIXME:
+  }
+
+  toggle_outside(e) {
+    this.setState({is_checked: false, is_user_checked: false});
   }
 
   /* for window dimension purpose */
@@ -93,7 +99,7 @@ class App extends Component {
       <div className="app-flex">
         <input type="checkbox" id="reveal-menu" className="reveal-m" role="button" checked={this.state.is_checked ? "checked" : ""}></input>
         <input type="checkbox" id="reveal-user-menu" className="reveal-um" role="button" checked={this.state.is_user_checked ? "checked" : ""}></input>
-        <div className={"navbar "}>
+        <div className={"navbar "} onClick={this.toggle_outside}>
 
           <div className="item logo-item" >
             <img src="/img/icon.png" height="40px"></img>
@@ -137,52 +143,85 @@ class App extends Component {
         </div>
         {
           (this.state.user) ? (
-            <div className="user-menu">
-              <div className="item" onClick={this.user_menuToggled}>
-                {
+            <div className="user-menu" onClick={this.user_menuToggled}>
+              <div className="item name" >
+                <div className="user-name">{
                   this.state.user.last+this.state.user.first
+
+                }</div>
+                <div>
+                {
+                  this.state.user.email
                 }
+                </div>
+
+
               </div>
-              <div className="item">
-                <Icon link name='bitcoin' />
-                $ {this.state.user.balance}
+              <div className="item account-status">
+                <Icon name='graduation'  color="blue" className="tab menu-icon" />
+                {this.state.user.ismentor ? "Mentor":"Mentee"}
               </div>
-              <NavLink to="/account/" onClick={this.user_menuToggled}>
+
+              {
+                this.state.user.ismentor ? (
+                   <NavLink to="/account/balance">
+                    <Icon name='dollar' className="tab menu-icon" />{this.state.user.balance}
+                  </NavLink>
+                ) : (<div></div>)
+              }
+
+
+              <NavLink to="/account/">
+              <Icon name='info'  className="tab menu-icon" />
                 基础资料
               </NavLink>
-              <NavLink to="/account/mentor" onClick={this.user_menuToggled}>
-                我的导师
-              </NavLink>
-              <NavLink to="/account/balance" onClick={this.user_menuToggled}>
-                我的余额
-              </NavLink>
               {
-                !this.state.user.ismentor ? (
-                  <NavLink to="/account/apply" onClick={this.user_menuToggled}>
-                    成为导师
-                  </NavLink>) : (
-                  <NavLink to="/account/service" onClick={this.user_menuToggled}>
-                    我的服务
-                  </NavLink>)
+                this.state.user.ismentor ? (<div>
+                   <NavLink to="/account/mentor_edit">
+                     <Icon name='edit'  className="tab menu-icon" />编辑导师档案
+                    </NavLink>
+                    <NavLink to="/account/service">
+                      <Icon name='users'  className="tab menu-icon" />我的Mentee
+                    </NavLink>
+                    <NavLink to="/account/create_article">
+                      <Icon name='write'  className="tab menu-icon" />编写干货
+                    </NavLink></div>):(<div>
+                    <NavLink to="/account/mentor">
+                     <Icon name='user secret'  className="tab menu-icon" />我的导师
+                   </NavLink>
+                    <NavLink to="/account/apply">
+                      <Icon name='add user'  className="tab menu-icon" />申请成为导师
+                    </NavLink></div>)
               }
+              <NavLink to="/account/notification">
+                <Icon name='chat' className="tab menu-icon" />
+                系统通知
+                {
+                  (!isNaN(this.state.user.num_notifications) && this.state.user.num_notifications!=0) &&
+                    (<Label color='red' floating>
+                      {this.state.user.num_notifications}
+                    </Label>)
+                }
+
+              </NavLink>
               {
                 this.state.user.isadmin && (
-                  <NavLink to="/account/admin" onClick={this.user_menuToggled}>
-                    管理员页面
+                  <NavLink to="/account/admin">
+                    <Icon name='user secret'  className="tab menu-icon" />管理员页面
                   </NavLink>)
               }
-              <NavLink to="/account/logout" onClick={this.user_menuToggled}>
-                注销
+              <NavLink to="/account/logout">
+                <Icon name='log out'  className="tab menu-icon" />注销
               </NavLink>
             </div>
           ) : (<div></div>)
         }
 
-        <div className="site-content">
+        <div className="site-content" onClick={this.toggle_outside}>
           <Switch onChange={this.onRouteChange}>
             <Route path='/login' render={()=><Login onSuccess={this.updateUser}></Login>} />
             <Route path='/signup' render={()=><Signup onSuccess={this.updateUser}></Signup>}  />
-            <Route path='/account' render={()=><Account user={this.state.user} onSuccess={this.updateUser}></Account>} />
+            <Route path='/account' render={()=><Account user={this.state.user} onSuccess={this.updateUser} width={this.state.width} height={this.state.height}></Account>} />
             <Route path="/mentor/:mid" render={(props)=><MentorDetail {...props} user={this.state.user}></MentorDetail>} />
             <Route path='/mentor' component={Mentor}/>
       <Route path='/news/:nid'   render={(props)=><NewsDetail {...props} loggedInUser={this.state.user}></NewsDetail> } />

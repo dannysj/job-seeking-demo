@@ -13,7 +13,7 @@
 }
 
 .mentor-overview_container {
-  width: 30%;
+  width: 20%;
   display: inline-block;
   margin: 0.5em;
   position: relative;
@@ -64,13 +64,14 @@
   text-align: center;
   display: inline-block;
   margin: 0.5em;
-  border: 0.1em #a0a0a0 solid;
+
 }
 
 .news-overview-picture {
   width: 100%;
-  height: 70%;
+  height: 50%;
   border-radius: 1px;
+  object-fit: cover;
 }
 
 .news-overview-text {
@@ -116,14 +117,14 @@
 }
 
 .news-overview-stamp {
-  text-align: right;
+  text-align: left;
   font-size: 1em;
   color: #a0a0a0;
   margin-top: 1em;
 }
 .news-overview-second{
-  margin: 1em;
-
+  margin: 1em 0em;
+  text-align: left;
 }
 
 .news-overview-text > * {
@@ -156,7 +157,7 @@
     text-align: center;
     display: inline-block;
     margin: 0.5em;
-    border: 0.1em #a0a0a0 solid;
+    
   }
   .home-title {
     font-size: 0.8em;

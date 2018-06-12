@@ -5,6 +5,9 @@
 
 .user-inline > img {
   margin-left: 1em;
+  height: 35px !important;
+  width: 35px !important;
+  object-fit: cover;
 }
 
 .large-screen {
@@ -45,4 +48,5 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor:pointer;
 }

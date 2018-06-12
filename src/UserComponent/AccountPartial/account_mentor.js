@@ -20,7 +20,6 @@ class AccountMentor extends React.Component {
     let handler = this;
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_rel_mentors', {uid: this.props.user.id}).then(res => {
       if(res.data.code === 0){
-        console.log(res.data);
         handler.setState({mentors:res.data.mentors});
       }
       else{
@@ -35,7 +34,6 @@ class AccountMentor extends React.Component {
     let handler = this;
     axios.post(process.env.REACT_APP_API_HOST + '/api/mentee_confirm', {uid: this.props.user.id, mid: mid}).then(res => {
       if(res.data.code === 0){
-        console.log(res.data);
         handler.updateInfo();
       }
       else{
@@ -49,7 +47,7 @@ class AccountMentor extends React.Component {
 
     render() {
         return(
-          <div>
+          <div className="account-inner-spacing">
             {this.state.mentors.length===0 && '您暂时并无导师签约'}
             {this.state.mentors.map(el => (
               <div className="app-mentor-container" key={el.id}>

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import {Button, Dropdown, Icon, Image} from 'semantic-ui-react';
 import 'react-notifications/lib/notifications.css';
@@ -14,16 +15,25 @@ class AccountProfile extends React.Component {
       showAddServiceModal: false,
       showImgCrop: false,
       fileName: this.props.user.resume,
-      attr_key: '',
-      attr_val: '',
-      attr_display_name: '',
+      attr_key: {},
       major_list: [],
-      editMode: false,
-      isLoadingMajorList: false
     };
     this.timer = null;
   }
 
+// Conflict 1.:
+  initAttrChange (key_name) {
+    let curState = this.state;
+    if (curState.showAddServiceModal) {
+
+    }
+    let attr_keys = curState.attr_key;
+    let list = curState.attr_list;
+
+
+    attr_keys[key_name] = "";
+
+    this.setState({attr_key:attr_keys, showAddServiceModal:true});
   componentDidMount() {
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_major_list').then(res => {
       if (res.data.code === 0) {
@@ -34,34 +44,31 @@ class AccountProfile extends React.Component {
     });
   }
 
-  initAttrChange = (key_name, display_name) => {
-    this.setState({attr_key: key_name, attr_val: '', attr_display_name: display_name, showAddServiceModal: true});
-  };
-
   confirmAttrChange = (e) => {
     e.preventDefault();
-    this.setState({showAddServiceModal: false, editMode: false});
-    const key = this.state.attr_key;
-    const value = this.state.attr_val;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/update_user', {
-      uid: this.props.user.id,
-      attr: this.state.attr_key,
-      val: this.state.attr_val
-    }).then(res => {
-      if (res.data.code === 0) {
+    // TODO: Process and upload data
+    let curState = this.state;
+    let attr_keys = curState.attr_key;
+    curState.showAddServiceModal = false
+    this.setState({showAddServiceModal : false});
+    //FIXME: Fixe bunches data update
+    for (const [key, value] of Object.entries(attr_keys)) {
+      axios.post(process.env.REACT_APP_API_HOST + '/api/update_user',{uid:this.props.user.id,attr:key,val:value}).then(res => {
+      if(res.data.code===0){
+
         this.props.user[key] = value;
         this.props.onUpdate(this.props.user);
+        delete curState.attr_key[key];
+        this.setState({curState})
       }
+
       else {
         NotificationManager.error('资料更新失败', '错误');
       }
     });
   };
+ }
 
-  cancelAttrChange = (e) => {
-    e.preventDefault();
-    this.setState({showAddServiceModal: false});
-  };
 
   handleResume = (e) => {
     const fileType = e.target.files[0]["type"];
@@ -154,11 +161,6 @@ class AccountProfile extends React.Component {
     });
   };
 
-  handleInputChange = (e, _) => {
-    this.setState({attr_val: e.target.value})
-  };
-
-
   handleSearchChange = (e, {searchQuery}) =>{
     clearTimeout(this.timer);
 
@@ -180,173 +182,267 @@ class AccountProfile extends React.Component {
     });
   };
 
-  confirmMajorChange = (e) => {
-    e.preventDefault();
-    this.setState({showAddServiceModal: false, editMode: false});
-    const key = this.state.attr_key;
-    const value = this.state.attr_val;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/update_user', {
-      uid: this.props.user.id,
-      attr: this.state.attr_key + "_id",
-      val: this.state.attr_val
-    }).then(res => {
-      if (res.data.code === 0) {
-        this.props.user[key] = this.state.major_list.find(e => e.value === value).text;
-        this.props.onUpdate(this.props.user);
-      }
-      else {
-        NotificationManager.error('资料更新失败', '错误');
-      }
-    });
-  };
+  cancelAttrChange(key_name) {
+    //e.preventDefault();
+    let curState = this.state;
+    curState.showAddServiceModal = false;
+    delete curState.attr_key[key_name];
+    this.setState(curState);
+  }
 
-  render() {
-    let modalClassName = 'ui modal';
-    if (this.state.showAddServiceModal) {
-      modalClassName += ' add-service-container';
-    }
+  handleInputChange(e, data) {
+    let attr_keys = this.state.attr_key;
+    attr_keys[e.target.name] = e.target.value
+    this.setState({attr_key:attr_keys});
+  }
 
-    return (
-      <div className="ui large celled list">
-        <NotificationContainer/>
-        <div className={modalClassName}>
-          <i className="close icon"/>
-          <div className="header">
-            {this.state.attr_display_name}
-          </div>
-          <div className="add-service-form-container">
-            <form className="ui form">
-              <div className="field">
-                <label>{this.state.attr_display_name}：</label>
-                <input type="text" name="name" value={this.state.attr_val} onChange={this.handleInputChange}/>
+    render() {
+        return(
+            <div className="ui large celled list">
+              <NotificationContainer />
+                <div className="category">
+                  <div className="header">
+                    <div className="title">
+                      基础资料
+                    </div>
+                    <div className="subtitle">
+                      基础设定资料、账号安全
+                    </div>
+                  </div>
+                </div>
+                <div className="category">
+                <div className="subheader">
+                  <div className="title">
+                    账户设置
+                  </div>
+                  <div className="subtitle">
+                    名字、密码、专业、自我介绍以及头像设置
+                  </div>
+                </div>
+              <div className="item center">
+                <div className="img-crop-item">
+                {this.state.showImgCrop ? ( <ImgCrop dataUrl={this.state.imgCropDataUrl} fileName={this.state.imgCropName} onSuccess={this.onSuccessCrop}/> )
+                  :
+                  ( <div className="imgContainer">
+                    <div className="image-text-centered">点击更换头像</div>
+                    <label className="header-input-label" htmlFor="header-input">
+                      <Image className="center-profile" small bordered src={this.props.user.profile_pic} />
+                    </label>
+                    <input type="file" accept="image/*" className="input-file" id="header-input" onChange={this.handleHeader} />
+                    </div>
+                  )}
+                  </div>
               </div>
-            </form>
-          </div>
-          <div className="actions">
-            <div className="ui black deny button" onClick={this.cancelAttrChange}>
-              取消
-            </div>
-            <div className="ui positive right labeled icon button" onClick={this.confirmAttrChange}>
-              确认
-              <i className="checkmark icon"/>
-            </div>
-          </div>
-        </div>
-        <div className="item">
-          {this.state.showImgCrop ?
-            (<ImgCrop dataUrl={this.state.imgCropDataUrl} fileName={this.state.imgCropName}
-                      onSuccess={this.onSuccessCrop}/>)
-            :
-            (<div className="imgContainer">
-                <div className="image-text-centered">点击更换头像</div>
-                <label className="header-input-label" htmlFor="header-input">
-                  <Image className="center-profile" small bordered src={this.props.user.profile_pic}/>
-                </label>
-                <input type="file" accept="image/*" className="input-file" id="header-input"
-                       onChange={this.handleHeader}/>
+              <div className={"item " + ((this.state.attr_key.hasOwnProperty('last')) ? "is-expanded" : "")}>
+                <div className="content">
+                  <div className="inner-content">
+                    <div className="header">姓{' '}</div>
+                    <div className="info">{this.props.user.last}</div>
+                  </div>
+                  <div className="inner-content">
+                    <div className="header">名</div>
+                    <div className="info">{this.props.user.first}</div>
+                  </div>
+                  <div className="edit-toggle"  onClick={()=> {
+                    this.initAttrChange('last');
+                    this.initAttrChange('first');
+                  }}>
+                    编辑
+                  </div>
+                </div>
+                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('last')) ? "is-expanded" : "")}>
+                  <div className="form-text">
+                    <input type="text" name="last" value={this.state.attr_key.last} onChange={this.handleInputChange}/>
+                    <input type="text" name="first" value={this.state.attr_key.first} onChange={this.handleInputChange}/>
+                    <div className="padding-text"></div>
+                  </div>
+                  <div className="actions">
+                    <div className="ui gray deny button" onClick={() => {
+                      this.cancelAttrChange("last");
+                      this.cancelAttrChange("first");
+                    }}>
+                      取消
+                    </div>
+                    <div className="ui blue right labeled icon button" onClick={this.confirmAttrChange}>
+                      确认
+                      <i className="checkmark icon"/>
+                    </div>
+                  </div>
+                </div>
               </div>
-            )}
-        </div>
-        <div className="item">
-          <div className="content">
-            <div className="header">姓{' '}
-              <Button floated='right' onClick={() => this.initAttrChange('last', '姓')}>
-                <Icon name='write' size='small'/>
-              </Button>
-            </div>
-            <div className="info">{this.props.user.last}</div>
-          </div>
-        </div>
-        <div className="item">
-          <div className="content">
-            <div className="header">名
-              <Button floated='right' onClick={() => this.initAttrChange('first', '名')}>
-                <Icon name='write' size='small'/>
-              </Button>
-            </div>
-            <div className="info">{this.props.user.first}</div>
-          </div>
-        </div>
 
-        <div className="item">
-          <div className="content">
-            <div className="header">Email
-              <Button floated='right' onClick={() => this.initAttrChange('email', 'Email')}>
-                <Icon name='write' size='small'/>
-              </Button>
-            </div>
-            <div className="info">{this.props.user.email}</div>
-          </div>
-        </div>
+              <div className={"item " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")} >
+                <div className="content">
+                  <div className="inner-content">
+                  <div className="header">专业</div>
+                  <div className="info">{this.props.user.major ? this.props.user.major : '暂无资料'}</div>
+                  </div>
+                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('major')}>
+                    编辑
+                  </div>
 
-        <div className="item">
-          <div className="content">
-            <div className="header">微信
-              <Button floated='right' onClick={() => this.initAttrChange('wechat', '微信')}>
-                <Icon name='write' size='small'/>
-              </Button>
-            </div>
-            <div className="info">{this.props.user.wechat ? this.props.user.wechat : '暂无资料'}</div>
-          </div>
-        </div>
+                </div>
 
-        <div className="item">
-          <div className="content">
-            <div className="header">
-              专业
-              {this.state.editMode ?
-                <Button floated='right' onClick={this.confirmMajorChange}>
-                  <i className="checkmark icon positive ui"/>
-                </Button>
-                :
-                <Button floated='right' onClick={() => this.setState({attr_key: 'major', editMode: true})}>
-                  <Icon name='write' size='small'/>
-                </Button>
-              }
-            </div>
-            <div className="info">
-              {this.state.attr_key === 'major' && this.state.editMode ?
-                <Dropdown name='major' placeholder='专业' search selection
-                          options={this.state.major_list}
-                          onChange={(e, data) => this.setState({attr_val: data.value})}
-                          selectedValue={this.state.attr_val}
-                          noResultsMessage={null}
-                          onSearchChange={this.handleSearchChange}
-                          loading={this.state.isLoadingMajorList}/>
-                :
-                this.props.user.major ? this.props.user.major : '暂无资料'
-              }
-            </div>
-          </div>
-        </div>
-        <div className="item">
-          <div className="content">
-            <div className="header">自我介绍
-              <Button floated='right' onClick={() => this.initAttrChange('cover', '自我介绍')}>
-                <Icon name='write' size='small'/>
-              </Button>
-            </div>
-            <div className="info">{this.props.user.cover ? this.props.user.cover : '暂无资料'}</div>
-          </div>
-        </div>
+                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")}>
+                  <div className="form-text">
 
-        <div className="item">
-          <div className="content">
-            <div className="header">简历</div>
-            <div className="info">{this.state.fileName ? '' : '暂无资料'}</div>
-            <label htmlFor="resume-input" className={this.state.fileName ? 'ui button positive' : 'ui button'}>
-              <i className="ui upload icon"/>
-              {this.state.fileName ? '成功' : '上传简历'}
-            </label>
+                      <Dropdown name='major' placeholder='专业' search selection
+                                options={this.state.major_list}
+                                onChange={(e, data) => this.setState({attr_key: {
+                                  major: data.value}})}
+                                selectedValue={this.state.attr_key.major}
+                                noResultsMessage={null}
+                                onSearchChange={this.handleSearchChange}
+                                loading={this.state.isLoadingMajorList}/>
 
-            <input type="file" accept="application/pdf" className="input-file" id="resume-input"
-                   onChange={this.handleResume}/>
+                    <div className="padding-text"></div>
 
-            {this.state.fileName &&
-            <embed className="resume-holder" src={this.state.fileName} width="100%" type='application/pdf'/>}
+                  </div>
+                  <div className="actions">
+                    <div className="ui gray deny button" onClick={() => {
+                      this.cancelAttrChange("major");
+                    }}>
+                      取消
+                    </div>
+                    <div className="ui blue right labeled icon button" onClick={this.confirmAttrChange}>
+                      确认
+                      <i className="checkmark icon"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className={"item " + ((this.state.attr_key.hasOwnProperty('cover')) ? "is-expanded" : "")}>
+                <div className="content">
+                  <div className="inner-content">
+                  <div className="header">自我介绍</div>
+                  <div className="info">{this.props.user.cover ? this.props.user.cover : '暂无资料'}</div>
+                  </div>
+                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('cover')}>
+                    编辑
+                  </div>
+                </div>
+                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('cover')) ? "is-expanded" : "")}>
+                  <div className="form-text">
+                    <input type="text" name="cover" value={this.state.attr_key.cover} onChange={this.handleInputChange}/>
+                    <div className="padding-text"></div>
+                  </div>
+                  <div className="actions">
+                    <div className="ui gray deny button" onClick={() => {
+                      this.cancelAttrChange("cover");
+                    }}>
+                      取消
+                    </div>
+                    <div className="ui blue right labeled icon button" onClick={this.confirmAttrChange}>
+                      确认
+                      <i className="checkmark icon"/>
+                    </div>
+                  </div>
+                </div>
 
-          </div>
-        </div>
+
+              </div>
+
+              </div>
+
+              <div className="category">
+              <div className="subheader">
+                <div className="title">
+                  联络
+                </div>
+                <div className="subtitle">
+                  邮件、微信绑定设置
+                </div>
+              </div>
+              <div className={"item first "+ ((this.state.attr_key.hasOwnProperty('email')) ? "is-expanded" : "")}>
+                <div className="content">
+                  <div className="inner-content">
+                  <div className="header">Email</div>
+                  <div className="info">{this.props.user.email}</div>
+                  </div>
+                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('email')}>
+                    编辑
+                  </div>
+                </div>
+
+                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('email')) ? "is-expanded" : "")}>
+                  <div className="form-text">
+                    <input type="text" name="email" value={this.state.attr_key.email} onChange={this.handleInputChange}/>
+                    <div className="padding-text"></div>
+                  </div>
+                  <div className="actions">
+                    <div className="ui gray deny button" onClick={() => {
+                      this.cancelAttrChange("email");
+                    }}>
+                      取消
+                    </div>
+                    <div className="ui blue right labeled icon button" onClick={this.confirmAttrChange}>
+                      确认
+                      <i className="checkmark icon"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="item">
+                <div className="content">
+                  <div className="inner-content">
+                  <div className="header">微信</div>
+                  <div className="info">{this.props.user.wechat ? this.props.user.wechat : '暂无资料'}</div>
+                  </div>
+                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('wechat')}>
+                    编辑
+                  </div>
+
+                </div>
+                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('wechat')) ? "is-expanded" : "")}>
+                  <div className="form-text">
+                    <input type="text" name="wechat" value={this.state.attr_key.wechat} onChange={this.handleInputChange}/>
+                    <div className="padding-text"></div>
+                  </div>
+                  <div className="actions">
+                    <div className="ui gray deny button" onClick={() => {
+                      this.cancelAttrChange("wechat");
+                    }}>
+                      取消
+                    </div>
+                    <div className="ui blue right labeled icon button" onClick={this.confirmAttrChange}>
+                      确认
+                      <i className="checkmark icon"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              </div>
+              <div className="category">
+              <div className="subheader">
+                <div className="title">
+                  简历设置
+                </div>
+                <div className="subtitle">
+                  这里展示你的简历噢
+                </div>
+              </div>
+              <div className="item first">
+                <div className="content">
+                <div className="inner-content">
+                  <div className="header">简历</div>
+                  <div className="info">{this.state.fileName ? '' : '暂无资料'}</div>
+                  <label htmlFor="resume-input" className={this.state.fileName ? 'ui button positive' : 'ui button'}>
+                    <i className="ui upload icon"/>
+                    {this.state.fileName ? '成功' : '上传简历'}
+                  </label>
+                  <input type="file" accept="application/pdf" className="input-file" id="resume-input" onChange={this.handleResume}/>
+                  {this.state.fileName ? (<embed className="resume-holder" src={this.state.fileName} width="100%"
+                                                 type='application/pdf'/>) : (<div></div>)}
+                  {/*{this.state.fileName ? (*/}
+                    {/*<Document file={this.state.fileName} onLoadSuccess={this.onDocumentLoad}> <Page*/}
+                      {/*pageNumber={this.state.pageNumber}/>*/}
+                    {/*</Document>) : (<div></div>)}*/}
+                </div>
+                </div>
+              </div>
+              </div>
 
 
       </div>

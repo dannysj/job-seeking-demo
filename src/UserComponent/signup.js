@@ -55,8 +55,6 @@ class Signup extends Component {
   }
 
   render() {
-    console.log(this.props);
-    console.log(this.context);
     return (
       <div className="login-signup-container">
         <NotificationContainer />

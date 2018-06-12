@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Container } from 'semantic-ui-react';
 import axios from 'axios';
+import Footer from '../Components/Footer';
 import './about.css';
 import '../NewsComponent/news.css';
 
@@ -118,7 +119,9 @@ class About extends React.Component {
             }
           </div>
         </div>
+        <Footer />
       </div>
+
     );
   }
 }

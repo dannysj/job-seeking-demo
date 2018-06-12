@@ -11,7 +11,7 @@ class AccountForbidden extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="forbidden-content">
         您的账户尚未激活，请查看您的邮件并根据提示验证邮箱
       </div>
     );

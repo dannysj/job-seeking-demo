@@ -36,7 +36,6 @@ class Login extends Component {
     let curUser = this.state.user;
     curUser[e.target.name]=e.target.value;
     this.setState({user: curUser});
-    console.log(this.state);
   }
 
   render() {

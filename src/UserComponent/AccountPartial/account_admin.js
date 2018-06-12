@@ -29,7 +29,6 @@ class AccountAdmin extends React.Component {
     let handler = this;
     axios.post(process.env.REACT_APP_API_HOST + '/api/admin/get_applications').then(res => {
       if(res.data.code === 0){
-        console.log(res.data);
         handler.setState({applications: res.data.applications});
       }
       else{
@@ -53,7 +52,6 @@ class AccountAdmin extends React.Component {
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/file/general_upload', data).then(res => {
       if(res.data.code === 0){
-        console.log(res.data);
         let curState = handler.state;
         curState['news']['thumbnail'] = res.data.url;
         handler.setState(curState);
@@ -90,7 +88,6 @@ class AccountAdmin extends React.Component {
     data.author_id = this.props.user.id;
     axios.post(process.env.REACT_APP_API_HOST + '/api/create_news',data).then(res => {
       if(res.data.code===0){
-        console.log(res.data.nid);
         alert('success'); // TODO: change this
         this.context.router.history.push('/news/'+res.data.nid);
       }
@@ -127,9 +124,8 @@ class AccountAdmin extends React.Component {
     if(!this.props.user.isadmin){
       return (<h1>您没有权限访问本页，别给老子瞎搞</h1>);
     }
-    console.log(this.state.news);
     return(
-      <div>
+      <div className="account-inner-spacing">
         <Segment>
           <h4>编写干货:</h4>
           标题: {' '}<Input placeholder='标题' onChange={this.handleTitleChange}/>
