@@ -34,6 +34,7 @@ class AccountProfile extends React.Component {
     attr_keys[key_name] = "";
 
     this.setState({attr_key:attr_keys, showAddServiceModal:true});
+  }
   componentDidMount() {
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_major_list').then(res => {
       if (res.data.code === 0) {
