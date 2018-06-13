@@ -23,6 +23,7 @@ class AccountProfile extends React.Component {
   componentDidMount() {
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_major_list').then(res => {
       if (res.data.code === 0) {
+        res.data.list.forEach(e=> e.value = e.text);
         this.setState({major_list: res.data.list});
       } else {
         NotificationManager.error('无法获取专业列表', '错误');
@@ -252,24 +253,24 @@ class AccountProfile extends React.Component {
                 </div>
               </div>
 
-              <div className={"item " + ((this.state.attr_key.hasOwnProperty('major_id')) ? "is-expanded" : "")} >
+              <div className={"item " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")} >
                 <div className="content">
                   <div className="inner-content">
                   <div className="header">专业</div>
                   <div className="info">{this.props.user.major ? this.props.user.major : '暂无资料'}</div>
                   </div>
-                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('major_id')}>
+                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('major')}>
                     编辑
                   </div>
 
                 </div>
 
-                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('major_id')) ? "is-expanded" : "")}>
+                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")}>
                   <div className="form-text">
 
-                      <Dropdown name='major_id' placeholder='专业' search selection multiple fluid
+                      <Dropdown name='major' placeholder='专业' search selection multiple fluid
                                 options={this.state.major_list}
-                                onChange={(e, data) => this.setState({attr_key: {major_id: data.value}})}
+                                onChange={(e, data) => this.setState({attr_key: {major: data.value}})}
                                 selectedValue={this.state.attr_key.major}/>
 
                     <div className="padding-text"></div>
@@ -277,7 +278,7 @@ class AccountProfile extends React.Component {
                   </div>
                   <div className="actions">
                     <div className="ui gray deny button" onClick={() => {
-                      this.cancelAttrChange("major_id");
+                      this.cancelAttrChange("major");
                     }}>
                       取消
                     </div>

@@ -66,13 +66,13 @@ exports.getMentorList = (filter, callback) => {
     select u.first as first,
       u.profile_pic as profile_pic,
       u.last as last,
-      major.name as major,
+      u.major as major,
       c.name as college_name,
       m.offer_title as offer_title,
       m.offer_company as offer_company,
       m.id as mid
-    from users u, mentor_info m, college c, major
-    where m.uid = u.id and m.cid = c.id and u.ismentor = true and u.major_id = major.id;
+    from users u, mentor_info m, college c
+    where m.uid = u.id and m.cid = c.id and u.ismentor = true;
   `;
   db.query(query, function (err, result) {
     if (err) {

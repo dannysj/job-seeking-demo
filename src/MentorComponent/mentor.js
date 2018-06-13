@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {Sidebar, Table, Checkbox, Segment, Menu, Icon, Button, Dropdown, Divider} from 'semantic-ui-react';
+import {Button, Checkbox, Divider, Icon, Menu, Segment, Sidebar, Table} from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import './mentor.css';
 import axios from "axios/index";
+
 //import { createFollowerFolloweeRelationship } from '../../server/db/module/follow_relation';
 
 
@@ -50,32 +51,12 @@ class Mentor extends Component {
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_list' ).then(res => {
       if (res.data.code === 0) {
-        let majorList = [];
-        let collegeList = [];
-        res.data.list.forEach((e) => {
-          if(majorList.indexOf(e.major)< 0 && e.major !== "" && e.major !== null){
-            majorList.push(e.major);
-          }
-          if (collegeList.indexOf(e.college_name) < 0) {
-            collegeList.push(e.college_name);
-          }
-        });
-
-
-        let majors = [];
-        let colleges = [];
-        majorList.forEach((e) => {majors.push(e);});
-        collegeList.forEach((e) => {colleges.push(e);});
-
         this.setState({
           mentors: res.data.list,
-          majors: majors,
-          colleges: colleges,
+          majors: Array.from(new Set([].concat.apply([], res.data.list.map(e => e.major)))),
+          colleges: Array.from(new Set(res.data.list.map(e => e.college_name))),
           followees: [1,4]
         });
-
-
-
       }
       else {
         //TODO: Error Handling
@@ -269,8 +250,8 @@ unfollow_action(uid, mentor_uid){
             <Segment basic>
             <div className="ui container listitem">
               {this.state.mentors
-                .filter((el) => (this.state.selected.Majors.length == 0 || this.state.selected.Majors.indexOf(el.major) > -1))
-                .filter((el) => (this.state.selected.Colleges.length == 0  || this.state.selected.Colleges.indexOf(el.college_name) > -1)).map(el => (
+                .filter((el) => (this.state.selected.Majors.length === 0 || el.major.filter(e => this.state.selected.Majors.indexOf(e) > -1).length > 0 ))
+                .filter((el) => (this.state.selected.Colleges.length === 0  || this.state.selected.Colleges.indexOf(el.college_name) > -1)).map(el => (
                 <div className="mentor-container" key={el.id}>
                     <div className="inner-container">
                     <div className="mentor-profile">
@@ -315,7 +296,7 @@ unfollow_action(uid, mentor_uid){
                           </Table.Cell>
                           <Table.Cell>
                           <img className="title-icon"  alt="position" src={ageIcon} ></img>
-                              {el.major}
+                              {el.major.join(', ')}
                           </Table.Cell>
                         </Table.Row>
                       </Table.Body>
