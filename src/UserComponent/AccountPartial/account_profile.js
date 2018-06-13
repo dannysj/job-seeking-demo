@@ -1,7 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import {Button, Dropdown, Icon, Image} from 'semantic-ui-react';
+import {Dropdown, Image} from 'semantic-ui-react';
 import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
 import '../account.css';
@@ -32,17 +31,13 @@ class AccountProfile extends React.Component {
   }
 
   initAttrChange = (key_name) => {
-    console.log(key_name)
-
     let curState = this.state;
     if (curState.showAddServiceModal) {
 
     }
     let attr_keys = curState.attr_key;
-    let list = curState.attr_list;
 
-
-    attr_keys[key_name] = "";
+    attr_keys[key_name] = this.props.user[key_name];
 
     this.setState({attr_key:attr_keys, showAddServiceModal:true});
   }
@@ -257,7 +252,7 @@ class AccountProfile extends React.Component {
                 <div className="content">
                   <div className="inner-content">
                   <div className="header">专业</div>
-                  <div className="info">{this.props.user.major ? this.props.user.major : '暂无资料'}</div>
+                  <div className="info">{this.props.user.major ? this.props.user.major.join(", ") : '暂无资料'}</div>
                   </div>
                   <div className="edit-toggle"  onClick={()=>this.initAttrChange('major')}>
                     编辑
@@ -267,12 +262,10 @@ class AccountProfile extends React.Component {
 
                 <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")}>
                   <div className="form-text">
-
-                      <Dropdown name='major' placeholder='专业' search selection multiple fluid
+                      <Dropdown name='major' placeholder='专业' search selection multiple fluid closeOnChange
                                 options={this.state.major_list}
                                 onChange={(e, data) => this.setState({attr_key: {major: data.value}})}
-                                selectedValue={this.state.attr_key.major}/>
-
+                                value={this.state.attr_key.major}/>
                     <div className="padding-text"></div>
 
                   </div>

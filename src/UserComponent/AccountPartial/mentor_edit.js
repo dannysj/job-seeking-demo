@@ -214,7 +214,7 @@ class MentorEdit extends React.Component {
             <label>院校名称：</label>
             <b className="notification-msg">
               <Dropdown name='cid' placeholder='院校名称' fluid search selection options={this.state.college_list}
-                        onChange={this.handleChange} selectedValue={this.state.mentor_info.college_name}/>
+                        onChange={this.handleChange} value={this.state.mentor_info.college_name}/>
             </b>
           </div>
           <div className="field">

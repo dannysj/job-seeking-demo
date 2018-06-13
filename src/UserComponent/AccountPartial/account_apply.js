@@ -233,10 +233,10 @@ class AccountApply extends React.Component {
               <Dropdown name='cid' placeholder='院校名称' fluid search selection
                         loading={this.state.isLoadingCollegeList}
                         noResultsMessage={null}
+                        onSearchChange={this.handleSearchChange}
                         options={this.state.college_list}
                         onChange={this.handleChange}
-                        selectedValue={this.state.mentor_info.college_name}
-                        onSearchChange={this.handleSearchChange}/>
+                        value={this.state.mentor_info.college_name}/>
             </b>
           </div>
           <div className="field">
