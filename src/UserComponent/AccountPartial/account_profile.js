@@ -18,11 +18,21 @@ class AccountProfile extends React.Component {
       attr_key: {},
       major_list: [],
     };
-    this.timer = null;
   }
 
-// Conflict 1.:
-  initAttrChange (key_name) {
+  componentDidMount() {
+    axios.post(process.env.REACT_APP_API_HOST + '/api/get_major_list').then(res => {
+      if (res.data.code === 0) {
+        this.setState({major_list: res.data.list});
+      } else {
+        NotificationManager.error('无法获取专业列表', '错误');
+      }
+    });
+  }
+
+  initAttrChange = (key_name) => {
+    console.log(key_name)
+
     let curState = this.state;
     if (curState.showAddServiceModal) {
 
@@ -34,15 +44,6 @@ class AccountProfile extends React.Component {
     attr_keys[key_name] = "";
 
     this.setState({attr_key:attr_keys, showAddServiceModal:true});
-  }
-  componentDidMount() {
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_major_list').then(res => {
-      if (res.data.code === 0) {
-        this.setState({major_list: res.data.list});
-      } else {
-        NotificationManager.error('无法获取专业列表', '错误');
-      }
-    });
   }
 
   confirmAttrChange = (e) => {
@@ -162,28 +163,7 @@ class AccountProfile extends React.Component {
     });
   };
 
-  handleSearchChange = (e, {searchQuery}) =>{
-    clearTimeout(this.timer);
-
-    this.setState({majorQuery: searchQuery});
-
-    this.timer = setTimeout(this.triggerSearch, 500);
-  };
-
-  triggerSearch = () =>{
-    this.setState({isLoadingMajorList : true});
-
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_major_list', {query: this.state.majorQuery}).then(res => {
-      if (res.data.code === 0) {
-        this.setState({major_list: res.data.list});
-      } else {
-        NotificationManager.error('无法获取专业列表', '错误');
-      }
-      this.setState({isLoadingMajorList : false})
-    });
-  };
-
-  cancelAttrChange(key_name) {
+  cancelAttrChange = (key_name) => {
     //e.preventDefault();
     let curState = this.state;
     curState.showAddServiceModal = false;
@@ -191,7 +171,7 @@ class AccountProfile extends React.Component {
     this.setState(curState);
   }
 
-  handleInputChange(e, data) {
+  handleInputChange = (e, data) => {
     let attr_keys = this.state.attr_key;
     attr_keys[e.target.name] = e.target.value
     this.setState({attr_key:attr_keys});
@@ -287,14 +267,10 @@ class AccountProfile extends React.Component {
                 <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('major_id')) ? "is-expanded" : "")}>
                   <div className="form-text">
 
-                      <Dropdown name='major_id' placeholder='专业' search selection
+                      <Dropdown name='major_id' placeholder='专业' search selection multiple fluid
                                 options={this.state.major_list}
-                                onChange={(e, data) => this.setState({attr_key: {
-                                  major_id: data.value}})}
-                                selectedValue={this.state.attr_key.major}
-                                noResultsMessage={null}
-                                onSearchChange={this.handleSearchChange}
-                                loading={this.state.isLoadingMajorList}/>
+                                onChange={(e, data) => this.setState({attr_key: {major_id: data.value}})}
+                                selectedValue={this.state.attr_key.major}/>
 
                     <div className="padding-text"></div>
 
@@ -436,10 +412,6 @@ class AccountProfile extends React.Component {
                   <input type="file" accept="application/pdf" className="input-file" id="resume-input" onChange={this.handleResume}/>
                   {this.state.fileName ? (<embed className="resume-holder" src={this.state.fileName} width="100%"
                                                  type='application/pdf'/>) : (<div></div>)}
-                  {/*{this.state.fileName ? (*/}
-                    {/*<Document file={this.state.fileName} onLoadSuccess={this.onDocumentLoad}> <Page*/}
-                      {/*pageNumber={this.state.pageNumber}/>*/}
-                    {/*</Document>) : (<div></div>)}*/}
                 </div>
                 </div>
               </div>

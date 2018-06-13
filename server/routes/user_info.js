@@ -28,7 +28,7 @@ app.post('/api/update_user', (req, res) => {
 
 
 app.post('/api/get_major_list', (req, res) => {
-  db.getMajorList(req.body.query, (err, list) => {
+  db.getMajorList((err, list) => {
     if (err) {
       console.log(err);
       res.json({code: 1});
