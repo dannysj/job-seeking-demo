@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { Router, Route, Switch } from 'react-router';
+import { Route, Switch } from 'react-router';
 import { Icon, Label} from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-import logo from './logo.svg';
 import axios from 'axios';
 import './Semantic/semantic.min.css';
 import './App.css';
@@ -17,6 +15,7 @@ import MentorDetail from './MentorComponent/mentor_detail';
 import News from './NewsComponent/news';
 import NewsDetail from './NewsComponent/news_detail';
 import About from './AboutComponent/about';
+
 
 
 class App extends Component {
