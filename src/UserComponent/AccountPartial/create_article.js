@@ -32,7 +32,7 @@ class CreateArticle extends React.Component {
     data.append('file', e.target.files[0]);
     let handler = this;
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/file/general_upload', data).then(res => {
+    axios.post('/api/file/general_upload', data).then(res => {
       if(res.data.code === 0){
         let curState = handler.state;
         curState['news']['thumbnail'] = res.data.url;
@@ -53,7 +53,7 @@ class CreateArticle extends React.Component {
   handleSubmitNews(){
     let data = this.state.news;
     data.author_id = this.props.user.id;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/create_news',data).then(res => {
+    axios.post('/api/create_news',data).then(res => {
       if(res.data.code===0){
         NotificationManager.success('上传成功，点击查看','成功',5000,()=>{
           this.context.router.history.push('/news/'+res.data.nid);

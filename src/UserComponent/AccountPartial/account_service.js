@@ -18,7 +18,7 @@ class AccountService extends React.Component {
 
   updateInfo(){
     var handler = this;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_rel_mentees', {uid: this.props.user.id}).then(res => {
+    axios.post('/api/get_rel_mentees', {uid: this.props.user.id}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         handler.setState({mentees:res.data.mentees});
@@ -33,7 +33,7 @@ class AccountService extends React.Component {
 
   handleConfirm(mentee_uid){
     var handler = this;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/mentor_confirm', {uid: this.props.user.id, mentee_uid: mentee_uid}).then(res => {
+    axios.post('/api/mentor_confirm', {uid: this.props.user.id, mentee_uid: mentee_uid}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         handler.updateInfo();

@@ -10,7 +10,7 @@ class MentorList extends Component {
 
     this.state={mentors:[]
     };
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_list',this.props.filter).then(res => {
+    axios.post('/api/get_mentor_list',this.props.filter).then(res => {
       if(res.data.code===0){
         this.setState({mentors:res.data.list.slice(0,6)});
       }

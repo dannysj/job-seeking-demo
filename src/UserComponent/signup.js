@@ -27,7 +27,7 @@ class Signup extends Component {
   handleSubmit (e) {
     e.preventDefault();
     if(this.state.user.password === this.state.user.cpassword){
-      axios.post(process.env.REACT_APP_API_HOST + '/api/create_user',this.state.user).then(res => {
+      axios.post('/api/create_user',this.state.user).then(res => {
         if(res.data.code===0){
           store.dispatch(setUser(res.data.user));
           this.context.router.history.push('/account');

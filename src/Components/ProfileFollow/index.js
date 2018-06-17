@@ -15,7 +15,7 @@ class ProfileFollow extends Component {
 
     /*
     if (this.props.loggedInUser != undefined){
-      axios.post(process.env.REACT_APP_API_HOST + '/api/whether_followed',
+      axios.post('/api/whether_followed',
       {follower_uid: this.props.loggedInUser.id , followee_uid: this.state.author_id}).then(res=>{
             this.setState({followed: res.data.whetherFollowed })
        })
@@ -32,7 +32,7 @@ class ProfileFollow extends Component {
     // call the function 
 
     if (this.props.loggedInUser !== undefined){
-      axios.post(process.env.REACT_APP_API_HOST + '/api/follow_user',
+      axios.post('/api/follow_user',
        {follower_uid: this.props.loggedInUser.id , followee_uid: this.state.author_id}).then(res=>{
           console.log("follow")    
       })

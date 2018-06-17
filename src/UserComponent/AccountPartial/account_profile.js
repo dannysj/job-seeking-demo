@@ -22,7 +22,7 @@ class AccountProfile extends React.Component {
   }
 
   componentDidMount() {
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_major_list').then(res => {
+    axios.post('/api/get_major_list').then(res => {
       if (res.data.code === 0) {
         res.data.list.forEach(e=> e.value = e.text);
         this.setState({major_list: res.data.list});
@@ -51,7 +51,7 @@ class AccountProfile extends React.Component {
 
       store.dispatch(updateUser(key, value));
 
-      axios.post(process.env.REACT_APP_API_HOST + '/api/update_user',{uid:this.props.user.id,attr:key,val:value}).then(res => {
+      axios.post('/api/update_user',{uid:this.props.user.id,attr:key,val:value}).then(res => {
       if(res.data.code===0){
         delete curState.attr_key[key];
         this.setState({curState})
@@ -78,13 +78,13 @@ class AccountProfile extends React.Component {
     data.append('file', e.target.files[0]);
     let handler = this;
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/file/general_upload', data).then(res => {
+    axios.post('/api/file/general_upload', data).then(res => {
       if (res.data.code === 0) {
         this.setState({fileName: res.data.url});
 
         store.dispatch(updateUser("resume", res.data.url));
 
-        axios.post(process.env.REACT_APP_API_HOST + '/api/update_user', {
+        axios.post('/api/update_user', {
           uid: this.props.user.id,
           attr: 'resume',
           val: res.data.url
@@ -130,11 +130,11 @@ class AccountProfile extends React.Component {
     data.append('file', img);
     let handler = this;
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/file/general_upload', data).then(res => {
+    axios.post('/api/file/general_upload', data).then(res => {
       if (res.data.code === 0) {
         this.setState({showImgCrop: false});
         store.dispatch(updateUser("profile_pic", res.data.url));
-        axios.post(process.env.REACT_APP_API_HOST + '/api/update_user', {
+        axios.post('/api/update_user', {
           uid: this.props.user.id,
           attr: 'profile_pic',
           val: res.data.url

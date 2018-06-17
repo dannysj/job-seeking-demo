@@ -20,7 +20,7 @@ class NewsDetail extends Component {
     this.likeButtonPressed = this.likeButtonPressed.bind(this);
     this.followButtonPressed = this.followButtonPressed.bind(this);
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_news_detail',
+    axios.post('/api/get_news_detail',
       {nid:this.props.match.params.nid}).then(res => {
 
       if(res.data.code===0){
@@ -45,7 +45,7 @@ class NewsDetail extends Component {
     // User id, props.loggedInUser.uid
     // The other one. this.state.news.author_id
     // call the function 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/follow_user',
+    axios.post('/api/follow_user',
      {follower_uid: this.props.loggedInUser.id , followee_uid: this.state.news.author_id}).then(res=>{
         console.log("follow")    
     }).catch(err=> console.log(err))

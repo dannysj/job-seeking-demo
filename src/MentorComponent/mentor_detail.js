@@ -13,7 +13,7 @@ class MentorDetail extends Component {
     super(props);
     this.state = {mentor: {first: "", last: "", service: []}, is_resume_open:false, isDown:true, showAddServiceModal: false};
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
+    axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
         this.setState({mentor:res.data.mentor});
       }
@@ -37,7 +37,7 @@ class MentorDetail extends Component {
       this.context.router.history.push('/login');
       return;
     }
-    axios.post(process.env.REACT_APP_API_HOST + '/api/create_order',
+    axios.post('/api/create_order',
     {
       uid:this.props.user.id,
       mid:this.props.match.params.mid,
@@ -55,7 +55,7 @@ class MentorDetail extends Component {
 
   pollPayment(order_id){
     var handler = this;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/poll_payment',
+    axios.post('/api/poll_payment',
     {
       uid:this.props.user.id,
       order_id:order_id
