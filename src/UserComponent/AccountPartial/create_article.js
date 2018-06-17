@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Modal, Button, Image, Header, Input, Segment } from 'semantic-ui-react';
+import { Button, Image, Input, Segment } from 'semantic-ui-react';
 import ReactQuill from 'react-quill';
 import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';

@@ -18,7 +18,7 @@ class Login extends Component {
     e.preventDefault();
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/verify_user',this.state.user).then(res => {
-      if(res.data.code==0){
+      if(res.data.code===0){
         this.props.onSuccess(res.data.user);
         if(this.context.router.history.location.pathname === "/login"){
           this.context.router.history.push("/");

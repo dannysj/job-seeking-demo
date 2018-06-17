@@ -6,7 +6,10 @@ import reducers from "./reducers"
 
 const middleware = [promise(), thunk, logger];
 const initState = {
-  user: {}
+  user: {
+    first: "",
+    last: ""
+  }
 };
 
 const store = createReduxStore(

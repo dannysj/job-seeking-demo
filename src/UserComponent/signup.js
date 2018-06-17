@@ -30,7 +30,7 @@ class Signup extends Component {
 
   handleSubmit (e) {
     e.preventDefault();
-    if(this.state.user.password == this.state.user.cpassword){
+    if(this.state.user.password === this.state.user.cpassword){
       axios.post(process.env.REACT_APP_API_HOST + '/api/create_user',this.state.user).then(res => {
         if(res.data.code===0){
           this.props.onSuccess(res.data.user); // TODO: use the user profile returned by the server

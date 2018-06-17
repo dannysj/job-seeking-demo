@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Carousel } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { Header, Container, Segment, Button } from 'semantic-ui-react';
 import axios from 'axios';
 import './home.css';
 
@@ -13,7 +11,7 @@ class MentorList extends Component {
     this.state={mentors:[]
     };
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_list',this.props.filter).then(res => {
-      if(res.data.code==0){
+      if(res.data.code===0){
         this.setState({mentors:res.data.list.slice(0,6)});
       }
       else{
@@ -27,10 +25,10 @@ class MentorList extends Component {
 
     return (
       <div className="overview-holder">
-        {this.state.mentors.map(el => (
-          <Link to={'/mentor/'+el.mid}>
+        {this.state.mentors.map((el, index) => (
+          <Link to={'/mentor/'+el.mid} key={index}>
             <div className="mentor-overview_container" key={el.id}>
-              <img className="mentor-overview-picture" src={el.profile_pic}></img>
+              <img className="mentor-overview-picture" src={el.profile_pic} alt={el.last + '' + el.last}/>
               <div className="mentor-overview-placeholder">
                 <h4>{el.last+' '}{el.first}</h4>
                 <p className="mentor-overview-text">{el.offer_company+' '+el.offer_title}</p>

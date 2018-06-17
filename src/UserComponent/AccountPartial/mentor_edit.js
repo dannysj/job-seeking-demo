@@ -157,7 +157,7 @@ class MentorEdit extends React.Component {
 
   handleEdit(index) {
     let curServices = this.state.mentor_info.services.slice();
-    let curServices2 = this.state.mentor_info.services.slice(index, index+1);
+    // let curServices2 = this.state.mentor_info.services.slice(index, index+1);
     this.tempService = curServices[index]
 
     this.setState({editMode: true, editIndex: index, showAddServiceModal: true});

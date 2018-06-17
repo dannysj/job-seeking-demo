@@ -136,7 +136,7 @@ class Comment extends Component {
       <div className="comment">
         <div className="comment-top">
           <div className="left">
-            <img className="comment-img" src={this.props.comment.profile_pic}/>
+            <img className="comment-img" src={this.props.comment.profile_pic} alt=""/>
           </div>
           <div className="right">
             <div className="comment-author">{this.props.comment.last + this.props.comment.first}
@@ -149,7 +149,7 @@ class Comment extends Component {
         <div className="comment-bottom">
         {this.props.comment.reply ? (
           <div className="comment-reply comment-content">
-              <div style={{fontWeight: 'Bold'}}><img className="mentor-reply-img" src={this.props.mentor.profile_pic}></img> </div>
+              <div style={{fontWeight: 'Bold'}}><img className="mentor-reply-img" src={this.props.mentor.profile_pic} alt=""/> </div>
               {this.props.comment.reply}
             </div>
           ):(

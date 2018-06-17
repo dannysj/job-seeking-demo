@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Image, Container, Icon, Button, Divider } from 'semantic-ui-react';
+import { Icon, Button, Divider } from 'semantic-ui-react';
 import './news.css';
 import Footer from '../Components/Footer';
 import ProfileFollow from '../Components/ProfileFollow';
@@ -24,7 +23,7 @@ class NewsDetail extends Component {
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_news_detail',
       {nid:this.props.match.params.nid}).then(res => {
 
-      if(res.data.code==0){
+      if(res.data.code===0){
         let curState = this.state;
         curState.news = res.data.news;
         curState.loading = false;

@@ -1,8 +1,4 @@
 import React, { Component } from 'react';
-import { Router, Route, Switch } from 'react-router';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import PropTypes from 'prop-types';
 import ReactCrop, { makeAspectCrop }  from 'react-image-crop';
 import { Button } from 'semantic-ui-react'
 import 'react-image-crop/dist/ReactCrop.css';
@@ -75,7 +71,7 @@ export default class ImgCrop extends Component {
   }
 
   onImageLoaded = (image) => {
-    var splitName = this.state.dataUrl.split('\\').pop().split('/').pop();
+    // var splitName = this.state.dataUrl.split('\\').pop().split('/').pop();
     this.setState({
       crop: makeAspectCrop({
         x: 0,

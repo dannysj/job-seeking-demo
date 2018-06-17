@@ -255,7 +255,7 @@ unfollow_action(uid, mentor_uid){
                 <div className="mentor-container" key={el.id}>
                     <div className="inner-container">
                     <div className="mentor-profile">
-                      <img className="mentor-picture" src={el.profile_pic}/>
+                      <img className="mentor-picture" src={el.profile_pic} alt=""/>
                       <br />
                       <div><strong>{el.last + ' '}{el.first}</strong></div>
                     </div>

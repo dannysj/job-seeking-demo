@@ -41,15 +41,13 @@ class App extends Component {
     this.updateCurrentPage = this.updateCurrentPage.bind(this);
     this.toggle_outside = this.toggle_outside.bind(this);
 
-
-
     let uid = localStorage.getItem('uid');
     if(uid){
       store.dispatch(fetchUser(uid));
 
       this.state = {user: {id: uid}};
       axios.post(process.env.REACT_APP_API_HOST + '/api/get_user_info',{uid:uid}).then(res => {
-        if(res.data.code==0){
+        if(res.data.code===0){
           this.updateUser(res.data.user);
         }
         else{
@@ -110,10 +108,10 @@ class App extends Component {
         <div className={"navbar "} onClick={this.toggle_outside}>
 
           <div className="item logo-item" >
-            <img src="/img/icon.png" height="40px"></img>
+            <img src="/img/icon.png" height="40px" alt="icon"></img>
             <b className="title">{' '}Buddy{'\n'}Career</b>
 
-            <label forName="reveal-menu" className="menu-icon" onClick={this.menuToggled}>
+            <label forname="reveal-menu" className="menu-icon" onClick={this.menuToggled}>
                 <span className="bread bread-top">
                 </span>
 
@@ -122,25 +120,25 @@ class App extends Component {
             </label>
           </div>
           <div className={"nav-list " }>
-            <NavLink to="/" ishorizontal={true} onClick={this.menuToggled}>
+            <NavLink to="/" onClick={this.menuToggled}>
               <div className="Nav-item ">
                 <div className="App-subtitle">Home</div>
                 <div className="chinese-top">主页</div>
               </div>
             </NavLink>
-            <NavLink to="/mentor" ishorizontal={true} onClick={this.menuToggled}>
+            <NavLink to="/mentor" onClick={this.menuToggled}>
               <div className="Nav-item ">
                 <div className="App-subtitle">Tutors</div>
                 <div className="chinese-top">导师</div>
               </div>
             </NavLink>
-            <NavLink to="/news" ishorizontal={true} onClick={this.menuToggled}>
+            <NavLink to="/news" onClick={this.menuToggled}>
               <div className="Nav-item ">
                 <div className="App-subtitle">Careers</div>
                 <div className="chinese-top">就业干货</div>
               </div>
             </NavLink>
-            <NavLink to="/about" ishorizontal={true} onClick={this.menuToggled}>
+            <NavLink to="/about" onClick={this.menuToggled}>
               <div className="Nav-item ">
                 <div className="App-subtitle">About</div>
                 <div className="chinese-top">关于</div>
@@ -153,10 +151,9 @@ class App extends Component {
           (this.props.user) ? (
             <div className="user-menu" onClick={this.user_menuToggled}>
               <div className="item name" >
-                <div className="user-name">{
-                  this.props.user.last+this.props.user.first
-
-                }</div>
+                <div className="user-name">
+                  {this.props.user.last + this.props.user.first}
+                </div>
                 <div>
                 {
                   this.props.user.email
@@ -205,7 +202,7 @@ class App extends Component {
                 <Icon name='chat' className="tab menu-icon" />
                 系统通知
                 {
-                  (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications!=0) &&
+                  (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications!==0) &&
                     (<Label color='red' floating>
                       {this.props.user.num_notifications}
                     </Label>)

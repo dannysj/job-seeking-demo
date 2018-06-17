@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { Router, Route, Switch } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Route, Switch } from 'react-router';
 import { Label, Icon } from 'semantic-ui-react';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import './account.css';
 import NavLink from '../NavLinkComponent/navlink';
@@ -22,9 +19,6 @@ import AccountNotification from "./AccountPartial/account_notification";
 
 class Account extends Component {
 
-  constructor (props) {
-    super(props);
-  }
 
   render() {
     if(this.props.user == null){
@@ -73,7 +67,7 @@ class Account extends Component {
                 <Icon name='chat' className="menu-icon" />
                 系统通知
                 {
-                  (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications!=0) &&
+                  (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications!==0) &&
                     (<Label color='red' floating>
                       {this.props.user.num_notifications}
                     </Label>)
