@@ -31,8 +31,7 @@ class App extends Component {
       is_user_checked: false,
       width: 0,
       height: 0,
-      current_page: "主 页",
-      num_notifications: 0
+      current_page: "主 页"
     };
     this.updateUser = this.updateUser.bind(this);
     this.menuToggled = this.menuToggled.bind(this);
@@ -45,7 +44,6 @@ class App extends Component {
     if(uid){
       store.dispatch(fetchUser(uid));
 
-      this.state = {user: {id: uid}};
       axios.post(process.env.REACT_APP_API_HOST + '/api/get_user_info',{uid:uid}).then(res => {
         if(res.data.code===0){
           this.updateUser(res.data.user);
@@ -103,8 +101,8 @@ class App extends Component {
   render() {
     return (
       <div className="app-flex">
-        <input type="checkbox" id="reveal-menu" className="reveal-m" role="button" checked={this.state.is_checked ? "checked" : ""}></input>
-        <input type="checkbox" id="reveal-user-menu" className="reveal-um" role="button" checked={this.state.is_user_checked ? "checked" : ""}></input>
+        <input type="checkbox" id="reveal-menu" className="reveal-m" role="button" checked={this.state.is_checked ? "checked" : ""}/>
+        <input type="checkbox" id="reveal-user-menu" className="reveal-um" role="button" checked={this.state.is_user_checked ? "checked" : ""}/>
         <div className={"navbar "} onClick={this.toggle_outside}>
 
           <div className="item logo-item" >
@@ -145,7 +143,11 @@ class App extends Component {
               </div>
             </NavLink>
           </div>
-          <UserStatus user={this.props.user} onClick={this.user_menuToggled} passFor="reveal-user-menu" numnotifications={this.state.num_notifications}></UserStatus>
+          <UserStatus
+            user={this.props.user}
+            onClick={this.user_menuToggled}
+            passFor="reveal-user-menu"
+            numnotifications={this.props.user.num_notifications}/>
         </div>
         {
           (this.props.user) ? (
@@ -202,7 +204,7 @@ class App extends Component {
                 <Icon name='chat' className="tab menu-icon" />
                 系统通知
                 {
-                  (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications!==0) &&
+                  (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications !== 0) &&
                     (<Label color='red' floating>
                       {this.props.user.num_notifications}
                     </Label>)
@@ -242,7 +244,6 @@ class App extends Component {
 
 const mapStateToProps = state => {
   const {user} = state;
-
   return {user}
 };
 
