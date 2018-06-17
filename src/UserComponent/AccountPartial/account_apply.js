@@ -47,7 +47,7 @@ class AccountApply extends React.Component {
         this.setState({mentor_info: mentor, statusChecked:true, hasNotApplied: false});
       }
       else {
-        if(res.data.code == 55){
+        if(res.data.code === 55){
           this.setState({statusChecked: true, hasNotApplied: true});
         }
         else{
@@ -153,7 +153,7 @@ class AccountApply extends React.Component {
         NotificationManager.success('我们已收到您的表格','成功');
       }
       else {
-        if(res.data.code == 45) {
+        if(res.data.code === 45) {
           NotificationManager.error('请先完善您的基础资料','错误');
         }
         else{

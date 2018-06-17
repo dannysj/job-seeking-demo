@@ -5,13 +5,15 @@ import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
 import '../account.css';
 import ImgCrop from './ImgCrop/imgcrop.js';
+import store from "../../redux";
+import {updateUser, setUser} from "../../redux/userAction";
+import {connect} from "react-redux";
 
 
 class AccountProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showAddServiceModal: false,
       showImgCrop: false,
       fileName: this.props.user.resume,
       attr_key: {},
@@ -32,14 +34,11 @@ class AccountProfile extends React.Component {
 
   initAttrChange = (key_name) => {
     let curState = this.state;
-    if (curState.showAddServiceModal) {
-
-    }
     let attr_keys = curState.attr_key;
 
     attr_keys[key_name] = this.props.user[key_name];
 
-    this.setState({attr_key:attr_keys, showAddServiceModal:true});
+    this.setState({attr_key:attr_keys});
   }
 
   confirmAttrChange = (e) => {
@@ -47,19 +46,16 @@ class AccountProfile extends React.Component {
     // TODO: Process and upload data
     let curState = this.state;
     let attr_keys = curState.attr_key;
-    curState.showAddServiceModal = false
-    this.setState({showAddServiceModal : false});
     //FIXME: Fixe bunches data update
     for (const [key, value] of Object.entries(attr_keys)) {
+
+      store.dispatch(updateUser(key, value));
+
       axios.post(process.env.REACT_APP_API_HOST + '/api/update_user',{uid:this.props.user.id,attr:key,val:value}).then(res => {
       if(res.data.code===0){
-
-        this.props.user[key] = value;
-        this.props.onUpdate(this.props.user);
         delete curState.attr_key[key];
         this.setState({curState})
       }
-
       else {
         NotificationManager.error('资料更新失败', '错误');
       }
@@ -86,8 +82,7 @@ class AccountProfile extends React.Component {
       if (res.data.code === 0) {
         this.setState({fileName: res.data.url});
 
-        handler.props.user.resume = res.data.url;
-        handler.props.onUpdate(handler.props.user);
+        store.dispatch(updateUser("resume", res.data.url));
 
         axios.post(process.env.REACT_APP_API_HOST + '/api/update_user', {
           uid: this.props.user.id,
@@ -137,9 +132,8 @@ class AccountProfile extends React.Component {
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/file/general_upload', data).then(res => {
       if (res.data.code === 0) {
-        handler.props.user.profile_pic = res.data.url;
         this.setState({showImgCrop: false});
-        handler.props.onUpdate(handler.props.user);
+        store.dispatch(updateUser("profile_pic", res.data.url));
         axios.post(process.env.REACT_APP_API_HOST + '/api/update_user', {
           uid: this.props.user.id,
           attr: 'profile_pic',
@@ -160,9 +154,7 @@ class AccountProfile extends React.Component {
   };
 
   cancelAttrChange = (key_name) => {
-    //e.preventDefault();
     let curState = this.state;
-    curState.showAddServiceModal = false;
     delete curState.attr_key[key_name];
     this.setState(curState);
   }
@@ -174,6 +166,7 @@ class AccountProfile extends React.Component {
   }
 
     render() {
+      const user = this.props.user;
         return(
             <div className="ui large celled list">
               <NotificationContainer />
@@ -203,7 +196,7 @@ class AccountProfile extends React.Component {
                   ( <div className="imgContainer">
                     <div className="image-text-centered">点击更换头像</div>
                     <label className="header-input-label" htmlFor="header-input">
-                      <Image className="center-profile" small bordered src={this.props.user.profile_pic} />
+                      <Image className="center-profile" small bordered src={user.profile_pic} />
                     </label>
                     <input type="file" accept="image/*" className="input-file" id="header-input" onChange={this.handleHeader} />
                     </div>
@@ -214,11 +207,11 @@ class AccountProfile extends React.Component {
                 <div className="content">
                   <div className="inner-content">
                     <div className="header">姓{' '}</div>
-                    <div className="info">{this.props.user.last}</div>
+                    <div className="info">{user.last}</div>
                   </div>
                   <div className="inner-content">
                     <div className="header">名</div>
-                    <div className="info">{this.props.user.first}</div>
+                    <div className="info">{user.first}</div>
                   </div>
                   <div className="edit-toggle"  onClick={()=> {
                     this.initAttrChange('last');
@@ -252,7 +245,7 @@ class AccountProfile extends React.Component {
                 <div className="content">
                   <div className="inner-content">
                   <div className="header">专业</div>
-                  <div className="info">{this.props.user.major ? this.props.user.major.join(", ") : '暂无资料'}</div>
+                  <div className="info">{user.major ? user.major.join(", ") : '暂无资料'}</div>
                   </div>
                   <div className="edit-toggle"  onClick={()=>this.initAttrChange('major')}>
                     编辑
@@ -286,7 +279,7 @@ class AccountProfile extends React.Component {
                 <div className="content">
                   <div className="inner-content">
                   <div className="header">自我介绍</div>
-                  <div className="info">{this.props.user.cover ? this.props.user.cover : '暂无资料'}</div>
+                  <div className="info">{user.cover ? user.cover : '暂无资料'}</div>
                   </div>
                   <div className="edit-toggle"  onClick={()=>this.initAttrChange('cover')}>
                     编辑
@@ -328,7 +321,7 @@ class AccountProfile extends React.Component {
                 <div className="content">
                   <div className="inner-content">
                   <div className="header">Email</div>
-                  <div className="info">{this.props.user.email}</div>
+                  <div className="info">{user.email}</div>
                   </div>
                   <div className="edit-toggle"  onClick={()=>this.initAttrChange('email')}>
                     编辑
@@ -358,7 +351,7 @@ class AccountProfile extends React.Component {
                 <div className="content">
                   <div className="inner-content">
                   <div className="header">微信</div>
-                  <div className="info">{this.props.user.wechat ? this.props.user.wechat : '暂无资料'}</div>
+                  <div className="info">{user.wechat ? user.wechat : '暂无资料'}</div>
                   </div>
                   <div className="edit-toggle"  onClick={()=>this.initAttrChange('wechat')}>
                     编辑
@@ -419,4 +412,10 @@ class AccountProfile extends React.Component {
   }
 }
 
-export default AccountProfile;
+
+const mapStateToProps = state => {
+  const {user} = state;
+  return {user};
+};
+
+export default connect(mapStateToProps)(AccountProfile);

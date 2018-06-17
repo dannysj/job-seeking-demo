@@ -18,7 +18,7 @@ exports.getUserInfo = (uid, callback) => {
     db.query(`select count(*) as count from message
               where is_read=false and destination=$1`, [uid])
       .then(result => {
-        userAccount.num_notifications = result.rows[0].count;
+        userAccount.num_notifications = parseInt(result.rows[0].count);
         callback(null, userAccount);
       }).catch(err => callback(err))
   });

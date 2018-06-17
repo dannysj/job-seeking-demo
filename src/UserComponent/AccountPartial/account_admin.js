@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Modal, Button, Image, Header, Input, Segment } from 'semantic-ui-react';
+import { Button, Image, Input, Segment } from 'semantic-ui-react';
 import ReactQuill from 'react-quill';
 import axios from 'axios';
 import 'react-quill/dist/quill.snow.css';
@@ -145,7 +145,7 @@ class AccountAdmin extends React.Component {
           {this.state.applications.length===0 && '暂无申请'}
           {this.state.applications.map(el => (
             <div className="app-mentor-container" key={el.id}>
-              <img className="app-mentor-picture" src={el.profile_pic}/>
+              <img className="app-mentor-picture" src={el.profile_pic} alt="mentor"/>
               <div className="app-mentor-text">
                 <h4>{el.last+' '}{el.first}</h4>
                 <p>Offer公司: {el.offer_company}</p>

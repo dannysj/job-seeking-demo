@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Button, Image, Divider, Icon} from 'semantic-ui-react';
+import {Button, Image, Divider} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import './mentor.css';
@@ -37,7 +37,6 @@ class MentorDetail extends Component {
       this.context.router.history.push('/login');
       return;
     }
-    var handler = this;
     axios.post(process.env.REACT_APP_API_HOST + '/api/create_order',
     {
       uid:this.props.user.id,
@@ -61,12 +60,12 @@ class MentorDetail extends Component {
       uid:this.props.user.id,
       order_id:order_id
     }).then(res => {
-      if(res.data.code==0){
+      if(res.data.code===0){
         // handler.setState({showAddServiceModal: false, qr_code: ''});
         alert('支付成功'); //TODO Notification System
         this.context.router.history.push('/account/mentor');
       }
-      else if(res.data.code == 15){
+      else if(res.data.code === 15){
         handler.pollPayment(order_id);
       }
       else{
@@ -78,7 +77,6 @@ class MentorDetail extends Component {
 
   render() {
     let modalClassName='ui modal';
-    var test_url = '/img/banner.jpg';
     const backimgstyle = {
       backgroundImage: 'url('+this.state.mentor.profile_pic+')',
       backgroundPosition: 'center center no-repeat',

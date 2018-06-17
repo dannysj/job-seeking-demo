@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 import './index.css';
 import axios from 'axios';
@@ -32,7 +31,7 @@ class ProfileFollow extends Component {
     // The other one. this.state.news.author_id
     // call the function 
 
-    if (this.props.loggedInUser != undefined){
+    if (this.props.loggedInUser !== undefined){
       axios.post(process.env.REACT_APP_API_HOST + '/api/follow_user',
        {follower_uid: this.props.loggedInUser.id , followee_uid: this.state.author_id}).then(res=>{
           console.log("follow")    
@@ -70,7 +69,7 @@ class ProfileFollow extends Component {
   render() {
     return (
       <div className="follow-container">
-        <img src={this.state.user.profile_pic}></img>
+        <img src={this.state.user.profile_pic} alt="Profile"/>
         <div className="follow-text-container">
           <div className="follow-title">
             <div className="follow-name">

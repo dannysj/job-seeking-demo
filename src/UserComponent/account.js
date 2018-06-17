@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { Router, Route, Switch } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Route, Switch } from 'react-router';
 import { Label, Icon } from 'semantic-ui-react';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import './account.css';
 import NavLink from '../NavLinkComponent/navlink';
@@ -22,9 +19,7 @@ import AccountNotification from "./AccountPartial/account_notification";
 
 class Account extends Component {
 
-  constructor (props) {
-    super(props);
-  }
+
 
   render() {
     if(this.props.user == null){
@@ -73,7 +68,7 @@ class Account extends Component {
                 <Icon name='chat' className="menu-icon" />
                 系统通知
                 {
-                  (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications!=0) &&
+                  (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications!==0) &&
                     (<Label color='red' floating>
                       {this.props.user.num_notifications}
                     </Label>)
@@ -102,10 +97,10 @@ class Account extends Component {
                   <Route path='/account/service' render={()=><AccountService user={this.props.user}/>} />
                   <Route path='/account/mentor_edit' render={()=><MentorEdit user={this.props.user}/>} />
                   <Route path='/account/create_article' render={()=><CreateArticle user={this.props.user}/>} />
-                  <Route path='/account/notification' render={()=><AccountNotification onUpdate={this.props.onSuccess} user={this.props.user}/>} />
+                  <Route path='/account/notification' render={()=><AccountNotification user={this.props.user}/>} />
                   <Route path='/account/admin' render={()=><AccountAdmin user={this.props.user}/>} />
                   <Route path='/account/logout' render={()=><AccountLogout/>} />
-                  <Route path='/account/' render={()=><AccountProfile user={this.props.user} onUpdate={this.props.onSuccess}/>} />
+                  <Route path='/account/' render={()=><AccountProfile/>} />
                 </Switch>
               )
                 : (<AccountForbidden />)}
