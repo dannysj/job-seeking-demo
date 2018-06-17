@@ -8,7 +8,7 @@ class NavLink extends React.Component {
         var isActive = this.context.router.route.location.pathname === this.props.to;
         var className = 'item ';
 
-        if (this.props.isVertical) {
+        if (!this.props.isHorizontal) {
           className += isActive ? 'vertical-col ' : ' ';
         } else {
           className += isActive ? 'active-custom ' : ' ';

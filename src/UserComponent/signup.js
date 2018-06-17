@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './user.css';
 import store from "../redux";
-import {updateUser} from "../redux/actions/userAction";
+import {setUser} from "../redux/userAction";
 
 //TODO Replace all alert with custom error message system
 
@@ -29,7 +29,7 @@ class Signup extends Component {
     if(this.state.user.password === this.state.user.cpassword){
       axios.post(process.env.REACT_APP_API_HOST + '/api/create_user',this.state.user).then(res => {
         if(res.data.code===0){
-          store.dispatch(updateUser(res.data.user));
+          store.dispatch(setUser(res.data.user));
           this.context.router.history.push('/account');
             NotificationManager.success('请检查邮件并激活此账号', '注册成功');
         }

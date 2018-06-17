@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import './user.css';
 import { Message } from 'semantic-ui-react'
 import store from "../redux";
-import {updateUser} from "../redux/actions/userAction";
+import {setUser} from "../redux/userAction";
 
 class Login extends Component {
 
@@ -21,7 +21,7 @@ class Login extends Component {
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/verify_user',this.state.user).then(res => {
       if(res.data.code===0){
-        store.dispatch(updateUser(res.data.user));
+        store.dispatch(setUser(res.data.user));
         if(this.context.router.history.location.pathname === "/login"){
           this.context.router.history.push("/");
           return;

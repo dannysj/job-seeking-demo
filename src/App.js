@@ -19,7 +19,7 @@ import NewsDetail from './NewsComponent/news_detail';
 import About from './AboutComponent/about';
 // Redux
 import store from "./redux";
-import {fetchUser} from "./redux/actions/userAction";
+import {fetchUser} from "./redux/userAction";
 import {connect, Provider} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 
@@ -34,7 +34,7 @@ class App extends Component {
       height: 0,
       current_page: "主 页"
     };
-    this.updateUser = this.updateUser.bind(this);
+
     this.menuToggled = this.menuToggled.bind(this);
     this.user_menuToggled = this.user_menuToggled.bind(this);
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -107,25 +107,25 @@ class App extends Component {
             </label>
           </div>
           <div className={"nav-list " }>
-            <NavLink to="/" onClick={this.menuToggled}>
+            <NavLink to="/" onClick={this.menuToggled} isHorizontal>
               <div className="Nav-item ">
                 <div className="App-subtitle">Home</div>
                 <div className="chinese-top">主页</div>
               </div>
             </NavLink>
-            <NavLink to="/mentor" onClick={this.menuToggled}>
+            <NavLink to="/mentor" onClick={this.menuToggled} isHorizontal>
               <div className="Nav-item ">
                 <div className="App-subtitle">Tutors</div>
                 <div className="chinese-top">导师</div>
               </div>
             </NavLink>
-            <NavLink to="/news" onClick={this.menuToggled}>
+            <NavLink to="/news" onClick={this.menuToggled} isHorizontal>
               <div className="Nav-item ">
                 <div className="App-subtitle">Careers</div>
                 <div className="chinese-top">就业干货</div>
               </div>
             </NavLink>
-            <NavLink to="/about" onClick={this.menuToggled}>
+            <NavLink to="/about" onClick={this.menuToggled} isHorizontal>
               <div className="Nav-item ">
                 <div className="App-subtitle">About</div>
                 <div className="chinese-top">关于</div>
@@ -234,7 +234,7 @@ class App extends Component {
 
 const mapStateToProps = state => {
   const {user} = state;
-  return {user}
+  return {user};
 };
 
-export default withRouter(connect(mapStateToProps)(App))
+export default withRouter(connect(mapStateToProps)(App));

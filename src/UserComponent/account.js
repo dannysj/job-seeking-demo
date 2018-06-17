@@ -100,7 +100,7 @@ class Account extends Component {
                   <Route path='/account/notification' render={()=><AccountNotification user={this.props.user}/>} />
                   <Route path='/account/admin' render={()=><AccountAdmin user={this.props.user}/>} />
                   <Route path='/account/logout' render={()=><AccountLogout/>} />
-                  <Route path='/account/' render={()=><AccountProfile user={this.props.user} onUpdate={this.props.onSuccess}/>} />
+                  <Route path='/account/' render={()=><AccountProfile/>} />
                 </Switch>
               )
                 : (<AccountForbidden />)}

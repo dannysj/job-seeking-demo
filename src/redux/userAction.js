@@ -7,9 +7,16 @@ export function fetchUser(uid) {
   }
 }
 
-export function updateUser(user){
+export function setUser(user){
+  return{
+    type: "SET_USER",
+    payload: user
+  }
+}
+
+export function updateUser(prop, val){
   return{
     type: "UPDATE_USER",
-    payload: user
+    payload: {prop, val}
   }
 }
