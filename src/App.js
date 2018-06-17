@@ -4,7 +4,7 @@ import { Icon, Label} from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import logo from './logo.svg';
 import axios from 'axios';
-import './Semantic/semantic.min.css';
+import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 import NavLink from './NavLinkComponent/navlink';
 import Home from './HomeComponent/home';
