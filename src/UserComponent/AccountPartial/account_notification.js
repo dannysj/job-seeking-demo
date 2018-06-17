@@ -2,6 +2,8 @@ import React from 'react';
 import {Image, Segment} from 'semantic-ui-react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import store from "../../redux";
+import {updateUser} from "../../redux/actions/userAction";
 
 class AccountNotification extends React.Component {
   constructor(props) {
@@ -31,7 +33,7 @@ class AccountNotification extends React.Component {
     axios.post(process.env.REACT_APP_API_HOST + '/api/read_system_notification', {uid: this.props.user.id}).then(res => {
       if(res.data.code === 0){
         this.props.user.num_notifications = 0;
-        this.props.onUpdate(this.props.user);
+        store.dispatch(updateUser(res.data.user));
       }
     });
   }

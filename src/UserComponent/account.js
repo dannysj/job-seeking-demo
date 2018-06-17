@@ -20,6 +20,7 @@ import AccountNotification from "./AccountPartial/account_notification";
 class Account extends Component {
 
 
+
   render() {
     if(this.props.user == null){
       this.context.router.history.push('/login');
@@ -96,7 +97,7 @@ class Account extends Component {
                   <Route path='/account/service' render={()=><AccountService user={this.props.user}/>} />
                   <Route path='/account/mentor_edit' render={()=><MentorEdit user={this.props.user}/>} />
                   <Route path='/account/create_article' render={()=><CreateArticle user={this.props.user}/>} />
-                  <Route path='/account/notification' render={()=><AccountNotification onUpdate={this.props.onSuccess} user={this.props.user}/>} />
+                  <Route path='/account/notification' render={()=><AccountNotification user={this.props.user}/>} />
                   <Route path='/account/admin' render={()=><AccountAdmin user={this.props.user}/>} />
                   <Route path='/account/logout' render={()=><AccountLogout/>} />
                   <Route path='/account/' render={()=><AccountProfile user={this.props.user} onUpdate={this.props.onSuccess}/>} />

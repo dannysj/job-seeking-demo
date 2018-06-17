@@ -2,9 +2,9 @@
 import React, {Component} from 'react';
 import {Route, Switch} from 'react-router';
 import {Icon, Label} from 'semantic-ui-react';
-import axios from 'axios';
 import 'semantic-ui-css/semantic.min.css';
 import './App.css';
+import {NotificationContainer} from 'react-notifications';
 // Components
 import NavLink from './NavLinkComponent/navlink';
 import Home from './HomeComponent/home';
@@ -20,7 +20,8 @@ import About from './AboutComponent/about';
 // Redux
 import store from "./redux";
 import {fetchUser} from "./redux/actions/userAction";
-import {connect} from 'react-redux'
+import {connect, Provider} from 'react-redux'
+import {withRouter} from 'react-router-dom'
 
 
 class App extends Component {
@@ -39,31 +40,17 @@ class App extends Component {
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.updateCurrentPage = this.updateCurrentPage.bind(this);
     this.toggle_outside = this.toggle_outside.bind(this);
+  }
 
-    let uid = localStorage.getItem('uid');
-    if(uid){
+  componentWillMount(){
+    const uid = localStorage.getItem('uid');
+    if (uid) {
       store.dispatch(fetchUser(uid));
-
-      axios.post(process.env.REACT_APP_API_HOST + '/api/get_user_info',{uid:uid}).then(res => {
-        if(res.data.code===0){
-          this.updateUser(res.data.user);
-        }
-        else{
-          alert('Database Error'); // TODO: proper err
-        }
-      });
     }
   }
 
-  updateUser(user) {
-    this.setState({user: user, is_checked: false});
-    localStorage.setItem('uid', user.id);
-  }
-
-
   updateCurrentPage(name) {
     this.setState({current_page: name, menu_open: false});
-
   }
 
   menuToggled(e) {
@@ -99,8 +86,10 @@ class App extends Component {
   }
 
   render() {
+    const user = this.props.user;
     return (
       <div className="app-flex">
+        <NotificationContainer />
         <input type="checkbox" id="reveal-menu" className="reveal-m" role="button" checked={this.state.is_checked ? "checked" : ""}/>
         <input type="checkbox" id="reveal-user-menu" className="reveal-um" role="button" checked={this.state.is_user_checked ? "checked" : ""}/>
         <div className={"navbar "} onClick={this.toggle_outside}>
@@ -144,21 +133,20 @@ class App extends Component {
             </NavLink>
           </div>
           <UserStatus
-            user={this.props.user}
+            user={user}
             onClick={this.user_menuToggled}
-            passFor="reveal-user-menu"
-            numnotifications={this.props.user.num_notifications}/>
+            passFor="reveal-user-menu"/>
         </div>
         {
-          (this.props.user) ? (
+          (user) ? (
             <div className="user-menu" onClick={this.user_menuToggled}>
               <div className="item name" >
                 <div className="user-name">
-                  {this.props.user.last + this.props.user.first}
+                  {user.last + user.first}
                 </div>
                 <div>
                 {
-                  this.props.user.email
+                  user.email
                 }
                 </div>
 
@@ -166,13 +154,13 @@ class App extends Component {
               </div>
               <div className="item account-status">
                 <Icon name='graduation'  color="blue" className="tab menu-icon" />
-                {this.props.user.ismentor ? "Mentor":"Mentee"}
+                {user.ismentor ? "Mentor":"Mentee"}
               </div>
 
               {
-                this.props.user.ismentor ? (
+                user.ismentor ? (
                    <NavLink to="/account/balance">
-                    <Icon name='dollar' className="tab menu-icon" />{this.props.user.balance}
+                    <Icon name='dollar' className="tab menu-icon" />{user.balance}
                   </NavLink>
                 ) : (<div></div>)
               }
@@ -183,7 +171,7 @@ class App extends Component {
                 基础资料
               </NavLink>
               {
-                this.props.user.ismentor ? (<div>
+                user.ismentor ? (<div>
                    <NavLink to="/account/mentor_edit">
                      <Icon name='edit'  className="tab menu-icon" />编辑导师档案
                     </NavLink>
@@ -204,15 +192,15 @@ class App extends Component {
                 <Icon name='chat' className="tab menu-icon" />
                 系统通知
                 {
-                  (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications !== 0) &&
+                  (!isNaN(user.num_notifications) && user.num_notifications !== 0) &&
                     (<Label color='red' floating>
-                      {this.props.user.num_notifications}
+                      {user.num_notifications}
                     </Label>)
                 }
 
               </NavLink>
               {
-                this.props.user.isadmin && (
+                user.isadmin && (
                   <NavLink to="/account/admin">
                     <Icon name='user secret'  className="tab menu-icon" />管理员页面
                   </NavLink>)
@@ -225,17 +213,19 @@ class App extends Component {
         }
 
         <div className="site-content" onClick={this.toggle_outside}>
+          <Provider store={store}>
           <Switch onChange={this.onRouteChange}>
-            <Route path='/login' render={()=><Login onSuccess={this.updateUser}></Login>} />
-            <Route path='/signup' render={()=><Signup onSuccess={this.updateUser}></Signup>}  />
-            <Route path='/account' render={()=><Account user={this.props.user} onSuccess={this.updateUser} width={this.state.width} height={this.state.height}></Account>} />
-            <Route path="/mentor/:mid" render={(props)=><MentorDetail {...props} user={this.props.user}></MentorDetail>} />
+            <Route path='/login' render={()=><Login/>} />
+            <Route path='/signup' render={()=><Signup />}  />
+            <Route path='/account' render={()=><Account user={user} width={this.state.width} height={this.state.height}/>} />
+            <Route path="/mentor/:mid" render={(props)=><MentorDetail {...props} user={user}/>} />
             <Route path='/mentor' component={Mentor}/>
-      <Route path='/news/:nid'   render={(props)=><NewsDetail {...props} loggedInUser={this.props.user}></NewsDetail> } />
+            <Route path='/news/:nid'   render={(props)=><NewsDetail {...props} loggedInUser={user}/> } />
             <Route path='/news' component={News}/>
             <Route path='/about' component={About}/>
             <Route path='/' component={Home}/>
           </Switch>
+          </Provider>
         </div>
       </div>
     );
@@ -247,4 +237,4 @@ const mapStateToProps = state => {
   return {user}
 };
 
-export default connect(mapStateToProps)(App)
+export default withRouter(connect(mapStateToProps)(App))

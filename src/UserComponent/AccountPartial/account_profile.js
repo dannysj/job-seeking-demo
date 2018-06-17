@@ -5,6 +5,8 @@ import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
 import '../account.css';
 import ImgCrop from './ImgCrop/imgcrop.js';
+import store from "../../redux";
+import {updateUser} from "../../redux/actions/userAction";
 
 
 class AccountProfile extends React.Component {
@@ -55,7 +57,7 @@ class AccountProfile extends React.Component {
       if(res.data.code===0){
 
         this.props.user[key] = value;
-        this.props.onUpdate(this.props.user);
+        store.dispatch(updateUser(res.data.user));
         delete curState.attr_key[key];
         this.setState({curState})
       }
