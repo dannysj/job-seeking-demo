@@ -20,3 +20,9 @@ export function updateUser(prop, val){
     payload: {prop, val}
   }
 }
+
+export function logout(){
+  return{
+    type: "LOGOUT"
+  }
+}

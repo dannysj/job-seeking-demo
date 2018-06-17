@@ -17,7 +17,9 @@ export default (state = {}, action) => {
       user = payload.data.user;
       break;
 
-
+    case "LOGOUT":
+      localStorage.removeItem('uid');
+      return null;
 
     case "FETCH_USER_REJECTED":
       NotificationManager.error('无法读取登陆信息', '错误');
