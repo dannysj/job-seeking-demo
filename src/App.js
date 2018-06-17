@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router';
 import { Icon, Label} from 'semantic-ui-react';
 import axios from 'axios';
-import './Semantic/semantic.min.css';
+import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 import NavLink from './NavLinkComponent/navlink';
 import Home from './HomeComponent/home';

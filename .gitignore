@@ -24,3 +24,5 @@ static/
 key.pem
 package-lock.json
 public/files/
+src/**/*.css
+src/**/*.css.map
