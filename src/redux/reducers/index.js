@@ -1,7 +1,11 @@
 import {combineReducers} from "redux"
 
-import user from "./userReducer"
+import userReducer from "./userReducer"
+import newsReducer from "./newsReducer";
 
-export default combineReducers({
-  user
-})
+const reducers = combineReducers({
+  user: userReducer,
+  news: newsReducer,
+});
+
+export default reducers;

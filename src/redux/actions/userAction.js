@@ -1,0 +1,8 @@
+import axios from "axios/index";
+
+export function fetchUser(uid) {
+  return {
+    type: "FETCH_USER",
+    payload: axios.post(process.env.REACT_APP_API_HOST + '/api/get_user_info', {uid: uid})
+  }
+}

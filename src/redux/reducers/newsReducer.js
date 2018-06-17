@@ -1,7 +1,7 @@
 export default (state = {}, action) => {
   switch (action.type) {
-    case "FETCH_USER_FULFILLED":
-      return action.payload.data.user;
+    case "FETCH_NEWS_FULFILLED":
+      return {...state, [action.payload.key]: action.payload.value};
     default:
       return state;
   }

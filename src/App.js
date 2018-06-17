@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
-import { Route, Switch } from 'react-router';
-import { Icon, Label} from 'semantic-ui-react';
+// UI
+import React, {Component} from 'react';
+import {Route, Switch} from 'react-router';
+import {Icon, Label} from 'semantic-ui-react';
 import axios from 'axios';
 import 'semantic-ui-css/semantic.min.css';
 import './App.css';
+// Components
 import NavLink from './NavLinkComponent/navlink';
 import Home from './HomeComponent/home';
 import Mentor from './MentorComponent/mentor';
@@ -15,7 +17,10 @@ import MentorDetail from './MentorComponent/mentor_detail';
 import News from './NewsComponent/news';
 import NewsDetail from './NewsComponent/news_detail';
 import About from './AboutComponent/about';
-
+// Redux
+import store from "./redux";
+import {fetchUser} from "./redux/actions/userAction";
+import {connect} from 'react-redux'
 
 
 class App extends Component {
@@ -36,8 +41,12 @@ class App extends Component {
     this.updateCurrentPage = this.updateCurrentPage.bind(this);
     this.toggle_outside = this.toggle_outside.bind(this);
 
+
+
     let uid = localStorage.getItem('uid');
     if(uid){
+      store.dispatch(fetchUser(uid));
+
       this.state = {user: {id: uid}};
       axios.post(process.env.REACT_APP_API_HOST + '/api/get_user_info',{uid:uid}).then(res => {
         if(res.data.code==0){
@@ -138,19 +147,19 @@ class App extends Component {
               </div>
             </NavLink>
           </div>
-          <UserStatus user={this.state.user} onClick={this.user_menuToggled} passFor="reveal-user-menu" numnotifications={this.state.num_notifications}></UserStatus>
+          <UserStatus user={this.props.user} onClick={this.user_menuToggled} passFor="reveal-user-menu" numnotifications={this.state.num_notifications}></UserStatus>
         </div>
         {
-          (this.state.user) ? (
+          (this.props.user) ? (
             <div className="user-menu" onClick={this.user_menuToggled}>
               <div className="item name" >
                 <div className="user-name">{
-                  this.state.user.last+this.state.user.first
+                  this.props.user.last+this.props.user.first
 
                 }</div>
                 <div>
                 {
-                  this.state.user.email
+                  this.props.user.email
                 }
                 </div>
 
@@ -158,13 +167,13 @@ class App extends Component {
               </div>
               <div className="item account-status">
                 <Icon name='graduation'  color="blue" className="tab menu-icon" />
-                {this.state.user.ismentor ? "Mentor":"Mentee"}
+                {this.props.user.ismentor ? "Mentor":"Mentee"}
               </div>
 
               {
-                this.state.user.ismentor ? (
+                this.props.user.ismentor ? (
                    <NavLink to="/account/balance">
-                    <Icon name='dollar' className="tab menu-icon" />{this.state.user.balance}
+                    <Icon name='dollar' className="tab menu-icon" />{this.props.user.balance}
                   </NavLink>
                 ) : (<div></div>)
               }
@@ -175,7 +184,7 @@ class App extends Component {
                 基础资料
               </NavLink>
               {
-                this.state.user.ismentor ? (<div>
+                this.props.user.ismentor ? (<div>
                    <NavLink to="/account/mentor_edit">
                      <Icon name='edit'  className="tab menu-icon" />编辑导师档案
                     </NavLink>
@@ -196,15 +205,15 @@ class App extends Component {
                 <Icon name='chat' className="tab menu-icon" />
                 系统通知
                 {
-                  (!isNaN(this.state.user.num_notifications) && this.state.user.num_notifications!=0) &&
+                  (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications!=0) &&
                     (<Label color='red' floating>
-                      {this.state.user.num_notifications}
+                      {this.props.user.num_notifications}
                     </Label>)
                 }
 
               </NavLink>
               {
-                this.state.user.isadmin && (
+                this.props.user.isadmin && (
                   <NavLink to="/account/admin">
                     <Icon name='user secret'  className="tab menu-icon" />管理员页面
                   </NavLink>)
@@ -220,10 +229,10 @@ class App extends Component {
           <Switch onChange={this.onRouteChange}>
             <Route path='/login' render={()=><Login onSuccess={this.updateUser}></Login>} />
             <Route path='/signup' render={()=><Signup onSuccess={this.updateUser}></Signup>}  />
-            <Route path='/account' render={()=><Account user={this.state.user} onSuccess={this.updateUser} width={this.state.width} height={this.state.height}></Account>} />
-            <Route path="/mentor/:mid" render={(props)=><MentorDetail {...props} user={this.state.user}></MentorDetail>} />
+            <Route path='/account' render={()=><Account user={this.props.user} onSuccess={this.updateUser} width={this.state.width} height={this.state.height}></Account>} />
+            <Route path="/mentor/:mid" render={(props)=><MentorDetail {...props} user={this.props.user}></MentorDetail>} />
             <Route path='/mentor' component={Mentor}/>
-      <Route path='/news/:nid'   render={(props)=><NewsDetail {...props} loggedInUser={this.state.user}></NewsDetail> } />
+      <Route path='/news/:nid'   render={(props)=><NewsDetail {...props} loggedInUser={this.props.user}></NewsDetail> } />
             <Route path='/news' component={News}/>
             <Route path='/about' component={About}/>
             <Route path='/' component={Home}/>
@@ -234,4 +243,10 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  const {user} = state;
+
+  return {user}
+};
+
+export default connect(mapStateToProps)(App)
