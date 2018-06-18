@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Button, Image, Divider, Icon} from 'semantic-ui-react';
+import {Button, Image, Divider, Icon, Modal, TextArea, Header, Input} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import './mentor.css';
@@ -11,7 +11,7 @@ import Footer from '../Components/Footer';
 class MentorDetail extends Component {
   constructor (props) {
     super(props);
-    this.state = {mentor: {first: "", last: "", service: []}, is_resume_open:false, isDown:true, showAddServiceModal: false};
+    this.state = {mentor: {first: "", last: "", service: []}, is_resume_open:false, isDown:true, note: '', showAddServiceModal: false, showNoteModal: false};
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
@@ -24,6 +24,33 @@ class MentorDetail extends Component {
 
     this.initBuy = this.initBuy.bind(this);
     this.resumeToggled = this.resumeToggled.bind(this);
+    this.updateNote = this.updateNote.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCancelBuy = this.handleCancelBuy.bind(this);
+  }
+
+  updateNote(e) {
+    this.setState({note: e.target.value});
+  }
+
+  handleSubmit() {
+    this.setState({showNoteModal: false})
+    var handler = this;
+    axios.post(process.env.REACT_APP_API_HOST + '/api/create_order',
+    {
+      uid:this.props.user.id,
+      mid:this.props.match.params.mid,
+      service_name: this.state.service_name,
+      service_price: this.state.service_price,
+      note: this.state.note
+    }).then(res => {
+      if (res.data.code === 0) {
+        window.location.href = res.data.url;
+      }
+      else{
+        NotificationManager.error('数据库错误','错误');
+      }
+    });
   }
 
   resumeToggled(e) {
@@ -37,21 +64,11 @@ class MentorDetail extends Component {
       this.context.router.history.push('/login');
       return;
     }
-    var handler = this;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/create_order',
-    {
-      uid:this.props.user.id,
-      mid:this.props.match.params.mid,
-      service_name: service_name,
-      service_price: service_price
-    }).then(res => {
-      if (res.data.code === 0) {
-        window.location.href = res.data.url;
-      }
-      else{
-        NotificationManager.error('数据库错误','错误');
-      }
-    });
+    this.setState({service_name: service_name, service_price: service_price, showNoteModal: true});
+  }
+
+  handleCancelBuy() {
+    this.setState({service_name: '', service_price: '', note: '', showNoteModal: false});
   }
 
   pollPayment(order_id){
@@ -97,6 +114,27 @@ class MentorDetail extends Component {
       <div className="mentor-detail-container">
         <input type="checkbox" id="reveal-resume" className="reveal-resume" role="button" checked={this.state.is_resume_open ? "checked" : ""}></input>
         <NotificationContainer />
+        <Modal open={this.state.showNoteModal} style={{
+          marginTop: '0px !important',
+          marginLeft: 'auto',
+          marginRight: 'auto'
+        }}>
+          <Header icon='archive' content='申请导师服务' />
+          <Modal.Content>
+            <p>
+              请为导师提供一小段cover letter
+            </p>
+            <Input placeholder='说点什么吧' fluid value={this.state.note} onChange={this.updateNote} />
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color='red' onClick={this.handleCancelBuy}>
+              <Icon name='remove' /> 取消
+            </Button>
+            <Button color='green' onClick={this.handleSubmit}>
+              <Icon name='checkmark' /> 确认
+            </Button>
+          </Modal.Actions>
+        </Modal>
         <div className={modalClassName}>
             <i className="close icon"/>
           <div className="header">

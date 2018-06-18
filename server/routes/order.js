@@ -2,6 +2,8 @@ const db = require('../db/index.js');
 const express = require('express');
 const app = express.Router();
 const paypal = require('paypal-rest-sdk');
+const msg = require('../message.js');
+const messageDispatch = new msg(db);
 
 paypal.configure({
   'mode': 'live', //sandbox or live
@@ -54,12 +56,17 @@ app.post('/api/create_order', (req, res) => {
     req.body.mid,
     req.body.service_name,
     req.body.service_price,
-    (err) => {
+    req.body.note,
+    (err, mentee_name, mentor_uid) => {
       if (err) {
         console.log(err);
         res.json({code: 1});
       }
       res.json({code: 0, url: '/account/mentor'});
+      console.log('Return: '+mentee_name+' '+mentor_uid);
+      messageDispatch.sendSystemMessage(mentor_uid,
+        `${mentee_name} 刚刚申请了您的服务 ${req.body.service_name}，备注：${req.body.note}`,
+        (err)=>  console.log(err));
     });
 //   var timestamp = new Date().getTime();
 //
