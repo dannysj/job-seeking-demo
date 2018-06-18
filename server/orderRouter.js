@@ -2,8 +2,7 @@ const db = require('./orderDB.js');
 const express = require('express');
 const app = express.Router();
 const paypal = require('paypal-rest-sdk');
-const msg = require('../message.js');
-const messageDispatch = new msg(db);
+const messageDispatch = require('./messageDB.js');
 
 paypal.configure({
   'mode': 'live', //sandbox or live
