@@ -198,7 +198,7 @@ class MentorDetail extends Component {
               <img className="title-icon"  alt="age" src={ageIcon} height={50}/>
               本周服务次数
             </div>
-            <div className="subtitle">{this.state.mentor.service_amount}</div>
+            <div className="subtitle">{this.state.mentor.num_availability}</div>
 
           </div>
 
