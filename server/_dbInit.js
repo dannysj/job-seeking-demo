@@ -98,10 +98,11 @@ exports.reset = function () {
       service_price numeric(8,2),
       start_time timestamp,
       end_time timestamp,
-      status int -- 1 for in progress, 2 for mentor confirmation, 3 for mentee confirmation
+      status int, -- 1 for in progress, 2 for mentor confirmation, 3 for mentee confirmation
+      note text
     );
     create table if not exists follow_rel(
-      follower_uid int references users(id), 
+      follower_uid int references users(id),
       followee_uid int references users(id),
       timestamp timestamp
     );
