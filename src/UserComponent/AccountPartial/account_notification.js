@@ -1,10 +1,9 @@
 import React from 'react';
-import {Button, Image, Segment} from 'semantic-ui-react';
+import {Image, Segment} from 'semantic-ui-react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import MessageBox from './message_box';
-import CommentBox from "../../MentorComponent/CommentBox";
-import NavLink from '../../NavLinkComponent/navlink';
+import store from "../../redux";
+import {updateUser} from "../../redux/userAction";
 
 class AccountNotification extends React.Component {
   constructor(props) {
@@ -19,7 +18,7 @@ class AccountNotification extends React.Component {
   }
 
   retrieveMessage(){
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_system_notifications', {uid: this.props.user.id}).then(res => {
+    axios.post('/api/get_system_notifications', {uid: this.props.user.id}).then(res => {
       if(res.data.code === 0){
 
         this.setState({messages:res.data.messages});
@@ -31,10 +30,9 @@ class AccountNotification extends React.Component {
       }
     });
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/read_system_notification', {uid: this.props.user.id}).then(res => {
-      if(res.data.code == 0){
-        this.props.user.num_notifications = 0;
-        this.props.onUpdate(this.props.user);
+    axios.post('/api/read_system_notification', {uid: this.props.user.id}).then(res => {
+      if(res.data.code === 0){
+        store.dispatch(updateUser('num_notifications', 0));
       }
     });
   }

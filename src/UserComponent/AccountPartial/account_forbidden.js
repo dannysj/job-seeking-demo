@@ -1,14 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Dropdown} from 'semantic-ui-react';
-import axios from 'axios';
 import '../account.css';
 
 class AccountForbidden extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="forbidden-content">

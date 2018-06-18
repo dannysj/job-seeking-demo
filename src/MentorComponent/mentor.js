@@ -31,7 +31,7 @@ class Mentor extends Component {
     this.renderFollowButton = this.renderFollowButton.bind(this);
     this.follow_action = this.follow_action.bind(this);
     this.unfollow_action = this.unfollow_action.bind(this);
-    /*axios.post(process.env.REACT_APP_API_HOST + '/api/get_followees_by_uid', {account: 0}.then( 
+    /*axios.post('/api/get_followees_by_uid', {account: 0}.then(
       res =>{
         if (res.data.code === 0){
           this.setState({
@@ -49,7 +49,7 @@ class Mentor extends Component {
 
     
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_list' ).then(res => {
+    axios.post('/api/get_mentor_list' ).then(res => {
       if (res.data.code === 0) {
         this.setState({
           mentors: res.data.list,
@@ -127,7 +127,7 @@ class Mentor extends Component {
   }
   
  follow_action(uid, mentor_uid){
-    // axios.post(process.env.REACT_APP_API_HOST + '/api/create_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
+    // axios.post('/api/create_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
     //      .then(res=> ())
     //      .catch(err => console.log(err))
     console.log("Button click")
@@ -137,7 +137,7 @@ class Mentor extends Component {
  }
 
 unfollow_action(uid, mentor_uid){
-    // axios.post(process.env.REACT_APP_API_HOST + '/api/delete_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
+    // axios.post('/api/delete_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
     //      .then(res=> ())
     //      .catch(err => console.log(err))
     let followees = this.state.followees;
@@ -255,7 +255,7 @@ unfollow_action(uid, mentor_uid){
                 <div className="mentor-container" key={el.id}>
                     <div className="inner-container">
                     <div className="mentor-profile">
-                      <img className="mentor-picture" src={el.profile_pic}/>
+                      <img className="mentor-picture" src={el.profile_pic} alt=""/>
                       <br />
                       <div><strong>{el.last + ' '}{el.first}</strong></div>
                     </div>

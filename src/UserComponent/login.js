@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './user.css';
 import { Message } from 'semantic-ui-react'
+import store from "../redux";
+import {setUser} from "../redux/userAction";
 
 class Login extends Component {
 
@@ -17,9 +19,9 @@ class Login extends Component {
   handleSubmit (e) {
     e.preventDefault();
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/verify_user',this.state.user).then(res => {
-      if(res.data.code==0){
-        this.props.onSuccess(res.data.user);
+    axios.post('/api/verify_user',this.state.user).then(res => {
+      if(res.data.code===0){
+        store.dispatch(setUser(res.data.user));
         if(this.context.router.history.location.pathname === "/login"){
           this.context.router.history.push("/");
           return;

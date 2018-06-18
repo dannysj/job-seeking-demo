@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Carousel } from 'react-responsive-carousel';
 import { Link } from 'react-router-dom';
-import { Header, Container, Segment, Button, Divider } from 'semantic-ui-react';
+import { Container, Divider } from 'semantic-ui-react';
 import NewsList from './news_list';
 import MentorList from './mentor_list';
-import styles from 'react-responsive-carousel/lib/styles/carousel.min.css';
 import Footer from '../Components/Footer';
 import './home.css';
 

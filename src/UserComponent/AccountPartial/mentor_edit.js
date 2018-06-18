@@ -38,7 +38,7 @@ class MentorEdit extends React.Component {
     this.deleteRowAt = this.deleteRowAt.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_college_list').then(res => {
+    axios.post('/api/get_college_list').then(res => {
       if (res.data.code === 0) {
         let college_list = [];
         res.data.list.forEach((college) => {
@@ -54,7 +54,7 @@ class MentorEdit extends React.Component {
       }
     });
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
+    axios.post('/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
       if (res.data.code === 0) {
 
         res.data.mentor.services = res.data.mentor.service; // sorry for the terrible naming.
@@ -136,7 +136,7 @@ class MentorEdit extends React.Component {
       return;
     }
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/mentor_edit', this.state.mentor_info).then(res => {
+    axios.post('/api/mentor_edit', this.state.mentor_info).then(res => {
       if (res.data.code === 0) {
         NotificationManager.success('已经更改了您的信息', '成功');
         this.context.router.history.push('/account/mentor_edit');
@@ -157,7 +157,7 @@ class MentorEdit extends React.Component {
 
   handleEdit(index) {
     let curServices = this.state.mentor_info.services.slice();
-    let curServices2 = this.state.mentor_info.services.slice(index, index+1);
+    // let curServices2 = this.state.mentor_info.services.slice(index, index+1);
     this.tempService = curServices[index]
 
     this.setState({editMode: true, editIndex: index, showAddServiceModal: true});

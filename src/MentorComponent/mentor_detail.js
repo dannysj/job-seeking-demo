@@ -13,7 +13,7 @@ class MentorDetail extends Component {
     super(props);
     this.state = {mentor: {first: "", last: "", service: []}, is_resume_open:false, isDown:true, note: '', showAddServiceModal: false, showNoteModal: false};
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
+    axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
         this.setState({mentor:res.data.mentor});
       }
@@ -73,17 +73,17 @@ class MentorDetail extends Component {
 
   pollPayment(order_id){
     var handler = this;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/poll_payment',
+    axios.post('/api/poll_payment',
     {
       uid:this.props.user.id,
       order_id:order_id
     }).then(res => {
-      if(res.data.code==0){
+      if(res.data.code===0){
         // handler.setState({showAddServiceModal: false, qr_code: ''});
         alert('支付成功'); //TODO Notification System
         this.context.router.history.push('/account/mentor');
       }
-      else if(res.data.code == 15){
+      else if(res.data.code === 15){
         handler.pollPayment(order_id);
       }
       else{
@@ -95,7 +95,6 @@ class MentorDetail extends Component {
 
   render() {
     let modalClassName='ui modal';
-    var test_url = '/img/banner.jpg';
     const backimgstyle = {
       backgroundImage: 'url('+this.state.mentor.profile_pic+')',
       backgroundPosition: 'center center no-repeat',

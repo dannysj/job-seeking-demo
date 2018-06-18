@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Modal, Button, Image, Header, Input, Segment } from 'semantic-ui-react';
+import { Button, Image, Input, Segment } from 'semantic-ui-react';
 import ReactQuill from 'react-quill';
 import axios from 'axios';
 import 'react-quill/dist/quill.snow.css';
@@ -27,7 +27,7 @@ class AccountAdmin extends React.Component {
 
   updateInfo() {
     let handler = this;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/admin/get_applications').then(res => {
+    axios.post('/api/admin/get_applications').then(res => {
       if(res.data.code === 0){
         handler.setState({applications: res.data.applications});
       }
@@ -50,7 +50,7 @@ class AccountAdmin extends React.Component {
     data.append('file', e.target.files[0]);
     let handler = this;
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/file/general_upload', data).then(res => {
+    axios.post('/api/file/general_upload', data).then(res => {
       if(res.data.code === 0){
         let curState = handler.state;
         curState['news']['thumbnail'] = res.data.url;
@@ -86,7 +86,7 @@ class AccountAdmin extends React.Component {
   handleSubmitNews(){
     let data = this.state.news;
     data.author_id = this.props.user.id;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/create_news',data).then(res => {
+    axios.post('/api/create_news',data).then(res => {
       if(res.data.code===0){
         alert('success'); // TODO: change this
         this.context.router.history.push('/news/'+res.data.nid);
@@ -102,7 +102,7 @@ class AccountAdmin extends React.Component {
 
     let handler = this;
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/admin/decide_mentor_app',{uid:uid,mid:mid,decision:decision}).then(res => {
+    axios.post('/api/admin/decide_mentor_app',{uid:uid,mid:mid,decision:decision}).then(res => {
       if(res.data.code===0){
         alert('success'); // TODO: change this
         // handler.state.applications.forEach(function(app, index){
@@ -145,7 +145,7 @@ class AccountAdmin extends React.Component {
           {this.state.applications.length===0 && '暂无申请'}
           {this.state.applications.map(el => (
             <div className="app-mentor-container" key={el.id}>
-              <img className="app-mentor-picture" src={el.profile_pic}/>
+              <img className="app-mentor-picture" src={el.profile_pic} alt="mentor"/>
               <div className="app-mentor-text">
                 <h4>{el.last+' '}{el.first}</h4>
                 <p>Offer公司: {el.offer_company}</p>

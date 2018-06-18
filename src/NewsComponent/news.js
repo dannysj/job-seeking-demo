@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Button, Container, Divider } from 'semantic-ui-react';
+import { Container, Divider } from 'semantic-ui-react';
 import axios from 'axios';
 import Footer from '../Components/Footer';
 import './news.css';
@@ -14,7 +14,7 @@ class News extends React.Component {
     };
     this.batch_size = 10;
     this.batch_num = 0;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_news_list',
+    axios.post('/api/get_news_list',
       {batch_size: this.batch_size, batch_num:this.batch_num}).then(res => {
       if(res.data.code===0){
         this.batch_num++;
@@ -44,7 +44,7 @@ class News extends React.Component {
           this.state.news_list.map(el => (
             <Link to={'/news/'+el.id}>
             <div className="list-news-container new-big" key={el.id}>
-              <img className="list-news-picture" src={el.thumbnail}/>
+              <img className="list-news-picture" src={el.thumbnail} alt={el.title}/>
               <div className="list-news-text">
                 <div className="list-news-title">{el.title}</div>
                 <div className="list-news-author-details">
@@ -74,7 +74,7 @@ class News extends React.Component {
             this.state.news_list.map(el => (
               <Link to={'/news/'+el.id}>
               <div className="list-news-container" key={el.id}>
-                <img className="list-news-picture" src={el.thumbnail}/>
+                <img className="list-news-picture" src={el.thumbnail} alt={el.title}/>
                 <div className="list-news-text">
                   <div className="list-news-title">{el.title}</div>
                   <div className="list-news-subtitle">{el.last + el.first}</div>
