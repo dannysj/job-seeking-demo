@@ -1,15 +1,12 @@
 const fs = require('fs');
-const db = require('../pool.js');
+const db = require('./_dbPool.js');
+const path = require("path");
 
 exports.patch = () => {
-  // Patch mentor_comment
-  const sql = fs.readFileSync('./patch/mentor_comment.sql').toString();
-  db.query(sql, (err, result) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    console.log('Table mentor_comment Created');
+  // patch everything in ./patch folder
+  fs.readdirSync(path.resolve(__dirname, 'patch')).forEach(file => {
+    const query = fs.readFileSync(file).toString();
+    db.query(query).then(() => console.log(file + 'patched')).catch(err => console.log(err));
   });
 };
 

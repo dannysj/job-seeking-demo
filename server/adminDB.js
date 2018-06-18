@@ -1,4 +1,4 @@
-const db = require('../pool.js');
+const db = require('./_dbPool.js');
 
 exports.approveMentor = (uid, mid, callback) => {
   console.log(uid);
@@ -23,44 +23,8 @@ exports.disapproveMentor = (uid, mid, callback) => {
   });
 };
 
-exports.createMessage = (origin, dest, type, content, callback) => {
-  const query = `
-    insert into message (origin,destination,type,content,timestamp,is_read)
-    values($1,$2,$3,$4,now(),false);
-  `;
-  db.query(query, [origin, dest, type, content], (err, result) => {
-    if (err) {
-      callback(err);
-      return;
-    }
-    callback(null);
-  });
-};
-
-exports.getNotificationsByUid = (uid, callback) => {
-  const query = `select * from message where origin=0 and destination=$1 order by timestamp desc;`;
-  db.query(query, [uid], (err, result) => {
-    if (err) {
-      callback(err);
-      return;
-    }
-    callback(null, result.rows);
-  });
-};
-
-exports.setNotificationsAsRead = (uid, callback) => {
-  const query = `update message set is_read=true where origin=0 and destination=$1;`;
-  db.query(query, [uid], (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-    if (callback)
-      callback(err);
-  });
-};
-
 exports.getMentorApplications = (callback) => {
-  var query = `
+  const query = `
     select u.first as first,
       u.profile_pic as profile_pic,
       u.last as last,

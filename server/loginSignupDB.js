@@ -1,4 +1,4 @@
-const db = require('../pool.js');
+const db = require('./_dbPool.js');
 
 
 // TODO: check and return proper error first if the user's email is duplicated

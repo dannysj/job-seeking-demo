@@ -1,11 +1,13 @@
-const db = require('../db/index.js');
-const express = require('express');
-const app = express.Router();
-const multer = require('multer');
-const msg = require('../message.js');
-const messageDispatch = new msg(db);
+const db = {
+  ...require('./adminDB.js'),
+  ...require('./messageDB.js')
+};
 
-var storage = multer.diskStorage({
+const express = require('express');
+const app = express();
+const multer = require('multer');
+
+const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, __dirname + '/static/files');
   },
@@ -13,7 +15,7 @@ var storage = multer.diskStorage({
     cb(null, new Date().getTime() + '-' + file.originalname);
   }
 });
-var upload = multer({storage: storage});
+const upload = multer({storage: storage});
 
 
 app.post('/api/file/general_upload', upload.single('file'), (req, res) => {
@@ -35,14 +37,14 @@ app.post('/api/admin/get_applications', (req, res) => {
 });
 
 app.post('/api/admin/decide_mentor_app', (req, res) => {
-  if (req.body.decision == 1) {
+  if (req.body.decision === 1) {
     db.approveMentor(req.body.uid, req.body.mid, (err) => {
       if (err) {
         console.log(err);
         res.json({code: 1, errMsg: 'Database Error'});
         return;
       }
-      messageDispatch.sendSystemMessage(req.body.uid, "您的导师申请已被通过。您的账户已成为导师账户，请经常查看系统通知并为Mentee提供优质服务");
+      db.sendSystemMessage(req.body.uid, "您的导师申请已被通过。您的账户已成为导师账户，请经常查看系统通知并为Mentee提供优质服务");
       res.json({code: 0});
     });
   }
@@ -53,31 +55,11 @@ app.post('/api/admin/decide_mentor_app', (req, res) => {
         res.json({code: 1, errMsg: 'Database Error'});
         return;
       }
-      messageDispatch.sendSystemMessage(req.body.uid, "我们抱歉地通知您，您的导师申请未被通过。您可以联系我们获得具体原因");
+      db.sendSystemMessage(req.body.uid, "我们抱歉地通知您，您的导师申请未被通过。您可以联系我们获得具体原因");
       res.json({code: 0});
     });
   }
 });
 
-app.post('/api/get_system_notifications', (req, res) => {
-  messageDispatch.getNotifications(req.body.uid, (err, notifications) => {
-    if (err) {
-      res.json({code: 1, errMsg: 'Database Error'});
-      return;
-    }
-    res.json({code: 0, messages: notifications});
-  });
-});
-
-app.post('/api/read_system_notification', (req, res) => {
-  messageDispatch.readNotifications(req.body.uid, (err)=>{
-    if(err){
-      res.json({code: 1, errMsg: 'Database Error'});
-    }
-    else{
-      res.json({code: 0});
-    }
-  });
-});
 
 module.exports = app;

@@ -1,4 +1,4 @@
-const db = require('../pool.js');
+const db = require('./_dbPool.js');
 
 exports.getRelMentors = (uid, callback) => {
   const query = `

@@ -1,4 +1,4 @@
-const db = require('../pool.js');
+const db = require('./_dbPool.js');
 
 // Table: follow_rel
 // follower
@@ -85,3 +85,4 @@ exports.createFollowerFolloweeRelationship= (follower_uid, followee_uid, callbac
        .then( res =>  callback(null, res.rows.map(dic=>dic["followee_uid"])) )
        .catch(err => dealWithFollowers(err, []))
    }
+

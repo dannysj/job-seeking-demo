@@ -1,4 +1,4 @@
-const db = require('../pool.js');
+const db = require('./_dbPool.js');
 
 
 exports.createMentorApp = (mentor_info, callback) => {
