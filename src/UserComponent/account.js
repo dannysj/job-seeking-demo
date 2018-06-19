@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router';
-import { Label, Icon } from 'semantic-ui-react';
+import { Label, Icon, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import './account.css';
 import NavLink from '../NavLinkComponent/navlink';
@@ -22,10 +22,18 @@ class Account extends Component {
 
 
   render() {
-    if(this.props.user == null){
+    if(localStorage.getItem('uid') == null){ // this is a temporary fix, please change it to using redux
       this.context.router.history.push('/login');
       return;
     }
+    if(!!!this.props.user){
+      return (
+        <div className="loading-news-view">
+            <Button basic loading>Loading</Button>
+        </div>
+      )
+    }
+    else
     return (
       <div className="back-container">
       <div className="ui container account-main-container">
