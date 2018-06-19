@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Container, Divider } from 'semantic-ui-react';
+import { Container, Divider, Button } from 'semantic-ui-react';
 import axios from 'axios';
 import Footer from '../Components/Footer';
 import './news.css';
@@ -10,7 +10,8 @@ class News extends React.Component {
   constructor (props) {
     super(props);
     this.state={
-      news_list:[]
+      news_list:[],
+      loading: true
     };
     this.batch_size = 10;
     this.batch_num = 0;
@@ -18,9 +19,7 @@ class News extends React.Component {
       {batch_size: this.batch_size, batch_num:this.batch_num}).then(res => {
       if(res.data.code===0){
         this.batch_num++;
-        let curState = this.state;
-        curState.news_list = res.data.news_list;
-        this.setState(curState);
+        this.setState({news_list: res.data.news_list, loading: false});
       }
       else{
         // TODO: detect which error it is, if it is depletion error, show "no more"
@@ -29,6 +28,14 @@ class News extends React.Component {
   }
 
   render() {
+    if (this.state.loading) {
+      return (
+        <div className="loading-news-view">
+            <Button basic loading>Loading</Button>
+        </div>
+      );
+    }
+    else
     return(
       <div className="news-container">
         <Container>

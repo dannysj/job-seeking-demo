@@ -21,6 +21,7 @@ class Mentor extends Component {
       },
       filterBarShown: false,
       followees: [],
+      loading: true
     };
     this.uid = 0;
     this.handleMajorChange = this.handleMajorChange.bind(this);
@@ -35,7 +36,7 @@ class Mentor extends Component {
       res =>{
         if (res.data.code === 0){
           this.setState({
-            followees = res.data.followees 
+            followees = res.data.followees
           })
         }
         else{
@@ -44,10 +45,10 @@ class Mentor extends Component {
           })
         }
         }
-      ) 
+      )
     )*/
 
-    
+
 
     axios.post('/api/get_mentor_list' ).then(res => {
       if (res.data.code === 0) {
@@ -55,7 +56,8 @@ class Mentor extends Component {
           mentors: res.data.list,
           majors: Array.from(new Set([].concat.apply([], res.data.list.map(e => e.major)))),
           colleges: Array.from(new Set(res.data.list.map(e => e.college_name))),
-          followees: [1,4]
+          followees: [1,4],
+          loading: false
         });
       }
       else {
@@ -125,7 +127,7 @@ class Mentor extends Component {
     curState.filterBarShown = !curState.filterBarShown;
     this.setState(curState);
   }
-  
+
  follow_action(uid, mentor_uid){
     // axios.post('/api/create_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
     //      .then(res=> ())
@@ -169,16 +171,25 @@ unfollow_action(uid, mentor_uid){
         <i class="user icon"></i>
         Follow
         </button>
-      ) 
+      )
     }
   }
 
   render() {
     //var blackout = this.state.search ? "blackout " : "";
-    const companyIcon = '/icons/company.png'
-    const schoolIcon = '/icons/school.png'
-    const posiIcon = '/icons/position.png'
-    const ageIcon = '/icons/age.png'
+    const companyIcon = '/icons/company.png';
+    const schoolIcon = '/icons/school.png';
+    const posiIcon = '/icons/position.png';
+    const ageIcon = '/icons/age.png';
+
+    if (this.state.loading) {
+      return (
+        <div className="loading-news-view">
+            <Button basic loading>Loading</Button>
+        </div>
+      );
+    }
+    else
     return (
       <div className="flex-container">
         <div className="ui top attached tabular menu top-bar">
