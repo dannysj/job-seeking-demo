@@ -23,7 +23,9 @@ class MentorEdit extends React.Component {
         offer_title: null
       },
       editMode: false,
-      editIndex: -1
+      editIndex: -1,
+      collegeQuery: "",
+      isLoadingCollegeList: false
     };
     this.tempService = {};
     this.formRef = null;
@@ -37,8 +39,9 @@ class MentorEdit extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.deleteRowAt = this.deleteRowAt.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
 
-    axios.post('/api/get_college_list').then(res => {
+    axios.post('/api/get_college_list', {query: this.state.collegeQuery}).then(res => {
       if (res.data.code === 0) {
         let college_list = [];
         res.data.list.forEach((college) => {
@@ -116,6 +119,27 @@ class MentorEdit extends React.Component {
     this.tempService[e.target.name] = e.target.value;
   }
 
+  handleSearchChange = (e, {searchQuery}) =>{
+    clearTimeout(this.timer);
+
+    this.setState({collegeQuery: searchQuery});
+
+    this.timer = setTimeout(this.triggerSearch, 500);
+  }
+
+  triggerSearch = () =>{
+    this.setState({isLoadingCollegeList : true});
+
+    axios.post('/api/get_college_list', {query: this.state.collegeQuery}).then(res => {
+      if (res.data.code === 0) {
+        this.setState({college_list: res.data.list});
+      } else {
+        NotificationManager.error('无法获取大学列表', '错误');
+      }
+      this.setState({isLoadingCollegeList : false})
+    });
+  }
+
   handleChange(e, data) {
     let curState = this.state;
     if (data) {
@@ -129,7 +153,7 @@ class MentorEdit extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    
+
 
     if(this.state.mentor_info.num_weekly_slots < 0){
       NotificationManager.error('每周愿意服务次数必须为自然数','错误');
@@ -213,8 +237,13 @@ class MentorEdit extends React.Component {
           <div className="field">
             <label>院校名称：</label>
             <b className="notification-msg">
-              <Dropdown name='cid' placeholder='院校名称' fluid search selection options={this.state.college_list}
-                        onChange={this.handleChange} value={this.state.mentor_info.college_name}/>
+              <Dropdown name='cid' placeholder='院校名称' fluid search selection
+                        options={this.state.college_list}
+                        onChange={this.handleChange}
+                        onSearchChange={this.handleSearchChange}
+                        value={this.state.mentor_info.college_name}
+                        noResultsMessage={null}
+                        loading={this.state.isLoadingCollegeList}/>
             </b>
           </div>
           <div className="field">
