@@ -30,7 +30,7 @@ exports.updateUser = (data, callback) => {
 };
 
 exports.getMajorList = (callback) => {
-  const query = `select * from major`;
+  const query = `select * from major order by name;`;
   db.query(query, (err, result) => {
     if (err) {
       callback(err);
