@@ -55,6 +55,8 @@ class AccountApply extends React.Component {
         }
       }
     });
+
+    this.triggerSearch();
   }
 
   addService(e) {

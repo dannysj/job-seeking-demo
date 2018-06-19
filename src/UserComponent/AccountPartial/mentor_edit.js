@@ -41,21 +41,7 @@ class MentorEdit extends React.Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
 
-    axios.post('/api/get_college_list', {query: this.state.collegeQuery}).then(res => {
-      if (res.data.code === 0) {
-        let college_list = [];
-        res.data.list.forEach((college) => {
-          college_list.push({
-            value: college.id,
-            text: college.name
-          });
-        });
-        this.setState({college_list: college_list});
-      }
-      else {
-        NotificationManager.error('无法获取大学列表', '错误');
-      }
-    });
+    this.triggerSearch();
 
     axios.post('/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
       if (res.data.code === 0) {
