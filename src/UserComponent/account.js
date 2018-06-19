@@ -103,7 +103,10 @@ class Account extends Component {
                   <Route path='/account/' render={()=><AccountProfile/>} />
                 </Switch>
               )
-                : (<AccountForbidden />)}
+                : (<Switch onChange={this.onRouteChange}>
+                    <Route path='/account/logout' render={()=><AccountLogout/>} />
+                    <Route path='/account/' render={()=><AccountForbidden />} />
+                  </Switch>)}
 
             </div>
           </div>
