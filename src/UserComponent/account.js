@@ -77,7 +77,7 @@ class Account extends Component {
                 系统通知
                 {
                   (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications!==0) &&
-                    (<Label color='red' floating>
+                    (<Label color='red'>
                       {this.props.user.num_notifications}
                     </Label>)
                 }
