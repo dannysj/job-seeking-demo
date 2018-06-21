@@ -420,6 +420,10 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
   background-color: #FFF;
   height: 30px;
   width: 30px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mentor-profile-border {
@@ -438,7 +442,7 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
   height: 85%;
   width: 85%;
   border-radius: 50%;
-
+    object-fit: cover;
 }
 
 .mentor-name > .chinese-top {
