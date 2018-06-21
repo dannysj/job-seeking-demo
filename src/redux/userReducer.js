@@ -19,7 +19,7 @@ Object.freeze(userStatus);
  *  isactivated: boolean,
  *  isadmin: boolean,
  *  ismentor: boolean,
- *  major: Array,
+ *  major: string[],
  *  num_notifications: number,
  *  profile_pic: string,
  *  register_date: Date,

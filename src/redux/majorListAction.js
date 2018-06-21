@@ -10,5 +10,6 @@ export function fetchMajorList() {
   else
     return {
       type: "USE_CACHED_MAJOR_LIST",
+      payload: new Promise((f)=>f())
     }
 }

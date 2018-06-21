@@ -3,6 +3,9 @@ import {Button, Checkbox, Divider, Icon, Menu, Segment, Sidebar, Table} from 'se
 import {Link} from 'react-router-dom';
 import './mentor.css';
 import axios from "axios/index";
+import {fetchMentorList} from "../redux/mentorListAction";
+import store from "../redux";
+import {connect} from "react-redux";
 
 //import { createFollowerFolloweeRelationship } from '../../server/db/module/follow_relation';
 
@@ -12,7 +15,6 @@ class Mentor extends Component {
     super(props);
 
     this.state = {
-      mentors: [],
       majors: [],
       colleges: [],
       selected: {
@@ -20,8 +22,7 @@ class Mentor extends Component {
         "Colleges": []
       },
       filterBarShown: false,
-      followees: [],
-      loading: true
+      followees: []
     };
     this.uid = 0;
     this.handleMajorChange = this.handleMajorChange.bind(this);
@@ -48,24 +49,10 @@ class Mentor extends Component {
       )
     )*/
 
+  }
 
-
-    axios.post('/api/get_mentor_list' ).then(res => {
-      if (res.data.code === 0) {
-        this.setState({
-          mentors: res.data.list,
-          majors: Array.from(new Set([].concat.apply([], res.data.list.map(e => e.major)))),
-          colleges: Array.from(new Set(res.data.list.map(e => e.college_name))),
-          followees: [1,4],
-          loading: false
-        });
-      }
-      else {
-        //TODO: Error Handling
-      }
-    });
-
-
+  componentWillMount(){
+    store.dispatch(fetchMentorList());
   }
 
   handleMajorChange(e, data){
@@ -182,7 +169,7 @@ unfollow_action(uid, mentor_uid){
     const posiIcon = '/icons/position.png';
     const ageIcon = '/icons/age.png';
 
-    if (this.state.loading) {
+    if (this.props.loading) {
       return (
         <div className="loading-news-view">
             <Button basic loading>Loading</Button>
@@ -260,7 +247,7 @@ unfollow_action(uid, mentor_uid){
           <Sidebar.Pusher>
             <Segment basic>
             <div className="ui container listitem">
-              {this.state.mentors
+              {this.props.mentors
                 .filter((el) => (this.state.selected.Majors.length === 0 || el.major.filter(e => this.state.selected.Majors.indexOf(e) > -1).length > 0 ))
                 .filter((el) => (this.state.selected.Colleges.length === 0  || this.state.selected.Colleges.indexOf(el.college_name) > -1)).map(el => (
                 <div className="mentor-container" key={el.id}>
@@ -341,7 +328,12 @@ unfollow_action(uid, mentor_uid){
   }
 }
 
-export default Mentor;
+const mapStateToProps = state => {
+  const {mentor_list} = state;
+  return {...mentor_list};
+};
+
+export default connect(mapStateToProps)(Mentor);
 
 /*
 <div className="ui right internal rail Filter-container">

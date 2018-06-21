@@ -5,10 +5,12 @@ import promise from "redux-promise-middleware";
 
 import userReducer from './userReducer'
 import majorListReducer from './majorListReducer'
+import mentorListReducer from './mentorListReducer'
 
 const reducers = combineReducers({
   user: userReducer,
-  major_list: majorListReducer
+  major_list: majorListReducer,
+  mentor_list: mentorListReducer,
 });
 
 const middleware = applyMiddleware(promise(), thunk, logger);
