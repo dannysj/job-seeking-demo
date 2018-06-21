@@ -66,7 +66,7 @@ class News extends React.Component {
           <div className="header-text">
           <div className="container-block">
             <div className="chinese-top">最 新 动 态</div>
-            <div className="subtitle">Newest wow</div>
+            <div className="subtitle">Trending Now</div>
           </div>
           </div>
           <div className="news-detail-content">

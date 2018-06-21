@@ -83,6 +83,7 @@ class MentorDetail extends Component {
       backgroundImage: 'url('+this.state.mentor.profile_pic+')',
       backgroundPosition: 'center center no-repeat',
       backgroundSize: 'cover',
+      filter:'blur(1.5em)',
       };
     if(this.state.showAddServiceModal){
       modalClassName += ' payment-qr-container';
@@ -172,7 +173,7 @@ class MentorDetail extends Component {
               简历
             </div>
           <embed className="resume-holder" src={this.state.mentor.resume} width="100%" type='application/pdf'/>
-          <label forName="reveal-resume" className="resume-name" onClick={this.resumeToggled}><span>{(this.state.isDown) ? "点 击 展 开 简 历" : "缩 小"}</span><span className="triangle-open"><Arrow isDown={this.state.isDown}/></span>
+          <label forName="reveal-resume" className="resume-name" onClick={this.resumeToggled}><span>{(this.state.isDown) ? "点&nbsp;&nbsp;&nbsp;&nbsp;击&nbsp;&nbsp;&nbsp;&nbsp;展&nbsp;&nbsp;&nbsp;&nbsp;开&nbsp;&nbsp;&nbsp;&nbsp;简&nbsp;&nbsp;&nbsp;&nbsp;历" : "缩&nbsp;&nbsp;&nbsp;&nbsp;小"}</span><span className="triangle-open"><Arrow isDown={this.state.isDown}/></span>
           </label>
         </div>
 
@@ -190,7 +191,8 @@ class MentorDetail extends Component {
               <div className="mentor-service-container">
               {
                 this.state.mentor.service.map(el => (
-                  <div className="service-border" style={backimgstyle}>
+                  <div className="service-border" >
+                    <div className="service-blur" style={backimgstyle}> </div>
                     <div className="service-item" >
                       <div className="service-title">
                         <div className="service-name">{el.name}</div>

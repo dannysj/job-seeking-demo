@@ -225,6 +225,10 @@ input[type=checkbox].reveal-um:checked ~ .user-menu {
 
 	}
 
+	.user-item .item {
+		padding: 1.2em 2em;
+	}
+
 	.bread {
 	  position: absolute;
 	  width: 17px;
@@ -283,7 +287,9 @@ input[type=checkbox].reveal-um:checked ~ .user-menu {
 		transition: opacity 0.5s, visibility 0.5s;
 	}
 
-
+	.mentor-overview_container {
+		 width: 35%;
+	}
 	.logo-item > b {
 		display: none;
 	}

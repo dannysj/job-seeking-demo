@@ -362,14 +362,13 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
   padding: 5em 10%;
   text-align: center;
   display: flex;
-    flex-flow: row;
-    justify-content: center;
-    align-items: center;
+  align-items: flex-start;
+  flex-flow: row;
+  justify-content: center;
 }
 
 .mentor-detail-info-container > .item {
   display: flex;
-
   align-items: center;
   flex-flow: column;
   flex: 0;
@@ -439,7 +438,7 @@ font-size: 2em;
   background-color: hsla(0, 0%, 40%, 0.75);
   margin: 0em 1.5em;
   position: relative;
-    background-blend-mode: overlay;
+
 }
 .service-border  > .service-item {
   position: absolute;
@@ -451,6 +450,15 @@ font-size: 2em;
   justify-content: space-around;
   flex-flow: column;
   transition: opacity .35s,transform .35s;
+  color: white;
+}
+
+.service-blur {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-blend-mode: overlay;
+
 }
 
 .service-item::before {

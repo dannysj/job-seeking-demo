@@ -14,11 +14,11 @@ class About extends React.Component {
       share: [
         {
           name:"申请经验",
-          description: "分享一下申请 Google暑期实习的经历吧"
+          description: "学长学姐是如何获得Google暑期实习的经历的呢？"
         },
         {
           name:"心路历程",
-          description: "你是如何从一开始的迷茫一步步走到今天 的高度的?"
+          description: "前辈们是如何从一开始的迷茫一步步走到今天的高度的?"
         },
         {
           name:"实习经历",
@@ -26,7 +26,7 @@ class About extends React.Component {
         },
         {
           name:"行业介绍",
-          description: "你所在的制药 行业是怎么样的主要是做什么样的工作呢?"
+          description: "制药行业怎么样？主要是做什么样的工作呢?"
         },
       ]
     }
@@ -96,11 +96,11 @@ class About extends React.Component {
         <div className="parallax light hori" style={backimgstyle1}>
           <div className="cali-group hori">
             <div className="cali-title intro">
-              成为一个Mentor
+              成为一个Mentee
             </div>
           </div>
           <div className="cali-title medium">
-            你将会分享什么
+            你将会收获什么
           </div>
           <div className="share-container">
             {
