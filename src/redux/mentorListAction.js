@@ -1,8 +1,9 @@
 import axios from "axios";
 import store from "./index";
+import * as config from "./config";
 
 export function fetchMentorList() {
-  if (store.getState().mentor_list.mentors.length === 0)
+  if (store.getState().mentor_list.last_fetched - new Date() > config.expire_time)
     return {
       type: "FETCH_MENTOR_LIST",
       payload: axios.post('/api/get_mentor_list')

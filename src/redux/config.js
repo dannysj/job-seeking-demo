@@ -1,0 +1,1 @@
+export const expire_time = 60000;

@@ -1,10 +1,11 @@
 import {NotificationManager} from "react-notifications";
 
 const initState = {
-  loading:false,
+  last_fetched: new Date(0),
+  loading: false,
   mentors: [],
   majors: [],
-  colleges:[]
+  colleges: []
 };
 
 
@@ -23,9 +24,8 @@ export default (state = initState, action) => {
         loading: false,
         mentors: list,
         majors: Array.from(new Set([].concat.apply([], list.map(e => e.major)))),
-        colleges: Array.from(new Set(list.map(e => e.college_name))),
+        colleges: Array.from(new Set(list.map(e => e.college_name)))
       };
-
 
     default:
       return state;
