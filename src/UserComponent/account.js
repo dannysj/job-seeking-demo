@@ -31,14 +31,15 @@ class Account extends Component {
       this.context.router.history.push('/login');
       return;
     }
+
     if(user.status === userStatus.pending){
       return (
         <div className="loading-news-view">
             <Button basic loading>Loading</Button>
         </div>
-      )
+      );
     }
-    else
+
     return (
       <div className="back-container">
       <div className="ui container account-main-container">
@@ -108,12 +109,12 @@ class Account extends Component {
                   <Route path='/account/balance' render={()=><AccountBalance user={user}/>} />
                   <Route path='/account/apply' render={()=><AccountApply user={user}/>} />
                   <Route path='/account/service' render={()=><AccountService user={user}/>} />
-                  <Route path='/account/mentor_edit' render={()=><MentorEdit user={user}/>} />
+                  <Route path='/account/mentor_edit' render={()=><AccountApply user={user}/>} />  {/** Temporarily change to AccountApply, used to be MentorEdit**/}
                   <Route path='/account/create_article' render={()=><CreateArticle user={user}/>} />
                   <Route path='/account/notification' render={()=><AccountNotification user={user}/>} />
                   <Route path='/account/admin' render={()=><AccountAdmin user={user}/>} />
                   <Route path='/account/logout' render={()=><AccountLogout/>} />
-                  <Route path='/account/' render={()=><AccountProfile user={user} />} />
+                  <Route path='/account/' render={()=><AccountProfile/>} />
                 </Switch>
               )
                 : (<Switch onChange={this.onRouteChange}>

@@ -25,8 +25,8 @@ exports.getUserInfo = (uid, callback) => {
 };
 
 exports.updateUser = (data, callback) => {
-    const query = `update users set ` + data.attr + `=$1 where id=$2;`;
-    db.query(query, [data.val, data.uid]).then(callback(null)).catch(err => callback(err));
+  const query = `update users set ` + data.attr + `=$1 where id=$2;`;
+  db.query(query, [data.val, data.uid]).then(() => callback(null)).catch(e => callback(e));
 };
 
 exports.getMajorList = (callback) => {

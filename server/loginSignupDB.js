@@ -31,7 +31,7 @@ exports.verifyUser = function (user, callback) {
       return;
     }
     var userAccount = result.rows[0];
-    userAccount.password = null;
+    delete userAccount.password;
     callback(null, userAccount);
   });
 };
