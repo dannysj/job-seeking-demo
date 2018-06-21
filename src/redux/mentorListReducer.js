@@ -15,12 +15,13 @@ export default (state = initState, action) => {
       return {...state, loading:true};
 
     case "FETCH_MENTOR_LIST_REJECTED":
-      NotificationManager.error('无法导师信息', '错误');
+      NotificationManager.error('无法获取导师信息', '错误');
       return state;
 
     case "FETCH_MENTOR_LIST_FULFILLED":
       const list = action.payload.data.list;
       return {
+        last_fetched: new Date(),
         loading: false,
         mentors: list,
         majors: Array.from(new Set([].concat.apply([], list.map(e => e.major)))),

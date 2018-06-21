@@ -15,8 +15,6 @@ class Mentor extends Component {
     super(props);
 
     this.state = {
-      majors: [],
-      colleges: [],
       selected: {
         "Majors": [],
         "Colleges": []
@@ -215,7 +213,7 @@ unfollow_action(uid, mentor_uid){
               <div className="section-header">Majors</div>
               <div className="section-container">
               {
-                this.state.majors.map((el, index) => (
+                this.props.majors.map((el, index) => (
                   <Checkbox key={index} checked={(this.state.selected.Majors.indexOf(el) > -1)} value={el} onChange={this.handleMajorChange} label={<label>{el}</label>} />
                 ))
               }
@@ -226,7 +224,7 @@ unfollow_action(uid, mentor_uid){
               <div className="section-header">Colleges</div>
               <div className="section-container">
               {
-                this.state.colleges.map((el, index) => (
+                this.props.colleges.map((el, index) => (
                   <Checkbox key={index} checked={(this.state.selected.Colleges.indexOf(el) > -1)}  value={el} onChange={this.handleCollegeChange} label={<label>{el}</label>} />
                 ))
               }
@@ -340,10 +338,10 @@ export default connect(mapStateToProps)(Mentor);
   <div className="filter-container">
     <h3>筛选导师：</h3>
     <label>选择领域</label>
-    <Dropdown placeholder='领域' fluid search selection options={this.state.majors} value={this.state.selectedMajor} onChange={this.handleMajorChange} />
+    <Dropdown placeholder='领域' fluid search selection options={this.props.majors} value={this.state.selectedMajor} onChange={this.handleMajorChange} />
     <br/>
     <label>选择院校</label>
-    <Dropdown placeholder='院校' fluid search selection options={this.state.colleges} value={this.state.selectedCollege} onChange={this.handleCollegeChange}/>
+    <Dropdown placeholder='院校' fluid search selection options={this.props.colleges} value={this.state.selectedCollege} onChange={this.handleCollegeChange}/>
     <br/>
     <Button className="ui button right"  onClick={this.handleClearFilter}>清除筛选</Button>
   </div>
