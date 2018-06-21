@@ -29,13 +29,20 @@ exports.updateUser = (data, callback) => {
   db.query(query, [data.val, data.uid]).then(() => callback(null)).catch(e => callback(e));
 };
 
-exports.getMajorList = (callback) => {
-  const query = `select * from major order by text;`;
-  db.query(query, (err, result) => {
+exports.verifyUser = function (user, callback) {
+  console.log(user.email);
+  const query = `select * from users where email=$1 and password=$2;`;
+  db.query(query, [user.email, user.password], (err, result) => {
     if (err) {
       callback(err);
       return;
     }
-    callback(null, result.rows);
+    if (result.rows.length === 0) {
+      callback('No such email found');
+      return;
+    }
+    var userAccount = result.rows[0];
+    delete userAccount.password;
+    callback(null, userAccount);
   });
 };

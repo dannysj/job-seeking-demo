@@ -18,7 +18,6 @@ class MentorList extends Component {
         //TODO: Error Handling
       }
     });
-    // this.context.router.route.location.pathname
   }
 
   render() {

@@ -27,14 +27,15 @@ app.post('/api/update_user', (req, res) => {
 });
 
 
-app.post('/api/get_major_list', (req, res) => {
-  db.getMajorList((err, list) => {
+app.post('/api/verify_user', (req, res) => {
+  console.log("Verify user called");
+  db.verifyUser(req.body, (err, user) => {
     if (err) {
       console.log(err);
-      res.json({code: 1});
+      res.json({code: 1, errMsg: err});
       return;
     }
-    res.json({code: 0, list: list});
+    res.json({code: 0, user: user});
   });
 });
 
