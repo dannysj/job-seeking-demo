@@ -11,7 +11,7 @@ import Footer from '../Components/Footer';
 class MentorDetail extends Component {
   constructor (props) {
     super(props);
-    this.state = {mentor: {first: "", last: "", service: []}, is_resume_open:false, isDown:true, showAddServiceModal: false};
+    this.state = {mentor: {first: "", last: "", service: []}, is_resume_open:false, isDown:true, showAddServiceModal: false, profile_pic:"/img/test4.jpg"};
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
@@ -80,7 +80,7 @@ class MentorDetail extends Component {
     let modalClassName='ui modal';
     var test_url = '/img/banner.jpg';
     const backimgstyle = {
-      backgroundImage: 'url('+this.state.mentor.profile_pic+')',
+      backgroundImage: 'url('+this.state.profile_pic+')',
       backgroundPosition: 'center center no-repeat',
       backgroundSize: 'cover',
       filter:'blur(1.5em)',
@@ -110,16 +110,31 @@ class MentorDetail extends Component {
           </div>
         </div>
 
-        <div className="mentor-background-image" style={backimgstyle}>
-          <div className="ui container">
-            <div className="mentor-name">
-              <div className="chinese-top">{this.state.mentor.last+this.state.mentor.first}</div>
-              <div className="App-subtitle">{"English name"}</div>
-              <Divider hidden clearing />
-              <Divider hidden clearing />
-              <div className="small-bio" dangerouslySetInnerHTML={{__html:this.state.mentor.bio}}>
-
+        <div className="mentor-background-image-container" >
+        <div className="mentor-background-image" style={backimgstyle}></div>
+          <div className="mentor-sep-container">
+            <div className="header">
+              <div className="mentor-profile-border">
+                <img src={this.state.profile_pic}></img>
               </div>
+              <div className="border-navi">
+                <div className="timeline-marker"></div>
+                <div className="item"><Icon name='leaf' /></div>
+                <div className="item"><Icon name='pencil' /></div>
+                <div className="item"><Icon name='address card' /></div>
+                <div className="item"><Icon name='star' /></div>
+                <div className="item"><Icon name='talk' /></div>
+              </div>
+            </div>
+            <div className="subheader">
+              <div className="mentor-name">
+                <div className="chinese-top">{this.state.mentor.last+this.state.mentor.first}</div>
+                <div className="divider"></div>
+                <div className="App-subtitle">{"English name"}</div>
+              </div>
+              <div className="small-bio" dangerouslySetInnerHTML={{__html:this.state.mentor.bio}}>
+              </div>
+
             </div>
           </div>
         </div>
@@ -173,7 +188,7 @@ class MentorDetail extends Component {
               简历
             </div>
           <embed className="resume-holder" src={this.state.mentor.resume} width="100%" type='application/pdf'/>
-          <label forName="reveal-resume" className="resume-name" onClick={this.resumeToggled}><span>{(this.state.isDown) ? "点&nbsp;&nbsp;&nbsp;&nbsp;击&nbsp;&nbsp;&nbsp;&nbsp;展&nbsp;&nbsp;&nbsp;&nbsp;开&nbsp;&nbsp;&nbsp;&nbsp;简&nbsp;&nbsp;&nbsp;&nbsp;历" : "缩&nbsp;&nbsp;&nbsp;&nbsp;小"}</span><span className="triangle-open"><Arrow isDown={this.state.isDown}/></span>
+          <label forName="reveal-resume" className="resume-name" onClick={this.resumeToggled}><span>{(this.state.isDown) ? "点\xa0\xa0\xa0\xa0击\xa0\xa0\xa0\xa0展\xa0\xa0\xa0\xa0开\xa0\xa0\xa0\xa0简\xa0\xa0\xa0\xa0历" : "缩\xa0\xa0\xa0\xa0小"}</span><span className="triangle-open"><Arrow isDown={this.state.isDown}/></span>
           </label>
         </div>
 

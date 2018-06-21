@@ -31,11 +31,11 @@ class Mentor extends Component {
     this.renderFollowButton = this.renderFollowButton.bind(this);
     this.follow_action = this.follow_action.bind(this);
     this.unfollow_action = this.unfollow_action.bind(this);
-    /*axios.post(process.env.REACT_APP_API_HOST + '/api/get_followees_by_uid', {account: 0}.then( 
+    /*axios.post(process.env.REACT_APP_API_HOST + '/api/get_followees_by_uid', {account: 0}.then(
       res =>{
         if (res.data.code === 0){
           this.setState({
-            followees = res.data.followees 
+            followees = res.data.followees
           })
         }
         else{
@@ -44,10 +44,10 @@ class Mentor extends Component {
           })
         }
         }
-      ) 
+      )
     )*/
 
-    
+
 
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_list' ).then(res => {
       if (res.data.code === 0) {
@@ -125,7 +125,7 @@ class Mentor extends Component {
     curState.filterBarShown = !curState.filterBarShown;
     this.setState(curState);
   }
-  
+
  follow_action(uid, mentor_uid){
     // axios.post(process.env.REACT_APP_API_HOST + '/api/create_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
     //      .then(res=> ())
@@ -169,7 +169,7 @@ unfollow_action(uid, mentor_uid){
         <i class="user icon"></i>
         Follow
         </button>
-      ) 
+      )
     }
   }
 
@@ -269,7 +269,7 @@ unfollow_action(uid, mentor_uid){
                           </Table.Cell>
                           <Table.Cell>
                             <img className="title-icon"  alt="position" src={companyIcon} ></img>
-                              {el.offer_company}
+                            <div className="card-info">  {el.offer_company}</div>
                           </Table.Cell>
                         </Table.Row>
                         <Table.Row className="table-clean-row">
@@ -278,7 +278,7 @@ unfollow_action(uid, mentor_uid){
                           </Table.Cell>
                           <Table.Cell>
                           <img className="title-icon"  alt="position" src={posiIcon} ></img>
-                              {el.offer_title}
+                            <div className="card-info">  {el.offer_title} </div>
                           </Table.Cell>
                         </Table.Row>
                         <Table.Row className="table-clean-row">
@@ -287,7 +287,7 @@ unfollow_action(uid, mentor_uid){
                           </Table.Cell>
                           <Table.Cell>
                           <img className="title-icon"  alt="position" src={schoolIcon} ></img>
-                              {el.college_name}
+                              <div className="card-info">{el.college_name} </div>
                           </Table.Cell>
                         </Table.Row>
                         <Table.Row className="table-clean-row">
@@ -296,7 +296,7 @@ unfollow_action(uid, mentor_uid){
                           </Table.Cell>
                           <Table.Cell>
                           <img className="title-icon"  alt="position" src={ageIcon} ></img>
-                              {el.major.join(', ')}
+                            <div className="card-info">  {el.major.join(', ')} </div>
                           </Table.Cell>
                         </Table.Row>
                       </Table.Body>
