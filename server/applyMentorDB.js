@@ -10,15 +10,17 @@ exports.createMentorApp = (mentor_info, callback) => {
       offer_title,
       offer_company,
       bio,
+      bios,
       service,
       num_weekly_slots)
-    values($1,false,now(),$2,$3,$4,$5,$6,$7);`;
+    values($1,false,now(),$2,$3,$4,$5,$6,$7,$8);`;
   db.query(query,
     [mentor_info.uid,
       mentor_info.cid,
       mentor_info.offer_title,
       mentor_info.offer_company,
       mentor_info.bio,
+      JSON.stringify(mentor_info.bios),
       JSON.stringify(mentor_info.services),
       mentor_info.num_weekly_slots], (err, result) => {
       if (err) {
@@ -35,13 +37,15 @@ exports.editMentorInfo = (mentor_info, callback) => {
       offer_title=$2,
       offer_company=$3,
       bio=$4,
-      service=$5,
-      num_weekly_slots=$6 where uid=$7;`;
+      bios=$5
+      service=$6,
+      num_weekly_slots=$7 where uid=$8;`;
   db.query(query,
     [mentor_info.cid,
       mentor_info.offer_title,
       mentor_info.offer_company,
       mentor_info.bio,
+      JSON.stringify(mentor_info.bios),
       JSON.stringify(mentor_info.services),
       mentor_info.num_weekly_slots,
       mentor_info.uid], (err, result) => {

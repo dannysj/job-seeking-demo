@@ -18,9 +18,11 @@ class MentorEdit extends React.Component {
       showAddServiceModal: false,
       mentor: {
         bio: null,
+        bios: {},
         college_name: null,
         offer_company: null,
-        offer_title: null
+        offer_title: null,
+        num_weekly_slots: 0
       },
       editMode: false,
       editIndex: -1,

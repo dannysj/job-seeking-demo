@@ -1,13 +1,7 @@
-const fs = require('fs');
 const db = require('./_dbPool.js');
-const path = require("path");
 
 exports.patch = () => {
-  // patch everything in ./patch folder
-  fs.readdirSync(path.resolve(__dirname, 'patch')).forEach(file => {
-    const query = fs.readFileSync(file).toString();
-    db.query(query).then(() => console.log(file + 'patched')).catch(err => console.log(err));
-  });
+    db.query(`alter table mentor_info add bios jsonb`).catch(e => console.log(e));
 };
 
 exports.reset = function () {

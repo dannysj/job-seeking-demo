@@ -15,6 +15,7 @@ exports.getMentorDetailByUid = (uid, callback) => {
       m.offer_title as offer_title,
       m.offer_company as offer_company,
       m.bio as bio,
+      m.bios as bios,
       m.service as service,
       m.num_weekly_slots as num_weekly_slots
     from users u, mentor_info m, college c
@@ -44,6 +45,7 @@ exports.getMentorDetail = (mid, callback) => {
       m.offer_title as offer_title,
       m.offer_company as offer_company,
       m.bio as bio,
+      m.bios as bios,
       m.service as service,
       m.num_weekly_slots as num_weekly_slots,
       m.num_weekly_slots - (select count(*) from mentor_rel
