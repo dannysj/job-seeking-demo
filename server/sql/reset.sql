@@ -10402,7 +10402,6 @@ CREATE TABLE "public"."users" (
   "isadmin" bool,
   "password" varchar(255) COLLATE "pg_catalog"."default",
   "email" varchar(255) COLLATE "pg_catalog"."default",
-  "major_id" int4,
   "cover" text COLLATE "pg_catalog"."default",
   "balance" numeric(8,2) DEFAULT 0.00,
   "wechat" text COLLATE "pg_catalog"."default",

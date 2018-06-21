@@ -413,9 +413,5 @@ class AccountProfile extends React.Component {
 }
 
 
-const mapStateToProps = state => {
-  const {user} = state;
-  return {user};
-};
 
-export default connect(mapStateToProps)(AccountProfile);
+export default AccountProfile;
