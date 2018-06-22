@@ -3,6 +3,9 @@ import {Button, Checkbox, Divider, Icon, Menu, Segment, Sidebar, Table} from 'se
 import {Link} from 'react-router-dom';
 import './mentor.css';
 import axios from "axios/index";
+import {fetchMentorList} from "../redux/mentorListAction";
+import store from "../redux";
+import {connect} from "react-redux";
 
 //import { createFollowerFolloweeRelationship } from '../../server/db/module/follow_relation';
 
@@ -12,16 +15,12 @@ class Mentor extends Component {
     super(props);
 
     this.state = {
-      mentors: [],
-      majors: [],
-      colleges: [],
       selected: {
         "Majors": [],
         "Colleges": []
       },
       filterBarShown: false,
-      followees: [],
-      loading: true
+      followees: []
     };
     this.uid = 0;
     this.handleMajorChange = this.handleMajorChange.bind(this);
@@ -32,24 +31,26 @@ class Mentor extends Component {
     this.renderFollowButton = this.renderFollowButton.bind(this);
     this.follow_action = this.follow_action.bind(this);
     this.unfollow_action = this.unfollow_action.bind(this);
+    /*axios.post('/api/get_followees_by_uid', {account: 0}.then(
+      res =>{
+        if (res.data.code === 0){
+          this.setState({
+            followees = res.data.followees
+          })
+        }
+        else{
+          this.setState ({
+            followees = []
+          })
+        }
+        }
+      )
+    )*/
 
+  }
 
-    axios.post('/api/get_mentor_list' ).then(res => {
-      if (res.data.code === 0) {
-        this.setState({
-          mentors: res.data.list,
-          majors: Array.from(new Set([].concat.apply([], res.data.list.map(e => e.major)))),
-          colleges: Array.from(new Set(res.data.list.map(e => e.college_name))),
-          followees: [1,4],
-          loading: false
-        });
-      }
-      else {
-        //TODO: Error Handling
-      }
-    });
-
-
+  componentWillMount(){
+    store.dispatch(fetchMentorList());
   }
 
   handleMajorChange(e, data){
@@ -166,7 +167,7 @@ unfollow_action(uid, mentor_uid){
     const posiIcon = '/icons/position.png';
     const ageIcon = '/icons/age.png';
 
-    if (this.state.loading) {
+    if (this.props.loading) {
       return (
         <div className="loading-news-view">
             <Button basic loading>Loading</Button>
@@ -212,7 +213,7 @@ unfollow_action(uid, mentor_uid){
               <div className="section-header">Majors</div>
               <div className="section-container">
               {
-                this.state.majors.map((el, index) => (
+                this.props.majors.map((el, index) => (
                   <Checkbox key={index} checked={(this.state.selected.Majors.indexOf(el) > -1)} value={el} onChange={this.handleMajorChange} label={<label>{el}</label>} />
                 ))
               }
@@ -223,7 +224,7 @@ unfollow_action(uid, mentor_uid){
               <div className="section-header">Colleges</div>
               <div className="section-container">
               {
-                this.state.colleges.map((el, index) => (
+                this.props.colleges.map((el, index) => (
                   <Checkbox key={index} checked={(this.state.selected.Colleges.indexOf(el) > -1)}  value={el} onChange={this.handleCollegeChange} label={<label>{el}</label>} />
                 ))
               }
@@ -244,7 +245,7 @@ unfollow_action(uid, mentor_uid){
           <Sidebar.Pusher>
             <Segment basic>
             <div className="ui container listitem">
-              {this.state.mentors
+              {this.props.mentors
                 .filter((el) => (this.state.selected.Majors.length === 0 || el.major.filter(e => this.state.selected.Majors.indexOf(e) > -1).length > 0 ))
                 .filter((el) => (this.state.selected.Colleges.length === 0  || this.state.selected.Colleges.indexOf(el.college_name) > -1)).map(el => (
                 <div className="mentor-container" key={el.id}>
@@ -325,17 +326,21 @@ unfollow_action(uid, mentor_uid){
   }
 }
 
-export default Mentor;
+const mapStateToProps = state => {
+  return {...state.mentorStore};
+};
+
+export default connect(mapStateToProps)(Mentor);
 
 /*
 <div className="ui right internal rail Filter-container">
   <div className="filter-container">
     <h3>筛选导师：</h3>
     <label>选择领域</label>
-    <Dropdown placeholder='领域' fluid search selection options={this.state.majors} value={this.state.selectedMajor} onChange={this.handleMajorChange} />
+    <Dropdown placeholder='领域' fluid search selection options={this.props.majors} value={this.state.selectedMajor} onChange={this.handleMajorChange} />
     <br/>
     <label>选择院校</label>
-    <Dropdown placeholder='院校' fluid search selection options={this.state.colleges} value={this.state.selectedCollege} onChange={this.handleCollegeChange}/>
+    <Dropdown placeholder='院校' fluid search selection options={this.props.colleges} value={this.state.selectedCollege} onChange={this.handleCollegeChange}/>
     <br/>
     <Button className="ui button right"  onClick={this.handleClearFilter}>清除筛选</Button>
   </div>
