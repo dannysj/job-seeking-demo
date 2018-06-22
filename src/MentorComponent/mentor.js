@@ -21,6 +21,7 @@ class Mentor extends Component {
       },
       filterBarShown: false,
       followees: [],
+      loading: true
     };
     this.uid = 0;
     this.handleMajorChange = this.handleMajorChange.bind(this);
@@ -31,7 +32,11 @@ class Mentor extends Component {
     this.renderFollowButton = this.renderFollowButton.bind(this);
     this.follow_action = this.follow_action.bind(this);
     this.unfollow_action = this.unfollow_action.bind(this);
+<<<<<<< HEAD
     /*axios.post(process.env.REACT_APP_API_HOST + '/api/get_followees_by_uid', {account: 0}.then(
+=======
+    /*axios.post('/api/get_followees_by_uid', {account: 0}.then(
+>>>>>>> 401d19ebbdd2516fec94073da7fdf8186930533d
       res =>{
         if (res.data.code === 0){
           this.setState({
@@ -47,15 +52,20 @@ class Mentor extends Component {
       )
     )*/
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 401d19ebbdd2516fec94073da7fdf8186930533d
 
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_list' ).then(res => {
+    axios.post('/api/get_mentor_list' ).then(res => {
       if (res.data.code === 0) {
         this.setState({
           mentors: res.data.list,
           majors: Array.from(new Set([].concat.apply([], res.data.list.map(e => e.major)))),
           colleges: Array.from(new Set(res.data.list.map(e => e.college_name))),
-          followees: [1,4]
+          followees: [1,4],
+          loading: false
         });
       }
       else {
@@ -127,7 +137,7 @@ class Mentor extends Component {
   }
 
  follow_action(uid, mentor_uid){
-    // axios.post(process.env.REACT_APP_API_HOST + '/api/create_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
+    // axios.post('/api/create_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
     //      .then(res=> ())
     //      .catch(err => console.log(err))
     console.log("Button click")
@@ -137,7 +147,7 @@ class Mentor extends Component {
  }
 
 unfollow_action(uid, mentor_uid){
-    // axios.post(process.env.REACT_APP_API_HOST + '/api/delete_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
+    // axios.post('/api/delete_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
     //      .then(res=> ())
     //      .catch(err => console.log(err))
     let followees = this.state.followees;
@@ -175,10 +185,19 @@ unfollow_action(uid, mentor_uid){
 
   render() {
     //var blackout = this.state.search ? "blackout " : "";
-    const companyIcon = '/icons/company.png'
-    const schoolIcon = '/icons/school.png'
-    const posiIcon = '/icons/position.png'
-    const ageIcon = '/icons/age.png'
+    const companyIcon = '/icons/company.png';
+    const schoolIcon = '/icons/school.png';
+    const posiIcon = '/icons/position.png';
+    const ageIcon = '/icons/age.png';
+
+    if (this.state.loading) {
+      return (
+        <div className="loading-news-view">
+            <Button basic loading>Loading</Button>
+        </div>
+      );
+    }
+    else
     return (
       <div className="flex-container">
         <div className="ui top attached tabular menu top-bar">
@@ -255,7 +274,7 @@ unfollow_action(uid, mentor_uid){
                 <div className="mentor-container" key={el.id}>
                     <div className="inner-container">
                     <div className="mentor-profile">
-                      <img className="mentor-picture" src={el.profile_pic}/>
+                      <img className="mentor-picture" src={el.profile_pic} alt=""/>
                       <br />
                       <div><strong>{el.last + ' '}{el.first}</strong></div>
                     </div>

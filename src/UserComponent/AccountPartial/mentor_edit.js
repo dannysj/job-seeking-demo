@@ -18,12 +18,16 @@ class MentorEdit extends React.Component {
       showAddServiceModal: false,
       mentor: {
         bio: null,
+        bios: {},
         college_name: null,
         offer_company: null,
-        offer_title: null
+        offer_title: null,
+        num_weekly_slots: 0
       },
       editMode: false,
-      editIndex: -1
+      editIndex: -1,
+      collegeQuery: "",
+      isLoadingCollegeList: false
     };
     this.tempService = {};
     this.formRef = null;
@@ -37,24 +41,11 @@ class MentorEdit extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.deleteRowAt = this.deleteRowAt.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_college_list').then(res => {
-      if (res.data.code === 0) {
-        let college_list = [];
-        res.data.list.forEach((college) => {
-          college_list.push({
-            value: college.id,
-            text: college.name
-          });
-        });
-        this.setState({college_list: college_list});
-      }
-      else {
-        NotificationManager.error('无法获取大学列表', '错误');
-      }
-    });
+    this.triggerSearch();
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
+    axios.post('/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
       if (res.data.code === 0) {
 
         res.data.mentor.services = res.data.mentor.service; // sorry for the terrible naming.
@@ -116,6 +107,27 @@ class MentorEdit extends React.Component {
     this.tempService[e.target.name] = e.target.value;
   }
 
+  handleSearchChange = (e, {searchQuery}) =>{
+    clearTimeout(this.timer);
+
+    this.setState({collegeQuery: searchQuery});
+
+    this.timer = setTimeout(this.triggerSearch, 500);
+  }
+
+  triggerSearch = () =>{
+    this.setState({isLoadingCollegeList : true});
+
+    axios.post('/api/get_college_list', {query: this.state.collegeQuery}).then(res => {
+      if (res.data.code === 0) {
+        this.setState({college_list: res.data.list});
+      } else {
+        NotificationManager.error('无法获取大学列表', '错误');
+      }
+      this.setState({isLoadingCollegeList : false})
+    });
+  }
+
   handleChange(e, data) {
     let curState = this.state;
     if (data) {
@@ -129,14 +141,14 @@ class MentorEdit extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    
+
 
     if(this.state.mentor_info.num_weekly_slots < 0){
       NotificationManager.error('每周愿意服务次数必须为自然数','错误');
       return;
     }
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/mentor_edit', this.state.mentor_info).then(res => {
+    axios.post('/api/mentor_edit', this.state.mentor_info).then(res => {
       if (res.data.code === 0) {
         NotificationManager.success('已经更改了您的信息', '成功');
         this.context.router.history.push('/account/mentor_edit');
@@ -157,7 +169,7 @@ class MentorEdit extends React.Component {
 
   handleEdit(index) {
     let curServices = this.state.mentor_info.services.slice();
-    let curServices2 = this.state.mentor_info.services.slice(index, index+1);
+    // let curServices2 = this.state.mentor_info.services.slice(index, index+1);
     this.tempService = curServices[index]
 
     this.setState({editMode: true, editIndex: index, showAddServiceModal: true});
@@ -213,8 +225,13 @@ class MentorEdit extends React.Component {
           <div className="field">
             <label>院校名称：</label>
             <b className="notification-msg">
-              <Dropdown name='cid' placeholder='院校名称' fluid search selection options={this.state.college_list}
-                        onChange={this.handleChange} value={this.state.mentor_info.college_name}/>
+              <Dropdown name='cid' placeholder='院校名称' fluid search selection
+                        options={this.state.college_list}
+                        onChange={this.handleChange}
+                        onSearchChange={this.handleSearchChange}
+                        value={this.state.mentor_info.college_name}
+                        noResultsMessage={null}
+                        loading={this.state.isLoadingCollegeList}/>
             </b>
           </div>
           <div className="field">

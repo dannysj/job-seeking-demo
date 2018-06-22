@@ -16,7 +16,7 @@ export default class Arrow extends Component {
 
 	render(){
 		var extra =""
-		if (this.props.isDown == true) {
+		if (this.props.isDown) {
 			extra += "down "
 		}
 		return (

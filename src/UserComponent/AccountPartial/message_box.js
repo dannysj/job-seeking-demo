@@ -1,10 +1,6 @@
 import React from 'react';
-import {Button} from 'semantic-ui-react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
-import { Message, Image, Input } from 'semantic-ui-react'
-import CommentBox from "../../MentorComponent/CommentBox";
-import NavLink from '../../NavLinkComponent/navlink';
+import { Message, Image} from 'semantic-ui-react'
 
 class MessageBox extends React.Component {
   constructor(props) {

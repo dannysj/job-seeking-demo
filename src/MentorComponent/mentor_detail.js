@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Button, Image, Divider, Icon} from 'semantic-ui-react';
+import {Button, Image, Divider, Icon, Modal, TextArea, Header, Input} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import './mentor.css';
@@ -11,9 +11,9 @@ import Footer from '../Components/Footer';
 class MentorDetail extends Component {
   constructor (props) {
     super(props);
-    this.state = {mentor: {first: "", last: "", service: []}, is_resume_open:false, isDown:true, showAddServiceModal: false, profile_pic:"/img/test4.jpg"};
-    this.timer = null;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
+    this.state = {mentor: {first: "", last: "", service: []}, is_resume_open:false, isDown:true, note: '', showAddServiceModal: false, showNoteModal: false};
+    this.timer = null
+    axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
         this.setState({mentor:res.data.mentor});
       }
@@ -24,7 +24,34 @@ class MentorDetail extends Component {
 
     this.initBuy = this.initBuy.bind(this);
     this.resumeToggled = this.resumeToggled.bind(this);
+    this.updateNote = this.updateNote.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCancelBuy = this.handleCancelBuy.bind(this);
     this.scrollTo = this.scrollTo.bind(this);
+  }
+
+  updateNote(e) {
+    this.setState({note: e.target.value});
+  }
+
+  handleSubmit() {
+    this.setState({showNoteModal: false})
+    var handler = this;
+    axios.post(process.env.REACT_APP_API_HOST + '/api/create_order',
+    {
+      uid:this.props.user.id,
+      mid:this.props.match.params.mid,
+      service_name: this.state.service_name,
+      service_price: this.state.service_price,
+      note: this.state.note
+    }).then(res => {
+      if (res.data.code === 0) {
+        window.location.href = res.data.url;
+      }
+      else{
+        NotificationManager.error('数据库错误','错误');
+      }
+    });
   }
 
   resumeToggled(e) {
@@ -38,36 +65,26 @@ class MentorDetail extends Component {
       this.context.router.history.push('/login');
       return;
     }
-    var handler = this;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/create_order',
-    {
-      uid:this.props.user.id,
-      mid:this.props.match.params.mid,
-      service_name: service_name,
-      service_price: service_price
-    }).then(res => {
-      if (res.data.code === 0) {
-        window.location.href = res.data.url;
-      }
-      else{
-        NotificationManager.error('数据库错误','错误');
-      }
-    });
+    this.setState({service_name: service_name, service_price: service_price, showNoteModal: true});
+  }
+
+  handleCancelBuy() {
+    this.setState({service_name: '', service_price: '', note: '', showNoteModal: false});
   }
 
   pollPayment(order_id){
     var handler = this;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/poll_payment',
+    axios.post('/api/poll_payment',
     {
       uid:this.props.user.id,
       order_id:order_id
     }).then(res => {
-      if(res.data.code==0){
+      if(res.data.code===0){
         // handler.setState({showAddServiceModal: false, qr_code: ''});
         alert('支付成功'); //TODO Notification System
         this.context.router.history.push('/account/mentor');
       }
-      else if(res.data.code == 15){
+      else if(res.data.code === 15){
         handler.pollPayment(order_id);
       }
       else{
@@ -145,7 +162,6 @@ class MentorDetail extends Component {
 
   render() {
     let modalClassName='ui modal';
-    var test_url = '/img/banner.jpg';
     const backimgstyle = {
       backgroundImage: 'url('+this.state.mentor.profile_pic+')',
       backgroundPosition: 'center center no-repeat',
@@ -163,8 +179,28 @@ class MentorDetail extends Component {
 
       return (
       <div className="mentor-detail-container">
-        <input type="checkbox" id="reveal-resume" className="reveal-resume" role="button" checked={this.state.is_resume_open ? "checked" : ""}></input>
         <NotificationContainer />
+        <Modal open={this.state.showNoteModal} style={{
+          marginTop: '0px !important',
+          marginLeft: 'auto',
+          marginRight: 'auto'
+        }}>
+          <Header icon='archive' content='申请导师服务' />
+          <Modal.Content>
+            <p>
+              请为导师提供一小段cover letter
+            </p>
+            <Input placeholder='说点什么吧' fluid value={this.state.note} onChange={this.updateNote} />
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color='red' onClick={this.handleCancelBuy}>
+              <Icon name='remove' /> 取消
+            </Button>
+            <Button color='green' onClick={this.handleSubmit}>
+              <Icon name='checkmark' /> 确认
+            </Button>
+          </Modal.Actions>
+        </Modal>
         <div className={modalClassName}>
             <i className="close icon"/>
           <div className="header">
@@ -244,13 +280,13 @@ class MentorDetail extends Component {
               <img className="title-icon"  alt="age" src={ageIcon} height={50}/>
               本周服务次数
             </div>
-            <div className="subtitle">{this.state.mentor.service_amount}</div>
+            <div className="subtitle">{this.state.mentor.num_availability}</div>
 
           </div>
 
         </div>
 
-        <div id="resume" className="detail-section resume-section">
+        <div id="resume" className="detail-section resume-section" style={{height:this.state.is_resume_open?'90vh':'50vh'}}>
           <div className="title">
               简历
             </div>
@@ -278,7 +314,7 @@ class MentorDetail extends Component {
                     <div className="service-item" >
                       <div className="service-title">
                         <div className="service-name">{el.name}</div>
-                        <div className="service-price">{el.price+' USD'}</div>
+                        <div className="service-price">{el.price+' RMB'}</div>
                       </div>
                       <div className="service-description">{el.description}</div>
                       <div className="buy-button"><Button className="buy-button-ani" onClick={()=>this.initBuy(el.name, el.price)}>购买</Button></div>

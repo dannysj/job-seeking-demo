@@ -1,24 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import store from "../../redux";
+import {logout} from "../../redux/userAction";
+import {withRouter} from "react-router-dom";
 
 class AccountLogout extends React.Component {
   constructor(props) {
     super(props);
-    this.setState({user: null});
-    localStorage.removeItem('uid');
-    window.location.href = '/';
+
+    store.dispatch(logout());
+    this.props.history.push("/");
   }
 
   render() {
     return (
-      <div>
-      </div>
+      <div/>
     );
   }
 }
 
-AccountLogout.contextTypes = {
-  router: PropTypes.object
-};
 
-export default AccountLogout;
+export default withRouter(AccountLogout);

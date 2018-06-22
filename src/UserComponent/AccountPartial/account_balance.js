@@ -1,6 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Modal, Button, Image, Header, Input, Segment } from 'semantic-ui-react';
+import { Button} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 class AccountBalance extends React.Component {

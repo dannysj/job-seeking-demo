@@ -40,14 +40,14 @@ class AccountApply extends React.Component {
     this.deleteRowAt = this.deleteRowAt.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
+    axios.post('/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
       if (res.data.code === 0) {
         let mentor = res.data.mentor;
         mentor.services = mentor.service; // Sorry for the terrible naming
         this.setState({mentor_info: mentor, statusChecked:true, hasNotApplied: false});
       }
       else {
-        if(res.data.code == 55){
+        if(res.data.code === 55){
           this.setState({statusChecked: true, hasNotApplied: true});
         }
         else{
@@ -55,6 +55,8 @@ class AccountApply extends React.Component {
         }
       }
     });
+
+    this.triggerSearch();
   }
 
   addService(e) {
@@ -117,7 +119,7 @@ class AccountApply extends React.Component {
   triggerSearch = () =>{
     this.setState({isLoadingCollegeList : true});
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_college_list', {query: this.state.collegeQuery}).then(res => {
+    axios.post('/api/get_college_list', {query: this.state.collegeQuery}).then(res => {
       if (res.data.code === 0) {
         this.setState({college_list: res.data.list});
       } else {
@@ -148,12 +150,12 @@ class AccountApply extends React.Component {
 
     const apiUrl = this.state.hasNotApplied ? '/api/mentor_apply' : '/api/mentor_edit';
 
-    axios.post(process.env.REACT_APP_API_HOST + apiUrl, this.state.mentor_info).then(res => {
+    axios.post(apiUrl, this.state.mentor_info).then(res => {
       if (res.data.code === 0) {
         NotificationManager.success('我们已收到您的表格','成功');
       }
       else {
-        if(res.data.code == 45) {
+        if(res.data.code === 45) {
           NotificationManager.error('请先完善您的基础资料','错误');
         }
         else{

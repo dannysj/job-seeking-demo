@@ -17,8 +17,8 @@ class Activate extends Component {
   handleSubmit (e) {
     e.preventDefault();
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/verify_user',this.state.user).then(res => {
-      if(res.data.code==0){
+    axios.post('/api/verify_user',this.state.user).then(res => {
+      if(res.data.code===0){
         this.props.onSuccess(res.data.user);
         this.context.router.history.goBack();
 

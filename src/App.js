@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { Router, Route, Switch } from 'react-router';
-import { Icon, Label} from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-import logo from './logo.svg';
-import axios from 'axios';
-import './Semantic/semantic.min.css';
+// UI
+import React, {Component} from 'react';
+import {Route, Switch} from 'react-router';
+import {Icon, Label} from 'semantic-ui-react';
+import 'semantic-ui-css/semantic.min.css';
 import './App.css';
+import {NotificationContainer} from 'react-notifications';
+// Components
 import NavLink from './NavLinkComponent/navlink';
 import Home from './HomeComponent/home';
 import Mentor from './MentorComponent/mentor';
@@ -17,6 +17,11 @@ import MentorDetail from './MentorComponent/mentor_detail';
 import News from './NewsComponent/news';
 import NewsDetail from './NewsComponent/news_detail';
 import About from './AboutComponent/about';
+// Redux
+import store from "./redux";
+import {fetchUser} from "./redux/userAction";
+import {connect, Provider} from 'react-redux'
+import {withRouter} from 'react-router-dom'
 
 
 class App extends Component {
@@ -27,39 +32,25 @@ class App extends Component {
       is_user_checked: false,
       width: 0,
       height: 0,
-      current_page: "主 页",
-      num_notifications: 0
+      current_page: "主 页"
     };
-    this.updateUser = this.updateUser.bind(this);
+
     this.menuToggled = this.menuToggled.bind(this);
     this.user_menuToggled = this.user_menuToggled.bind(this);
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.updateCurrentPage = this.updateCurrentPage.bind(this);
     this.toggle_outside = this.toggle_outside.bind(this);
+  }
 
-    let uid = localStorage.getItem('uid');
-    if(uid){
-      this.state = {user: {id: uid}};
-      axios.post(process.env.REACT_APP_API_HOST + '/api/get_user_info',{uid:uid}).then(res => {
-        if(res.data.code==0){
-          this.updateUser(res.data.user);
-        }
-        else{
-          alert('Database Error'); // TODO: proper err
-        }
-      });
+  componentWillMount(){
+    const uid = localStorage.getItem('uid');
+    if (uid) {
+      store.dispatch(fetchUser(uid));
     }
   }
 
-  updateUser(user) {
-    this.setState({user: user, is_checked: false});
-    localStorage.setItem('uid', user.id);
-  }
-
-
   updateCurrentPage(name) {
     this.setState({current_page: name, menu_open: false});
-
   }
 
   menuToggled(e) {
@@ -95,17 +86,19 @@ class App extends Component {
   }
 
   render() {
+    const user = this.props.user;
     return (
       <div className="app-flex">
-        <input type="checkbox" id="reveal-menu" className="reveal-m" role="button" checked={this.state.is_checked ? "checked" : ""}></input>
-        <input type="checkbox" id="reveal-user-menu" className="reveal-um" role="button" checked={this.state.is_user_checked ? "checked" : ""}></input>
+        <NotificationContainer />
+        <input type="checkbox" id="reveal-menu" className="reveal-m" role="button" checked={this.state.is_checked ? "checked" : ""}/>
+        <input type="checkbox" id="reveal-user-menu" className="reveal-um" role="button" checked={this.state.is_user_checked ? "checked" : ""}/>
         <div className={"navbar "} onClick={this.toggle_outside}>
 
           <div className="item logo-item" >
-            <img src="/img/icon.png" height="40px"></img>
-            <b className="title">{' '}Buddy{'\n'}Career</b>
+            <img src="/img/icon.png" height="40px" alt="icon"></img>
+            <b className="title">{' '}同行{'\n'}求职</b>
 
-            <label forName="reveal-menu" className="menu-icon" onClick={this.menuToggled}>
+            <label forname="reveal-menu" className="menu-icon" onClick={this.menuToggled}>
                 <span className="bread bread-top">
                 </span>
 
@@ -114,44 +107,46 @@ class App extends Component {
             </label>
           </div>
           <div className={"nav-list " }>
-            <NavLink to="/" ishorizontal={true} onClick={this.menuToggled}>
+            <NavLink to="/" onClick={this.menuToggled} isHorizontal>
               <div className="Nav-item ">
                 <div className="App-subtitle">Home</div>
                 <div className="chinese-top">主页</div>
               </div>
             </NavLink>
-            <NavLink to="/mentor" ishorizontal={true} onClick={this.menuToggled}>
+            <NavLink to="/mentor" onClick={this.menuToggled} isHorizontal>
               <div className="Nav-item ">
                 <div className="App-subtitle">Tutors</div>
                 <div className="chinese-top">导师</div>
               </div>
             </NavLink>
-            <NavLink to="/news" ishorizontal={true} onClick={this.menuToggled}>
+            <NavLink to="/news" onClick={this.menuToggled} isHorizontal>
               <div className="Nav-item ">
                 <div className="App-subtitle">Careers</div>
                 <div className="chinese-top">就业干货</div>
               </div>
             </NavLink>
-            <NavLink to="/about" ishorizontal={true} onClick={this.menuToggled}>
+            <NavLink to="/about" onClick={this.menuToggled} isHorizontal>
               <div className="Nav-item ">
                 <div className="App-subtitle">About</div>
                 <div className="chinese-top">关于</div>
               </div>
             </NavLink>
           </div>
-          <UserStatus user={this.state.user} onClick={this.user_menuToggled} passFor="reveal-user-menu" numnotifications={this.state.num_notifications}></UserStatus>
+          <UserStatus
+            user={user}
+            onClick={this.user_menuToggled}
+            passFor="reveal-user-menu"/>
         </div>
         {
-          (this.state.user) ? (
+          (user) ? (
             <div className="user-menu" onClick={this.user_menuToggled}>
               <div className="item name" >
-                <div className="user-name">{
-                  this.state.user.last+this.state.user.first
-
-                }</div>
+                <div className="user-name">
+                  {user.last + user.first}
+                </div>
                 <div>
                 {
-                  this.state.user.email
+                  user.email
                 }
                 </div>
 
@@ -159,13 +154,13 @@ class App extends Component {
               </div>
               <div className="item account-status">
                 <Icon name='graduation'  color="blue" className="tab menu-icon" />
-                {this.state.user.ismentor ? "Mentor":"Mentee"}
+                {user.ismentor ? "Mentor":"Mentee"}
               </div>
 
               {
-                this.state.user.ismentor ? (
+                user.ismentor ? (
                    <NavLink to="/account/balance">
-                    <Icon name='dollar' className="tab menu-icon" />{this.state.user.balance}
+                    <Icon name='dollar' className="tab menu-icon" />{user.balance}
                   </NavLink>
                 ) : (<div></div>)
               }
@@ -176,7 +171,7 @@ class App extends Component {
                 基础资料
               </NavLink>
               {
-                this.state.user.ismentor ? (<div>
+                user.ismentor ? (<div>
                    <NavLink to="/account/mentor_edit">
                      <Icon name='edit'  className="tab menu-icon" />编辑导师档案
                     </NavLink>
@@ -197,15 +192,15 @@ class App extends Component {
                 <Icon name='chat' className="tab menu-icon" />
                 系统通知
                 {
-                  (!isNaN(this.state.user.num_notifications) && this.state.user.num_notifications!=0) &&
+                  (!isNaN(user.num_notifications) && user.num_notifications !== 0) &&
                     (<Label color='red' floating>
-                      {this.state.user.num_notifications}
+                      {user.num_notifications}
                     </Label>)
                 }
 
               </NavLink>
               {
-                this.state.user.isadmin && (
+                user.isadmin && (
                   <NavLink to="/account/admin">
                     <Icon name='user secret'  className="tab menu-icon" />管理员页面
                   </NavLink>)
@@ -218,21 +213,28 @@ class App extends Component {
         }
 
         <div className="site-content" onClick={this.toggle_outside}>
+          <Provider store={store}>
           <Switch onChange={this.onRouteChange}>
-            <Route path='/login' render={()=><Login onSuccess={this.updateUser}></Login>} />
-            <Route path='/signup' render={()=><Signup onSuccess={this.updateUser}></Signup>}  />
-            <Route path='/account' render={()=><Account user={this.state.user} onSuccess={this.updateUser} width={this.state.width} height={this.state.height}></Account>} />
-            <Route path="/mentor/:mid" render={(props)=><MentorDetail {...props} user={this.state.user}></MentorDetail>} />
+            <Route path='/login' render={()=><Login/>} />
+            <Route path='/signup' render={()=><Signup />}  />
+            <Route path='/account' render={()=><Account user={user} width={this.state.width} height={this.state.height}/>} />
+            <Route path="/mentor/:mid" render={(props)=><MentorDetail {...props} user={user}/>} />
             <Route path='/mentor' component={Mentor}/>
-      <Route path='/news/:nid'   render={(props)=><NewsDetail {...props} loggedInUser={this.state.user}></NewsDetail> } />
+            <Route path='/news/:nid'   render={(props)=><NewsDetail {...props} loggedInUser={user}/> } />
             <Route path='/news' component={News}/>
             <Route path='/about' component={About}/>
             <Route path='/' component={Home}/>
           </Switch>
+          </Provider>
         </div>
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  const {user} = state;
+  return {user};
+};
+
+export default withRouter(connect(mapStateToProps)(App));

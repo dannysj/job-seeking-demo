@@ -11,7 +11,7 @@ class CommentBox extends Component{
     this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
     this.handleCommentReply = this.handleCommentReply.bind(this);
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_comment', {mid: this.props.mid}).then(res => {
+    axios.post('/api/get_mentor_comment', {mid: this.props.mid}).then(res => {
       if (res.data.code === 0) {
         this.setState({comments: res.data.list});
       } else {
@@ -24,7 +24,7 @@ class CommentBox extends Component{
     this.setState({comments: [...this.state.comments, comment]});
 
     comment.mid = this.props.mid;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/create_mentor_comment', comment).then(res => {
+    axios.post('/api/create_mentor_comment', comment).then(res => {
       // TODO: Error Handling
     });
   }
@@ -35,7 +35,7 @@ class CommentBox extends Component{
 
     this.setState({comments: comments});
 
-    axios.post(process.env.REACT_APP_API_HOST + '/api/create_mentor_reply', comment).then(res => {
+    axios.post('/api/create_mentor_reply', comment).then(res => {
       // TODO: Error Handling
     });
   }
@@ -136,7 +136,7 @@ class Comment extends Component {
       <div className="comment">
         <div className="comment-top">
           <div className="left">
-            <img className="comment-img" src={this.props.comment.profile_pic}/>
+            <img className="comment-img" src={this.props.comment.profile_pic} alt=""/>
           </div>
           <div className="right">
             <div className="comment-author">{this.props.comment.last + this.props.comment.first}
@@ -149,7 +149,7 @@ class Comment extends Component {
         <div className="comment-bottom">
         {this.props.comment.reply ? (
           <div className="comment-reply comment-content">
-              <div style={{fontWeight: 'Bold'}}><img className="mentor-reply-img" src={this.props.mentor.profile_pic}></img> </div>
+              <div style={{fontWeight: 'Bold'}}><img className="mentor-reply-img" src={this.props.mentor.profile_pic} alt=""/> </div>
               {this.props.comment.reply}
             </div>
           ):(
