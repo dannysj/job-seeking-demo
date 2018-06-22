@@ -33,7 +33,7 @@ class MentorList extends Component {
 }
 
 const mapStateToProps = state => {
-  return {mentors: state.mentor_list.mentors};
+  return {mentors: state.mentorStore.mentors};
 };
 
 export default connect(mapStateToProps)(MentorList);
