@@ -111,7 +111,6 @@ class MentorDetail extends Component {
 
       return (
       <div className="mentor-detail-container">
-        <input type="checkbox" id="reveal-resume" className="reveal-resume" role="button" checked={this.state.is_resume_open ? "checked" : ""}></input>
         <NotificationContainer />
         <Modal open={this.state.showNoteModal} style={{
           marginTop: '0px !important',
@@ -204,7 +203,7 @@ class MentorDetail extends Component {
 
         </div>
 
-        <div className="detail-section resume-section">
+        <div className="detail-section resume-section" style={{height:this.state.is_resume_open?'90vh':'50vh'}}>
           <div className="title">
               简历
             </div>
