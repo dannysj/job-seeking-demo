@@ -12,7 +12,7 @@ class MentorDetail extends Component {
   constructor (props) {
     super(props);
     this.state = {mentor: {first: "", last: "", service: []}, is_resume_open:false, isDown:true, showAddServiceModal: false, profile_pic:"/img/test4.jpg"};
-
+    this.timer = null;
     axios.post(process.env.REACT_APP_API_HOST + '/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
         this.setState({mentor:res.data.mentor});
@@ -24,6 +24,7 @@ class MentorDetail extends Component {
 
     this.initBuy = this.initBuy.bind(this);
     this.resumeToggled = this.resumeToggled.bind(this);
+    this.scrollTo = this.scrollTo.bind(this);
   }
 
   resumeToggled(e) {
@@ -75,15 +76,81 @@ class MentorDetail extends Component {
     });
   }
 
+  	stop() {
+  		clearTimeout(this.timer);
+  	}
+  	scrollTo(id, callback) {
+  		var settings = {
+  			duration: 1000,
+  			easing: {
+  				outQuint: function (x, t, b, c, d) {
+  					return c*((t=t/d-1)*t*t*t*t + 1) + b;
+  				}
+  			}
+  		};
+  		var percentage;
+  		var startTime;
+  		var node = document.getElementById(id);
+  		var nodeTop = node.offsetTop - 65;
+  		var nodeHeight = node.offsetHeight;
+  		var body = document.body;
+  		var html = document.documentElement;
+  		var height = Math.max(
+  			body.scrollHeight,
+  			body.offsetHeight,
+  			html.clientHeight,
+  			html.scrollHeight,
+  			html.offsetHeight
+  		);
+  		var windowHeight = window.innerHeight
+  		var offset = window.pageYOffset ;
+  		var delta = nodeTop - offset;
+  		var bottomScrollableY = height - windowHeight;
+  		var targetY = (bottomScrollableY < delta) ?
+  			bottomScrollableY - (height - nodeTop - nodeHeight + offset):
+  			delta;
+
+  		startTime = Date.now();
+  		percentage = 0;
+
+  		if (this.timer) {
+  			clearInterval(this.timer);
+  		}
+
+  		function step () {
+  			var yScroll;
+  			var elapsed = Date.now() - startTime;
+
+  			if (elapsed > settings.duration) {
+  				clearTimeout(this.timer);
+  			}
+
+  			percentage = elapsed / settings.duration;
+
+  			if (percentage > 1) {
+  				clearTimeout(this.timer);
+
+  				if (callback) {
+  					callback();
+  				}
+  			} else {
+  				yScroll = settings.easing.outQuint(0, elapsed, offset, targetY, settings.duration);
+  				window.scrollTo(0, yScroll);
+  				this.timer = setTimeout(step, 10);
+  			}
+  		}
+
+  		this.timer = setTimeout(step, 10);
+  	}
 
   render() {
     let modalClassName='ui modal';
     var test_url = '/img/banner.jpg';
     const backimgstyle = {
-      backgroundImage: 'url('+this.state.profile_pic+')',
+      backgroundImage: 'url('+this.state.mentor.profile_pic+')',
       backgroundPosition: 'center center no-repeat',
       backgroundSize: 'cover',
-      filter:'blur(1.5em)',
+      filter:'blur(1em)',
       };
     if(this.state.showAddServiceModal){
       modalClassName += ' payment-qr-container';
@@ -115,15 +182,15 @@ class MentorDetail extends Component {
           <div className="mentor-sep-container">
             <div className="header">
               <div className="mentor-profile-border">
-                <img src={this.state.profile_pic}></img>
+                <img src={this.state.mentor.profile_pic}></img>
               </div>
               <div className="border-navi">
                 <div className="timeline-marker"></div>
-                <div className="item"><Icon name='leaf' /></div>
-                <div className="item"><Icon name='pencil' /></div>
-                <div className="item"><Icon name='address card' /></div>
-                <div className="item"><Icon name='star' /></div>
-                <div className="item"><Icon name='talk' /></div>
+                <div className="item" onClick={() => {this.scrollTo("info")}}><Icon name='leaf' /><div className="navi-title">个人资料</div></div>
+                <div className="item" onClick={() => {this.scrollTo("info")}}><Icon name='pencil' /><div className="navi-title">阅历</div></div>
+                <div className="item" onClick={() => {this.scrollTo("resume")}}><Icon name='address card' /><div className="navi-title">简历</div></div>
+                <div className="item" onClick={() => {this.scrollTo("service")}}><Icon name='star' /><div className="navi-title">服务介绍</div></div>
+                <div className="item" onClick={() => {this.scrollTo("comment")}}><Icon name='talk' /><div className="navi-title">评价</div></div>
               </div>
             </div>
             <div className="subheader">
@@ -138,7 +205,7 @@ class MentorDetail extends Component {
             </div>
           </div>
         </div>
-        <div className="mentor-detail-info-container">
+        <div id="info" className="mentor-detail-info-container">
 
           <div className="item detail-item">
 
@@ -171,7 +238,7 @@ class MentorDetail extends Component {
 
           </div>
 
-          <div className="item detail-item">
+          <div  className="item detail-item">
 
             <div className="title">
               <img className="title-icon"  alt="age" src={ageIcon} height={50}/>
@@ -183,7 +250,7 @@ class MentorDetail extends Component {
 
         </div>
 
-        <div className="detail-section resume-section">
+        <div id="resume" className="detail-section resume-section">
           <div className="title">
               简历
             </div>
@@ -194,7 +261,7 @@ class MentorDetail extends Component {
 
           {
             (this.state.mentor.service.length > 0) ? (
-              <div className="mentor-service-overview detail-section">
+              <div id="service" className="mentor-service-overview detail-section">
                 <div className="title">
                   服务介绍
 
@@ -224,7 +291,7 @@ class MentorDetail extends Component {
               </div>
             </div>
             ) : (
-            <div className="para-large">
+            <div id="service" className="para-large">
               <b>{this.state.mentor.last+this.state.mentor.first}</b>
               本周尚未提供服务
             </div>
@@ -233,7 +300,7 @@ class MentorDetail extends Component {
 
 
 
-        <div className="detail-section">
+        <div id="comment" className="detail-section">
             <div className="title">
                 过往评价
             </div>
