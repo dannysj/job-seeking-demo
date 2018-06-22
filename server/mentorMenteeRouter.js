@@ -1,6 +1,7 @@
 const db = require('./mentorMenteeDB.js');
 const express = require('express');
 const app = express.Router();
+const messageDispatch = require('./messageDB.js');
 
 app.post('/api/get_rel_mentors', (req, res) => {
   db.getRelMentors(req.body.uid, (err, mentors) => {
@@ -35,6 +36,24 @@ app.post('/api/mentor_confirm', (req, res) => {
   });
 });
 
+app.post('/api/mentor_decision', (req, res) => {
+  db.setMentorDecision(req.body.uid, req.body.mentee_uid, req.body.agreed, (err) => {
+    if (err) {
+      console.log(err);
+      res.json({code: 1, errMsg: 'Database Error'});
+      return;
+    }
+    res.json({code: 0});
+    let is_passed_str = (req.body.agreed == 1)?'通过':'拒绝';
+    messageDispatch.sendSystemMessage(req.body.uid,
+      `您刚刚${is_passed_str}了Mentee的申请，请前往“我的mentee页”查看`,
+      (err)=>  console.log(err));
+    messageDispatch.sendSystemMessage(req.body.mentee_uid,
+      `您的申请已被${is_passed_str}，请前往“我的导师”页查看`,
+      (err)=>  console.log(err));
+  });
+});
+
 app.post('/api/mentee_confirm', (req, res) => {
   db.setMenteeConfirm(req.body.uid, req.body.mid, (err) => {
     if (err) {
@@ -60,7 +79,7 @@ app.post('/api/follow_user', (req, res)=>{
 })
 
 // API: unfollow_user. post: body:{follower_uid:, followee_uid:}
-// call db to delete followRelationship in a table. 
+// call db to delete followRelationship in a table.
 app.post('/api/unfollow_user', (req, res)=>{
   db.deleteFollowerFolloweeRelationship(req.body.follower_uid, req.body.followee_uid, (err)=>{
       if (err) {
