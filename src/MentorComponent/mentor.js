@@ -32,30 +32,6 @@ class Mentor extends Component {
     this.renderFollowButton = this.renderFollowButton.bind(this);
     this.follow_action = this.follow_action.bind(this);
     this.unfollow_action = this.unfollow_action.bind(this);
-<<<<<<< HEAD
-    /*axios.post(process.env.REACT_APP_API_HOST + '/api/get_followees_by_uid', {account: 0}.then(
-=======
-    /*axios.post('/api/get_followees_by_uid', {account: 0}.then(
->>>>>>> 401d19ebbdd2516fec94073da7fdf8186930533d
-      res =>{
-        if (res.data.code === 0){
-          this.setState({
-            followees = res.data.followees
-          })
-        }
-        else{
-          this.setState ({
-            followees = []
-          })
-        }
-        }
-      )
-    )*/
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 401d19ebbdd2516fec94073da7fdf8186930533d
 
 
     axios.post('/api/get_mentor_list' ).then(res => {
