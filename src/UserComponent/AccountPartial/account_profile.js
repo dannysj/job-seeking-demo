@@ -51,7 +51,7 @@ class AccountProfile extends React.Component {
 
       store.dispatch(updateUser(key, value));
 
-      axios.post('/api/update_user',{uid:this.props.user.id,attr:key,val:value}).then(res => {
+      axios.post('/api/update_user',{access_token:this.props.user.access_token,attr:key,val:value}).then(res => {
       if(res.data.code===0){
         delete curState.attr_key[key];
         this.setState({curState})
@@ -85,7 +85,7 @@ class AccountProfile extends React.Component {
         store.dispatch(updateUser("resume", res.data.url));
 
         axios.post('/api/update_user', {
-          uid: this.props.user.id,
+          access_token: this.props.user.access_token,
           attr: 'resume',
           val: res.data.url
         }).then(res => {
@@ -135,7 +135,7 @@ class AccountProfile extends React.Component {
         this.setState({showImgCrop: false});
         store.dispatch(updateUser("profile_pic", res.data.url));
         axios.post('/api/update_user', {
-          uid: this.props.user.id,
+          access_token: this.props.user.access_token,
           attr: 'profile_pic',
           val: res.data.url
         }).then(res => {

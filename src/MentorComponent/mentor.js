@@ -128,6 +128,7 @@ class Mentor extends Component {
     this.setState(curState);
   }
 
+ // Follow action might not needed now.
  follow_action(uid, mentor_uid){
     // axios.post('/api/create_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
     //      .then(res=> ())

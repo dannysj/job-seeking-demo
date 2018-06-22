@@ -45,7 +45,7 @@ class MentorEdit extends React.Component {
 
     this.triggerSearch();
 
-    axios.post('/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
+    axios.post('/api/get_mentor_detail_by_uid', {access_token: this.props.user.access_token}).then(res => {
       if (res.data.code === 0) {
 
         res.data.mentor.services = res.data.mentor.service; // sorry for the terrible naming.

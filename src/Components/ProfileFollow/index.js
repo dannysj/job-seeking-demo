@@ -31,9 +31,10 @@ class ProfileFollow extends Component {
     // The other one. this.state.news.author_id
     // call the function 
 
+    // TODO: Change the acceptable environment in the backend.
     if (this.props.loggedInUser !== undefined){
       axios.post('/api/follow_user',
-       {follower_uid: this.props.loggedInUser.id , followee_uid: this.state.author_id}).then(res=>{
+       {follower_access_token: this.props.loggedInUser.access_token , followee_uid: this.state.author_id}).then(res=>{
           console.log("follow")    
       })
     }

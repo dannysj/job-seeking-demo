@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export function fetchUser(uid) {
+export function fetchUser(access_token) {
   return {
     type: "FETCH_USER",
-    payload: axios.post('/api/get_user_info', {uid: uid})
+    payload: axios.post('/api/get_user_info', {access_token: access_token})
   }
 }
 

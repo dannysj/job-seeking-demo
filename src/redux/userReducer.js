@@ -18,7 +18,7 @@ export default (state = {}, action) => {
       break;
 
     case "LOGOUT":
-      localStorage.removeItem('uid');
+      localStorage.removeItem('access_token');
       return null;
 
     case "FETCH_USER_REJECTED":
@@ -32,6 +32,6 @@ export default (state = {}, action) => {
       return null;
   }
 
-  localStorage.setItem('uid', user.id);
+  localStorage.setItem('access_token', user.access_token);
   return user;
 }

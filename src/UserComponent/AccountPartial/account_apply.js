@@ -40,7 +40,8 @@ class AccountApply extends React.Component {
     this.deleteRowAt = this.deleteRowAt.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
 
-    axios.post('/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
+    // TODO: Rename by uid to by access_token? 
+    axios.post('/api/get_mentor_detail_by_uid', {access_token: this.props.user.access_token}).then(res => {
       if (res.data.code === 0) {
         let mentor = res.data.mentor;
         mentor.services = mentor.service; // Sorry for the terrible naming

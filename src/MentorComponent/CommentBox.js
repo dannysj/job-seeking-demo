@@ -82,7 +82,7 @@ class CommentForm extends Component{
       last: this.props.user.last,
       time_added: dateformat(new Date(),"DD Mon HH24:MI"),
       profile_pic: this.props.user.profile_pic,
-      uid:  this.props.user.id
+      access_token: this.props.user.access_token
     });
 
     e.target[0].value = '';

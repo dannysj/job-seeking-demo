@@ -38,7 +38,7 @@ class MentorDetail extends Component {
     var handler = this;
     axios.post(process.env.REACT_APP_API_HOST + '/api/create_order',
     {
-      uid:this.props.user.id,
+      access_token: this.props.user.access_token,
       mid:this.props.match.params.mid,
       service_name: this.state.service_name,
       service_price: this.state.service_price,
@@ -75,7 +75,7 @@ class MentorDetail extends Component {
     var handler = this;
     axios.post('/api/poll_payment',
     {
-      uid:this.props.user.id,
+      access_token: this.props.user.access_token,
       order_id:order_id
     }).then(res => {
       if(res.data.code===0){
