@@ -30,7 +30,8 @@ exports.reset = function () {
       balance numeric(8,2) default 0.00,
       wechat text,
       resume text,
-      isactivated boolean
+      isactivated boolean,
+      access_token varchar(255)
     );
     create table if not exists message (
       id serial unique primary key,
