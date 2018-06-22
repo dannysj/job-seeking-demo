@@ -61,6 +61,22 @@ exports.setMentorConfirm = (mentor_uid, mentee_uid, callback) => {
   });
 };
 
+exports.setMentorDecision = (mentor_uid, mentee_uid, agreed, callback) => {
+  let decision_status = (agreed == 1) ? 1 : 50;
+  const query = `
+    update mentor_rel set status=$3 where uid=$2 and mid=(
+      select id from mentor_info where uid=$1
+    );
+  `;
+  db.query(query, [mentor_uid, mentee_uid,decision_status], (err, result) => {
+    if (err) {
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+};
+
 exports.setMenteeConfirm = (uid, mid, callback) => {
   const query = `
     update mentor_rel set status=3 where uid=$1 and mid=$2;

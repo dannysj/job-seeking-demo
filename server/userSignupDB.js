@@ -3,7 +3,7 @@ const db = require('./_dbPool.js');
 
 // TODO: check and return proper error first if the user's email is duplicated
 exports.createUser = function (user, callback) {
-  const query = `insert into users 
+  const query = `insert into users
                  (first,last,password,email,profile_pic,register_date,isadmin,ismentor)
                  values($1,$2,$3,$4,'/img/sample_profile.jpg',now(),false,false)
                  returning *;`;

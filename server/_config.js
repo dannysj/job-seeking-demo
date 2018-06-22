@@ -25,6 +25,10 @@ if (process.env.DATABASE_URL) {
   };
 }
 
+
+exports.hash_salt = (!!!process.env.HASH_SALT) ? process.env.HASH_SALT : 'defaultsalt'
+
+
 exports.jwtSecret = 'y8$8HBH+du6H3a[C7ticMF)Pf{]8tBDM';
 
 exports.root_admin = {

@@ -1,6 +1,7 @@
 const db = require('./userInfoDB.js');
 const express = require('express');
 const app = express.Router();
+const security = require('./security');
 
 
 app.post('/api/get_user_info', (req, res) => {
@@ -28,7 +29,7 @@ app.post('/api/update_user', (req, res) => {
 
 
 app.post('/api/verify_user', (req, res) => {
-  console.log("Verify user called");
+  req.body.password = security.getHashedPassword(req.body.password);
   db.verifyUser(req.body, (err, user) => {
     if (err) {
       console.log(err);

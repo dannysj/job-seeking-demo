@@ -265,7 +265,7 @@ unfollow_action(uid, mentor_uid){
                           </Table.Cell>
                           <Table.Cell>
                             <img className="title-icon"  alt="position" src={companyIcon} ></img>
-                              {el.offer_company}
+                            <div className="card-info">  {el.offer_company}</div>
                           </Table.Cell>
                         </Table.Row>
                         <Table.Row className="table-clean-row">
@@ -274,7 +274,7 @@ unfollow_action(uid, mentor_uid){
                           </Table.Cell>
                           <Table.Cell>
                           <img className="title-icon"  alt="position" src={posiIcon} ></img>
-                              {el.offer_title}
+                            <div className="card-info">  {el.offer_title} </div>
                           </Table.Cell>
                         </Table.Row>
                         <Table.Row className="table-clean-row">
@@ -283,7 +283,7 @@ unfollow_action(uid, mentor_uid){
                           </Table.Cell>
                           <Table.Cell>
                           <img className="title-icon"  alt="position" src={schoolIcon} ></img>
-                              {el.college_name}
+                              <div className="card-info">{el.college_name} </div>
                           </Table.Cell>
                         </Table.Row>
                         <Table.Row className="table-clean-row">
@@ -292,7 +292,7 @@ unfollow_action(uid, mentor_uid){
                           </Table.Cell>
                           <Table.Cell>
                           <img className="title-icon"  alt="position" src={ageIcon} ></img>
-                              {el.major.join(', ')}
+                            <div className="card-info">  {el.major.join(', ')} </div>
                           </Table.Cell>
                         </Table.Row>
                       </Table.Body>

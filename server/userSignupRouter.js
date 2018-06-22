@@ -6,6 +6,7 @@ const express = require('express');
 const app = express.Router();
 const nodemailer = require('nodemailer');
 const config = require('./_config.js');
+const security = require('./security');
 
 
 // create reusable transporter object using the default SMTP transport
@@ -13,6 +14,9 @@ const transporter = nodemailer.createTransport(config.mail_config);
 
 
 app.post('/api/create_user', (req, res) => {
+
+  req.body.password = security.getHashedPassword(req.body.password);
+
   db.createUser(req.body, (err, user) => {
     if (err) {
       console.log(err);
@@ -32,11 +36,14 @@ app.post('/api/create_user', (req, res) => {
 
     // setup e-mail data
     let mailOptions = {
-      from: '"Test Job Name" <' + config.mail_config.auth.user + '>', // sender address
+      from: '"同行平台" <' + config.mail_config.auth.user + '>', // sender address
       to: user.email, // list of receivers
-      subject: 'Welcome to Buddy Career', // Subject line
+      subject: '欢迎您使用同行平台', // Subject line
       text: link, // plaintext body
-      html: '<a href=' + link + '>Click here to verify</a>' // html body
+      html: `亲爱的用户您好：<br>
+        感谢您注册使用同行平台，希望能和您一起在这里度过美好的时光！<br>
+        <a href=' + link + '>点击此处</a>即可完成邮箱验证。<br>
+        如遇到问题可联系同行平台客服助手微信，微信号：tongxingplatform<br>` // html body
     };
 
 
@@ -51,7 +58,6 @@ app.post('/api/create_user', (req, res) => {
     res.json({code: 0, user: user});
   });
 });
-
 
 
 app.get('/activate', (req, res) => {

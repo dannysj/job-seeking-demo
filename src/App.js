@@ -96,7 +96,7 @@ class App extends Component {
 
           <div className="item logo-item" >
             <img src="/img/icon.png" height="40px" alt="icon"></img>
-            <b className="title">{' '}Buddy{'\n'}Career</b>
+            <b className="title">{' '}同行{'\n'}求职</b>
 
             <label forname="reveal-menu" className="menu-icon" onClick={this.menuToggled}>
                 <span className="bread bread-top">

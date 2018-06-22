@@ -57,7 +57,7 @@ class AccountMentor extends React.Component {
                   <p>Offer: {el.offer_company+' '+el.offer_title}</p>
                   <p>院校: {el.college_name}</p>
                   <p>Email: {el.email}</p>
-                  <p>签约状态: {el.status===1?'正在服务':el.status===2?'等待您确认服务完成':'服务完成'}</p>
+                  <p>签约状态: {el.status===20?'等待导师通过':el.status==50?'已被导师拒绝':el.status===1?'正在服务':el.status===2?'等待您确认服务完成':'服务完成'}</p>
                 </div>
                 {el.status===1 && <Button floated='right' disabled>服务进行中</Button>}
                 {el.status===2 && <Button floated='right' positive onClick={() => this.handleConfirm(el.mid)}>确认完成</Button>}
