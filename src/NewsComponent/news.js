@@ -5,30 +5,34 @@ import { Container, Divider, Button } from 'semantic-ui-react';
 import axios from 'axios';
 import Footer from '../Components/Footer';
 import './news.css';
+import store from "../redux";
+import {fetchNewsList} from "../redux/newsListAction";
+import {connect} from 'react-redux'
 
 class News extends React.Component {
   constructor (props) {
     super(props);
-    this.state={
-      news_list:[],
-      loading: true
-    };
-    this.batch_size = 10;
     this.batch_num = 0;
-    axios.post('/api/get_news_list',
-      {batch_size: this.batch_size, batch_num:this.batch_num}).then(res => {
-      if(res.data.code===0){
-        this.batch_num++;
-        this.setState({news_list: res.data.news_list, loading: false});
-      }
-      else{
-        // TODO: detect which error it is, if it is depletion error, show "no more"
-      }
+    // axios.post('/api/get_news_list',
+    //   {batch_size: this.batch_size, batch_num:this.batch_num}).then(res => {
+    //   if(res.data.code===0){
+    //     this.batch_num++;
+    //     this.setState({newsStore: res.data.newsStore, loading: false});
+    //   }
+    //   else{
+    //     // TODO: detect which error it is, if it is depletion error, show "no more"
+    //   }
+    // });
+  }
+
+  componentWillMount(){
+    store.dispatch(fetchNewsList(this.batch_num)).then(()=>{
+      this.batch_num++;
     });
   }
 
   render() {
-    if (this.state.loading) {
+    if (this.props.loading) {
       return (
         <div className="loading-news-view">
             <Button basic loading>Loading</Button>
@@ -48,7 +52,7 @@ class News extends React.Component {
         </div>
         <div className="news-detail-content">
         {
-          this.state.news_list.map(el => (
+          this.props.news_list.map(el => (
             <Link to={'/news/'+el.id}>
             <div className="list-news-container new-big" key={el.id}>
               <img className="list-news-picture" src={el.thumbnail} alt={el.title}/>
@@ -78,7 +82,7 @@ class News extends React.Component {
           </div>
           <div className="news-detail-content">
           {
-            this.state.news_list.map(el => (
+            this.props.news_list.map(el => (
               <Link to={'/news/'+el.id}>
               <div className="list-news-container" key={el.id}>
                 <img className="list-news-picture" src={el.thumbnail} alt={el.title}/>
@@ -106,4 +110,6 @@ News.contextTypes = {
     router: PropTypes.object
 };
 
-export default News;
+const mapStateToProps = state => {return {...state.newsStore}};
+
+export default connect(mapStateToProps)(News);
