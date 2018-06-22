@@ -115,19 +115,8 @@
   object-fit: cover;
 }
 
-input[type=checkbox].reveal-resume {
-  &:checked {
-    & ~ {
-      .resume-section {
-        height: 90vh;
-      }
-    }
-  }
-}
-
 .resume-section {
   position: relative;
-  height: 50vh;
   transition: height 0.25s;
   background: linear-gradient(45deg, rgba(51, 51, 51, 1) 0%, rgba(18, 18, 18, 0.5718662464985995) 36%, rgba(15, 15, 15, 0.6334908963585435) 63%, rgba(80, 80, 80, 1) 100%);
   display: flex;
