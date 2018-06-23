@@ -41,11 +41,17 @@ class MentorDetail extends Component {
     this.handleCancelBuy = this.handleCancelBuy.bind(this);
     this.scrollTo = this.scrollTo.bind(this);
     this.handleCompanyIconError = this.handleCompanyIconError.bind(this);
+    this.handleCompanyIconLoad = this.handleCompanyIconLoad.bind(this);
   }
 
   handleCompanyIconError (e) {
     e.preventDefault();
     e.target.style.display = 'none';
+  }
+
+  handleCompanyIconLoad (e) {
+    e.preventDefault();
+    e.target.style.display = 'block';
   }
 
   updateNote(e) {
@@ -255,7 +261,8 @@ class MentorDetail extends Component {
                   <img
                     style={{width:'50px',height:'50px'}}
                     src={'/files/'+this.state.mentor.offer_company.replace(/\s+/g,'').toLowerCase()+'.jpg'}
-                  />
+                    onError={this.handleCompanyIconError}
+                    onLoad={this.handleCompanyIconLoad}/>
                 </div>
               </div>
               <div className="small-bio" dangerouslySetInnerHTML={{__html:this.state.mentor.bio}}>
