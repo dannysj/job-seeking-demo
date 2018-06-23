@@ -1,6 +1,7 @@
 const config = require('./_config.js');
 const bcrypt = require('bcrypt');
 const db = require('./securityDB.js');
+const uuidv4 = require('uuid/v4');
 
 exports.getHashedPassword = (input) => {
   return bcrypt.hashSync(input, config.hash_salt);
@@ -18,4 +19,9 @@ exports.access_token_validator = (req, res, next) => {
       next();
     });
   }
+}
+
+exports.update_access_token = (uid, callback) => {
+  let access_token = uuid4();
+  db.updateAccessToken(uid, access_token, callback);
 }

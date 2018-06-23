@@ -36,11 +36,17 @@ app.post('/api/verify_user', (req, res) => {
       res.json({code: 1, errMsg: err});
       return;
     }
-    res.json({code: 0, user: user});
+    security.updateAccessToken(user.id, (err, access_token)=>{
+      if(err){
+        console.log(err);
+        res.json({code: 1, errMsg: 'Cannot generate access token'});
+        return;
+      }
+      user.access_token = access_token;
+      res.json({code: 0, user: user});
+    });
   });
 });
 
 
 module.exports = app;
-
-

@@ -14,4 +14,12 @@ exports.getUidByAccessToken = (access_token, callback) => {
       callback(null, result.rows[0].id);
     }
   });
+};
+
+exports.updateAccessToken = (uid, access_token, callback) => {
+
+  const query = `update users set access_token=$2 where id=$1;`;
+  db.query(query, [uid, access_token], (err, result)=>{
+    callback(err, access_token);
+  });
 }
