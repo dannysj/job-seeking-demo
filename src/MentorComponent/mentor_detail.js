@@ -11,7 +11,19 @@ import Footer from '../Components/Footer';
 class MentorDetail extends Component {
   constructor (props) {
     super(props);
-    this.state = {mentor: {first: "", last: "", service: []}, is_resume_open:false, isDown:true, note: '', showAddServiceModal: false, showNoteModal: false};
+    this.state = {
+      mentor: {
+        first: "",
+        last: "",
+        offer_company: '',
+        service: []
+      },
+      is_resume_open:false,
+      isDown:true,
+      note: '',
+      showAddServiceModal: false,
+      showNoteModal: false
+    };
     this.timer = null
     axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
@@ -28,6 +40,12 @@ class MentorDetail extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancelBuy = this.handleCancelBuy.bind(this);
     this.scrollTo = this.scrollTo.bind(this);
+    this.handleCompanyIconError = this.handleCompanyIconError.bind(this);
+  }
+
+  handleCompanyIconError (e) {
+    e.preventDefault();
+    e.target.style.display = 'none';
   }
 
   updateNote(e) {
@@ -233,7 +251,12 @@ class MentorDetail extends Component {
               <div className="mentor-name">
                 <div className="chinese-top">{this.state.mentor.last+this.state.mentor.first}</div>
                 <div className="divider"></div>
-                <div className="App-subtitle">{"English name"}</div>
+                <div className="App-subtitle">
+                  <img
+                    style={{width:'50px',height:'50px'}}
+                    src={'/files/'+this.state.mentor.offer_company.replace(/\s+/g,'').toLowerCase()+'.jpg'}
+                  />
+                </div>
               </div>
               <div className="small-bio" dangerouslySetInnerHTML={{__html:this.state.mentor.bio}}>
               </div>

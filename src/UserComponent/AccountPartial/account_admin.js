@@ -177,7 +177,7 @@ class AccountAdmin extends React.Component {
           ))}
         </Segment>
         <Segment>
-          <h4>上传公司图片：(请保持文件名与公司名一致，全部小写，去掉空格以及单引号)</h4>
+          <h4>上传公司图片：(请保持文件名与公司名一致，全部小写，后缀名jpg，去掉空格以及单引号)</h4>
             <label htmlFor="company-icon-input" className="ui button">
               <i className="ui upload icon"/>
               公司logo上传

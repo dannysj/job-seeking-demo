@@ -34,7 +34,7 @@ app.post('/api/file/general_upload', upload.single('file'), (req, res) => {
   res.json({code: 0, url: '/files/' + req.file.filename});
 });
 
-app.post('/api/file/general_upload_name_perserved', upload.single('file'), (req, res) => {
+app.post('/api/file/general_upload_name_perserved', upload_name_perserved.single('file'), (req, res) => {
   if (!req.file)
     return res.json({code: -21, errMsg: 'No files found'});
 
