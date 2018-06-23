@@ -39,9 +39,8 @@ class AccountApply extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.deleteRowAt = this.deleteRowAt.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
-
-    // TODO: Rename by uid to by access_token? 
-    axios.post('/api/get_mentor_detail_by_uid', {access_token: this.props.user.access_token}).then(res => {
+ 
+    axios.post('/api/get_mentor_detail_by_uid',{}, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if (res.data.code === 0) {
         let mentor = res.data.mentor;
         mentor.services = mentor.service; // Sorry for the terrible naming

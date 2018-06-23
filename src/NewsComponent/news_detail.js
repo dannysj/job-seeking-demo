@@ -84,7 +84,7 @@ class NewsDetail extends Component {
                   "profile_pic": this.state.news.profile_pic,
                   "cover": this.state.news.author_cover,
                 }}
-                loggedInUser={this.props.loggedInUser} 
+                loggedInUser={this.props.loggedInUser}
                 author_id = {this.state.news.author_id}
                 />
           </div>

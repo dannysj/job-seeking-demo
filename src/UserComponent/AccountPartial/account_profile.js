@@ -43,14 +43,17 @@ class AccountProfile extends React.Component {
 
       store.dispatch(updateUser(key, value));
 
-      axios.post('/api/update_user',{access_token:this.props.user.access_token,attr:key,val:value}).then(res => {
-      if(res.data.code===0){
-        delete curState.attr_key[key];
-        this.setState({curState})
-      }
-      else {
-        NotificationManager.error('资料更新失败', '错误');
-      }
+      axios.post('/api/update_user',
+                {attr:key,val:value}, 
+                {headers:{access_token:this.props.user.access_token}}
+      ).then(res => {
+        if(res.data.code===0){
+          delete curState.attr_key[key];
+          this.setState({curState})
+        }
+        else {
+          NotificationManager.error('资料更新失败', '错误');
+        }
     });
   };
  }
@@ -72,12 +75,14 @@ class AccountProfile extends React.Component {
     axios.post('/api/file/general_upload', data).then(res => {
       if (res.data.code === 0) {
         store.dispatch(updateUser("resume", res.data.url));
-<<<<<<< HEAD
 
-        axios.post('/api/update_user', {
-          access_token: this.props.user.access_token,
+        axios.post('/api/update_user', 
+        {
           attr: 'resume',
           val: res.data.url
+        }, 
+        {
+          headers: {access_token: this.props.user.access_token}
         }).then(res => {
           if (res.data.code === 0)
             NotificationManager.success('简历上传成功', '完成啦');
@@ -86,9 +91,6 @@ class AccountProfile extends React.Component {
         });
       }
       else {
-=======
-      } else {
->>>>>>> 0ecb0b5d72fe309ef040f354b6e1c29a8062fae5
         NotificationManager.error('简历上传失败', '错误');
       }
     });
@@ -126,12 +128,15 @@ class AccountProfile extends React.Component {
       if (res.data.code === 0) {
         this.setState({showImgCrop: false});
         store.dispatch(updateUser("profile_pic", res.data.url));
-<<<<<<< HEAD
-        axios.post('/api/update_user', {
-          access_token: this.props.user.access_token,
+        axios.post('/api/update_user', 
+        {
           attr: 'profile_pic',
           val: res.data.url
-        }).then(res => {
+        }, 
+        {
+          headers:{access_token: this.props.user.access_token}
+        }
+        ).then(res => {
           if (res.data.code === 0) {
             NotificationManager.success('头像上传成功', '上传成功');
           }
@@ -139,8 +144,6 @@ class AccountProfile extends React.Component {
             NotificationManager.error('资料更新失败', '错误');
           }
         });
-=======
->>>>>>> 0ecb0b5d72fe309ef040f354b6e1c29a8062fae5
       }
       else {
         NotificationManager.error('头像上传失败', '错误');

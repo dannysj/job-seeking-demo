@@ -39,12 +39,11 @@ class MentorDetail extends Component {
     var handler = this;
     axios.post(process.env.REACT_APP_API_HOST + '/api/create_order',
     {
-      access_token: this.props.user.access_token,
       mid:this.props.match.params.mid,
       service_name: this.state.service_name,
       service_price: this.state.service_price,
       note: this.state.note
-    }).then(res => {
+    }, {headers: {access_token: this.props.user.access_token}}).then(res => {
       if (res.data.code === 0) {
         window.location.href = res.data.url;
       }
@@ -76,9 +75,8 @@ class MentorDetail extends Component {
     var handler = this;
     axios.post('/api/poll_payment',
     {
-      access_token: this.props.user.access_token,
       order_id:order_id
-    }).then(res => {
+    }, {headers: {access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code===0){
         // handler.setState({showAddServiceModal: false, qr_code: ''});
         alert('支付成功'); //TODO Notification System

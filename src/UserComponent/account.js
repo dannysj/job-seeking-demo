@@ -25,12 +25,13 @@ class Account extends Component {
 
 
   render() {
-    const user = this.props.user;
 
-    if(user.status === userStatus.logout){
+    let user = localStorage.getItem("user")
+    if(user == null){ // this is a temporary fix, please change it to using redux
       this.context.router.history.push('/login');
       return;
     }
+    
 
     if(user.status === userStatus.pending){
       return (

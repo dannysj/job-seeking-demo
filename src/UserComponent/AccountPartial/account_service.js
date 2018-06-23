@@ -20,7 +20,7 @@ class AccountService extends React.Component {
 
   updateInfo(){
     var handler = this;
-    axios.post('/api/get_rel_mentees', {access_token: this.props.user.access_token}).then(res => {
+    axios.post('/api/get_rel_mentees', {},{header:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         handler.setState({mentees:res.data.mentees});
@@ -35,7 +35,7 @@ class AccountService extends React.Component {
 
   handleConfirm(mentee_uid){
     var handler = this;
-    axios.post('/api/mentor_confirm', {access_token: this.props.user.access_token, mentee_uid: mentee_uid}).then(res => {
+    axios.post('/api/mentor_confirm',{mentee_uid: mentee_uid}, {headers: {access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         handler.updateInfo();
@@ -50,7 +50,7 @@ class AccountService extends React.Component {
 
   handleDecision(mentee_uid, agreed){
     var handler = this;
-    axios.post('/api/mentor_decision', {access_token: this.props.user.access_token, mentee_uid: mentee_uid, agreed: agreed}).then(res => {
+    axios.post('/api/mentor_decision', {mentee_uid: mentee_uid, agreed: agreed}, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         window.location.reload(); // TODO: the reason I used reload here is because

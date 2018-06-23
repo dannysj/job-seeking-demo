@@ -68,7 +68,7 @@ app.post('/api/mentee_confirm', (req, res) => {
 
 // API follow_user. post: body:{follower_uid:, followee_uid:}
 app.post('/api/follow_user', (req, res)=>{
-  db.createFollowerFolloweeRelationship(req.body.follower_uid, req.body.followee_uid, (err)=>{
+  db.createFollowerFolloweeRelationship(req.body.uid, req.body.followee_uid, (err)=>{
       if (err) {
         console.log(err);
         res.json({code: 1, errMsg: 'Database Error'});
@@ -81,7 +81,7 @@ app.post('/api/follow_user', (req, res)=>{
 // API: unfollow_user. post: body:{follower_uid:, followee_uid:}
 // call db to delete followRelationship in a table.
 app.post('/api/unfollow_user', (req, res)=>{
-  db.deleteFollowerFolloweeRelationship(req.body.follower_uid, req.body.followee_uid, (err)=>{
+  db.deleteFollowerFolloweeRelationship(req.body.uid, req.body.followee_uid, (err)=>{
       if (err) {
         console.log(err);
         res.json({code: 1, errMsg: 'Database Error'});

@@ -24,7 +24,7 @@ class CommentBox extends Component{
     this.setState({comments: [...this.state.comments, comment]});
 
     comment.mid = this.props.mid;
-    axios.post('/api/create_mentor_comment', comment).then(res => {
+    axios.post('/api/create_mentor_comment', comment, {headers:{access_token: this.props.user.access_token}}).then(res => {
       // TODO: Error Handling
     });
   }
@@ -35,7 +35,7 @@ class CommentBox extends Component{
 
     this.setState({comments: comments});
 
-    axios.post('/api/create_mentor_reply', comment).then(res => {
+    axios.post('/api/create_mentor_reply', comment, {headers:{access_token: this.props.user.access_token}}).then(res => {
       // TODO: Error Handling
     });
   }
@@ -82,7 +82,6 @@ class CommentForm extends Component{
       last: this.props.user.last,
       time_added: dateformat(new Date(),"DD Mon HH24:MI"),
       profile_pic: this.props.user.profile_pic,
-      access_token: this.props.user.access_token
     });
 
     e.target[0].value = '';
