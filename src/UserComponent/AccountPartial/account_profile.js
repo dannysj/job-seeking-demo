@@ -6,8 +6,9 @@ import axios from 'axios';
 import '../account.css';
 import ImgCrop from './ImgCrop/imgcrop.js';
 import store from "../../redux";
-import {updateUser, setUser} from "../../redux/userAction";
-import {connect} from "react-redux";
+import {updateUser} from "../../redux/userAction";
+import {fetchMajorList} from "../../redux/majorListAction";
+import {connect} from 'react-redux'
 
 
 class AccountProfile extends React.Component {
@@ -15,21 +16,12 @@ class AccountProfile extends React.Component {
     super(props);
     this.state = {
       showImgCrop: false,
-      fileName: this.props.user.resume,
       attr_key: {},
-      major_list: [],
     };
   }
 
   componentDidMount() {
-    axios.post('/api/get_major_list').then(res => {
-      if (res.data.code === 0) {
-        res.data.list.forEach(e=> e.value = e.text);
-        this.setState({major_list: res.data.list});
-      } else {
-        NotificationManager.error('无法获取专业列表', '错误');
-      }
-    });
+    store.dispatch(fetchMajorList());
   }
 
   initAttrChange = (key_name) => {
@@ -39,7 +31,7 @@ class AccountProfile extends React.Component {
     attr_keys[key_name] = this.props.user[key_name];
 
     this.setState({attr_key:attr_keys});
-  }
+  };
 
   confirmAttrChange = (e) => {
     e.preventDefault();
@@ -76,13 +68,11 @@ class AccountProfile extends React.Component {
     let data = new FormData();
     // for security reason, can't access local files on client's comp
     data.append('file', e.target.files[0]);
-    let handler = this;
 
     axios.post('/api/file/general_upload', data).then(res => {
       if (res.data.code === 0) {
-        this.setState({fileName: res.data.url});
-
         store.dispatch(updateUser("resume", res.data.url));
+<<<<<<< HEAD
 
         axios.post('/api/update_user', {
           access_token: this.props.user.access_token,
@@ -96,6 +86,9 @@ class AccountProfile extends React.Component {
         });
       }
       else {
+=======
+      } else {
+>>>>>>> 0ecb0b5d72fe309ef040f354b6e1c29a8062fae5
         NotificationManager.error('简历上传失败', '错误');
       }
     });
@@ -128,12 +121,12 @@ class AccountProfile extends React.Component {
     }
     let data = new FormData();
     data.append('file', img);
-    let handler = this;
 
     axios.post('/api/file/general_upload', data).then(res => {
       if (res.data.code === 0) {
         this.setState({showImgCrop: false});
         store.dispatch(updateUser("profile_pic", res.data.url));
+<<<<<<< HEAD
         axios.post('/api/update_user', {
           access_token: this.props.user.access_token,
           attr: 'profile_pic',
@@ -146,6 +139,8 @@ class AccountProfile extends React.Component {
             NotificationManager.error('资料更新失败', '错误');
           }
         });
+=======
+>>>>>>> 0ecb0b5d72fe309ef040f354b6e1c29a8062fae5
       }
       else {
         NotificationManager.error('头像上传失败', '错误');
@@ -256,7 +251,7 @@ class AccountProfile extends React.Component {
                 <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")}>
                   <div className="form-text">
                       <Dropdown name='major' placeholder='专业' search selection multiple fluid closeOnChange
-                                options={this.state.major_list}
+                                options={this.props.major_list}
                                 onChange={(e, data) => this.setState({attr_key: {major: data.value}})}
                                 value={this.state.attr_key.major}/>
                     <div className="padding-text"></div>
@@ -391,13 +386,13 @@ class AccountProfile extends React.Component {
                 <div className="content">
                 <div className="inner-content">
                   <div className="header">简历</div>
-                  <div className="info">{this.state.fileName ? '' : '暂无资料'}</div>
-                  <label htmlFor="resume-input" className={this.state.fileName ? 'ui button positive' : 'ui button'}>
+                  <div className="info">{user.resume ? '' : '暂无资料'}</div>
+                  <label htmlFor="resume-input" className={user.resume ? 'ui button positive' : 'ui button'}>
                     <i className="ui upload icon"/>
-                    {this.state.fileName ? '成功' : '上传简历'}
+                    {user.resume ? '成功' : '上传简历'}
                   </label>
                   <input type="file" accept="application/pdf" className="input-file" id="resume-input" onChange={this.handleResume}/>
-                  {this.state.fileName ? (<embed className="resume-holder" src={this.state.fileName} width="100%"
+                  {user.resume ? (<embed className="resume-holder" src={user.resume} width="100%"
                                                  type='application/pdf'/>) : (<div></div>)}
                 </div>
                 </div>
@@ -412,10 +407,10 @@ class AccountProfile extends React.Component {
   }
 }
 
-
 const mapStateToProps = state => {
-  const {user} = state;
-  return {user};
+  const {user, major_list} = state;
+  return {user, major_list};
 };
+
 
 export default connect(mapStateToProps)(AccountProfile);

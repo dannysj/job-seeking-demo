@@ -1,35 +1,94 @@
 import {NotificationManager} from "react-notifications";
 
-export default (state = {}, action) => {
-  let user = null;
-  const {type, payload} = action;
+export const userStatus = {
+  logout: -1,
+  pending: 0,
+  login: 1,
+};
+Object.freeze(userStatus);
 
-  switch (type) {
+/**
+ * @type {{
+ *  balance: string,
+ *  cover: string,
+ *  dob: Date,
+ *  email: string,
+ *  first: string,
+ *  last: string,
+ *  id: number,
+ *  isactivated: boolean,
+ *  isadmin: boolean,
+ *  ismentor: boolean,
+ *  major: string[],
+ *  num_notifications: number,
+ *  profile_pic: string,
+ *  register_date: Date,
+ *  resume: string,
+ *  wechat: string,
+ *  status: number
+ *  }}
+ */
+const initState = {
+  balance: "0.00",
+  cover: "",
+  dob: null, // not used
+  email: "",
+  first: "",
+  last: "",
+  id: -1,
+  isactivated: false,
+  isadmin: false,
+  ismentor: false,
+  major: [],
+  num_notifications: 0,
+  profile_pic: "/img/sample_profile.jpg",
+  register_date: null, // not used
+  resume: "",
+  wechat: "",
+  status: userStatus.logout,
+};
+
+
+export default (state = initState, action) => {
+  switch (action.type) {
     case "SET_USER":
-      user = payload;
-      break;
-
-    case "UPDATE_USER":
-      user = {...state, [payload.prop]: payload.val};
-      break;
-
-    case "FETCH_USER_FULFILLED":
-      user = payload.data.user;
-      break;
+      localStorage.setItem('uid', action.payload.id);
+      return {...action.payload, status: userStatus.login};
 
     case "LOGOUT":
+      localStorage.removeItem('uid');
       localStorage.removeItem('access_token');
-      return null;
+      return {status: userStatus.logout};
+
+
+
+    case "FETCH_USER_PENDING":
+      return {status: userStatus.pending};
 
     case "FETCH_USER_REJECTED":
       NotificationManager.error('无法读取登陆信息', '错误');
-      return null;
+      return {status: userStatus.logout};
 
-    case "FETCH_USER_PENDING":
-      return null;
+    case "FETCH_USER_FULFILLED":
+      return {...action.payload.data.user, status: userStatus.login};
+
+
+
+    case "UPDATE_USER_PENDING":
+      return state;
+
+    case "UPDATE_USER_REJECTED":
+      NotificationManager.error('资料更新失败', '错误');
+      return state;
+
+    case "UPDATE_USER_FULFILLED":
+      NotificationManager.success('资料更新成功', '完成啦');
+      const {attr, val} = JSON.parse(action.payload.config.data);
+      return {...state, [attr]: val};
+
 
     default:
-      return null;
+      return state;
   }
 
   localStorage.setItem('access_token', user.access_token);

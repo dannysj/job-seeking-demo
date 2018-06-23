@@ -12,7 +12,7 @@ class MentorDetail extends Component {
   constructor (props) {
     super(props);
     this.state = {mentor: {first: "", last: "", service: []}, is_resume_open:false, isDown:true, note: '', showAddServiceModal: false, showNoteModal: false};
-
+    this.timer = null
     axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
         this.setState({mentor:res.data.mentor});
@@ -27,6 +27,7 @@ class MentorDetail extends Component {
     this.updateNote = this.updateNote.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancelBuy = this.handleCancelBuy.bind(this);
+    this.scrollTo = this.scrollTo.bind(this);
   }
 
   updateNote(e) {
@@ -92,6 +93,72 @@ class MentorDetail extends Component {
     });
   }
 
+  	stop() {
+  		clearTimeout(this.timer);
+  	}
+  	scrollTo(id, callback) {
+  		var settings = {
+  			duration: 1000,
+  			easing: {
+  				outQuint: function (x, t, b, c, d) {
+  					return c*((t=t/d-1)*t*t*t*t + 1) + b;
+  				}
+  			}
+  		};
+  		var percentage;
+  		var startTime;
+  		var node = document.getElementById(id);
+  		var nodeTop = node.offsetTop - 65;
+  		var nodeHeight = node.offsetHeight;
+  		var body = document.body;
+  		var html = document.documentElement;
+  		var height = Math.max(
+  			body.scrollHeight,
+  			body.offsetHeight,
+  			html.clientHeight,
+  			html.scrollHeight,
+  			html.offsetHeight
+  		);
+  		var windowHeight = window.innerHeight
+  		var offset = window.pageYOffset ;
+  		var delta = nodeTop - offset;
+  		var bottomScrollableY = height - windowHeight;
+  		var targetY = (bottomScrollableY < delta) ?
+  			bottomScrollableY - (height - nodeTop - nodeHeight + offset):
+  			delta;
+
+  		startTime = Date.now();
+  		percentage = 0;
+
+  		if (this.timer) {
+  			clearInterval(this.timer);
+  		}
+
+  		function step () {
+  			var yScroll;
+  			var elapsed = Date.now() - startTime;
+
+  			if (elapsed > settings.duration) {
+  				clearTimeout(this.timer);
+  			}
+
+  			percentage = elapsed / settings.duration;
+
+  			if (percentage > 1) {
+  				clearTimeout(this.timer);
+
+  				if (callback) {
+  					callback();
+  				}
+  			} else {
+  				yScroll = settings.easing.outQuint(0, elapsed, offset, targetY, settings.duration);
+  				window.scrollTo(0, yScroll);
+  				this.timer = setTimeout(step, 10);
+  			}
+  		}
+
+  		this.timer = setTimeout(step, 10);
+  	}
 
   render() {
     let modalClassName='ui modal';
@@ -99,6 +166,7 @@ class MentorDetail extends Component {
       backgroundImage: 'url('+this.state.mentor.profile_pic+')',
       backgroundPosition: 'center center no-repeat',
       backgroundSize: 'cover',
+      filter:'blur(1em)',
       };
     if(this.state.showAddServiceModal){
       modalClassName += ' payment-qr-container';
@@ -111,7 +179,6 @@ class MentorDetail extends Component {
 
       return (
       <div className="mentor-detail-container">
-        <input type="checkbox" id="reveal-resume" className="reveal-resume" role="button" checked={this.state.is_resume_open ? "checked" : ""}></input>
         <NotificationContainer />
         <Modal open={this.state.showNoteModal} style={{
           marginTop: '0px !important',
@@ -146,20 +213,35 @@ class MentorDetail extends Component {
           </div>
         </div>
 
-        <div className="mentor-background-image" style={backimgstyle}>
-          <div className="ui container">
-            <div className="mentor-name">
-              <div className="chinese-top">{this.state.mentor.last+this.state.mentor.first}</div>
-              <div className="App-subtitle">{"English name"}</div>
-              <Divider hidden clearing />
-              <Divider hidden clearing />
-              <div className="small-bio" dangerouslySetInnerHTML={{__html:this.state.mentor.bio}}>
-
+        <div className="mentor-background-image-container" >
+        <div className="mentor-background-image" style={backimgstyle}></div>
+          <div className="mentor-sep-container">
+            <div className="header">
+              <div className="mentor-profile-border">
+                <img src={this.state.mentor.profile_pic}></img>
               </div>
+              <div className="border-navi">
+                <div className="timeline-marker"></div>
+                <div className="item" onClick={() => {this.scrollTo("info")}}><Icon name='leaf' /><div className="navi-title">个人资料</div></div>
+                <div className="item" onClick={() => {this.scrollTo("info")}}><Icon name='pencil' /><div className="navi-title">阅历</div></div>
+                <div className="item" onClick={() => {this.scrollTo("resume")}}><Icon name='address card' /><div className="navi-title">简历</div></div>
+                <div className="item" onClick={() => {this.scrollTo("service")}}><Icon name='star' /><div className="navi-title">服务介绍</div></div>
+                <div className="item" onClick={() => {this.scrollTo("comment")}}><Icon name='talk' /><div className="navi-title">评价</div></div>
+              </div>
+            </div>
+            <div className="subheader">
+              <div className="mentor-name">
+                <div className="chinese-top">{this.state.mentor.last+this.state.mentor.first}</div>
+                <div className="divider"></div>
+                <div className="App-subtitle">{"English name"}</div>
+              </div>
+              <div className="small-bio" dangerouslySetInnerHTML={{__html:this.state.mentor.bio}}>
+              </div>
+
             </div>
           </div>
         </div>
-        <div className="mentor-detail-info-container">
+        <div id="info" className="mentor-detail-info-container">
 
           <div className="item detail-item">
 
@@ -192,7 +274,7 @@ class MentorDetail extends Component {
 
           </div>
 
-          <div className="item detail-item">
+          <div  className="item detail-item">
 
             <div className="title">
               <img className="title-icon"  alt="age" src={ageIcon} height={50}/>
@@ -204,18 +286,18 @@ class MentorDetail extends Component {
 
         </div>
 
-        <div className="detail-section resume-section">
+        <div id="resume" className="detail-section resume-section" style={{height:this.state.is_resume_open?'90vh':'50vh'}}>
           <div className="title">
               简历
             </div>
           <embed className="resume-holder" src={this.state.mentor.resume} width="100%" type='application/pdf'/>
-          <label forName="reveal-resume" className="resume-name" onClick={this.resumeToggled}><span>{(this.state.isDown) ? "点 击 展 开 简 历" : "缩 小"}</span><span className="triangle-open"><Arrow isDown={this.state.isDown}/></span>
+          <label forName="reveal-resume" className="resume-name" onClick={this.resumeToggled}><span>{(this.state.isDown) ? "点\xa0\xa0\xa0\xa0击\xa0\xa0\xa0\xa0展\xa0\xa0\xa0\xa0开\xa0\xa0\xa0\xa0简\xa0\xa0\xa0\xa0历" : "缩\xa0\xa0\xa0\xa0小"}</span><span className="triangle-open"><Arrow isDown={this.state.isDown}/></span>
           </label>
         </div>
 
           {
             (this.state.mentor.service.length > 0) ? (
-              <div className="mentor-service-overview detail-section">
+              <div id="service" className="mentor-service-overview detail-section">
                 <div className="title">
                   服务介绍
 
@@ -227,7 +309,8 @@ class MentorDetail extends Component {
               <div className="mentor-service-container">
               {
                 this.state.mentor.service.map(el => (
-                  <div className="service-border" style={backimgstyle}>
+                  <div className="service-border" >
+                    <div className="service-blur" style={backimgstyle}> </div>
                     <div className="service-item" >
                       <div className="service-title">
                         <div className="service-name">{el.name}</div>
@@ -244,7 +327,7 @@ class MentorDetail extends Component {
               </div>
             </div>
             ) : (
-            <div className="para-large">
+            <div id="service" className="para-large">
               <b>{this.state.mentor.last+this.state.mentor.first}</b>
               本周尚未提供服务
             </div>
@@ -253,7 +336,7 @@ class MentorDetail extends Component {
 
 
 
-        <div className="detail-section">
+        <div id="comment" className="detail-section">
             <div className="title">
                 过往评价
             </div>

@@ -1,11 +1,12 @@
 const db = {
-  ...require('./loginSignupDB.js'),
+  ...require('./userSignupDB.js'),
   ...require('./messageDB.js')
 };
 const express = require('express');
 const app = express.Router();
 const nodemailer = require('nodemailer');
 const config = require('./_config.js');
+const security = require('./security');
 
 
 // create reusable transporter object using the default SMTP transport
@@ -13,6 +14,9 @@ const transporter = nodemailer.createTransport(config.mail_config);
 
 
 app.post('/api/create_user', (req, res) => {
+
+  req.body.password = security.getHashedPassword(req.body.password);
+
   db.createUser(req.body, (err, user) => {
     if (err) {
       console.log(err);
@@ -55,17 +59,6 @@ app.post('/api/create_user', (req, res) => {
   });
 });
 
-app.post('/api/verify_user', (req, res) => {
-  console.log("Verify user called");
-  db.verifyUser(req.body, (err, user) => {
-    if (err) {
-      console.log(err);
-      res.json({code: 1, errMsg: err});
-      return;
-    }
-    res.json({code: 0, user: user});
-  });
-});
 
 app.get('/activate', (req, res) => {
   console.log("GET verify user called")

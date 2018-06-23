@@ -10,9 +10,9 @@ class Footer extends Component {
       <footer className="main-footer">
         <Container>
           <div className="footer-container">
-          <p className="chinese-top">同行求职</p>
+          <p className="chinese-top">同行 TongXing Career</p>
           <p>www.tongxingcareer.com</p>
-          <p>© 2018 Tongxing career | All Rights Reserved</p>
+          <p>© {(new Date().getFullYear())} Buddy Career | All Rights Reserved</p>
           <p><Link to="about">About</Link> | <Link to="contact">Contact</Link></p>
           </div>
         </Container>

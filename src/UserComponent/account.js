@@ -15,6 +15,9 @@ import AccountForbidden from "./AccountPartial/account_forbidden";
 import MentorEdit from "./AccountPartial/mentor_edit";
 import CreateArticle from "./AccountPartial/create_article";
 import AccountNotification from "./AccountPartial/account_notification";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
+import {userStatus} from "../redux/userReducer";
 
 
 class Account extends Component {
@@ -22,18 +25,21 @@ class Account extends Component {
 
 
   render() {
-    if(localStorage.getItem('uid') == null){ // this is a temporary fix, please change it to using redux
+    const user = this.props.user;
+
+    if(user.status === userStatus.logout){
       this.context.router.history.push('/login');
       return;
     }
-    if(!!!this.props.user){
+
+    if(user.status === userStatus.pending){
       return (
         <div className="loading-news-view">
             <Button basic loading>Loading</Button>
         </div>
-      )
+      );
     }
-    else
+
     return (
       <div className="back-container">
       <div className="ui container account-main-container">
@@ -44,7 +50,7 @@ class Account extends Component {
             <div className="ui vertical fluid tabular menu account-side-no-container">
               <div className="account-status">
                 <Icon name='graduation'  color="blue" className="menu-icon" />
-                您的账号状态：{this.props.user.ismentor ? "Mentor":"Mentee"}
+                您的账号状态：{user.ismentor ? "Mentor":"Mentee"}
               </div>
 
               <NavLink to="/account/">
@@ -52,7 +58,7 @@ class Account extends Component {
                 基础资料
               </NavLink>
               {
-                this.props.user.ismentor ? (
+                user.ismentor ? (
                    <div><NavLink to="/account/mentor_edit">
                      <Icon name='edit'  className="menu-icon" />编辑导师档案
                     </NavLink>
@@ -76,15 +82,15 @@ class Account extends Component {
                 <Icon name='chat' className="menu-icon" />
                 系统通知
                 {
-                  (!isNaN(this.props.user.num_notifications) && this.props.user.num_notifications!==0) &&
+                  (!isNaN(user.num_notifications) && user.num_notifications!==0) &&
                     (<Label color='red'>
-                      {this.props.user.num_notifications}
+                      {user.num_notifications}
                     </Label>)
                 }
 
               </NavLink>
               {
-                this.props.user.isadmin && (
+                user.isadmin && (
                   <NavLink to="/account/admin">
                     <Icon name='user secret'  className="menu-icon" />管理员页面
                   </NavLink>)
@@ -97,16 +103,16 @@ class Account extends Component {
           }
           <div className= {((this.props.width > 767) ? "twelve" : "sixteen") + " wide stretched column " }>
             <div className="account-partial-container">
-              {this.props.user.isactivated ? (
+              {user.isactivated ? (
                 <Switch onChange={this.onRouteChange}>
-                  <Route path='/account/mentor' render={()=><AccountMentor user={this.props.user}/>} />
-                  <Route path='/account/balance' render={()=><AccountBalance user={this.props.user}/>} />
-                  <Route path='/account/apply' render={()=><AccountApply user={this.props.user}/>} />
-                  <Route path='/account/service' render={()=><AccountService user={this.props.user}/>} />
-                  <Route path='/account/mentor_edit' render={()=><MentorEdit user={this.props.user}/>} />
-                  <Route path='/account/create_article' render={()=><CreateArticle user={this.props.user}/>} />
-                  <Route path='/account/notification' render={()=><AccountNotification user={this.props.user}/>} />
-                  <Route path='/account/admin' render={()=><AccountAdmin user={this.props.user}/>} />
+                  <Route path='/account/mentor' render={()=><AccountMentor user={user}/>} />
+                  <Route path='/account/balance' render={()=><AccountBalance user={user}/>} />
+                  <Route path='/account/apply' render={()=><AccountApply user={user}/>} />
+                  <Route path='/account/service' render={()=><AccountService user={user}/>} />
+                  <Route path='/account/mentor_edit' render={()=><AccountApply user={user}/>} />  {/** Temporarily change to AccountApply, used to be MentorEdit**/}
+                  <Route path='/account/create_article' render={()=><CreateArticle user={user}/>} />
+                  <Route path='/account/notification' render={()=><AccountNotification user={user}/>} />
+                  <Route path='/account/admin' render={()=><AccountAdmin user={user}/>} />
                   <Route path='/account/logout' render={()=><AccountLogout/>} />
                   <Route path='/account/' render={()=><AccountProfile/>} />
                 </Switch>
@@ -129,5 +135,9 @@ Account.contextTypes = {
   router: PropTypes.object
 };
 
+const mapStateToProps = state => {
+  const {user} = state;
+  return {user};
+};
 
-export default Account;
+export default withRouter(connect(mapStateToProps)(Account));

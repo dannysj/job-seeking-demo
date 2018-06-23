@@ -42,8 +42,7 @@ class Home extends Component {
           </div>
           <Divider hidden clearing />
           <div>
-            <MentorList>
-            </MentorList>
+            <MentorList/>
           </div>
           <Link to='/mentor'>
             <div style={{textAlign:'right'}}>
