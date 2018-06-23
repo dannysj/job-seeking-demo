@@ -32,7 +32,7 @@ app.post('/api/create_user', (req, res) => {
         res.json({code: 1, errMsg: error});
       }
     });
-    var link = "http://" + req.get('host') + "/activate?code=" + verificationCode;
+    let link = "http://" + req.get('host') + "/activate?code=" + verificationCode;
 
     // setup e-mail data
     let mailOptions = {
@@ -42,7 +42,8 @@ app.post('/api/create_user', (req, res) => {
       text: link, // plaintext body
       html: `亲爱的用户您好：<br>
         感谢您注册使用同行平台，希望能和您一起在这里度过美好的时光！<br>
-        <a href=' + link + '>点击此处</a>即可完成邮箱验证。<br>
+        <a href='`+link+`'>点击此处</a> 即可完成邮箱验证。<br>
+        若无法点击，请使用此链接: `+link+`<br>
         如遇到问题可联系同行平台客服助手微信，微信号：tongxingplatform<br>` // html body
     };
 
