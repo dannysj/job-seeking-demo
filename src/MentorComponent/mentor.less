@@ -388,8 +388,7 @@
   padding-right: 4em;
   position: relative;
   margin-left: 8em;
-  min-width: calc(180px + 4em);
-  max-width: calc(180px + 4em);
+
 }
 
 
@@ -492,6 +491,8 @@
     display: inline-block;
     padding-bottom: 0.5em;
     font-size: 3em;
+    min-width: calc(180px + 4em);
+    max-width: calc(180px + 4em);
   }
   > .App-subtitle {
     padding-top: 0.5em;
@@ -526,19 +527,23 @@
 
 }
 
-.detail-item > .title {
-  font-family: HYYakuHei-DEW;
-  color: gray;
+.detail-item {
+  > .title {
+    font-family: HYYakuHei-DEW;
+    color: gray;
 
-  font-size: 1.5em;
-}
+    font-size: 1.5em;
+  }
 
-.detail-item > .subtitle {
+  > .subtitle {
 
   font-size: 1em;
   padding: 0em 2em;
+  padding-top: 1em;
 
+  }
 }
+
 .mentor-service-overview {
   padding: 5em 10%;
   text-align: center;
@@ -569,8 +574,8 @@
   flex-wrap: wrap;
 
   > .service-border {
-    width: 230px;
-    height: 350px;
+    width: 260px;
+    height: 380px;
     border-radius: 10px;
     background-color: hsla(0, 0%, 40%, 0.75);
     margin: 0em 1.5em;
