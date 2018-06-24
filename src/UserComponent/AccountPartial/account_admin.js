@@ -21,6 +21,7 @@ class AccountAdmin extends React.Component {
     this.handleSubmitNews = this.handleSubmitNews.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleAppDecision = this.handleAppDecision.bind(this);
+    this.handleCompanyIcon = this.handleCompanyIcon.bind(this);
 
     this.updateInfo();
   }
@@ -81,6 +82,23 @@ class AccountAdmin extends React.Component {
     let curState = this.state;
     curState.news.title = e.target.value;
     this.setState(curState);
+  }
+
+  handleCompanyIcon(e) {
+    let data = new FormData();
+    data.append('file', e.target.files[0]);
+    let handler = this;
+
+    axios.post('/api/file/general_upload_name_perserved', data).then(res => {
+      if(res.data.code === 0){
+        alert('Success!');
+      }
+      else{
+        // TODO: error handling
+        alert('Thumbnail Error');
+        console.log(res.data);
+      }
+    });
   }
 
   handleSubmitNews(){
@@ -157,6 +175,14 @@ class AccountAdmin extends React.Component {
               <Button floated='right' negative onClick={() => this.handleAppDecision(el.id, el.mid, false)}>拒绝申请</Button>
             </div>
           ))}
+        </Segment>
+        <Segment>
+          <h4>上传公司图片：(请保持文件名与公司名一致，全部小写，后缀名jpg，去掉空格以及单引号)</h4>
+            <label htmlFor="company-icon-input" className="ui button">
+              <i className="ui upload icon"/>
+              公司logo上传
+            </label>
+            <input type="file" className="input-file" id="company-icon-input" onChange={this.handleCompanyIcon}/>
         </Segment>
       </div>
     );

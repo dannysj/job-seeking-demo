@@ -27,7 +27,9 @@ class MentorEdit extends React.Component {
       editMode: false,
       editIndex: -1,
       collegeQuery: "",
-      isLoadingCollegeList: false
+      isLoadingCollegeList: false,
+      user_college: [],
+      college_list: []
     };
     this.tempService = {};
     this.formRef = null;
@@ -50,7 +52,11 @@ class MentorEdit extends React.Component {
 
         res.data.mentor.services = res.data.mentor.service; // sorry for the terrible naming.
         this.setState({
-          mentor_info: res.data.mentor
+          mentor_info: res.data.mentor,
+          user_college: {
+            value: res.data.mentor.cid,
+            text: res.data.mentor.college_name
+          }
         });
       }
       else {
@@ -226,10 +232,10 @@ class MentorEdit extends React.Component {
             <label>院校名称：</label>
             <b className="notification-msg">
               <Dropdown name='cid' placeholder='院校名称' fluid search selection
-                        options={this.state.college_list}
+                        options={this.state.college_list.concat(this.state.user_college)}
                         onChange={this.handleChange}
                         onSearchChange={this.handleSearchChange}
-                        value={this.state.mentor_info.college_name}
+                        value={this.state.mentor.cid}
                         noResultsMessage={null}
                         loading={this.state.isLoadingCollegeList}/>
             </b>

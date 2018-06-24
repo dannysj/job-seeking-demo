@@ -33,7 +33,8 @@ exports.getRelMentees = (uid, callback) => {
     u.email as email,
     u.id as uid,
     mr.status as status,
-    mr.start_time as start_time
+    mr.start_time as start_time,
+    mr.note as note
   from users u, mentor_info m, mentor_rel mr
   where mr.uid=u.id and mr.mid=m.id and m.uid=$1;
   `;

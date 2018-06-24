@@ -11,7 +11,19 @@ import Footer from '../Components/Footer';
 class MentorDetail extends Component {
   constructor (props) {
     super(props);
-    this.state = {mentor: {first: "", last: "", service: []}, is_resume_open:false, isDown:true, note: '', showAddServiceModal: false, showNoteModal: false};
+    this.state = {
+      mentor: {
+        first: "",
+        last: "",
+        offer_company: '',
+        service: []
+      },
+      is_resume_open:false,
+      isDown:true,
+      note: '',
+      showAddServiceModal: false,
+      showNoteModal: false
+    };
     this.timer = null
     axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
       if(res.data.code===0){
@@ -28,6 +40,18 @@ class MentorDetail extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancelBuy = this.handleCancelBuy.bind(this);
     this.scrollTo = this.scrollTo.bind(this);
+    this.handleCompanyIconError = this.handleCompanyIconError.bind(this);
+    this.handleCompanyIconLoad = this.handleCompanyIconLoad.bind(this);
+  }
+
+  handleCompanyIconError (e) {
+    e.preventDefault();
+    e.target.style.display = 'none';
+  }
+
+  handleCompanyIconLoad (e) {
+    e.preventDefault();
+    e.target.style.display = 'block';
   }
 
   updateNote(e) {
@@ -62,6 +86,10 @@ class MentorDetail extends Component {
   initBuy(service_name, service_price){
     if(!this.props.user){
       this.context.router.history.push('/login');
+      return;
+    }
+    if(!this.props.user.wechat){
+      NotificationManager.error('请先在个人资料中填好您的微信号', '错误');
       return;
     }
     this.setState({service_name: service_name, service_price: service_price, showNoteModal: true});
@@ -231,7 +259,13 @@ class MentorDetail extends Component {
               <div className="mentor-name">
                 <div className="chinese-top">{this.state.mentor.last+this.state.mentor.first}</div>
                 <div className="divider"></div>
-                <div className="App-subtitle">{"English name"}</div>
+                <div className="App-subtitle">
+                  <img
+                    style={{width:'50px',height:'50px'}}
+                    src={'/files/'+this.state.mentor.offer_company.replace(/\s+/g,'').toLowerCase()+'.jpg'}
+                    onError={this.handleCompanyIconError}
+                    onLoad={this.handleCompanyIconLoad}/>
+                </div>
               </div>
               <div className="small-bio" dangerouslySetInnerHTML={{__html:this.state.mentor.bio}}>
               </div>
