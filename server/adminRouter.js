@@ -15,10 +15,26 @@ const storage = multer.diskStorage({
     cb(null, new Date().getTime() + '-' + file.originalname);
   }
 });
+const storage_name_perserved = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, __dirname + '/../static/files');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  }
+});
 const upload = multer({storage: storage});
+const upload_name_perserved = multer({storage: storage_name_perserved});
 
 
 app.post('/api/file/general_upload', upload.single('file'), (req, res) => {
+  if (!req.file)
+    return res.json({code: -21, errMsg: 'No files found'});
+
+  res.json({code: 0, url: '/files/' + req.file.filename});
+});
+
+app.post('/api/file/general_upload_name_perserved', upload_name_perserved.single('file'), (req, res) => {
   if (!req.file)
     return res.json({code: -21, errMsg: 'No files found'});
 

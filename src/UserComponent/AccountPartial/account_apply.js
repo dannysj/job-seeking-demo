@@ -22,7 +22,8 @@ class AccountApply extends React.Component {
       showAddServiceModal: false,
       editMode: false,
       editIndex: -1,
-      college_list : [],
+      college_list: [],
+      user_college: [],
       collegeQuery: "",
       isLoadingCollegeList: false
     };
@@ -44,7 +45,17 @@ class AccountApply extends React.Component {
       if (res.data.code === 0) {
         let mentor = res.data.mentor;
         mentor.services = mentor.service; // Sorry for the terrible naming
-        this.setState({mentor_info: mentor, statusChecked:true, hasNotApplied: false});
+        this.setState({
+          mentor_info: mentor,
+          statusChecked:true,
+          hasNotApplied: false,
+          user_college:[
+            {
+              value: mentor.cid,
+              text: mentor.college_name
+            }
+          ]
+        });
       }
       else {
         if(res.data.code === 55){
@@ -190,7 +201,7 @@ class AccountApply extends React.Component {
     var editName = this.tempService['name'];
     var editPrice = this.tempService['price'];
     var editDesc = this.tempService['description'];
-
+console.log(this.state.college_list.concat(this.state.user_college));
     return (
       !this.state.statusChecked?("请稍后..."):(
         <div className="account-inner-spacing">
@@ -236,9 +247,9 @@ class AccountApply extends React.Component {
                         loading={this.state.isLoadingCollegeList}
                         noResultsMessage={null}
                         onSearchChange={this.handleSearchChange}
-                        options={this.state.college_list}
+                        options={this.state.college_list.concat(this.state.user_college)}
                         onChange={this.handleChange}
-                        value={this.state.mentor_info.college_name}/>
+                        value={this.state.mentor_info.cid}/>
             </b>
           </div>
           <div className="field">
