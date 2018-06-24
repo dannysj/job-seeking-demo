@@ -177,6 +177,17 @@ class MentorDetail extends Component {
     const posiIcon = '/icons/position.png'
     const ageIcon = '/icons/age.png'
 
+    let paragraphs = []
+    if (this.state.mentor.bio) {
+      paragraphs = this.state.mentor.bio.split(/\n/g) || []
+    }
+    paragraphs = paragraphs.map((text, i) => {
+      return (
+          <p key={i}>
+            {text}
+          </p>
+      );
+    });
       return (
       <div className="mentor-detail-container">
         <NotificationContainer />
@@ -235,7 +246,8 @@ class MentorDetail extends Component {
                 <div className="divider"></div>
                 <div className="App-subtitle">{"English name"}</div>
               </div>
-              <div className="small-bio" dangerouslySetInnerHTML={{__html:this.state.mentor.bio}}>
+              <div className="small-bio">
+              {paragraphs}
               </div>
 
             </div>

@@ -115,14 +115,7 @@
   object-fit: cover;
 }
 
-<<<<<<< HEAD:src/MentorComponent/mentor.css
-input[type=checkbox].reveal-resume:checked ~ .resume-section {
-	height: calc(100vh - 65px);
 
-}
-
-=======
->>>>>>> 401d19ebbdd2516fec94073da7fdf8186930533d:src/MentorComponent/mentor.less
 .resume-section {
   position: relative;
   transition: height 0.25s;
@@ -333,7 +326,6 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
   object-fit: cover;
   display: flex;
   align-items: center;
-<<<<<<< HEAD:src/MentorComponent/mentor.css
   position: relative;
 }
 .mentor-background-image {
@@ -352,46 +344,49 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
   z-index: 2;
   width: 100%;
   min-height: inherit;
+  > .header {
+    display: flex;
+    padding-top: 5em;
+    padding-bottom: 2em;
+    padding-left: 8em;
+    padding-right: 8em;
+  }
+  .subheader {
+    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(239,78,62,1) 100%);
+    display: flex;
+    padding-top: 2em;
+    padding-bottom: 5em;
+    flex: 1;
+  }
+  .small-bio {
+    padding: 1em;
+    background: hsla(0, 0%, 91%, 0.22);
+    color: white;
+    margin-right: 8rem;
+    font-size: 1.3em;
+    line-height: initial;
+  }
 }
 
-.mentor-sep-container > .header {
-  display: flex;
-  padding-top: 5em;
-  padding-bottom: 2em;
-  padding-left: 8em;
-  padding-right: 8em;
-}
 
-.mentor-sep-container > .subheader {
-  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(239,78,62,1) 100%);
-  display: flex;
-  padding-top: 2em;
-  padding-bottom: 5em;
-  flex: 1;
-}
-
-.subheader  .divider {
+.subheader {
+  .divider {
   background: linear-gradient(270deg, hsla(0, 0%, 91%, 0.22), rgba(255,255,255,1) 100%);
   height: 3px;
   left: 0;
   right: 0;
   position: absolute;
 }
+}
 
 .mentor-name {
   padding-right: 4em;
   position: relative;
   margin-left: 8em;
+  min-width: calc(180px + 4em);
+  max-width: calc(180px + 4em);
 }
 
-.mentor-sep-container .small-bio {
-  padding: 1em;
-  background: hsla(0, 0%, 91%, 0.22);
-  color: white;
-  margin-right: 8rem;
-  font-size: 1.3em;
-  line-height: initial;
-}
 
 .timeline-marker {
     position: absolute;
@@ -416,9 +411,7 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
   justify-content: space-around;
   align-items: center;
   flex: 1;
-}
-
-.border-navi > .item {
+  .item {
   border-radius: 50%;
   background-color: #FFF;
   color: rgba(239,78,62,1);
@@ -433,32 +426,37 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
   border: none;
 }
 
-.border-navi > .item:hover {
-  background-color: rgba(239,78,62,1);
-  color: #fff;
-  border: 5px white solid;
-  transform: scale(1.5);
+  > .item:hover {
+    background-color: rgba(239,78,62,1);
+    color: #fff;
+    border: 5px white solid;
+    transform: scale(1.5);
+  }
+  .navi-title {
+    color: white;
+    opacity: 0;
+    position: absolute;
+    transition: opacity 0.2s, transform 0.2s;
+    top: 0px;
+    white-space: nowrap;
+    display: inline-block;
+  }
+
+  .icon {
+    margin: 0 auto;
+    margin-bottom: 0.3em;
+  }
+
 }
 
-.border-navi .navi-title {
-  color: white;
-  opacity: 0;
-  position: absolute;
-  transition: opacity 0.2s, transform 0.2s;
-  top: 0px;
-  white-space: nowrap;
-  display: inline-block;
+
+.item:hover {
+  .navi-title {
+    opacity: 1;
+    transform: translate(0,-30px);
+  }
 }
 
-.item:hover  .navi-title {
-  opacity: 1;
-  transform: translate(0,-30px);
-}
-
-.border-navi .icon {
-  margin: 0 auto;
-  margin-bottom: 0.3em;
-}
 
 .border-navi .item:hover .icon {
   transform: scale(0.67);
@@ -474,33 +472,17 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
   align-items: center;
   justify-content: center;
   margin-right: 4em;
+  > img {
+    height: 85%;
+    width: 85%;
+    border-radius: 50%;
+      object-fit: cover;
+  }
 }
 
-.mentor-profile-border > img {
-  height: 85%;
-  width: 85%;
-  border-radius: 50%;
-    object-fit: cover;
-}
-
-.mentor-name > .chinese-top {
-
-  display: inline-block;
-  padding-bottom: 0.5em;
-  font-size: 4em;
-}
-
-.mentor-name > .App-subtitle {
-  padding-top: 1em;
-  font-size: 2em;
-=======
-  background-color: hsla(0, 0%, 100%, 0.70);
-  background-blend-mode: overlay;
-}
 
 .mentor-name {
   > .chinese-top {
-    border-bottom: 1.5px #001BB1 solid;
     display: inline-block;
     padding-bottom: 0.5em;
     font-size: 3em;
@@ -514,7 +496,7 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
     line-height: 1.5;
     white-space: pre-wrap;
   }
->>>>>>> 401d19ebbdd2516fec94073da7fdf8186930533d:src/MentorComponent/mentor.less
+
 }
 
 .mentor-detail-info-container {
@@ -522,21 +504,11 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
   padding: 5em 10%;
   text-align: center;
   display: flex;
-<<<<<<< HEAD:src/MentorComponent/mentor.css
-  align-items: flex-start;
   flex-flow: row;
   justify-content: center;
-}
-
-.mentor-detail-info-container > .item {
-  display: flex;
-=======
-  flex-flow: row;
-  justify-content: center;
->>>>>>> 401d19ebbdd2516fec94073da7fdf8186930533d:src/MentorComponent/mentor.less
   align-items: center;
   > .item {
-    display: flex;
+    display: inline-block;
     align-items: center;
     flex-flow: column;
     flex: 0;
@@ -585,6 +557,8 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
     margin: 0em 1.5em;
     position: relative;
     background-blend-mode: overlay;
+    margin-bottom: 3em;
+    color: white;
   }
 }
 
@@ -599,80 +573,8 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
   width: 90%;
 }
 
-<<<<<<< HEAD:src/MentorComponent/mentor.css
-.mentor-service-container > .service-border {
-  width: 230px;
-  height: 350px;
-  border-radius: 10px;
-  background-color: hsla(0, 0%, 40%, 0.75);
-  margin: 0em 1.5em;
-  position: relative;
-
-}
-.service-border  > .service-item {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  padding: 1em 2em;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  flex-flow: column;
-  transition: opacity .35s,transform .35s;
-  color: white;
-}
-
-.service-blur {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  background-blend-mode: overlay;
-
-}
-
-.service-item::before {
-  position: absolute;
-  content: '';
-  opacity: 0;
-  top: 20px;
-  right: 10px;
-  bottom: 20px;
-  left: 10px;
-  border-top: 1px solid #fff;
-  border-bottom: 1px solid #fff;
-  transform: scale(0,1);
-  transform-origin: 0 0;
-  transition: opacity .35s,transform .35s;
-}
-
-.service-item::after {
-  position: absolute;
-  content: '';
-  opacity: 0;
-  top: 10px;
-  right: 20px;
-  bottom: 10px;
-  left: 20px;
-  border-right: 1px solid #fff;
-  border-left: 1px solid #fff;
-  transform: scale(1,0);
-  transform-origin: 100% 0;
-  transition: opacity .35s,transform .35s;
-}
 
 
-.service-item:hover::before, .service-item:hover::after {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.service-item:hover > .service-title {
-  transform: translate3d(0,30px,0);
-}
-
-.service-item:hover > .service-description {
-  opacity: 1;
-=======
 .service-border {
   > .service-item {
     position: absolute;
@@ -739,8 +641,17 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
   > .buy-button {
     z-index: 3;
   }
->>>>>>> 401d19ebbdd2516fec94073da7fdf8186930533d:src/MentorComponent/mentor.less
+
 }
+
+.service-blur {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-blend-mode: overlay;
+
+}
+
 
 .service-title {
   transition: transform .35s;
@@ -859,25 +770,17 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
 }
 
 @media screen and (max-width: 767px) {
-<<<<<<< HEAD:src/MentorComponent/mentor.css
 
-  .title-icon {
-    height: 10px;
+  .mentor-sep-container {
+    > .header {
+    display: flex;
+    padding-top: 5em;
+    padding-bottom: 2em;
+    padding-left: 1em;
+    padding-right: 1em;
   }
-  .ui.basic.table tbody tr {
-    border-bottom: none !important;
-    box-shadow: none !important;
-    padding-top: 0;
-    padding-bottom: 0.5em;
   }
-  .ui.basic.table tbody tr td:nth-child(1) {
-      display: none !important;
-    }
-    .ui.basic.table tbody tr td .title-icon {
-      height: auto;
-      display: inline-block;
-      margin-right: 1em;
-=======
+
   .ui.basic.table {
     tbody {
       tr {
@@ -896,7 +799,7 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
           }
         }
       }
->>>>>>> 401d19ebbdd2516fec94073da7fdf8186930533d:src/MentorComponent/mentor.less
+
     }
   }
 
@@ -1017,6 +920,7 @@ input[type=checkbox].reveal-resume:checked ~ .resume-section {
     > .item {
       min-width: 40%;
       margin: 1em 0em;
+      display: inline-block;
     }
   }
 
