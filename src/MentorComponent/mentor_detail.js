@@ -89,6 +89,10 @@ class MentorDetail extends Component {
       this.context.router.history.push('/login');
       return;
     }
+    if(!this.props.user.wechat){
+      NotificationManager.error('请先在个人资料中填好您的微信号', '错误');
+      return;
+    }
     this.setState({service_name: service_name, service_price: service_price, showNoteModal: true});
   }
 
