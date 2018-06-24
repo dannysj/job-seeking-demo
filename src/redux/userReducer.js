@@ -81,8 +81,10 @@ export default (state = initState, action) => {
       return state;
 
     case "UPDATE_USER_FULFILLED":
-      NotificationManager.success('资料更新成功', '完成啦');
       const {attr, val} = JSON.parse(action.payload.config.data);
+      if(attr != 'num_notifications') {
+        NotificationManager.success('资料更新成功', '完成啦');
+      }
       return {...state, [attr]: val};
 
 
