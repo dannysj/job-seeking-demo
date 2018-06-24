@@ -36,7 +36,7 @@ app.post('/api/verify_user', (req, res) => {
       res.json({code: 1, errMsg: err});
       return;
     }
-    security.updateAccessToken(user.id, (err, access_token)=>{
+    security.update_access_token(user.id, (err, access_token)=>{
       if(err){
         console.log(err);
         res.json({code: 1, errMsg: 'Cannot generate access token'});
