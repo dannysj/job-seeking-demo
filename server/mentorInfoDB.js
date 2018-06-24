@@ -51,7 +51,7 @@ exports.editMentorInfo = (mentor_info, callback) => {
       offer_title=$2,
       offer_company=$3,
       bio=$4,
-      bios=$5
+      bios=$5,
       service=$6,
       num_weekly_slots=$7 where uid=$8;`;
   db.query(query,
