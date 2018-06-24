@@ -15,8 +15,12 @@ const reducers = combineReducers({
   newsStore: newsListReducer
 });
 
-const middleware = applyMiddleware(promise(), thunk, logger);
 
-const store = createStore(reducers, middleware);
+const middleware = [promise(),  thunk];
+
+if(process.env.NODE_ENV === 'development')
+  middleware.concat(logger);
+
+const store = createStore(reducers, applyMiddleware(...middleware));
 
 export default store;
