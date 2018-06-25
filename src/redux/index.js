@@ -16,10 +16,12 @@ const reducers = combineReducers({
 });
 
 
-const middleware = [promise(),  thunk];
+let middleware = [promise(),  thunk];
 
-if(process.env.NODE_ENV === 'development')
-  middleware.concat(logger);
+if(process.env.NODE_ENV === 'development'){
+  middleware = [...middleware, logger];
+}
+
 
 const store = createStore(reducers, applyMiddleware(...middleware));
 
