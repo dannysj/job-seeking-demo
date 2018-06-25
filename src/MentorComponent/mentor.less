@@ -491,8 +491,8 @@
     display: inline-block;
     padding-bottom: 0.5em;
     font-size: 3em;
-    min-width: calc(180px + 4em);
-    max-width: calc(180px + 4em);
+    min-width: calc(180px + 4rem);
+    max-width: calc(180px + 4rem);
   }
   > .App-subtitle {
     padding-top: 0.5em;
@@ -503,6 +503,7 @@
     line-height: 1.5;
     white-space: pre-wrap;
   }
+}
 
 
 
@@ -525,6 +526,12 @@
     justify-content: space-between;
   }
 
+}
+
+.ellipsis {
+    bottom: 0;
+    position: absolute;
+    right: 0;
 }
 
 .detail-item {
@@ -596,6 +603,7 @@
 
 .buy-button {
   width: 90%;
+  transition: transform .35s;
 }
 
 
@@ -653,17 +661,30 @@
     }
     > .service-title {
       transform: translate3d(0, 30px, 0);
+      opacity: 0;
     }
     > .service-description {
       opacity: 1;
+      transform: translate3d(0, 30px, 0);
+    }
+
+    > .buy-button {
+      transform: translate3d(0, 30px, 0);
     }
   }
   > .service-description {
     opacity: 0;
-    transition: opacity .35s;
+    transition: opacity .35s, transform .35s;
+    margin-top: 1em;
+    position: absolute;
+    top: 0;
+    padding: 1em 2em;
   }
   > .buy-button {
     z-index: 3;
+
+    transition: transform .35s;
+
   }
 
 
@@ -679,7 +700,7 @@
 
 
 .service-title {
-  transition: transform .35s;
+  transition: transform .35s, opacity .35s;
 }
 
 .service-title > .service-name {
@@ -692,15 +713,6 @@
   font-weight: bold;
   font-size: 1.2em;
   color: white;
-}
-
-.service-item > .service-description {
-  opacity: 0;
-  transition: opacity .35s;
-}
-
-.service-item > .buy-button {
-  z-index: 3;
 }
 
 .title > .title-icon {

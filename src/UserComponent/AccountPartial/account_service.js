@@ -71,7 +71,7 @@ class AccountService extends React.Component {
     render() {
         return(
           <div className="account-inner-spacing">
-            <div>
+            <div className="category">
               {this.state.mentees.length===0 && '您暂时并无Mentee签约'}
               {this.state.mentees.map(el => (
                 <div className="app-mentor-container" key={el.id}>

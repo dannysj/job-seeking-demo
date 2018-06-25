@@ -207,7 +207,7 @@ class MentorDetail extends Component {
 
     let paragraphs = []
     if (this.state.mentor.bio) {
-      paragraphs = this.state.mentor.bio.split(/\n/g) || []
+      paragraphs = this.state.mentor.bio.split(/[\n\r]+/g) || []
     }
     paragraphs = paragraphs.map((text, i) => {
       return (
@@ -362,7 +362,7 @@ class MentorDetail extends Component {
                         <div className="service-name">{el.name}</div>
                         <div className="service-price">{el.price+' RMB'}</div>
                       </div>
-                      <div className="service-description">{el.description}</div>
+                      <p className="service-description">{el.description} </p>
                       <div className="buy-button"><Button className="buy-button-ani" onClick={()=>this.initBuy(el.name, el.price)}>购买</Button></div>
                     </div>
                   </div>

@@ -144,8 +144,13 @@ class AccountAdmin extends React.Component {
     }
     return(
       <div className="account-inner-spacing">
-        <Segment>
-          <h4>编写干货:</h4>
+        <div className="category">
+          <div className="header">
+            <div className="title">
+            编写干货:
+            </div>
+          </div>
+
           标题: {' '}<Input placeholder='标题' onChange={this.handleTitleChange}/>
           <br />
           <label htmlFor="thumbnail-input" className="ui button">
@@ -157,9 +162,14 @@ class AccountAdmin extends React.Component {
           <br />
           <ReactQuill value={this.state.news.content} onChange={this.handleChange} />
           <Button onClick={this.handleSubmitNews}>提交</Button>
-        </Segment>
-        <Segment>
-          <h4>审核Mentor申请:</h4>
+        </div>
+        <div className="category">
+          <div className="header">
+            <div className="title">
+            审核Mentor申请:
+            </div>
+          </div>
+
           {this.state.applications.length===0 && '暂无申请'}
           {this.state.applications.map(el => (
             <div className="app-mentor-container" key={el.id}>
@@ -175,15 +185,23 @@ class AccountAdmin extends React.Component {
               <Button floated='right' negative onClick={() => this.handleAppDecision(el.uid, el.mid, false)}>拒绝申请</Button>
             </div>
           ))}
-        </Segment>
-        <Segment>
-          <h4>上传公司图片：(请保持文件名与公司名一致，全部小写，后缀名jpg，去掉空格以及单引号)</h4>
+        </div>
+        <div className="category">
+          <div className="header">
+            <div className="title">
+            上传公司图片
+            </div>
+            <div className="subtitle">
+              保持文件名与公司名一致，全部小写，后缀名jpg，去掉空格以及单引号
+            </div>
+          </div>
+    
             <label htmlFor="company-icon-input" className="ui button">
               <i className="ui upload icon"/>
               公司logo上传
             </label>
             <input type="file" className="input-file" id="company-icon-input" onChange={this.handleCompanyIcon}/>
-        </Segment>
+        </div>
       </div>
     );
   }

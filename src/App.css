@@ -100,6 +100,9 @@ body {
 .navbar .menu-icon {
   display: none;
 }
+.logo-item {
+  font-family: HYYakuHei-DEW;
+}
 .logo-item > img {
   margin-right: 1em;
 }

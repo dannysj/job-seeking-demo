@@ -3,13 +3,17 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Modal, Button, Image, Header, Dropdown, Container } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import Arrow from "../Components/Arrow";
+import Footer from '../Components/Footer';
 
 class UserDetail extends Component {
 
   constructor (props) {
     super(props);
     this.state={
-      user:{}
+      user:{},
+      is_resume_open:false,
+      isDown:true,
     };
 
     axios.post('/api/get_user_info',{uid:this.props.match.params.uid}).then(res => {
@@ -21,6 +25,14 @@ class UserDetail extends Component {
         //TODO: Error Handling
       }
     });
+
+    this.resumeToggled = this.resumeToggled.bind(this);
+  }
+
+  resumeToggled(e) {
+    let check = this.state.is_resume_open;
+    let down = this.state.isDown;
+    this.setState({is_resume_open: !check, isDown: !down});
   }
 
   render() {
@@ -30,6 +42,7 @@ class UserDetail extends Component {
     }
 
     return (
+      <div>
       <Container text style={{marginTop: '20px'}}>
         <div className="ui grid">
           <div className="six wide column">
@@ -52,17 +65,19 @@ class UserDetail extends Component {
           </div>
         </div>
 
-        <div className="detail-section" style={{height: '100vh'}}>
-          <h2 className="ui header">
-            <i className="file alternate outline icon"></i>
-            <div className="content">
-              简历
-            </div>
-          </h2>
-          <iframe className="resume-holder" width="100%" height="100%" src={this.state.user.resume}>
-          </iframe>
-        </div>
       </Container>
+      <div id="resume" className="detail-section resume-section" style={{height:this.state.is_resume_open?'90vh':'50vh'}}>
+        <div className="title">
+            简历
+          </div>
+        <iframe className="resume-holder" src={this.state.mentor.resume} width="100%" type='application/pdf'></iframe>
+        <label forName="reveal-resume" className="resume-name" onClick={this.resumeToggled}><span>{(this.state.isDown) ? "点\xa0\xa0\xa0\xa0击\xa0\xa0\xa0\xa0展\xa0\xa0\xa0\xa0开\xa0\xa0\xa0\xa0简\xa0\xa0\xa0\xa0历" : "缩\xa0\xa0\xa0\xa0小"}</span><span className="triangle-open"><Arrow isDown={this.state.isDown}/></span>
+        </label>
+      </div>
+
+
+
+      </div>
     );
   }
 }

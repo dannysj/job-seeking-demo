@@ -41,6 +41,7 @@ class AccountNotification extends React.Component {
   render() {
     return(
       <div className="account-inner-spacing">
+        <div className="category">
         {this.state.messages.map(el=>(
           <Segment>
             <Image avatar src='/img/icon.png' />
@@ -51,6 +52,7 @@ class AccountNotification extends React.Component {
             </div>
           </Segment>
         ))}
+        </div>
       </div>
     );
   }
