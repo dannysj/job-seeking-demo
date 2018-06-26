@@ -13,7 +13,6 @@ export default class ImgCrop extends Component {
         y: 0,
         aspect: 1
       },
-      maxHeight: 80,
       dataUrl: this.props.dataUrl,
       inlineStyle: {
         height: '50vh',
