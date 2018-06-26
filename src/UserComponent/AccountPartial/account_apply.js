@@ -305,7 +305,7 @@ console.log(this.state.college_list.concat(this.state.user_college));
 
           <div className="item">
           <div className="content">
-
+            <div className="inner-content">
             <div className="header">提供服务</div>
             <table className="ui celled table">
               <thead>
@@ -329,17 +329,18 @@ console.log(this.state.college_list.concat(this.state.user_college));
               </tbody>
             </table>
             <button className="ui button" onClick={this.addService}>+添加服务</button>
-
+            </div>
           </div>
           </div>
           </div>
           <div className="category">
           <div className="item first">
           <div className="content">
+          <div className="inner-content">
             <div className="header">自我介绍</div>
             <textarea rows="8" name="bio" onChange={this.handleChange} value={this.state.mentor_info.bio}/>
           </div>
-
+          </div>
           </div>
           <div className="item">
           <div className="content">
