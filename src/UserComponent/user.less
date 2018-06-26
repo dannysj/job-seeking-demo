@@ -5,7 +5,7 @@
 
 .user-background {
     position: relative;
-  
+
     background: #0D0F41;
     display: flex;
     flex-flow: column;
@@ -13,7 +13,7 @@
     align-items: center;
 
     > .stars-background {
-      position: absolute;
+      position: fixed;
       height: 100%;
       width: 100%;
       top: 0;
@@ -75,5 +75,10 @@
 @media screen and (max-width: 767px) {
   .login-signup-container {
     width: 80%;
+  }
+  .user-background {
+    > .card {
+      width: 90%;
+    }
   }
 }
