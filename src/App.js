@@ -23,7 +23,7 @@ import store from "./redux";
 import {fetchUser} from "./redux/userAction";
 import {connect, Provider} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-
+import { hot } from 'react-hot-loader'
 
 class App extends Component {
   constructor(props){
@@ -239,4 +239,4 @@ const mapStateToProps = state => {
   return {user};
 };
 
-export default withRouter(connect(mapStateToProps)(App));
+export default hot(module)(withRouter(connect(mapStateToProps)(App)));
