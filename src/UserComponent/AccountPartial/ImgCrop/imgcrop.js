@@ -93,7 +93,7 @@ export default class ImgCrop extends Component {
   render() {
     console.log(this.state.crop);
     return (
-      <div className="test">
+      <div className="img-crop-wrapper">
         <div className="img-crop-box ">
           <ReactCrop
             {...this.state}
