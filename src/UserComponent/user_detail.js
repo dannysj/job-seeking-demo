@@ -70,7 +70,7 @@ class UserDetail extends Component {
         <div className="title">
             简历
           </div>
-        <iframe className="resume-holder" src={this.state.mentor.resume} width="100%" type='application/pdf'></iframe>
+        <iframe className="resume-holder" src={this.state.user.resume} width="100%" type='application/pdf'></iframe>
         <label forName="reveal-resume" className="resume-name" onClick={this.resumeToggled}><span>{(this.state.isDown) ? "点\xa0\xa0\xa0\xa0击\xa0\xa0\xa0\xa0展\xa0\xa0\xa0\xa0开\xa0\xa0\xa0\xa0简\xa0\xa0\xa0\xa0历" : "缩\xa0\xa0\xa0\xa0小"}</span><span className="triangle-open"><Arrow isDown={this.state.isDown}/></span>
         </label>
       </div>

@@ -72,6 +72,7 @@ class AccountService extends React.Component {
         return(
           <div className="account-inner-spacing">
             <div className="category">
+              <div className="item">
               {this.state.mentees.length===0 && '您暂时并无Mentee签约'}
               {this.state.mentees.map(el => (
                 <div className="app-mentor-container" key={el.id}>
@@ -92,6 +93,7 @@ class AccountService extends React.Component {
                   {el.status===3 && <Button floated='right' disabled>服务完成</Button>}
                 </div>
               ))}
+              </div>
             </div>
           </div>
         );

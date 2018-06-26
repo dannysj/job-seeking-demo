@@ -43,6 +43,7 @@ class AccountNotification extends React.Component {
       <div className="account-inner-spacing">
         <div className="category">
         {this.state.messages.map(el=>(
+          <div className="item first">
           <Segment>
             <Image avatar src='/img/icon.png' />
             系统通知：{new Date(el.timestamp).toLocaleTimeString()}
@@ -51,6 +52,7 @@ class AccountNotification extends React.Component {
               {el.content}
             </div>
           </Segment>
+          </div>
         ))}
         </div>
       </div>

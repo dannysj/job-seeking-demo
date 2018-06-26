@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Dropdown} from 'semantic-ui-react';
+import {Dropdown, Message} from 'semantic-ui-react';
 import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import '../account.css';
@@ -237,11 +237,29 @@ console.log(this.state.college_list.concat(this.state.user_college));
             </div>
           </div>
         </div>
-        {!this.state.hasNotApplied ? <h4>我们已经收到了您的申请，您仍可以在此修改您的申请表格</h4>:
-          <h4>申请成为导师</h4>}
+        <div className="category">
+          <div className="header">
+            <div className= "title">
+            申请成为导师
+            </div>
+            <div className="subtitle">
+            {!this.state.hasNotApplied ? (  <Message info>
+                  <Message.Header>我们已经收到了您的申请，您仍可以在此修改您的申请表格</Message.Header>
+                </Message>
+              ): (<div></div>)
+              }
+            </div>
+
+          </div>
+        </div>
+
         <form className="ui form">
-          <div className="field">
-            <label>院校名称：</label>
+          <div className="category">
+          <div className="item first">
+          <div className="content">
+            <div className="inner-content">
+            <div className="header">院校名称</div>
+
             <b className="notification-msg">
               <Dropdown name='cid' placeholder='院校名称' fluid search selection
                         loading={this.state.isLoadingCollegeList}
@@ -252,23 +270,43 @@ console.log(this.state.college_list.concat(this.state.user_college));
                         value={this.state.mentor_info.cid}/>
             </b>
           </div>
-          <div className="field">
-            <label>Offer职位：</label>
+          </div>
+          </div>
+
+          <div className="item ">
+          <div className="content">
+          <div className="inner-content">
+            <div className="header">Offer职位</div>
             <input type="text" name="offer_title" placeholder="Offer职位" onChange={this.handleChange}
                    value={this.state.mentor_info.offer_title} required/>
-          </div>
-          <div className="field">
-            <label>Offer企业：</label>
+                </div>
+              </div>
+            </div>
+            <div className="item ">
+            <div className="content">
+          <div className="inner-content">
+            <div className="header">Offer企业</div>
             <input type="text" name="offer_company" placeholder="Offer企业" onChange={this.handleChange}
                    value={this.state.mentor_info.offer_company} required/>
           </div>
-          <div className="field">
-            <label>每周愿意服务次数：</label>
+          </div>
+          </div>
+          </div>
+          <div className="category">
+          <div className="item first">
+          <div className="content">
+          <div className="inner-content">
+            <div className="header">每周愿意服务次数</div>
             <input type="number" name="num_weekly_slots" placeholder="服务次数" onChange={this.handleChange}
                    value={this.state.mentor_info.num_weekly_slots} required/>
           </div>
-          <div className="field">
-            <label>提供服务：</label>
+          </div>
+          </div>
+
+          <div className="item">
+          <div className="content">
+
+            <div className="header">提供服务</div>
             <table className="ui celled table">
               <thead>
               <tr>
@@ -291,14 +329,28 @@ console.log(this.state.college_list.concat(this.state.user_college));
               </tbody>
             </table>
             <button className="ui button" onClick={this.addService}>+添加服务</button>
+
           </div>
-          <div className="field">
-            <label>自我介绍：</label>
+          </div>
+          </div>
+          <div className="category">
+          <div className="item first">
+          <div className="content">
+            <div className="header">自我介绍</div>
             <textarea rows="8" name="bio" onChange={this.handleChange} value={this.state.mentor_info.bio}/>
           </div>
+
+          </div>
+          <div className="item">
+          <div className="content">
           {!this.state.hasNotApplied ? <button className="ui button" type="submit" onClick={this.handleSubmit}>更新</button> :
             <button className="ui button" type="submit" onClick={this.handleSubmit}>申请</button>}
-        </form>
+          </div>
+          </div>
+          </div>
+
+          </form>
+
       </div>)
     );
   }

@@ -76,7 +76,7 @@ class CreateArticle extends React.Component {
               编写干货
             </div>
           </div>
-        
+          <div className="item">
           标题: {' '}<Input placeholder='标题' onChange={this.handleTitleChange}/>
           <br />
           <label htmlFor="thumbnail-input" className="ui button">
@@ -91,6 +91,7 @@ class CreateArticle extends React.Component {
           <br />
           <br />
           <Button onClick={this.handleSubmitNews}>提交</Button>
+        </div>
         </div>
       </div>
     );
