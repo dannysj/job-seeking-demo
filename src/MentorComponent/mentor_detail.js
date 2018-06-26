@@ -7,17 +7,14 @@ import './mentor.css';
 import CommentBox from "./CommentBox";
 import Arrow from "../Components/Arrow";
 import Footer from '../Components/Footer';
+import {connect} from 'react-redux'
+import store from "../redux";
+import {fetchMentorDetail} from "../redux/mentorDetailAction";
 
 class MentorDetail extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      mentor: {
-        first: "",
-        last: "",
-        offer_company: '',
-        service: []
-      },
       is_resume_open:false,
       isDown:true,
       note: '',
@@ -25,14 +22,6 @@ class MentorDetail extends Component {
       showNoteModal: false
     };
     this.timer = null
-    axios.post('/api/get_mentor_detail',{mid:this.props.match.params.mid}).then(res => {
-      if(res.data.code===0){
-        this.setState({mentor:res.data.mentor});
-      }
-      else{
-        NotificationManager.error('无法获得Mentor信息', '错误');
-      }
-    });
 
     this.initBuy = this.initBuy.bind(this);
     this.resumeToggled = this.resumeToggled.bind(this);
@@ -42,6 +31,10 @@ class MentorDetail extends Component {
     this.scrollTo = this.scrollTo.bind(this);
     this.handleCompanyIconError = this.handleCompanyIconError.bind(this);
     this.handleCompanyIconLoad = this.handleCompanyIconLoad.bind(this);
+  }
+
+  componentWillMount(){
+    store.dispatch(fetchMentorDetail(this.props.match.params.mid));
   }
 
   handleCompanyIconError (e) {
@@ -61,7 +54,7 @@ class MentorDetail extends Component {
   handleSubmit() {
     this.setState({showNoteModal: false})
     var handler = this;
-    axios.post(process.env.REACT_APP_API_HOST + '/api/create_order',
+    axios.post('/api/create_order',
     {
       uid:this.props.user.id,
       mid:this.props.match.params.mid,
@@ -189,9 +182,19 @@ class MentorDetail extends Component {
   	}
 
   render() {
+
+    const mentor = this.props.mentorDetailStore[this.props.match.params.mid];
+
+    if(!mentor)
+      return (
+        <div className="loading-news-view">
+          <Button basic loading>Loading</Button>
+        </div>
+      );
+
     let modalClassName='ui modal';
     const backimgstyle = {
-      backgroundImage: 'url('+this.state.mentor.profile_pic+')',
+      backgroundImage: 'url('+mentor.profile_pic+')',
       backgroundPosition: 'center center no-repeat',
       backgroundSize: 'cover',
       filter:'blur(1em)',
@@ -205,9 +208,11 @@ class MentorDetail extends Component {
     const posiIcon = '/icons/position.png'
     const ageIcon = '/icons/age.png'
 
+
+
     let paragraphs = []
-    if (this.state.mentor.bio) {
-      paragraphs = this.state.mentor.bio.split(/\n/g) || []
+    if (mentor.bio) {
+      paragraphs = mentor.bio.split(/\n/g) || []
     }
     paragraphs = paragraphs.map((text, i) => {
       return (
@@ -257,7 +262,7 @@ class MentorDetail extends Component {
           <div className="mentor-sep-container">
             <div className="header">
               <div className="mentor-profile-border">
-                <img src={this.state.mentor.profile_pic}></img>
+                <img src={mentor.profile_pic}></img>
               </div>
               <div className="border-navi">
                 <div className="timeline-marker"></div>
@@ -270,12 +275,12 @@ class MentorDetail extends Component {
             </div>
             <div className="subheader">
               <div className="mentor-name">
-                <div className="chinese-top">{this.state.mentor.last+this.state.mentor.first}</div>
+                <div className="chinese-top">{mentor.last+mentor.first}</div>
                 <div className="divider"></div>
                 <div className="App-subtitle">
                   <img
                     style={{width:'50px',height:'50px'}}
-                    src={'/files/'+this.state.mentor.offer_company.replace(/\s+/g,'').toLowerCase()+'.jpg'}
+                    src={'/files/'+mentor.offer_company.replace(/\s+/g,'').toLowerCase()+'.jpg'}
                     onError={this.handleCompanyIconError}
                     onLoad={this.handleCompanyIconLoad}/>
                 </div>
@@ -295,7 +300,7 @@ class MentorDetail extends Component {
             <img className="title-icon" alt="school" src={schoolIcon} height={50}/>
               在读院校
             </div>
-            <div className="subtitle" dangerouslySetInnerHTML={{__html:this.state.mentor.college_name}}>
+            <div className="subtitle" dangerouslySetInnerHTML={{__html:mentor.college_name}}>
             </div>
           </div>
           <div className="item detail-item">
@@ -304,7 +309,7 @@ class MentorDetail extends Component {
             <img className="title-icon" alt="company" src={companyIcon} height={50}/>
               offer公司
             </div>
-            <div className="subtitle" dangerouslySetInnerHTML={{__html:this.state.mentor.offer_company}}>
+            <div className="subtitle" dangerouslySetInnerHTML={{__html:mentor.offer_company}}>
             </div>
 
           </div>
@@ -315,7 +320,7 @@ class MentorDetail extends Component {
               <img className="title-icon"  alt="position" src={posiIcon} height={50}/>
               offer职位
             </div>
-            <div className="subtitle" dangerouslySetInnerHTML={{__html:this.state.mentor.offer_title}}>
+            <div className="subtitle" dangerouslySetInnerHTML={{__html:mentor.offer_title}}>
             </div>
 
           </div>
@@ -326,7 +331,7 @@ class MentorDetail extends Component {
               <img className="title-icon"  alt="age" src={ageIcon} height={50}/>
               本周服务次数
             </div>
-            <div className="subtitle">{this.state.mentor.num_availability}</div>
+            <div className="subtitle">{mentor.num_availability}</div>
 
           </div>
 
@@ -336,25 +341,25 @@ class MentorDetail extends Component {
           <div className="title">
               简历
             </div>
-          <embed className="resume-holder" src={this.state.mentor.resume} width="100%" type='application/pdf'/>
+          <embed className="resume-holder" src={mentor.resume} width="100%" type='application/pdf'/>
           <label forName="reveal-resume" className="resume-name" onClick={this.resumeToggled}><span>{(this.state.isDown) ? "点\xa0\xa0\xa0\xa0击\xa0\xa0\xa0\xa0展\xa0\xa0\xa0\xa0开\xa0\xa0\xa0\xa0简\xa0\xa0\xa0\xa0历" : "缩\xa0\xa0\xa0\xa0小"}</span><span className="triangle-open"><Arrow isDown={this.state.isDown}/></span>
           </label>
         </div>
 
           {
-            (this.state.mentor.service.length > 0) ? (
+            (mentor.service.length > 0) ? (
               <div id="service" className="mentor-service-overview detail-section">
                 <div className="title">
                   服务介绍
 
                 </div>
               <div className="para-medium">
-                <b>{this.state.mentor.last+this.state.mentor.first}</b>
-                本周还可提供{this.state.mentor.num_availability}次服务
+                <b>{mentor.last+mentor.first}</b>
+                本周还可提供{mentor.num_availability}次服务
               </div>
               <div className="mentor-service-container">
               {
-                this.state.mentor.service.map(el => (
+                mentor.service.map(el => (
                   <div className="service-border" >
                     <div className="service-blur" style={backimgstyle}> </div>
                     <div className="service-item" >
@@ -374,7 +379,7 @@ class MentorDetail extends Component {
             </div>
             ) : (
             <div id="service" className="para-large">
-              <b>{this.state.mentor.last+this.state.mentor.first}</b>
+              <b>{mentor.last+mentor.first}</b>
               本周尚未提供服务
             </div>
           )
@@ -387,7 +392,7 @@ class MentorDetail extends Component {
                 过往评价
             </div>
 
-          <CommentBox user={this.props.user} mentor={this.state.mentor} mid={this.props.match.params.mid} displayCommentReplyButton={true}/>
+          <CommentBox user={this.props.user} mentor={mentor} displayCommentReplyButton/>
         </div>
 
         <Footer />
@@ -402,4 +407,9 @@ MentorDetail.contextTypes = {
     router: PropTypes.object
 };
 
-export default MentorDetail;
+const mapStateToProps = state => {
+  const {mentorDetailStore} = state;
+  return {mentorDetailStore};
+};
+
+export default connect(mapStateToProps)(MentorDetail);

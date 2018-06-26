@@ -327,7 +327,7 @@ unfollow_action(uid, mentor_uid){
 }
 
 const mapStateToProps = state => {
-  return {...state.mentorStore};
+  return {...state.mentorListStore};
 };
 
 export default connect(mapStateToProps)(Mentor);
