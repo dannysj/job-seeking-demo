@@ -293,6 +293,14 @@ console.log(this.state.college_list.concat(this.state.user_college));
           </div>
           </div>
           <div className="category">
+          <div className="subheader">
+            <div className="title">
+              服务设置
+            </div>
+            <div className="subtitle">
+              这里展示你的服务潜能噢
+            </div>
+          </div>
           <div className="item first">
           <div className="content">
           <div className="inner-content">
@@ -342,7 +350,7 @@ console.log(this.state.college_list.concat(this.state.user_college));
           </div>
           </div>
           </div>
-          <div className="item">
+          <div className="item first">
           <div className="content">
           {!this.state.hasNotApplied ? <button className="ui button" type="submit" onClick={this.handleSubmit}>更新</button> :
             <button className="ui button" type="submit" onClick={this.handleSubmit}>申请</button>}
