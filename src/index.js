@@ -15,7 +15,7 @@ axios.defaults.baseURL = process.env.REACT_APP_API_HOST;
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter>
+    <BrowserRouter >
       <App/>
     </BrowserRouter>
   </Provider>,

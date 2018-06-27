@@ -22,6 +22,7 @@ import store from "./redux";
 import {fetchUser} from "./redux/userAction";
 import {connect, Provider} from 'react-redux'
 import {withRouter} from 'react-router-dom'
+import {logMessage} from './redux/logAction'
 
 
 class App extends Component {
@@ -40,6 +41,22 @@ class App extends Component {
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.updateCurrentPage = this.updateCurrentPage.bind(this);
     this.toggle_outside = this.toggle_outside.bind(this);
+    // Using listen to log each change in logging. Dispatch to store.
+    this.props.history.listen(
+      //    user_action: (redux action name/ history)    
+//    prev_state: (redux previous state/ previous history)
+//    next_state: (redux next state/ to )
+//    timestamp: (date.now())
+      location => {
+        let log = {user_action: "", prev_state:"", next_state: "", timestamp: "", note: ""}; 
+        log.user_action = "Navigate to " + location.pathname
+        log.prev_state= ""
+        log.next_state = "Next URL" + location.pathname
+        log.timestamp = Date.now()
+        //let cur = this.props.history.getCurrentLocation().pathname
+        store.dispatch(logMessage(log))
+      }
+    )
   }
 
   componentWillMount(){
@@ -57,6 +74,7 @@ class App extends Component {
     e.stopPropagation();
     let check = this.state.is_checked;
     this.setState({is_checked: !check});
+    console.log(this.props.history)
   }
 
   user_menuToggled(e) {
@@ -84,6 +102,9 @@ class App extends Component {
   updateWindowDimensions() {
     this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
+
+  // How to record the data for clicking the button.
+
 
   render() {
     const user = this.props.user;

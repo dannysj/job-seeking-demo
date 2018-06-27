@@ -6,6 +6,13 @@ import './user.css';
 import { Message } from 'semantic-ui-react'
 import store from "../redux";
 import {setUser} from "../redux/userAction";
+import {verifyUser} from "../redux/userActionRewrite"
+import {loginStatus} from "../redux/userReducerRewrite"
+import {connect} from "react-redux"
+
+const mapStateToProps = state =>{
+  return { login: state.login }
+}
 
 class Login extends Component {
 
@@ -17,43 +24,11 @@ class Login extends Component {
   }
 
   // How to rewrite the redux here
-  handleSubmit2 (e) {
+  handleSubmit(e) {
     e.preventDefault();
-    
-
-    axios.post('/api/verify_user',this.state.user).then(res => {
-      if(res.data.code===0){
-        store.dispatch(setUser(res.data.user));
-        if(this.context.router.history.location.pathname === "/login"){
-          this.context.router.history.push("/");
-          return;
-        }
-        this.context.router.history.goBack();
-      }
-      else{
-        this.setState({isLoginFailed: true})
-      }
-    });
+    dispatch(verifyUser(this.state.user))
   }
 
-
-  handleSubmit (e) {
-    e.preventDefault();
-
-    axios.post('/api/verify_user',this.state.user).then(res => {
-      if(res.data.code===0){
-        store.dispatch(setUser(res.data.user));
-        if(this.context.router.history.location.pathname === "/login"){
-          this.context.router.history.push("/");
-          return;
-        }
-        this.context.router.history.goBack();
-      }
-      else{
-        this.setState({isLoginFailed: true})
-      }
-    });
-  }
 
   handleChange (e) {
     let curUser = this.state.user;
@@ -62,9 +37,18 @@ class Login extends Component {
   }
 
   render() {
+    if (this.props.login === loginStatus.LOGIN_SUCCESS){
+      if(this.context.router.history.location.pathname === "/login"){
+        this.context.router.history.push("/");
+        return;
+      }
+      this.context.router.history.goBack();
+      return
+    }
+
     return (
       <div class="login-signup-container">
-      {this.state.isLoginFailed ? (<Message negative>
+      {this.props.login === loginStatus.LOGIN_FAILURE ? (<Message negative>
     <Message.Header>Login failed. The email and password combination does not match.</Message.Header>
   </Message> )
         : (<div></div>) }
@@ -90,5 +74,4 @@ Login.contextTypes = {
   router: PropTypes.object
 };
 
-
-export default Login;
+export default connect(mapStateToProps)(Login);
