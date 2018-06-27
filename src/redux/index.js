@@ -60,10 +60,14 @@ const beconMiddleWare = store => next => action =>{
   }
 }
 
-const middleware = applyMiddleware(promise(), thunk, beconMiddleWare);
-// /const middleware = applyMiddleware(promise(), thunk, logger);
+let middleware = [promise(),  thunk];
 
-const store = createStore(reducers, middleware);
+if(process.env.NODE_ENV === 'development'){
+  //middleware = [...middleware, logger];
+  middleware = [...middleware, lbeconMiddleWare];
+} 
+
+const store = createStore(reducers, applyMiddleware(...middleware));
 store.dispatch(startLogsInterval(15000))
 
 export default store;

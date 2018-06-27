@@ -28,6 +28,10 @@ exports.confirmVerification = (verification_code, callback) => {
       callback(err);
       return;
     }
+    if (result.rows.length === 0) {
+      callback(`No user with verification code "${verification_code}" found `);
+      return;
+    }
     callback(null, result.rows[0].id);
   });
 };

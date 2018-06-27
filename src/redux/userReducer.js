@@ -60,7 +60,6 @@ export default (state = initState, action) => {
       return {status: userStatus.logout};
 
 
-
     case "FETCH_USER_PENDING":
       return {status: userStatus.pending};
 
@@ -72,7 +71,6 @@ export default (state = initState, action) => {
       return {...action.payload.data.user, status: userStatus.login};
 
 
-
     case "UPDATE_USER_PENDING":
       return state;
 
@@ -82,11 +80,11 @@ export default (state = initState, action) => {
 
     case "UPDATE_USER_FULFILLED":
       const {attr, val} = JSON.parse(action.payload.config.data);
-      if(attr != 'num_notifications') {
-        NotificationManager.success('资料更新成功', '完成啦');
-      }
+      NotificationManager.success('资料更新成功', '完成啦');
       return {...state, [attr]: val};
 
+    case "UPDATE_USER_LOCAL":
+      return {...state, [action.payload.attr]: action.payload.val};
 
     default:
       return state;

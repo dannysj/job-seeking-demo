@@ -205,6 +205,17 @@ class MentorDetail extends Component {
     const posiIcon = '/icons/position.png'
     const ageIcon = '/icons/age.png'
 
+    let paragraphs = []
+    if (this.state.mentor.bio) {
+      paragraphs = this.state.mentor.bio.split(/\n/g) || []
+    }
+    paragraphs = paragraphs.map((text, i) => {
+      return (
+          <p key={i}>
+            {text}
+          </p>
+      );
+    });
       return (
       <div className="mentor-detail-container">
         <NotificationContainer />
@@ -269,7 +280,8 @@ class MentorDetail extends Component {
                     onLoad={this.handleCompanyIconLoad}/>
                 </div>
               </div>
-              <div className="small-bio" dangerouslySetInnerHTML={{__html:this.state.mentor.bio}}>
+              <div className="small-bio">
+              {paragraphs}
               </div>
 
             </div>
@@ -351,7 +363,7 @@ class MentorDetail extends Component {
                         <div className="service-price">{el.price+' RMB'}</div>
                       </div>
                       <div className="service-description">{el.description}</div>
-                      <div className="buy-button"><Button className="buy-button-ani" onClick={()=>this.initBuy(el.name, el.price)}>购买</Button></div>
+                      <div className="buy-button"><Button className="buy-button-ani" onClick={()=>this.initBuy(el.name, el.price)}>免费体验</Button></div>
                     </div>
                   </div>
 
