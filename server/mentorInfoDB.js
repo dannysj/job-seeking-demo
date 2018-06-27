@@ -135,7 +135,6 @@ exports.getMentorDetail = (mid, callback) => {
         from mentor_comment comment, users u
         where comment.mid= 2 and comment.uid=u.id
        ) as comments
-      
     from users u, mentor_info m, college c
     where m.uid = u.id and m.cid = c.id and m.id = $1;
   `;
