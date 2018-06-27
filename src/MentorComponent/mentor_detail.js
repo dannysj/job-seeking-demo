@@ -363,7 +363,7 @@ class MentorDetail extends Component {
                         <div className="service-price">{el.price+' RMB'}</div>
                       </div>
                       <div className="service-description">{el.description}</div>
-                      <div className="buy-button"><Button className="buy-button-ani" onClick={()=>this.initBuy(el.name, el.price)}>购买</Button></div>
+                      <div className="buy-button"><Button className="buy-button-ani" onClick={()=>this.initBuy(el.name, el.price)}>免费体验</Button></div>
                     </div>
                   </div>
 
