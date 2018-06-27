@@ -123,15 +123,18 @@ exports.getMentorDetail = (mid, callback) => {
       (m.num_weekly_slots - (select count(*) from mentor_rel
         where mid=m.id and now()-start_time<'1 week'))::integer as num_availability,
         
-      (select json_agg(json_build_object(
-          'id', comment.id,
-          'text', comment.text,
-          'reply', comment.reply,
-          'time_added', to_char(comment.time_added,'DD Mon HH24:MI'),
-          'first', u.first,
-          'last', u.last,
-          'profile_pic', u.profile_pic
-        ))
+      (select 
+         json_agg(
+            json_build_object(
+              'id', comment.id,
+              'text', comment.text,
+              'reply', comment.reply,
+              'time_added', to_char(comment.time_added,'DD Mon HH24:MI'),
+              'first', u.first,
+              'last', u.last,
+              'profile_pic', u.profile_pic
+            ) order by time_added
+        )
         from mentor_comment comment, users u
         where comment.mid = $1 and comment.uid = u.id
        ) as comments
