@@ -21,7 +21,7 @@ class CommentBox extends Component{
             ))}
           </div>
         ))}
-        {this.props.user && this.props.user.id && <CommentForm user={this.props.user} mentor={this.props.mentor}/>}
+        {this.props.user && this.props.user.id && <CommentForm mentor={this.props.mentor}/>}
       </div>
     );
   }
