@@ -31,6 +31,13 @@ app.post('/api/file/general_upload', upload.single('file'), (req, res) => {
   if (!req.file)
     return res.json({code: -21, errMsg: 'No files found'});
 
+  // All file types supported by `sharp`
+  const imageMIME  = ["image/gif", "image/png", "image/jpeg", "image/bmp", "image/webp", "image/tiff"];
+  if(imageMIME.indexOf(req.file.mimetype) !== -1){
+    sharp(req.file).resize().toFile(req.file.path);
+  }
+
+
   res.json({code: 0, url: '/files/' + req.file.filename});
 });
 
