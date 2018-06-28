@@ -3,7 +3,6 @@ import { Icon, Button } from 'semantic-ui-react';
 import './CommentBox.css';
 import store from '../redux'
 import {createMentorComment, createMentorReply, fetchMentorDetail, createCommentLike} from "../redux/mentorDetailAction";
-import axios from "axios/index";
 
 class CommentBox extends Component{
   render() {
@@ -87,7 +86,7 @@ class Comment extends Component {
   handleCommentLike = () =>{
     console.log("called")
     store.dispatch(createCommentLike(this.props.comment.id)).then(()=>{
-      store.dispatch(fetchMentorDetail(this.props.mentor.mid))
+      store.dispatch(fetchMentorDetail(this.props.mentor.mid)) // TODO: don't fetch again
     });
   }
 

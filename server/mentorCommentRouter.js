@@ -40,7 +40,6 @@ app.post('/api/create_mentor_reply', (req, res) => {
 app.post('/api/create_comment_like', (req, res) => {
   db.createCommentLike(req.body.comment_id, req.body.uid, (err) => {
     if (err) {
-      console.log(err);
       res.json({code: 1});
       return;
     }
