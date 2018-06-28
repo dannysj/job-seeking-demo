@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import './user.css';
+import './user.less';
 import { Message } from 'semantic-ui-react'
 import store from "../redux";
 import {setUser} from "../redux/userAction";

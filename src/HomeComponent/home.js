@@ -4,7 +4,7 @@ import { Container, Divider } from 'semantic-ui-react';
 import NewsList from './news_list';
 import MentorList from './mentor_list';
 import Footer from '../Components/Footer';
-import './home.css';
+import './home.less';
 
 
 class Home extends Component {

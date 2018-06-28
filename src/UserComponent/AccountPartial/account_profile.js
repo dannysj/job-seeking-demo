@@ -3,7 +3,7 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 import {Dropdown, Image} from 'semantic-ui-react';
 import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
-import '../account.css';
+import '../account.less';
 import ImgCrop from './ImgCrop/imgcrop.js';
 import store from "../../redux";
 import {updateUser} from "../../redux/userAction";
