@@ -1,6 +1,6 @@
 import {applyMiddleware, combineReducers, createStore} from 'redux'
 import thunk from 'redux-thunk'
-import {createLogger} from "redux-logger";
+import logger from "redux-logger";
 import promise from "redux-promise-middleware";
 import userReducer from './userReducer'
 import majorListReducer from './majorListReducer'
@@ -38,6 +38,7 @@ const beconMiddleWare = store => next => action =>{
   // This implementation might have concurrency issue. Loggers can be pushed at any time by any two objects
   switch (action.type) {
     case "LOG_MESSAGE":
+    case "PURGE_ALL_LOGS":
       return next(action)
     default:
 
@@ -70,11 +71,11 @@ const beconMiddleWare = store => next => action =>{
   }
 }
 
-let middleware = [promise(),  thunk];
+let middleware = [promise(),  thunk, beconMiddleWare];
 
 if(process.env.NODE_ENV === 'development'){
-  //middleware = [...middleware, logger];
-  middleware = [...middleware, beconMiddleWare];
+  middleware = [...middleware, logger];
+  //middleware = [...middleware, ];
 } 
 
 const store = createStore(reducers, applyMiddleware(...middleware));

@@ -26,8 +26,16 @@ export function startLogsInterval(timeout){
     return dispatch => {
         // set timer api 
         let timer = setInterval( 
-            ()=> {dispatch( dispatch => {
+            ()=> {
+         
+                    if (store.getState().logs.size === 0){
+                        console.log("EMPTY log, no need to save")
+                        return 
+                    }
+                    
+                    dispatch( dispatch => {
                         store.getState().logs.forEach( x=> console.log(x.user_action))
+                        
                         axios.post("/api/save_logger", {logs: store.getState().logs})
                             .then(
                                 res => {
