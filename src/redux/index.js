@@ -6,28 +6,21 @@ import userReducer from './userReducer'
 import majorListReducer from './majorListReducer'
 import mentorListReducer from './mentorListReducer'
 import newsListReducer from "./newsListReducer";
+import mentorDetailReducer from "./mentorDetailReducer";
+
 import {logs, timer} from "./logReducer";
 import {logMessage, startLogsInterval} from "./logAction"
 import {userStatus} from "./userReducer"
 const reducers = combineReducers({
   user: userReducer,
   major_list: majorListReducer,
-  mentorStore: mentorListReducer,
   newsStore: newsListReducer,
+  mentorListStore: mentorListReducer,
+  mentorDetailStore: mentorDetailReducer,
   logs,
-  timer
-});
+  timer,
+})
 
-function filterOutLogs(storeState){
-  let state = {}
-  for (const [key, value] of Object.entries(storeState)){
-    let unwantedKeys = ["logs","timer"]
-    if (!unwantedKeys.includes(key)){
-      state[key] = value
-    }
-  }
-  return state
-}
 
 const beconMiddleWare = store => next => action =>{
   // This middleware is constructed for becon system. 
