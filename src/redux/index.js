@@ -8,7 +8,7 @@ import mentorListReducer from './mentorListReducer'
 import newsListReducer from "./newsListReducer";
 import {logs, timer} from "./logReducer";
 import {logMessage, startLogsInterval} from "./logAction"
-
+import {userStatus} from "./userReducer"
 const reducers = combineReducers({
   user: userReducer,
   major_list: majorListReducer,
@@ -44,8 +44,18 @@ const beconMiddleWare = store => next => action =>{
       if (action.doNotLog !== undefined && action.doNotLog === true){
         return next(action)
       }
+      
+      // Change for access token
+      let log = {user_action:"", prev_state:"", next_state:"", timestamp:"", note:"", uid:""}
 
-      let log = {user_action:"", prev_state:"", next_state:"", timestamp:"", note:""}
+      // Assign the uid to guest
+      if (store.getState().user.status === userStatus.login){
+        log.uid = store.getState().user.id
+      }
+      else{
+        log.uid = -1
+      }
+
       log.user_action = action.type.toLowerCase()
 
       if (action.logNote !== undefined){
@@ -64,7 +74,7 @@ let middleware = [promise(),  thunk];
 
 if(process.env.NODE_ENV === 'development'){
   //middleware = [...middleware, logger];
-  middleware = [...middleware, lbeconMiddleWare];
+  middleware = [...middleware, beconMiddleWare];
 } 
 
 const store = createStore(reducers, applyMiddleware(...middleware));

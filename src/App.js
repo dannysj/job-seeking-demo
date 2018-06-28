@@ -5,6 +5,8 @@ import {Icon, Label} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 import {NotificationContainer} from 'react-notifications';
+import {userStatus} from "./redux/userReducer"
+
 // Components
 import NavLink from './NavLinkComponent/navlink';
 import Home from './HomeComponent/home';
@@ -49,10 +51,15 @@ class App extends Component {
 //    next_state: (redux next state/ to )
 //    timestamp: (date.now())
       location => {
-        let log = {user_action: "", prev_state:"", next_state: "", timestamp: "", note: ""}; 
+        let log = {user_action: "", timestamp: "", note: "", uid:-1}; 
+        if (store.getState().user.status === userStatus.login){
+          log.uid = store.getState().user.id
+        }
+        else{
+          log.uid = -1
+        }
+  
         log.user_action = "Navigate to " + location.pathname
-        log.prev_state= ""
-        log.next_state = "Next URL" + location.pathname
         log.timestamp = Date.now()
         //let cur = this.props.history.getCurrentLocation().pathname
         store.dispatch(logMessage(log))

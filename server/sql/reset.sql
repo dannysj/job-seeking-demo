@@ -9064,6 +9064,18 @@ CREATE TABLE "public"."mentor_rel" (
 ALTER TABLE "public"."mentor_rel" OWNER TO "buddycareer";
 
 -- ----------------------------
+-- Table structure for user_action_logs
+-- ----------------------------
+DROP TABLE IF EXISTS "public"."user_action_logs";
+CREATE TABLE "public"."user_action_logs" (
+  "uid" int4 NOT NULL,
+  "user_action" text,
+  "note" text
+  "timestamp" timestamp(6)
+)
+;
+ALTER TABLE "public"."user_action_logs" OWNER TO "buddycareer";
+-- ----------------------------
 -- Table structure for mentor_tag
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."mentor_tag";

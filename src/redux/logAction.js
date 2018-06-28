@@ -4,8 +4,6 @@
 
 // {
 //    user_action: (redux action name/ history)    
-//    prev_state: (redux previous state/ previous history)
-//    next_state: (redux next state/ to )
 //    note: (specify by redux to provide more detail for logging)
 //    timestamp: (date.now())
 // }
