@@ -9,7 +9,7 @@ class CommentBox extends Component{
     return (
       <div className="comment-box">
         {!this.props.hideComment &&
-        (this.props.mentor.comments.length === 0 ? (
+        (this.props.mentor.comments === null || this.props.mentor.comments.length === 0 ? (
           <div style={{display: 'flex', justifyContent: 'center', lineHeight: '200%'}}>暂无评价</div>
         ) : (
           <div className="comment-list">
@@ -21,7 +21,7 @@ class CommentBox extends Component{
             ))}
           </div>
         ))}
-        {this.props.user && this.props.user.id && <CommentForm user={this.props.user} mentor={this.props.mentor}/>}
+        {this.props.user && this.props.user.id && <CommentForm mentor={this.props.mentor}/>}
       </div>
     );
   }
