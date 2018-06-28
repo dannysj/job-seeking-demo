@@ -3,9 +3,11 @@ const db = {
   ...require('./messageDB.js')
 };
 
+const sharp = require('sharp');
 const express = require('express');
 const app = express();
 const multer = require('multer');
+const image_compression_size = require("./_config").image_compression_size;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -32,11 +34,12 @@ app.post('/api/file/general_upload', upload.single('file'), (req, res) => {
     return res.json({code: -21, errMsg: 'No files found'});
 
   // All file types supported by `sharp`
-  const imageMIME  = ["image/gif", "image/png", "image/jpeg", "image/bmp", "image/webp", "image/tiff"];
-  if(imageMIME.indexOf(req.file.mimetype) !== -1){
-    sharp(req.file).resize().toFile(req.file.path);
+  const imageMIME = ["image/gif", "image/png", "image/jpeg", "image/bmp", "image/webp", "image/tiff"];
+  if (imageMIME.indexOf(req.file.mimetype) !== -1) {
+    sharp(req.file.path).resize(image_compression_size).toFile(req.file.path + "small");
+    res.json({code: 0, url: '/files/' + req.file.filename + "small"});
+    return;
   }
-
 
   res.json({code: 0, url: '/files/' + req.file.filename});
 });
@@ -45,8 +48,17 @@ app.post('/api/file/general_upload_name_perserved', upload_name_perserved.single
   if (!req.file)
     return res.json({code: -21, errMsg: 'No files found'});
 
+  // All file types supported by `sharp`
+  const imageMIME = ["image/gif", "image/png", "image/jpeg", "image/bmp", "image/webp", "image/tiff"];
+  if (imageMIME.indexOf(req.file.mimetype) !== -1) {
+    sharp(req.file.path).resize(image_compression_size).toFile(req.file.path + "small");
+    res.json({code: 0, url: '/files/' + req.file.filename + "small"});
+    return;
+  }
+
   res.json({code: 0, url: '/files/' + req.file.filename});
 });
+
 
 app.post('/api/admin/get_applications', (req, res) => {
   db.getMentorApplications((err, list) => {
