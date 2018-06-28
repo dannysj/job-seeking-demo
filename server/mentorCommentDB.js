@@ -22,9 +22,16 @@ exports.createMentorComment = (mid, text, uid, callback) => {
     .catch(err => callback(err));
 };
 
-exports.createMentorReply = (id, reply, callback) => {
+exports.createCommentReply = (id, reply, callback) => {
   const query = `update mentor_comment set reply = $2 where id=$1`;
   db.query(query, [id, reply])
+    .then(() => callback(null))
+    .catch(err => callback(err));
+};
+
+exports.createCommentLike = (comment_id, uid, callback) => {
+  const query = `insert into mentor_comment_like (comment_id, uid) values($1, $2)`;
+  db.query(query, [comment_id, uid])
     .then(() => callback(null))
     .catch(err => callback(err));
 };
