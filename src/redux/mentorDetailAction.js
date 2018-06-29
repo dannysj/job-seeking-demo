@@ -12,7 +12,6 @@ export function fetchMentorDetail(mid) {
 export function createMentorComment(mid, text){
   const uid = store.getState().user.id;
   const access_token = store.getState().user.access_token;
-  console.log(access_token)
   return{
     type: "CREATE_MENTOR_COMMENT",
     payload: axios.post('/api/create_mentor_comment', {mid, text}, {headers: {access_token}})
@@ -21,9 +20,10 @@ export function createMentorComment(mid, text){
 
 
 
-export function createMentorReply(id, reply){
+export function createMentorReply(comment_id, reply){
+  const access_token = store.getState().user.access_token;
   return{
     type: "CREATE_MENTOR_REPLY",
-    payload:axios.post('/api/create_mentor_reply', {id, reply}) // TODO: access_token
+    payload:axios.post('/api/create_mentor_reply', {comment_id, reply}, {headers: {access_token}})
   }
 }
