@@ -395,7 +395,7 @@ class MentorDetail extends Component {
                 过往评价
             </div>
 
-
+          <CommentBox user={this.props.user} mentor={mentor} displayCommentReplyButton/>
         </div>
 
         <Footer />
@@ -416,4 +416,3 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps)(MentorDetail);
-  //  <CommentBox user={this.props.user} mentor={mentor} displayCommentReplyButton/>

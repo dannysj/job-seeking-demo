@@ -9,17 +9,18 @@ class CommentBox extends Component{
     return (
       <div className="comment-box">
         {!this.props.hideComment &&
-        (this.props.mentor.comments === null || this.props.mentor.comments.length === 0 ? (
+        ((this.props.mentor.comments === null ) ? (
           <div style={{display: 'flex', justifyContent: 'center', lineHeight: '200%'}}>暂无评价</div>
-        ) : (
-          <div className="comment-list">
-            {this.props.mentor.comments.map(comment => (
-              <Comment comment={comment}
-                       onCommentReply={this.handleCommentReply}
-                       mentor={this.props.mentor}
-                       displayCommentReplyButton={this.props.displayCommentReplyButton}/>
-            ))}
-          </div>
+        ) : ( (this.props.mentor.comments.length === 0) ? (<div style={{display: 'flex', justifyContent: 'center', lineHeight: '200%'}}>暂无评价</div>)
+          : (<div className="comment-list">
+          {this.props.mentor.comments.map(comment => (
+            <Comment comment={comment}
+                     onCommentReply={this.handleCommentReply}
+                     mentor={this.props.mentor}
+                     displayCommentReplyButton={this.props.displayCommentReplyButton}/>
+          ))}
+        </div>)
+
         ))}
         {this.props.user && this.props.user.id && <CommentForm mentor={this.props.mentor}/>}
       </div>
@@ -61,6 +62,7 @@ class Comment extends Component {
   constructor (props) {
     super(props);
     this.state={displayCommentReply:false};
+    console.log(this.props.mentor);
   }
 
   handleSubmit = (e) => {
