@@ -1,13 +1,6 @@
 import {NotificationManager} from "react-notifications";
 
-const initState = {
-  0: {
-    first: "",
-    last: "",
-    offer_company: '',
-    service: []
-  }
-};
+const initState = {};
 
 
 export default (state = initState, action) => {
