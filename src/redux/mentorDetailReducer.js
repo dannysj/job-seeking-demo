@@ -21,6 +21,7 @@ export default (state = initState, action) => {
       return {...state, [mentor.mid]: mentor};
 
 
+      // TODO: Error message for CREATE_MENTOR_COMMENT and CREATE_MENTOR_REPLY
     default:
       return state;
   }

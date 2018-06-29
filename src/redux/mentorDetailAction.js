@@ -10,7 +10,6 @@ export function fetchMentorDetail(mid) {
 
 
 export function createMentorComment(mid, text){
-  const uid = store.getState().user.id;
   const access_token = store.getState().user.access_token;
   return{
     type: "CREATE_MENTOR_COMMENT",
