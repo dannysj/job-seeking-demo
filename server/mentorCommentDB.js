@@ -22,8 +22,9 @@ exports.createMentorComment = (mid, text, uid, callback) => {
     .catch(err => callback(err));
 };
 
+
 exports.createMentorReply = (comment_id, reply, uid, callback) => {
-  const query = `select count(*) from mentor_info
+  const query = `select * from mentor_info
                   where uid = $2 and
                          id = (select mid from mentor_comment where id = $1)`;
   db.query(query, [comment_id, uid])
