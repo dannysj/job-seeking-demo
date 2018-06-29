@@ -62,7 +62,6 @@ class Comment extends Component {
   constructor (props) {
     super(props);
     this.state={displayCommentReply:false};
-    console.log(this.props.mentor);
   }
 
   handleSubmit = (e) => {
@@ -103,8 +102,8 @@ class Comment extends Component {
         <div className="comment-bottom">
         {this.props.comment.reply ? (
           <div className="comment-reply comment-content">
-              <div style={{fontWeight: 'Bold'}}><img className="mentor-reply-img" src={this.props.mentor.profile_pic} alt=""/> </div>
-              {this.props.comment.reply}
+              <div style={{fontWeight: 'Bold', height: '50px', width: '50px', marginRight:'1em'}}><img className="mentor-reply-img" src={this.props.mentor.profile_pic} alt=""/> </div>
+              <div style={{borderRadius: '5px',padding: '0.5em', lineHeight: '1.5', height: 'auto', flex: '1 0', textAlign: 'left', background: 'rgba(34, 36, 38, 0.08)'}}>{this.props.comment.reply}</div>
             </div>
           ):(
             this.props.displayCommentReplyButton &&
