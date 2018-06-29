@@ -9,17 +9,18 @@ class CommentBox extends Component{
     return (
       <div className="comment-box">
         {!this.props.hideComment &&
-        (this.props.mentor.comments === null || this.props.mentor.comments.length === 0 ? (
+        ((this.props.mentor.comments === null ) ? (
           <div style={{display: 'flex', justifyContent: 'center', lineHeight: '200%'}}>暂无评价</div>
-        ) : (
-          <div className="comment-list">
-            {this.props.mentor.comments.map(comment => (
-              <Comment comment={comment}
-                       onCommentReply={this.handleCommentReply}
-                       mentor={this.props.mentor}
-                       displayCommentReplyButton={this.props.displayCommentReplyButton}/>
-            ))}
-          </div>
+        ) : ( (this.props.mentor.comments.length === 0) ? (<div style={{display: 'flex', justifyContent: 'center', lineHeight: '200%'}}>暂无评价</div>)
+          : (<div className="comment-list">
+          {this.props.mentor.comments.map(comment => (
+            <Comment comment={comment}
+                     onCommentReply={this.handleCommentReply}
+                     mentor={this.props.mentor}
+                     displayCommentReplyButton={this.props.displayCommentReplyButton}/>
+          ))}
+        </div>)
+
         ))}
         {this.props.user && this.props.user.id && <CommentForm mentor={this.props.mentor}/>}
       </div>
@@ -101,8 +102,8 @@ class Comment extends Component {
         <div className="comment-bottom">
         {this.props.comment.reply ? (
           <div className="comment-reply comment-content">
-              <div style={{fontWeight: 'Bold'}}><img className="mentor-reply-img" src={this.props.mentor.profile_pic} alt=""/> </div>
-              {this.props.comment.reply}
+              <div style={{fontWeight: 'Bold', height: '50px', width: '50px', marginRight:'1em'}}><img className="mentor-reply-img" src={this.props.mentor.profile_pic} alt=""/> </div>
+              <div style={{borderRadius: '5px',padding: '0.5em', lineHeight: '1.5', height: 'auto', flex: '1 0', textAlign: 'left', background: 'rgba(34, 36, 38, 0.08)'}}>{this.props.comment.reply}</div>
             </div>
           ):(
             this.props.displayCommentReplyButton &&
