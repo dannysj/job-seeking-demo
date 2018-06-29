@@ -8,23 +8,30 @@ export function fetchUser(access_token) {
   }
 }
 
-export function setUser(user){
-  return{
+export function setUser(user) {
+  return {
     type: "SET_USER",
     payload: user
   }
 }
 
-export function updateUser(attr, val){
-  const access_token = store.getState().user.access_token;
-  return {
-    type: "UPDATE_USER",
-    payload: axios.post('/api/update_user', {attr, val}, {headers:{access_token: access_token}})
+export function updateUser(attr, val, {local = false} = {}) {
+  const uid = store.getState().user.id;
+  if (local) {
+    return {
+      type: "UPDATE_USER_LOCAL",
+      payload: {attr, val}
+    }
+  } else {
+    return {
+      type: "UPDATE_USER",
+      payload: axios.post('/api/update_user', {uid, attr, val}, {headers:{access_token: access_token}})
+    }
   }
 }
 
-export function logout(){
-  return{
+export function logout() {
+  return {
     type: "LOGOUT"
   }
 }

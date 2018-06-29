@@ -7,16 +7,24 @@ import userReducer from './userReducer'
 import majorListReducer from './majorListReducer'
 import mentorListReducer from './mentorListReducer'
 import newsListReducer from "./newsListReducer";
+import mentorDetailReducer from "./mentorDetailReducer";
 
 const reducers = combineReducers({
   user: userReducer,
   major_list: majorListReducer,
-  mentorStore: mentorListReducer,
-  newsStore: newsListReducer
+  newsStore: newsListReducer,
+  mentorListStore: mentorListReducer,
+  mentorDetailStore: mentorDetailReducer,
 });
 
-const middleware = applyMiddleware(promise(), thunk, logger);
 
-const store = createStore(reducers, middleware);
+let middleware = [promise(),  thunk];
+
+if(process.env.NODE_ENV === 'development'){
+  middleware = [...middleware, logger];
+}
+
+
+const store = createStore(reducers, applyMiddleware(...middleware));
 
 export default store;

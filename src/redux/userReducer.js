@@ -1,5 +1,9 @@
 import {NotificationManager} from "react-notifications";
 
+/**
+ * @readonly
+ * @enum {number}
+ */
 export const userStatus = {
   logout: -1,
   pending: 0,
@@ -8,30 +12,37 @@ export const userStatus = {
 Object.freeze(userStatus);
 
 /**
- * @type {{
- *  balance: string,
- *  cover: string,
- *  dob: Date,
- *  email: string,
- *  first: string,
- *  last: string,
- *  id: number,
- *  isactivated: boolean,
- *  isadmin: boolean,
- *  ismentor: boolean,
- *  major: string[],
- *  num_notifications: number,
- *  profile_pic: string,
- *  register_date: Date,
- *  resume: string,
- *  wechat: string,
- *  status: number
- *  }}
+ * @typedef {Object} User
+ * @property {string} access_token
+ * @property {string} balance
+ * @property {string} cover
+ * @property {string} email
+ * @property {string} first
+ * @property {string} last
+ * @property {number} id
+ * @property {boolean} isactivated
+ * @property {boolean} isadmin
+ * @property {boolean} ismentor
+ * @property {string[]} major
+ * @property {number} num_notifications
+ * @property {string} profile_pic
+ * @property {string} resume
+ * @property {string} wechat
+ * @property {Date} register_date
+ * @property {userStatus} status
+ *
+ * @property {null} [dob] not used
+
  */
+
+
+/**
+ * @type {User}
+ * */
 const initState = {
+  access_token: "",
   balance: "0.00",
   cover: "",
-  dob: null, // not used
   email: "",
   first: "",
   last: "",
@@ -42,12 +53,15 @@ const initState = {
   major: [],
   num_notifications: 0,
   profile_pic: "/img/sample_profile.jpg",
-  register_date: null, // not used
   resume: "",
   wechat: "",
+  register_date: null,
   status: userStatus.logout,
-};
 
+  dob: null, // not used
+
+  }
+;
 
 export default (state = initState, action) => {
   switch (action.type) {
@@ -62,7 +76,6 @@ export default (state = initState, action) => {
       return {status: userStatus.logout};
 
 
-
     case "FETCH_USER_PENDING":
       return {status: userStatus.pending};
 
@@ -74,7 +87,6 @@ export default (state = initState, action) => {
       return {...action.payload.data.user, status: userStatus.login};
 
 
-
     case "UPDATE_USER_PENDING":
       return state;
 
@@ -84,11 +96,11 @@ export default (state = initState, action) => {
 
     case "UPDATE_USER_FULFILLED":
       const {attr, val} = JSON.parse(action.payload.config.data);
-      if(attr != 'num_notifications') {
-        NotificationManager.success('资料更新成功', '完成啦');
-      }
+      NotificationManager.success('资料更新成功', '完成啦');
       return {...state, [attr]: val};
 
+    case "UPDATE_USER_LOCAL":
+      return {...state, [action.payload.attr]: action.payload.val};
 
     default:
       return state;

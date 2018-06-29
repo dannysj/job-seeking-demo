@@ -167,7 +167,7 @@ class AccountApply extends React.Component {
       }
       else {
         if(res.data.code === 45) {
-          NotificationManager.error('请先完善您的基础资料','错误');
+          NotificationManager.success('我们已收到您的表格，请尽快完善您的基础资料','成功');
         }
         else{
           NotificationManager.error('数据库错误','错误');

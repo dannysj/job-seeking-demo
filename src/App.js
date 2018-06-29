@@ -14,6 +14,7 @@ import Login from './UserComponent/login';
 import Signup from './UserComponent/signup';
 import Account from './UserComponent/account';
 import MentorDetail from './MentorComponent/mentor_detail';
+import UserDetail from './UserComponent/user_detail';
 import News from './NewsComponent/news';
 import NewsDetail from './NewsComponent/news_detail';
 import About from './AboutComponent/about';
@@ -22,7 +23,7 @@ import store from "./redux";
 import {fetchUser} from "./redux/userAction";
 import {connect, Provider} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-
+import { hot } from 'react-hot-loader'
 
 class App extends Component {
   constructor(props){
@@ -222,6 +223,7 @@ class App extends Component {
             <Route path='/account' render={()=><Account user={user} width={this.state.width} height={this.state.height}/>} />
             <Route path="/mentor/:mid" render={(props)=><MentorDetail {...props} user={user}/>} />
             <Route path='/mentor' component={Mentor}/>
+            <Route path="/user/:uid" render={(props)=><UserDetail {...props} user={user}/>} />
             <Route path='/news/:nid'   render={(props)=><NewsDetail {...props} loggedInUser={user}/> } />
             <Route path='/news' component={News}/>
             <Route path='/about' component={About}/>
@@ -239,4 +241,4 @@ const mapStateToProps = state => {
   return {user};
 };
 
-export default withRouter(connect(mapStateToProps)(App));
+export default hot(module)(withRouter(connect(mapStateToProps)(App)));

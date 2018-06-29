@@ -4,18 +4,19 @@ const app = express.Router();
 
 app.post('/api/mentor_apply', (req, res) => {
   db.verifyInfoCompletion(req.body.uid, (err, isCompleted) => {
-    if (!isCompleted) {
-      res.json({code: 45});
-      return;
-    }
-
+  
     db.createMentorApp(req.body, (err) => {
       if (err) {
         console.log(err);
         res.json({code: 1});
         return;
       }
-      res.json({code: 0});
+      if (!isCompleted) {
+        res.json({code: 45});
+      }
+      else {
+        res.json({code: 0});
+      }
     });
 
   });

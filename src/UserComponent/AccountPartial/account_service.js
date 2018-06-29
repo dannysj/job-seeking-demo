@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button} from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { Button } from 'semantic-ui-react';
 import axios from 'axios';
 import '../account.css';
 
@@ -84,6 +85,7 @@ class AccountService extends React.Component {
                   {el.status===20 && (<div>
                     <Button floated='right' positive onClick={() => this.handleDecision(el.uid, 1)}>通过申请</Button>
                     <Button floated='right' negative onClick={() => this.handleDecision(el.uid, 0)}>拒绝申请</Button>
+                    <Link to={'/user/'+el.uid}><Button floated='right'>查看简历</Button></Link>
                   </div>)}
                   {el.status===1 && <Button floated='right' positive onClick={() => this.handleConfirm(el.uid)}>确认完成</Button>}
                   {el.status===2 && <Button floated='right' disabled>等待Mentee确认</Button>}

@@ -32,7 +32,7 @@ class AccountNotification extends React.Component {
 
     axios.post('/api/read_system_notification', {}, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
-        store.dispatch(updateUser('num_notifications', 0));
+        store.dispatch(updateUser('num_notifications', 0, {local: true}));
       }
     });
   }

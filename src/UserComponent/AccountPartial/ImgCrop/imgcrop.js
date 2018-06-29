@@ -13,7 +13,6 @@ export default class ImgCrop extends Component {
         y: 0,
         aspect: 1
       },
-      maxHeight: 80,
       dataUrl: this.props.dataUrl,
       inlineStyle: {
         height: '50vh',
@@ -94,7 +93,7 @@ export default class ImgCrop extends Component {
   render() {
     console.log(this.state.crop);
     return (
-      <div className="test">
+      <div className="img-crop-wrapper">
         <div className="img-crop-box ">
           <ReactCrop
             {...this.state}
