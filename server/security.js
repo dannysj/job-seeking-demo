@@ -8,6 +8,8 @@ exports.getHashedPassword = (input) => {
 }
 
 exports.access_token_validator = (req, res, next) => {
+  console.log('VALIDATING ACCESS TOKEN: '+req.get('access_token'));
+  req.body.uid = null;
   if(!!req.get('access_token')) {
     db.getUidByAccessToken(req.get('access_token'), (err, uid) => {
       if(err) {
@@ -15,11 +17,14 @@ exports.access_token_validator = (req, res, next) => {
       }
       else {
         req.body.uid = uid;
+        console.log('UID SET: '+req.body.uid);
       }
       next();
     });
   }
-  next();
+  else{
+    next();
+  }
 }
 
 exports.update_access_token = (uid, callback) => {

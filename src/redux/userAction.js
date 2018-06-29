@@ -25,7 +25,7 @@ export function updateUser(attr, val, {local = false} = {}) {
   } else {
     return {
       type: "UPDATE_USER",
-      payload: axios.post('/api/update_user', {uid, attr, val}, {headers:{access_token: access_token}})
+      payload: axios.post('/api/update_user', {uid, attr, val}, {headers:{access_token: store.getState().user.access_token}})
     }
   }
 }

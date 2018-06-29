@@ -14,14 +14,16 @@ class AccountService extends React.Component {
         mentees: []
       };
 
-    this.updateInfo();
+    this.updateInfo = this.updateInfo.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
     this.handleDecision = this.handleDecision.bind(this);
+    this.updateInfo();
   }
 
   updateInfo(){
     var handler = this;
-    axios.post('/api/get_rel_mentees', {},{header:{access_token: this.props.user.access_token}}).then(res => {
+    console.log(this.props.user.access_token);
+    axios.post('/api/get_rel_mentees', {}, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         handler.setState({mentees:res.data.mentees});

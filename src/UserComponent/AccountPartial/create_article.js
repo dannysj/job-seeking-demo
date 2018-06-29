@@ -53,7 +53,7 @@ class CreateArticle extends React.Component {
   handleSubmitNews(){
     let data = this.state.news;
     data.author_id = this.props.user.id;
-    axios.post('/api/create_news',data).then(res => {
+    axios.post('/api/create_news',data,{headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code===0){
         NotificationManager.success('上传成功，点击查看','成功',5000,()=>{
           this.context.router.history.push('/news/'+res.data.nid);

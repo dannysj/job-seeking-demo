@@ -154,7 +154,7 @@ class MentorEdit extends React.Component {
       return;
     }
 
-    axios.post('/api/mentor_edit', this.state.mentor_info).then(res => {
+    axios.post('/api/mentor_edit', this.state.mentor_info, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if (res.data.code === 0) {
         NotificationManager.success('已经更改了您的信息', '成功');
         this.context.router.history.push('/account/mentor_edit');

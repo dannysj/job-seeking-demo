@@ -40,7 +40,7 @@ class AccountApply extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.deleteRowAt = this.deleteRowAt.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
- 
+
     axios.post('/api/get_mentor_detail_by_uid',{}, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if (res.data.code === 0) {
         let mentor = res.data.mentor;
@@ -161,7 +161,7 @@ class AccountApply extends React.Component {
 
     const apiUrl = this.state.hasNotApplied ? '/api/mentor_apply' : '/api/mentor_edit';
 
-    axios.post(apiUrl, this.state.mentor_info).then(res => {
+    axios.post(apiUrl, this.state.mentor_info, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if (res.data.code === 0) {
         NotificationManager.success('我们已收到您的表格','成功');
       }

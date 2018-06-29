@@ -5,6 +5,8 @@ const security = require('./security');
 
 
 app.post('/api/get_user_info', (req, res) => {
+  console.log('FUCK: '+req.body.uid);
+
   db.getUserInfo(req.body.uid, (err, user) => {
     if (err) {
       console.log(err);

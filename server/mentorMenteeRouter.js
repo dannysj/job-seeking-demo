@@ -15,6 +15,7 @@ app.post('/api/get_rel_mentors', (req, res) => {
 });
 
 app.post('/api/get_rel_mentees', (req, res) => {
+  console.log('GET REL MENTEE: '+req.body.uid);
   db.getRelMentees(req.body.uid, (err, mentees) => {
     if (err) {
       console.log(err);
