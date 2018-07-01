@@ -5,6 +5,7 @@ import { Icon, Button, Divider } from 'semantic-ui-react';
 import './news.less';
 import Footer from '../Components/Footer';
 import ProfileFollow from '../Components/ProfileFollow';
+import  QuillDeltaToHtmlConverter from  'quill-delta-to-html'
 
 class NewsDetail extends Component {
 
@@ -26,6 +27,8 @@ class NewsDetail extends Component {
       if(res.data.code===0){
         let curState = this.state;
         curState.news = res.data.news;
+        if (curState.news.content === null) // compatibility, will be removed and use delta
+          curState.news.content = new QuillDeltaToHtmlConverter(curState.news.delta["ops"]).convert();
         curState.loading = false;
         this.setState(curState);
       }

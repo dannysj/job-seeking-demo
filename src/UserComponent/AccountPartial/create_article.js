@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Image, Input, Segment } from 'semantic-ui-react';
+import {Button, Image, Input, Segment} from 'semantic-ui-react';
 import ReactQuill from 'react-quill';
 import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
@@ -11,10 +11,9 @@ class CreateArticle extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state =
-      {
-        news: { content: '' , thumbnail: '' }
-      };
+    this.state = {
+        news: {thumbnail: null, delta: []}
+    };
     let reactQuillRef = null;
     let quillRef = null;
   }
@@ -43,7 +42,7 @@ class CreateArticle extends React.Component {
 
   handleChange = () => {
     let curState = this.state;
-    curState.news.content = this.quillRef.getContents();
+    curState.news.delta = this.quillRef.getContents();
     this.setState(curState);
   };
 
@@ -55,6 +54,7 @@ class CreateArticle extends React.Component {
 
   handleSubmitNews = () => {
     let data = this.state.news;
+    console.log(data)
     data.author_id = this.props.user.id;
     axios.post('/api/create_news',data).then(res => {
       if(res.data.code===0){
@@ -84,7 +84,7 @@ class CreateArticle extends React.Component {
           <input type="file" className="input-file" id="thumbnail-input" onChange={this.handleThumbnail}/>
           {this.state.news.thumbnail && (<Image src={this.state.news.thumbnail} size='small' />)}
           <br />
-          <ReactQuill ref={(el) => { this.reactQuillRef = el }} value={this.state.news.content} onChange={this.handleChange} />
+          <ReactQuill ref={(el) => { this.reactQuillRef = el }} onChange={this.handleChange} />
           <Button onClick={this.handleSubmitNews}>提交</Button>
         </Segment>
       </div>
