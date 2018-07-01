@@ -23,6 +23,10 @@ class News extends React.Component {
     //     // TODO: detect which error it is, if it is depletion error, show "no more"
     //   }
     // });
+    this.state = {
+      loaded: false,
+    }
+    this.handleImageLoaded = this.handleImageLoaded.bind(this);
   }
 
   componentWillMount(){
@@ -30,6 +34,12 @@ class News extends React.Component {
       this.batch_num++;
     });
   }
+
+  handleImageLoaded() {
+    if (!this.state.loaded) {
+        this.setState({ loaded: true });
+    }
+}
 
   render() {
     if (this.props.loading) {
@@ -55,7 +65,7 @@ class News extends React.Component {
           this.props.news_list.map(el => (
             <Link to={'/news/'+el.id}>
             <div className="list-news-container new-big" key={el.id}>
-              <img className="list-news-picture" src={el.thumbnail} alt={el.title}/>
+              <img className={"list-news-picture" + (this.state.loaded ? "" : " on-load")} src={el.thumbnail} alt={el.title} onLoad={this.handleImageLoaded}/>
               <div className="list-news-text">
                 <div className="list-news-title">{el.title}</div>
                 <div className="list-news-author-details">
@@ -85,7 +95,7 @@ class News extends React.Component {
             this.props.news_list.map(el => (
               <Link to={'/news/'+el.id}>
               <div className="list-news-container" key={el.id}>
-                <img className="list-news-picture" src={el.thumbnail} alt={el.title}/>
+                <img className={"list-news-picture" + (this.state.loaded ? "" : " on-load")} src={el.thumbnail} alt={el.title} onLoad={this.handleImageLoaded}/>
                 <div className="list-news-text">
                   <div className="list-news-title">{el.title}</div>
                   <div className="list-news-subtitle">{el.last + el.first}</div>

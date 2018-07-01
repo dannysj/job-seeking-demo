@@ -131,9 +131,9 @@ unfollow_action(uid, mentor_uid){
     const posiIcon = '/icons/position.png';
     const ageIcon = '/icons/age.png';
     // for search
-    const { filterPressed, keyword, isLoading, results, left } = this.state
-    console.log(keyword);
-  
+    const { filterPressed, keyword, isLoading, left } = this.state
+    console.log(this.state.selected[keyword]);
+
     console.log(this.props[keyword]);
     if (this.props.loading) {
       return (
@@ -172,6 +172,7 @@ unfollow_action(uid, mentor_uid){
                               this.setState({curState});
                             }
                             }
+                          value={this.state.selected[keyword]}
                           />
                 </div>
               ) : (<div></div>)
