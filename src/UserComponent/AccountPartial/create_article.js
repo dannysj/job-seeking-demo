@@ -15,19 +15,24 @@ class CreateArticle extends React.Component {
       {
         news: { content: '' , thumbnail: '' }
       };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleThumbnail = this.handleThumbnail.bind(this);
-    this.handleSubmitNews = this.handleSubmitNews.bind(this);
-    this.handleTitleChange = this.handleTitleChange.bind(this);
+    let reactQuillRef = null;
+    let quillRef = null;
   }
 
-  handleChange(value) {
+  componentDidMount() {
+    if (typeof this.reactQuillRef.getEditor !== 'function') return;
+    this.quillRef = this.reactQuillRef.getEditor();
+  }
+
+
+  handleChange = (value) => {
+    console.log(this.quillRef.getContents());
     let curState = this.state;
     curState.news.content = value;
     this.setState(curState);
-  }
+  };
 
-  handleThumbnail(e){
+  handleThumbnail = (e) => {
     let data = new FormData();
     data.append('file', e.target.files[0]);
     let handler = this;
@@ -44,13 +49,13 @@ class CreateArticle extends React.Component {
     });
   }
 
-  handleTitleChange(e) {
+  handleTitleChange = (e) =>{
     let curState = this.state;
     curState.news.title = e.target.value;
     this.setState(curState);
   }
 
-  handleSubmitNews(){
+  handleSubmitNews = () => {
     let data = this.state.news;
     data.author_id = this.props.user.id;
     axios.post('/api/create_news',data).then(res => {
@@ -81,7 +86,7 @@ class CreateArticle extends React.Component {
           <input type="file" className="input-file" id="thumbnail-input" onChange={this.handleThumbnail}/>
           {this.state.news.thumbnail && (<Image src={this.state.news.thumbnail} size='small' />)}
           <br />
-          <ReactQuill value={this.state.news.content} onChange={this.handleChange} />
+          <ReactQuill ref={(el) => { this.reactQuillRef = el }} value={this.state.news.content} onChange={this.handleChange} />
           <Button onClick={this.handleSubmitNews}>提交</Button>
         </Segment>
       </div>
