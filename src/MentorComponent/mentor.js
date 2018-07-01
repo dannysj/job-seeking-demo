@@ -292,7 +292,7 @@ unfollow_action(uid, mentor_uid){
                           </Table.Cell>
                           <Table.Cell>
                           <img className="title-icon"  alt="position" src={ageIcon} ></img>
-                            <div className="card-info">  {el.major.join(', ')} </div>
+                            <div className="card-info">  {(el.major) ? (el.major.join(', ')) : ("")} </div>
                           </Table.Cell>
                         </Table.Row>
                       </Table.Body>
