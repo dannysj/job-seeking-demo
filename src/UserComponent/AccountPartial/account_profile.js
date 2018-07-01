@@ -21,11 +21,10 @@ class AccountProfile extends React.Component {
     };
   }
 
-  componentWillMount() {
-    store.dispatch(fetchMajorList());
-  }
-
   initAttrChange = (key_name) => {
+    if (key_name === "major")
+      store.dispatch(fetchMajorList());
+
     let curState = this.state;
     let attr_keys = curState.attr_key;
 
@@ -294,7 +293,7 @@ class AccountProfile extends React.Component {
 
                 <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('email')) ? "is-expanded" : "")}>
                   <div className="form-text">
-                    <input type="text" name="email" value={this.state.attr_key.email} onChange={this.handleInputChange}/>
+                    <input type="email" name="email" value={this.state.attr_key.email} onChange={this.handleInputChange}/>
                     <div className="padding-text"></div>
                   </div>
                   <div className="actions">
