@@ -35,8 +35,18 @@ const app = express.Router();
 //   });
 //
 
+app.post('/api/follow_user', (req, res) => {
+  db.createFollowerFolloweeRelationship(req.body.uid, req.body.followee_uid, (err) =>{
+    if (err) {
+      console.log(err);
+      res.json({code: 1, errMsg: 'Database Error'});
+      return;
+    }
+    res.json({code:0})
+  });
+})
 
-// API: unfollow_user. post: body:{follower_uid:, followee_uid:}
+// API: unfollow_user. post: body:{uid:, followee_uid:}
 // call db to delete followRelationship in a table.
 app.post('/api/unfollow_user', (req, res) => {
   db.deleteFollowerFolloweeRelationship(req.body.uid, req.body.followee_uid, (err) => {
@@ -50,8 +60,8 @@ app.post('/api/unfollow_user', (req, res) => {
 })
 
 app.post('/api/whether_followed', (req, res) => {
-  // Request body. req.body{follower_uid, followee_uid"}
-  db.whetherFollowed(req.body.follower_uid, req.body.followee_uid, (err, whetherFollowed) => {
+  // Request body. req.body{uid, followee_uid"}
+  db.whetherFollowed(req.body.uid, req.body.followee_uid, (err, whetherFollowed) => {
       if (err) {
         console.log(err);
         res.json({code: 1, errMsg: 'Database Error'});
