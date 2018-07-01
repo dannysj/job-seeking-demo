@@ -21,7 +21,7 @@ class AccountProfile extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     store.dispatch(fetchMajorList());
   }
 
@@ -41,7 +41,6 @@ class AccountProfile extends React.Component {
     let attr_keys = curState.attr_key;
     //FIXME: Fixe bunches data update
     for (const [attr, val] of Object.entries(attr_keys)) {
-      console.log(attr)
       if (attr === "email"){
         if (!validator.isEmail(val)){
           NotificationManager.error('Email格式不正确', '错误');
@@ -223,7 +222,7 @@ class AccountProfile extends React.Component {
                       <Dropdown name='major' placeholder='专业' search selection multiple fluid closeOnChange
                                 options={this.props.major_list}
                                 onChange={(e, data) => this.setState({attr_key: {major: data.value}})}
-                                value={this.state.attr_key.major}/>
+                                value={this.state.attr_key.major ? this.state.attr_key.major : []}/>
                     <div className="padding-text"></div>
 
                   </div>
