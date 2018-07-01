@@ -16,9 +16,11 @@ class NewsList extends Component {
     this.handleImageLoaded = this.handleImageLoaded.bind(this);
   }
 
-  handleImageLoaded() {
-    if (!this.state.loaded) {
-        this.setState({ loaded: true });
+  handleImageLoaded(index) {
+    if (!this.state.loaded[index]) {
+        let curState = this.state;
+        curState.loaded[index] = true;
+        this.setState({ curState });
     }
 }
 
@@ -28,13 +30,21 @@ class NewsList extends Component {
     });
   }
 
+  componentDidMount() {
+    let list = this.props.news_list.map(() => {
+      return false;
+    })
+    this.setState({loaded: list});
+  }
+
   render() {
     return (
       <div className="overview-holder">
         {this.props.news_list.slice(0,6).map((el, index) => (
           <Link to={'/news/'+el.id} key={index}>
             <div className="news-overview_container" key={el.id}>
-              <img className={"news-overview-picture" + (this.state.loaded ? "" : " on-load")} src={el.thumbnail} alt={el.title} onLoad={this.handleImageLoaded}/>
+              <img className={"news-overview-picture" + (this.state.loaded[index] ? "" : " on-load")} src={el.thumbnail} alt={el.title} onLoad={() => {
+                this.handleImageLoaded(index)}}/>
               <div className="news-overview-second">
                 <div className="news-overview-text">
                   <h4>{el.title}</h4>

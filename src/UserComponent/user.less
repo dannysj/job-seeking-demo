@@ -5,11 +5,11 @@
 
 .user-background {
     position: relative;
-
+    min-height: 100%;
     background: #0D0F41;
     display: flex;
     flex-flow: column;
-    justify-content: space-around;
+    justify-content: baseline;
     align-items: center;
 
     > .stars-background {
@@ -18,6 +18,10 @@
       width: 100%;
       top: 0;
       left: 0;
+    }
+
+    &:nth-child(2).card {
+      margin-top: 4em;
     }
 
     > .card {

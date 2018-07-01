@@ -163,26 +163,28 @@ unfollow_action(uid, mentor_uid){
             {
               (this.state.filterPressed) ? (
                 <div className="filter-expand" style={{left: left+"px"}}>
-                <Dropdown name='filter' placeholder='查一查' search selection multiple fluid closeOnChange
-                          options={this.props[keyword]}
-                          onChange={(e, data) =>
-                            {
-                              let curState = this.state;
-                              curState.selected[keyword] = data.value
-                              this.setState({curState});
-                            }
-                            }
-                          value={this.state.selected[keyword]}
-                          />
+                  <div className="content">
+                  <Dropdown name='filter' placeholder='查一查' search selection multiple fluid closeOnChange
+                            options={this.props[keyword]}
+                            onChange={(e, data) =>
+                              {
+                                let curState = this.state;
+                                curState.selected[keyword] = data.value
+                                this.setState({curState});
+                              }
+                              }
+                            value={this.state.selected[keyword]}
+                            />
+                          </div>
                 </div>
               ) : (<div></div>)
             }
 
           </div>
         </div>
-        <div className="content-container">
+        <div className="content-container listitem">
 
-            <div className="ui container listitem">
+
               {this.props.mentors
                 .filter((el) => (this.state.selected.majors.length === 0 || el.major.filter(e => this.state.selected.majors.indexOf(e) > -1).length > 0 ))
                 .filter((el) => (this.state.selected.colleges.length === 0  || this.state.selected.colleges.indexOf(el.college_name) > -1)).map(el => (
@@ -248,7 +250,7 @@ unfollow_action(uid, mentor_uid){
                 </div>
               ))}
             </div>
-          </div>
+          
 
       </div>
     );
