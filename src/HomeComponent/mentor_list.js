@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import './home.css';
+import './home.less';
 import {fetchMentorList} from "../redux/mentorListAction";
 import store from '../redux'
 import {connect} from 'react-redux'

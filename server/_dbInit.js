@@ -100,6 +100,13 @@ exports.reset = function () {
       followee_uid int references users(id),
       timestamp timestamp
     );
+    
+    drop table if mentor_comment_like;
+    create table mentor_comment_like(
+      comment_id int not null references mentor_comment(id),
+      uid int not null references users(id),
+      unique (comment_id, uid)
+    );
     `;
   db.query(query, function (err, result) {
     if (err) {

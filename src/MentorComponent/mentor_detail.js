@@ -3,7 +3,7 @@ import axios from 'axios';
 import {Button, Image, Divider, Icon, Modal, TextArea, Header, Input} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import './mentor.css';
+import './mentor.less';
 import CommentBox from "./CommentBox";
 import Arrow from "../Components/Arrow";
 import Footer from '../Components/Footer';
@@ -300,7 +300,8 @@ class MentorDetail extends Component {
             <img className="title-icon" alt="school" src={schoolIcon} height={50}/>
               在读院校
             </div>
-            <div className="subtitle" dangerouslySetInnerHTML={{__html:mentor.college_name}}>
+            <div className="subtitle">
+              {mentor.college_name}
             </div>
           </div>
           <div className="item detail-item">
@@ -309,7 +310,8 @@ class MentorDetail extends Component {
             <img className="title-icon" alt="company" src={companyIcon} height={50}/>
               offer公司
             </div>
-            <div className="subtitle" dangerouslySetInnerHTML={{__html:mentor.offer_company}}>
+            <div className="subtitle">
+              {mentor.offer_company}
             </div>
 
           </div>
@@ -320,7 +322,8 @@ class MentorDetail extends Component {
               <img className="title-icon"  alt="position" src={posiIcon} height={50}/>
               offer职位
             </div>
-            <div className="subtitle" dangerouslySetInnerHTML={{__html:mentor.offer_title}}>
+            <div className="subtitle">
+              {mentor.offer_title}
             </div>
 
           </div>

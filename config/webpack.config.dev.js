@@ -194,6 +194,24 @@ module.exports = {
               },
             ],
           },
+          // Remember to also change prod !!!!!
+          {
+            test: /\.less$/,
+            use: [{
+              loader: 'style-loader' // creates style nodes from JS strings
+            }, {
+              loader: 'css-loader', // translates CSS into CommonJS
+              options: {
+                sourceMap: true
+              }
+            }, {
+              loader: 'less-loader', // compiles Less to CSS
+              options: {
+                sourceMap: true,
+
+              }
+            }]
+          },
           // "file" loader makes sure those assets get served by WebpackDevServer.
           // When you `import` an asset, you get its (virtual) filename.
           // In production, they would get copied to the `build` folder.

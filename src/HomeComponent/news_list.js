@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import './home.css';
+import './home.less';
 import store from "../redux";
 import {fetchNewsList} from "../redux/newsListAction";
 import {connect} from "react-redux";

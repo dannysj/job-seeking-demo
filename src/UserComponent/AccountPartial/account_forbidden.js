@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../account.css';
+import '../account.less';
 
 class AccountForbidden extends React.Component {
   render() {

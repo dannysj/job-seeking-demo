@@ -1,25 +1,26 @@
 import React, {Component} from 'react';
 import { Icon, Button } from 'semantic-ui-react';
-import './CommentBox.css';
+import './CommentBox.less';
 import store from '../redux'
-import {createMentorComment, createMentorReply, fetchMentorDetail} from "../redux/mentorDetailAction";
+import {createMentorComment, createMentorReply, fetchMentorDetail, createCommentLike} from "../redux/mentorDetailAction";
 
 class CommentBox extends Component{
   render() {
     return (
       <div className="comment-box">
         {!this.props.hideComment &&
-        (this.props.mentor.comments === null || this.props.mentor.comments.length === 0 ? (
+        ((this.props.mentor.comments === null ) ? (
           <div style={{display: 'flex', justifyContent: 'center', lineHeight: '200%'}}>暂无评价</div>
-        ) : (
-          <div className="comment-list">
-            {this.props.mentor.comments.map(comment => (
-              <Comment comment={comment}
-                       onCommentReply={this.handleCommentReply}
-                       mentor={this.props.mentor}
-                       displayCommentReplyButton={this.props.displayCommentReplyButton}/>
-            ))}
-          </div>
+        ) : ( (this.props.mentor.comments.length === 0) ? (<div style={{display: 'flex', justifyContent: 'center', lineHeight: '200%'}}>暂无评价</div>)
+          : (<div className="comment-list">
+          {this.props.mentor.comments.map(comment => (
+            <Comment comment={comment}
+                     onCommentReply={this.handleCommentReply}
+                     mentor={this.props.mentor}
+                     displayCommentReplyButton={this.props.displayCommentReplyButton}/>
+          ))}
+        </div>)
+
         ))}
         {this.props.user && this.props.user.id && <CommentForm mentor={this.props.mentor}/>}
       </div>
@@ -83,6 +84,13 @@ class Comment extends Component {
     this.setState({displayCommentReply:!this.state.displayCommentReply});
   }
 
+  handleCommentLike = () =>{
+    console.log("called")
+    store.dispatch(createCommentLike(this.props.comment.id)).then(()=>{
+      store.dispatch(fetchMentorDetail(this.props.mentor.mid)) // TODO: don't fetch again
+    });
+  }
+
   render() {
     return (
       <div className="comment">
@@ -101,16 +109,19 @@ class Comment extends Component {
         <div className="comment-bottom">
         {this.props.comment.reply ? (
           <div className="comment-reply comment-content">
-              <div style={{fontWeight: 'Bold'}}><img className="mentor-reply-img" src={this.props.mentor.profile_pic} alt=""/> </div>
-              {this.props.comment.reply}
+              <div style={{fontWeight: 'Bold', height: '50px', width: '50px', marginRight:'1em'}}><img className="mentor-reply-img" src={this.props.mentor.profile_pic} alt=""/> </div>
+              <div style={{borderRadius: '5px',padding: '0.5em', lineHeight: '1.5', height: 'auto', flex: '1 0', textAlign: 'left', background: 'rgba(34, 36, 38, 0.08)'}}>{this.props.comment.reply}</div>
             </div>
           ):(
             this.props.displayCommentReplyButton &&
               <div className="comment-reply-overview">
                 <div className="comment-reply-section">
                 <div className="like-section">
-                  <div className="like-comment"><Icon color={this.props.comment.like ? 'red' : 'black' } name={this.props.comment.like ? 'heart' : 'heart outline'} /></div>
-                  <div className="like-count">9</div>
+                  <div className="like-comment" onClick={this.handleCommentLike}>
+                    <Icon color={this.props.comment.like ? 'red' : 'black' }
+                          name={this.props.comment.like ? 'heart' : 'heart outline'}/>
+                  </div>
+                  <div className="like-count">{this.props.comment.like}</div>
 
                 </div>
                 <div onClick={this.handleDisplayCommentReply} className="reply-right"><Icon className="reply-logo" color='blue' name='reply' />回复</div>
