@@ -35,7 +35,7 @@ exports.createMentorApp = (mentor_info, callback) => {
       mentor_info.offer_company,
       mentor_info.bio,
       JSON.stringify(mentor_info.bios),
-      JSON.stringify(mentor_info.services),
+      JSON.stringify(mentor_info.service),
       mentor_info.num_weekly_slots], (err, result) => {
       if (err) {
         callback(err);
@@ -60,7 +60,7 @@ exports.editMentorInfo = (mentor_info, callback) => {
       mentor_info.offer_company,
       mentor_info.bio,
       JSON.stringify(mentor_info.bios),
-      JSON.stringify(mentor_info.services),
+      JSON.stringify(mentor_info.service),
       mentor_info.num_weekly_slots,
       mentor_info.uid], (err, result) => {
       if (err) {
