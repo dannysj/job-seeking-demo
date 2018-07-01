@@ -8,6 +8,7 @@ import '../account.less';
 //TODO: Bugs: Description text is not blank on next form input after submit edit
 //TODO: verification
 
+
 class AccountApply extends React.Component {
   constructor(props) {
     super(props);
@@ -33,16 +34,6 @@ class AccountApply extends React.Component {
       }
     };
     this.timer = null;
-
-    // This binding is necessary to make `this` work in the callback
-    this.addService = this.addService.bind(this);
-    this.confirmAddService = this.confirmAddService.bind(this);
-    this.cancelAddService = this.cancelAddService.bind(this);
-    this.handleEditService = this.handleEditService.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.deleteRowAt = this.deleteRowAt.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
   }
 
   componentWillMount(){
@@ -74,73 +65,64 @@ class AccountApply extends React.Component {
     this.triggerSearch();
   }
 
-  clearTempService = () => {
-    this.setState({
-      tempService: {
-        name: "",
-        price: "",
-        description : "",
-      }
-    })
+
+  showAddServicePopup = (e) => {
+    e.preventDefault();
+    this.setState({editMode: false, showAddServiceModal: true});
   };
 
-  addService(e) {
-    e.preventDefault();
-    this.clearTempService();
-    this.setState({editMode: false, showAddServiceModal: true});
-  }
-
-  confirmAddService(e) {
-    e.preventDefault();
-
-    const index = this.state.editMode ? this.state.editIndex : this.state.mentor_info.service.length;
-    const service = Object.assign([], this.state.mentor_info.service, {[index]: this.state.tempService});
-
-    this.setState({
-      mentor_info: {...this.state.mentor_info, service},
-      showAddServiceModal: false,
-      editMode: false,
-      editIndex: -1
-    });
-
-    this.clearTempService();
-  }
-
-  cancelAddService(e) {
-    e.preventDefault();
-    let curState = this.state;
-    curState.showAddServiceModal = false;
-
-    if (curState.editMode) {
-      curState.editIndex = -1;
-      curState.editMode = false;
-    }
-    this.setState(curState);
-    this.clearTempService();
-  }
-
-  handleEditService(e) {
-    this.setState({
-      tempService: {...this.state.tempService, [e.target.name]: e.target.value},
-    });
-  }
-
-  deleteRowAt(index) {
-    let curServices = this.state.mentor_info.service.slice();
-    let curInfo = this.state.mentor_info;
-    curServices.splice(index, 1);
-    curInfo.service = curServices;
-    this.setState({mentor_info: curInfo, showAddServiceModal: false});
-  }
-
-  handleEdit(index) {
+  showEditServicePopup = (index) => {
     this.setState({
       tempService: this.state.mentor_info.service[index],
       editMode: true,
       editIndex: index,
       showAddServiceModal: true
     });
-  }
+  };
+
+  resetServicePopup = () => {
+    this.setState({
+      tempService: {
+        name: "",
+        price: "",
+        description : "",
+      },
+      showAddServiceModal: false,
+      editMode: false,
+      editIndex: -1
+    })
+  };
+
+  confirmServiceChange = (e) => {
+    e.preventDefault();
+
+    const index = this.state.editMode ? this.state.editIndex : this.state.mentor_info.service.length;
+    const service = Object.assign([], this.state.mentor_info.service, {[index]: this.state.tempService});
+
+    this.setState({mentor_info: {...this.state.mentor_info, service},});
+
+    this.resetServicePopup();
+  };
+
+  cancelServiceChange = (e) => {
+    e.preventDefault();
+    this.resetServicePopup();
+  };
+
+  deleteService = (index) => {
+    let curServices = this.state.mentor_info.service.slice();
+    let curInfo = this.state.mentor_info;
+    curServices.splice(index, 1);
+    curInfo.service = curServices;
+    this.setState({mentor_info: curInfo, showAddServiceModal: false});
+  };
+
+
+  handleServiceInputChange = (e) => {
+    this.setState({
+      tempService: {...this.state.tempService, [e.target.name]: e.target.value},
+    });
+  };
 
 
 
@@ -163,9 +145,9 @@ class AccountApply extends React.Component {
       }
       this.setState({isLoadingCollegeList : false})
     });
-  }
+  };
 
-  handleChange(e, data) {
+  handleChange = (e, data) => {
     let curState = this.state;
     if (data) {
       curState.mentor_info[data.name] = data.value;
@@ -174,9 +156,9 @@ class AccountApply extends React.Component {
       curState.mentor_info[e.target.name] = e.target.value;
     }
     this.setState(curState);
-  }
+  };
 
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
 
     if(this.state.mentor_info.num_weekly_slots < 0){
@@ -199,7 +181,7 @@ class AccountApply extends React.Component {
         }
       }
     });
-  }
+  };
 
   render() {
 
@@ -215,30 +197,30 @@ class AccountApply extends React.Component {
         <div className={modalClassName}>
           <i className="close icon"/>
           <div className="header">
-            添加服务
+            {this.state.editMode ? "编辑服务" : "添加服务"}
           </div>
           <div className="add-service-form-container">
             <form className="ui form">
               <div className="field">
                 <label>服务名称：</label>
-                <input type="text" name="name" placeholder= "服务名称" defaultValue={this.state.tempService.name} onChange={this.handleEditService}/>
+                <input type="text" name="name" placeholder= "服务名称" defaultValue={this.state.tempService.name} onChange={this.handleServiceInputChange}/>
               </div>
               <div className="field">
                 <label>服务价格：</label>
-                <input type="text" name="price" placeholder="服务价格" defaultValue={this.state.tempService.price} onChange={this.handleEditService}/>
+                <input type="text" name="price" placeholder="服务价格" defaultValue={this.state.tempService.price} onChange={this.handleServiceInputChange}/>
               </div>
               <div className="field">
                 <label>服务描述：</label>
-                <TextArea name="description" rows="4" value={this.state.tempService.description} onChange={this.handleEditService} />
+                <TextArea name="description" rows="4" value={this.state.tempService.description} onChange={this.handleServiceInputChange} />
               </div>
             </form>
           </div>
           <div className="actions">
-            <div className="ui black deny button" onClick={this.cancelAddService}>
+            <div className="ui black deny button" onClick={this.cancelServiceChange}>
               取消
             </div>
-            <div className="ui positive right labeled icon button" onClick={this.confirmAddService}>
-              {this.state.editMode ? "更新" : "添加"}
+            <div className="ui positive right labeled icon button" onClick={this.confirmServiceChange}>
+              {this.state.editMode ? "确认" : "添加"}
               <i className="checkmark icon"/>
             </div>
           </div>
@@ -290,13 +272,13 @@ class AccountApply extends React.Component {
                     <td>{service.name}</td>
                     <td>{service.price}</td>
                     <td>{service.description}</td>
-                    <td><label onClick={() => this.handleEdit(i)} >编辑</label><label> | </label><label onClick={() => this.deleteRowAt(i)} >删除</label></td>
+                    <td><label onClick={() => this.showEditServicePopup(i)} >编辑</label><label> | </label><label onClick={() => this.deleteService(i)} >删除</label></td>
                   </tr>
                 ))
               }
               </tbody>
             </table>
-            <button className="ui button" onClick={this.addService}>+添加服务</button>
+            <button className="ui button" onClick={this.showAddServicePopup}>+添加服务</button>
           </div>
           <div className="field">
             <label>自我介绍：</label>
