@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Dropdown} from 'semantic-ui-react';
 import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import '../account.css';
+import '../account.less';
 
 
 class MentorEdit extends React.Component {

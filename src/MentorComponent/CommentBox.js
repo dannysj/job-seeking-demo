@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Icon, Button } from 'semantic-ui-react';
-import './CommentBox.css';
+import './CommentBox.less';
 import store from '../redux'
 import {createMentorComment, createMentorReply, fetchMentorDetail, createCommentLike} from "../redux/mentorDetailAction";
 

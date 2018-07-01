@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactCrop, { makeAspectCrop }  from 'react-image-crop';
 import { Button } from 'semantic-ui-react'
 import 'react-image-crop/dist/ReactCrop.css';
-import './imgcrop.css';
+import './imgcrop.less';
 
 export default class ImgCrop extends Component {
   constructor(props) {

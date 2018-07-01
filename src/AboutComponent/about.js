@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Footer from '../Components/Footer';
-import './about.css';
-import '../NewsComponent/news.css';
+import './about.less';
+import '../NewsComponent/news.less';
 
 class About extends React.Component {
   constructor(props) {

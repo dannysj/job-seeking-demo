@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Checkbox, Divider, Icon, Menu, Segment, Sidebar, Table} from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
-import './mentor.css';
+import './mentor.less';
 import axios from "axios/index";
 import {fetchMentorList} from "../redux/mentorListAction";
 import store from "../redux";

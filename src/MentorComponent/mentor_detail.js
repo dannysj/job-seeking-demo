@@ -3,7 +3,7 @@ import axios from 'axios';
 import {Button, Image, Divider, Icon, Modal, TextArea, Header, Input} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import './mentor.css';
+import './mentor.less';
 import CommentBox from "./CommentBox";
 import Arrow from "../Components/Arrow";
 import Footer from '../Components/Footer';
