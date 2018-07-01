@@ -270,7 +270,7 @@ class AccountProfile extends React.Component {
                   联络
                 </div>
                 <div className="subtitle">
-                  邮件、微信绑定设置
+                  邮箱、微信号绑定设置
                 </div>
               </div>
               <div className={"item first "+ ((this.state.attr_key.hasOwnProperty('email')) ? "is-expanded" : "")}>
@@ -306,7 +306,7 @@ class AccountProfile extends React.Component {
               <div className="item">
                 <div className="content">
                   <div className="inner-content">
-                  <div className="header">微信</div>
+                  <div className="header">微信号</div>
                   <div className="info">{user.wechat ? user.wechat : '暂无资料'}</div>
                   </div>
                   <div className="edit-toggle"  onClick={()=>this.initAttrChange('wechat')}>
