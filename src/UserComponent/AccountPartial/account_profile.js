@@ -1,6 +1,6 @@
 import React from 'react';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import {Dropdown, Image} from 'semantic-ui-react';
+import {Dropdown, Image, TextArea} from 'semantic-ui-react';
 import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
 import '../account.less';
@@ -124,7 +124,7 @@ class AccountProfile extends React.Component {
     render() {
       const user = this.props.user;
         return(
-            <div className="ui large celled list">
+            <div className="ui large celled list form">
               <NotificationContainer />
                 <div className="category">
                   <div className="header">
@@ -243,7 +243,7 @@ class AccountProfile extends React.Component {
                 </div>
                 <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('cover')) ? "is-expanded" : "")}>
                   <div className="form-text">
-                    <input type="text" name="cover" value={this.state.attr_key.cover} onChange={this.handleInputChange}/>
+                    <TextArea rows="8" name="cover" value={this.state.attr_key.cover} onChange={this.handleInputChange}/>
                     <div className="padding-text"></div>
                   </div>
                   <div className="actions">
