@@ -24,14 +24,6 @@ class CreateArticle extends React.Component {
     this.quillRef = this.reactQuillRef.getEditor();
   }
 
-
-  handleChange = (value) => {
-    console.log(this.quillRef.getContents());
-    let curState = this.state;
-    curState.news.content = value;
-    this.setState(curState);
-  };
-
   handleThumbnail = (e) => {
     let data = new FormData();
     data.append('file', e.target.files[0]);
@@ -48,6 +40,12 @@ class CreateArticle extends React.Component {
       }
     });
   }
+
+  handleChange = () => {
+    let curState = this.state;
+    curState.news.content = this.quillRef.getContents();
+    this.setState(curState);
+  };
 
   handleTitleChange = (e) =>{
     let curState = this.state;
