@@ -80,7 +80,8 @@
     "node-less-chokidar": "^0.1.2",
     "npm-watch": "^0.3.0",
     "react-hot-loader": "^4.3.3",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "thread-loader": "^1.1.5"
   },
   "jest": {
     "collectCoverageFrom": [

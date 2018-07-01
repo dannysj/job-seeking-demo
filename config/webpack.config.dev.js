@@ -27,6 +27,7 @@ const env = getClientEnvironment(publicUrl);
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.
 module.exports = {
+  cache: true,
   // You may want 'eval' instead if you prefer to see the compiled output in DevTools.
   // See the discussion in https://github.com/facebookincubator/create-react-app/issues/343.
   devtool: 'cheap-module-source-map',
@@ -145,6 +146,7 @@ module.exports = {
             include: paths.appSrc,
             use: [
               'cache-loader',
+              "thread-loader",
               {
               loader: require.resolve('babel-loader'),
               options: {
@@ -165,6 +167,8 @@ module.exports = {
           {
             test: /\.css$/,
             use: [
+              'cache-loader',
+              "thread-loader",
               require.resolve('style-loader'),
               {
                 loader: require.resolve('css-loader'),
@@ -197,20 +201,23 @@ module.exports = {
           // Remember to also change prod !!!!!
           {
             test: /\.less$/,
-            use: [{
-              loader: 'style-loader' // creates style nodes from JS strings
-            }, {
-              loader: 'css-loader', // translates CSS into CommonJS
-              options: {
-                sourceMap: true
-              }
-            }, {
-              loader: 'less-loader', // compiles Less to CSS
-              options: {
-                sourceMap: true,
+            use: [
+              'cache-loader',
+              "thread-loader",
+              {
+                loader: 'style-loader' // creates style nodes from JS strings
+              }, {
+                loader: 'css-loader', // translates CSS into CommonJS
+                options: {
+                  sourceMap: true
+                }
+              }, {
+                loader: 'less-loader', // compiles Less to CSS
+                options: {
+                  sourceMap: true,
 
-              }
-            }]
+                }
+              }]
           },
           // "file" loader makes sure those assets get served by WebpackDevServer.
           // When you `import` an asset, you get its (virtual) filename.
