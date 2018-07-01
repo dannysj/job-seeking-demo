@@ -26,3 +26,11 @@ export function createMentorReply(comment_id, reply){
     payload:axios.post('/api/create_mentor_reply', {comment_id, reply}, {headers: {access_token}})
   }
 }
+
+export function createCommentLike(id){
+  const uid = store.getState().user.id;
+  return{
+    type: "CREATE_COMMENT_LIKE",
+    payload:axios.post('/api/create_comment_like', {comment_id: id, uid})
+  }
+}

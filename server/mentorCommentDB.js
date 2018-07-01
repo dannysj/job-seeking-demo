@@ -22,7 +22,6 @@ exports.createMentorComment = (mid, text, uid, callback) => {
     .catch(err => callback(err));
 };
 
-
 exports.createMentorReply = (comment_id, reply, uid, callback) => {
   const query = `select * from mentor_info
                   where uid = $2 and
@@ -40,5 +39,12 @@ exports.createMentorReply = (comment_id, reply, uid, callback) => {
 
 
     })
+    .catch(err => callback(err));
+};
+
+exports.createCommentLike = (comment_id, uid, callback) => {
+  const query = `insert into mentor_comment_like (comment_id, uid) values($1, $2)`;
+  db.query(query, [comment_id, uid])
+    .then(() => callback(null))
     .catch(err => callback(err));
 };

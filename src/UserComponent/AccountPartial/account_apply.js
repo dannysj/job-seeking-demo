@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Dropdown} from 'semantic-ui-react';
 import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import '../account.css';
+import '../account.less';
 
 //TODO: Bugs: Description text is not blank on next form input after submit edit
 //TODO: verification

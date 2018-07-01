@@ -27,10 +27,19 @@ app.post('/api/create_mentor_comment', (req, res) => {
 });
 
 app.post('/api/create_mentor_reply', (req, res) => {
-
   db.createMentorReply(req.body.comment_id, req.body.reply, req.body.uid, (err) => {
     if (err) {
       console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0});
+  });
+});
+
+app.post('/api/create_comment_like', (req, res) => {
+  db.createCommentLike(req.body.comment_id, req.body.uid, (err) => {
+    if (err) {
       res.json({code: 1});
       return;
     }

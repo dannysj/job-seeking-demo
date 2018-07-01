@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 import axios from 'axios';
-import '../account.css';
+import '../account.less';
 
 class AccountService extends React.Component {
   constructor(props) {
