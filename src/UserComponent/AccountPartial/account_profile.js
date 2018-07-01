@@ -9,6 +9,7 @@ import store from "../../redux";
 import {updateUser} from "../../redux/userAction";
 import {fetchMajorList} from "../../redux/majorListAction";
 import {connect} from 'react-redux'
+import validator from 'validator';
 
 
 class AccountProfile extends React.Component {
@@ -40,6 +41,14 @@ class AccountProfile extends React.Component {
     let attr_keys = curState.attr_key;
     //FIXME: Fixe bunches data update
     for (const [attr, val] of Object.entries(attr_keys)) {
+      console.log(attr)
+      if (attr === "email"){
+        if (!validator.isEmail(val)){
+          NotificationManager.error('Email格式不正确', '错误');
+          return;
+        }
+      }
+
       store.dispatch(updateUser(attr, val)).then(()=>{
         delete curState.attr_key[attr];
         this.setState({curState});
