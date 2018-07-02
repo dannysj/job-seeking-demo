@@ -330,7 +330,7 @@ console.log(this.state.college_list.concat(this.state.user_college));
                     <td>{service.name}</td>
                     <td>{service.price}</td>
                     <td>{service.description}</td>
-                    <td><label onClick={() => this.handleEdit(i)} >编辑</label><label> | </label><label onClick={() => this.deleteRowAt(i)} >删除</label></td>
+                    <td><label onClick={() => this.handleEdit(i)} style={{cursor: 'pointer'}}>编辑</label><label> | </label><label onClick={() => this.deleteRowAt(i)} style={{cursor: 'pointer'}}>删除</label></td>
                   </tr>
                 ))
               }

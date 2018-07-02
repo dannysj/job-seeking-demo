@@ -33,6 +33,7 @@ class Mentor extends Component {
     this.renderFollowButton = this.renderFollowButton.bind(this);
     this.follow_action = this.follow_action.bind(this);
     this.unfollow_action = this.unfollow_action.bind(this);
+    this.toggle_outside = this.toggle_outside.bind(this);
     /*axios.post('/api/get_followees_by_uid', {account: 0}.then(
       res =>{
         if (res.data.code === 0){
@@ -49,6 +50,10 @@ class Mentor extends Component {
       )
     )*/
 
+  }
+
+  toggle_outside(e) {
+    this.setState({filterPressed: false});
   }
 
   componentWillMount(){
@@ -73,7 +78,11 @@ class Mentor extends Component {
     let curState = this.state;
     curState.filterPressed = !curState.filterPressed;
     curState.keyword = val;
-
+    if (val === "majors") {
+      curState.left = this.instance_major.getBoundingClientRect().left;
+    } else {
+      curState.left = this.instance_college.getBoundingClientRect().left;
+    }
     this.setState(curState);
   }
 
@@ -144,18 +153,18 @@ unfollow_action(uid, mentor_uid){
     }
     else
     return (
-      <div className="flex-container">
-        <div className="ui top attached tabular menu top-bar">
+      <div className="flex-container" >
+        <div className="ui top attached tabular menu top-bar" >
           <div className="ui container inner-topbar">
             <div className="filter-item filter-item-all" onClick={(e) => this.filterBarPressed(e,"majors")}>
-            <div className="item-central">Major{(this.state.selected.majors.length > 0) ? (" · " + this.state.selected.majors.length) : ""}</div>
+            <div className="item-central" ref={(el) => this.instance_major = el}>Major{(this.state.selected.majors.length > 0) ? (" · " + this.state.selected.majors.length) : ""}</div>
             {
               (this.state.selected.majors.length > 0) ? ( <Icon className="delete-button"  name='repeat' onClick={(e)=> this.handleRemoveButton(e,"majors")}/>): (<div></div>)
             }
             </div>
 
             <div className="filter-item filter-item-all" onClick={(e) => this.filterBarPressed(e,"colleges")}>
-            <div className="item-central">College{(this.state.selected.colleges.length > 0) ? (" · " + this.state.selected.colleges.length) : ""}</div>
+            <div className="item-central" ref={(el) => this.instance_college = el} >College{(this.state.selected.colleges.length > 0) ? (" · " + this.state.selected.colleges.length) : ""}</div>
             {
               (this.state.selected.colleges.length > 0) ? ( <Icon className="delete-button"  name='repeat' onClick={(e)=> this.handleRemoveButton(e,"colleges")}/>): (<div></div>)
             }
@@ -163,7 +172,7 @@ unfollow_action(uid, mentor_uid){
             {
               (this.state.filterPressed) ? (
                 <div className="filter-expand" style={{left: left+"px"}}>
-                  <div className="content">
+
                   <Dropdown name='filter' placeholder='查一查' search selection multiple fluid closeOnChange
                             options={this.props[keyword]}
                             onChange={(e, data) =>
@@ -175,14 +184,14 @@ unfollow_action(uid, mentor_uid){
                               }
                             value={this.state.selected[keyword]}
                             />
-                          </div>
+
                 </div>
               ) : (<div></div>)
             }
 
           </div>
         </div>
-        <div className="content-container listitem">
+        <div className="content-container listitem" onClick={this.toggle_outside}>
 
 
               {this.props.mentors
@@ -250,7 +259,7 @@ unfollow_action(uid, mentor_uid){
                 </div>
               ))}
             </div>
-          
+
 
       </div>
     );

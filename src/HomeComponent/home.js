@@ -37,7 +37,7 @@ class Home extends Component {
           <div className="header-text">
           <div className="container-block">
             <div className="chinese-top">导 师 推 荐 </div>
-            <div className="subtitle">Hot Tutors</div>
+            <div className="subtitle">Trending Tutors</div>
           </div>
           </div>
           <Divider hidden clearing />
@@ -56,13 +56,13 @@ class Home extends Component {
         <Divider hidden clearing />
         <Divider hidden clearing />
         <Divider hidden clearing />
-      
+
         <Container>
           <div className="container-sideline">
               <div className="header-text">
               <div className="container-block">
                 <div className="chinese-top">干 货 推 荐</div>
-                <div className="subtitle">Hot Careers</div>
+                <div className="subtitle">Resources</div>
               </div>
               </div>
             <Divider hidden clearing />
