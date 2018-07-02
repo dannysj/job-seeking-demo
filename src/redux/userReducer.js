@@ -94,7 +94,8 @@ export default (state = initState, action) => {
 
     case "UPDATE_USER_FULFILLED":
       const {attr, val} = JSON.parse(action.payload.config.data);
-      NotificationManager.success('资料更新成功', '完成啦');
+      if (attr !== 'last')  // prevent multiple notifications when updating name
+        NotificationManager.success('资料更新成功', '完成啦');
       return {...state, [attr]: val};
 
     case "UPDATE_USER_LOCAL":

@@ -48,10 +48,10 @@ class AccountProfile extends React.Component {
         }
       }
 
-      store.dispatch(updateUser(attr, val)).then(()=>{
-        delete curState.attr_key[attr];
-        this.setState({curState});
-      });
+      store.dispatch(updateUser(attr, val));
+
+      delete curState.attr_key[attr];
+      this.setState({curState});
   }
  };
 
