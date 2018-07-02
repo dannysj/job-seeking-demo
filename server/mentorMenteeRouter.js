@@ -26,7 +26,7 @@ app.post('/api/get_rel_mentees', (req, res) => {
 });
 
 app.post('/api/mentor_confirm', (req, res) => {
-  db.setMentorConfirm(req.body.uid, req.body.mentee_uid, (err) => {
+  db.setMentorConfirm(req.body.uid, req.body.mrid, (err) => {
     if (err) {
       console.log(err);
       res.json({code: 1, errMsg: 'Database Error'});
@@ -37,7 +37,7 @@ app.post('/api/mentor_confirm', (req, res) => {
 });
 
 app.post('/api/mentor_decision', (req, res) => {
-  db.setMentorDecision(req.body.uid, req.body.mentee_uid, req.body.agreed, (err) => {
+  db.setMentorDecision(req.body.uid, req.body.mrid, req.body.agreed, (err) => {
     if (err) {
       console.log(err);
       res.json({code: 1, errMsg: 'Database Error'});
@@ -55,7 +55,7 @@ app.post('/api/mentor_decision', (req, res) => {
 });
 
 app.post('/api/mentee_confirm', (req, res) => {
-  db.setMenteeConfirm(req.body.uid, req.body.mid, (err) => {
+  db.setMenteeConfirm(req.body.uid, req.body.mrid, (err) => {
     if (err) {
       console.log(err);
       res.json({code: 1, errMsg: 'Database Error'});
