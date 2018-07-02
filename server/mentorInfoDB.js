@@ -3,8 +3,7 @@ const db = require('./_dbPool.js');
 
 exports.verifyInfoCompletion = (uid, callback) => {
   let query = `select (major is not null
-    and wechat is not null
-    and resume is not null) as res
+    and wechat is not null) as res
     from users where id=$1;`;
   db.query(query, [uid], (err, result) => {
     if (err) {
@@ -122,8 +121,8 @@ exports.getMentorDetail = (mid, callback) => {
       m.num_weekly_slots as num_weekly_slots,
       (m.num_weekly_slots - (select count(*) from mentor_rel
         where mid=m.id and now()-start_time<'1 week'))::integer as num_availability,
-        
-      (select 
+
+      (select
          json_agg(
             json_build_object(
               'id', comment.id,
