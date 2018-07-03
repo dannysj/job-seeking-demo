@@ -4,6 +4,7 @@ import {Dropdown, TextArea} from 'semantic-ui-react';
 import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import '../account.less';
+import ReactQuill from 'react-quill';
 
 //TODO: Bugs: Description text is not blank on next form input after submit edit
 //TODO: verification
@@ -282,7 +283,8 @@ class AccountApply extends React.Component {
           </div>
           <div className="field">
             <label>自我介绍：</label>
-            <textarea rows="8" name="bio" onChange={this.handleChange} value={this.state.mentor_info.bio}/>
+              <ReactQuill onChange={this.handleChange} value={this.state.mentor_info.bio}/>
+              {/*<textarea rows="8" name="bio" onChange={this.handleChange} value={this.state.mentor_info.bio}/>*/}
           </div>
           {!this.state.hasNotApplied ? <button className="ui button" type="submit" onClick={this.handleSubmit}>更新</button> :
             <button className="ui button" type="submit" onClick={this.handleSubmit}>申请</button>}
