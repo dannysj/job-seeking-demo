@@ -89,12 +89,12 @@ export default (state = initState, action) => {
       return state;
 
     case "UPDATE_USER_REJECTED":
-      NotificationManager.error('资料更新失败', '错误');
+      if (JSON.parse(action.payload.config.data).attr !== 'last')
+        NotificationManager.error('资料更新失败', '错误');
       return state;
 
     case "UPDATE_USER_FULFILLED":
-      const {attr, val} = JSON.parse(action.payload.config.data);
-      if (attr !== 'last')  // prevent multiple notifications when updating name
+      if (JSON.parse(action.payload.config.data).attr !== 'last')  // prevent multiple notifications when updating name
         NotificationManager.success('资料更新成功', '完成啦');
       return state;
 
