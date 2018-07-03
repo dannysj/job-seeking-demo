@@ -41,11 +41,9 @@ class AccountProfile extends React.Component {
     let attr_keys = curState.attr_key;
     //FIXME: Fixe bunches data update
     for (const [attr, val] of Object.entries(attr_keys)) {
-      if (attr === "email"){
-        if (!validator.isEmail(val)){
-          NotificationManager.error('Email格式不正确', '错误');
-          return;
-        }
+      if (attr === "email" && !validator.isEmail(val)) {
+        NotificationManager.error('Email格式不正确', '错误');
+        return;
       }
 
       store.dispatch(updateUser(attr, val));
