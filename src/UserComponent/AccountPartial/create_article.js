@@ -90,13 +90,9 @@ class CreateArticle extends React.Component {
           <input type="file" className="input-file" id="thumbnail-input" onChange={this.handleThumbnail}/>
           {this.state.news.thumbnail && (<Image src={this.state.news.thumbnail} size='small' />)}
           <br />
-<<<<<<< HEAD
-          <ReactQuill value={this.state.news.content} onChange={this.handleChange} />
-          <br />
-          <br />
-=======
+
           <ReactQuill ref={(el) => { this.reactQuillRef = el }} onChange={this.handleChange} />
->>>>>>> 0d8bce1dd0c92a3eb4def0cb486be9e01edbeb09
+
           <Button onClick={this.handleSubmitNews}>提交</Button>
         </div>
         </div>
