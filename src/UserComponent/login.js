@@ -6,12 +6,13 @@ import './user.less';
 import { Message } from 'semantic-ui-react'
 import store from "../redux";
 import {setUser} from "../redux/userAction";
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 class Login extends Component {
 
   constructor (props) {
     super(props);
-    this.state={user:{}, isLoginFailed:false};
+    this.state={user:{}};
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -29,7 +30,7 @@ class Login extends Component {
         this.context.router.history.goBack();
       }
       else{
-        this.setState({isLoginFailed: true})
+        NotificationManager.error('登入失败', '错误');
       }
     });
   }
@@ -43,10 +44,6 @@ class Login extends Component {
   render() {
     return (
       <div class="login-signup-container">
-      {this.state.isLoginFailed ? (<Message negative>
-    <Message.Header>Login failed. The email and password combination does not match.</Message.Header>
-  </Message> )
-        : (<div></div>) }
         <form class="ui form" onSubmit={this.handleSubmit}>
           <div class="field">
             <label>Email</label>

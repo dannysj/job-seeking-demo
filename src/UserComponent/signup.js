@@ -56,16 +56,16 @@ class Signup extends Component {
         <NotificationContainer />
         <form className="ui form" onSubmit={this.handleSubmit}>
           <div className="field">
-            <label>Email</label>
-            <input type="email" name="email" placeholder="Email" onChange={this.handleChange.bind(this)} required />
-          </div>
-          <div className="field">
             <label>姓</label>
             <input type="text" name="last" placeholder="Last Name" onChange={this.handleChange} required/>
           </div>
           <div className="field">
             <label>名</label>
             <input type="text" name="first" placeholder="First Name" onChange={this.handleChange} required />
+          </div>
+          <div className="field">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Email" onChange={this.handleChange.bind(this)} required />
           </div>
           <div className="field">
             <label>密码</label>
