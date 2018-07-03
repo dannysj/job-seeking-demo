@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Container, Divider, Button } from 'semantic-ui-react';
 import axios from 'axios';
 import Footer from '../Components/Footer';
-import './news.css';
+import './news.less';
 import store from "../redux";
 import {fetchNewsList} from "../redux/newsListAction";
 import {connect} from 'react-redux'

@@ -7,12 +7,14 @@ import userReducer from './userReducer'
 import majorListReducer from './majorListReducer'
 import mentorListReducer from './mentorListReducer'
 import newsListReducer from "./newsListReducer";
+import mentorDetailReducer from "./mentorDetailReducer";
 
 const reducers = combineReducers({
   user: userReducer,
   major_list: majorListReducer,
-  mentorStore: mentorListReducer,
-  newsStore: newsListReducer
+  newsStore: newsListReducer,
+  mentorListStore: mentorListReducer,
+  mentorDetailStore: mentorDetailReducer,
 });
 
 

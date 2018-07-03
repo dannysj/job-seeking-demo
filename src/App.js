@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {Route, Switch} from 'react-router';
 import {Icon, Label} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import './App.css';
+import './App.less';
 import {NotificationContainer} from 'react-notifications';
 // Components
 import NavLink from './NavLinkComponent/navlink';
@@ -23,7 +23,7 @@ import store from "./redux";
 import {fetchUser} from "./redux/userAction";
 import {connect, Provider} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-
+import { hot } from 'react-hot-loader'
 
 class App extends Component {
   constructor(props){
@@ -239,4 +239,4 @@ const mapStateToProps = state => {
   return {user};
 };
 
-export default withRouter(connect(mapStateToProps)(App));
+export default hot(module)(withRouter(connect(mapStateToProps)(App)));

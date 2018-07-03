@@ -35,7 +35,7 @@ exports.createMentorApp = (mentor_info, callback) => {
       mentor_info.offer_company,
       mentor_info.bio,
       JSON.stringify(mentor_info.bios),
-      JSON.stringify(mentor_info.services),
+      JSON.stringify(mentor_info.service),
       mentor_info.num_weekly_slots], (err, result) => {
       if (err) {
         callback(err);
@@ -60,7 +60,7 @@ exports.editMentorInfo = (mentor_info, callback) => {
       mentor_info.offer_company,
       mentor_info.bio,
       JSON.stringify(mentor_info.bios),
-      JSON.stringify(mentor_info.services),
+      JSON.stringify(mentor_info.service),
       mentor_info.num_weekly_slots,
       mentor_info.uid], (err, result) => {
       if (err) {
@@ -120,8 +120,29 @@ exports.getMentorDetail = (mid, callback) => {
       m.bios as bios,
       m.service as service,
       m.num_weekly_slots as num_weekly_slots,
-      m.num_weekly_slots - (select count(*) from mentor_rel
-        where mid=m.id and now()-start_time<'1 week') as num_availability
+      (m.num_weekly_slots - (select count(*) from mentor_rel
+        where mid=m.id and now()-start_time<'1 week'))::integer as num_availability,
+        
+      (select 
+         json_agg(
+            json_build_object(
+              'id', comment.id,
+              'text', comment.text,
+              'reply', comment.reply,
+              'time_added', to_char(comment.time_added,'DD Mon HH24:MI'),
+              'first', u.first,
+              'last', u.last,
+              'profile_pic', u.profile_pic,
+              'like', (
+                select COUNT(*) from mentor_comment_like
+                where mentor_comment_like.comment_id = comment.id
+              )
+            ) order by time_added
+        )
+        from mentor_comment comment, users u
+        where comment.mid = $1 and comment.uid = u.id
+       ) as comments
+
     from users u, mentor_info m, college c
     where m.uid = u.id and m.cid = c.id and m.id = $1;
   `;

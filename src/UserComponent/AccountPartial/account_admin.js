@@ -5,7 +5,7 @@ import { Button, Image, Input, Segment } from 'semantic-ui-react';
 import ReactQuill from 'react-quill';
 import axios from 'axios';
 import 'react-quill/dist/quill.snow.css';
-import '../account.css';
+import '../account.less';
 
 class AccountAdmin extends React.Component {
   constructor(props) {

@@ -1,63 +1,28 @@
 import React, {Component} from 'react';
 import { Icon, Button } from 'semantic-ui-react';
-import './CommentBox.css';
-import axios from "axios/index";
-import dateformat from "dateformat";
+import './CommentBox.less';
+import store from '../redux'
+import {createMentorComment, createMentorReply, fetchMentorDetail, createCommentLike} from "../redux/mentorDetailAction";
 
 class CommentBox extends Component{
-  constructor (props) {
-    super(props);
-    this.state={comments:[]};
-    this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
-    this.handleCommentReply = this.handleCommentReply.bind(this);
-
-    axios.post('/api/get_mentor_comment', {mid: this.props.mid}).then(res => {
-      if (res.data.code === 0) {
-        this.setState({comments: res.data.list});
-      } else {
-        //TODO: Error Handling
-      }
-    });
-  }
-
-  handleCommentSubmit(comment) {
-    this.setState({comments: [...this.state.comments, comment]});
-
-    comment.mid = this.props.mid;
-    axios.post('/api/create_mentor_comment', comment).then(res => {
-      // TODO: Error Handling
-    });
-  }
-
-  handleCommentReply(comment){
-    let comments = this.state.comments;
-    comments[comments.findIndex(item => item.id === comment.id)].reply = comment.reply;
-
-    this.setState({comments: comments});
-
-    axios.post('/api/create_mentor_reply', comment).then(res => {
-      // TODO: Error Handling
-    });
-  }
-
   render() {
     return (
       <div className="comment-box">
         {!this.props.hideComment &&
-        (this.state.comments.length === 0 ? (
+        ((this.props.mentor.comments === null ) ? (
           <div style={{display: 'flex', justifyContent: 'center', lineHeight: '200%'}}>暂无评价</div>
-        ) : (
-          <div className="comment-list">
-            {this.state.comments.map(comment => (
-              <Comment comment={comment}
-                       onCommentReply={this.handleCommentReply}
-                       mentor={this.props.mentor}
-                       displayCommentReplyButton={this.props.displayCommentReplyButton}/>
-            ))}
-          </div>
-        ))}
+        ) : ( (this.props.mentor.comments.length === 0) ? (<div style={{display: 'flex', justifyContent: 'center', lineHeight: '200%'}}>暂无评价</div>)
+          : (<div className="comment-list">
+          {this.props.mentor.comments.map(comment => (
+            <Comment comment={comment}
+                     onCommentReply={this.handleCommentReply}
+                     mentor={this.props.mentor}
+                     displayCommentReplyButton={this.props.displayCommentReplyButton}/>
+          ))}
+        </div>)
 
-        {this.props.user && this.props.user.id && <CommentForm onCommentSubmit={this.handleCommentSubmit} user={this.props.user}/>}
+        ))}
+        {this.props.user && this.props.user.id && <CommentForm mentor={this.props.mentor}/>}
       </div>
     );
   }
@@ -65,25 +30,17 @@ class CommentBox extends Component{
 
 
 class CommentForm extends Component{
-  constructor (props) {
-    super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
     const text = e.target[0].value.trim();
     if (!text) {
       return;
     }
-    this.props.onCommentSubmit({
-      text: text,
-      first: this.props.user.first,
-      last: this.props.user.last,
-      time_added: dateformat(new Date(),"DD Mon HH24:MI"),
-      profile_pic: this.props.user.profile_pic,
-      uid:  this.props.user.id
+
+    store.dispatch(createMentorComment(this.props.mentor.mid, text)).then(()=>{
+      store.dispatch(fetchMentorDetail(this.props.mentor.mid))
     });
+
 
     e.target[0].value = '';
   }
@@ -105,11 +62,9 @@ class Comment extends Component {
   constructor (props) {
     super(props);
     this.state={displayCommentReply:false};
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDisplayCommentReply = this.handleDisplayCommentReply.bind(this);
   }
 
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
 
     const reply = e.target[0].value.trim();
@@ -117,18 +72,23 @@ class Comment extends Component {
       return;
     }
 
-    this.props.onCommentReply({
-      id: this.props.comment.id,
-      reply: reply
+    store.dispatch(createMentorReply(this.props.comment.id, reply)).then(()=>{
+      store.dispatch(fetchMentorDetail(this.props.mentor.mid))
     });
 
     e.target[0].value = '';
     this.handleDisplayCommentReply();
-
   }
 
-  handleDisplayCommentReply(){
+  handleDisplayCommentReply = () =>{
     this.setState({displayCommentReply:!this.state.displayCommentReply});
+  }
+
+  handleCommentLike = () =>{
+    console.log("called")
+    store.dispatch(createCommentLike(this.props.comment.id)).then(()=>{
+      store.dispatch(fetchMentorDetail(this.props.mentor.mid)) // TODO: don't fetch again
+    });
   }
 
   render() {
@@ -149,16 +109,19 @@ class Comment extends Component {
         <div className="comment-bottom">
         {this.props.comment.reply ? (
           <div className="comment-reply comment-content">
-              <div style={{fontWeight: 'Bold'}}><img className="mentor-reply-img" src={this.props.mentor.profile_pic} alt=""/> </div>
-              {this.props.comment.reply}
+              <div style={{fontWeight: 'Bold', height: '50px', width: '50px', marginRight:'1em'}}><img className="mentor-reply-img" src={this.props.mentor.profile_pic} alt=""/> </div>
+              <div style={{borderRadius: '5px',padding: '0.5em', lineHeight: '1.5', height: 'auto', flex: '1 0', textAlign: 'left', background: 'rgba(34, 36, 38, 0.08)'}}>{this.props.comment.reply}</div>
             </div>
           ):(
             this.props.displayCommentReplyButton &&
               <div className="comment-reply-overview">
                 <div className="comment-reply-section">
                 <div className="like-section">
-                  <div className="like-comment"><Icon color={this.props.comment.like ? 'red' : 'black' } name={this.props.comment.like ? 'heart' : 'heart outline'} /></div>
-                  <div className="like-count">9</div>
+                  <div className="like-comment" onClick={this.handleCommentLike}>
+                    <Icon color={this.props.comment.like ? 'red' : 'black' }
+                          name={this.props.comment.like ? 'heart' : 'heart outline'}/>
+                  </div>
+                  <div className="like-count">{this.props.comment.like}</div>
 
                 </div>
                 <div onClick={this.handleDisplayCommentReply} className="reply-right"><Icon className="reply-logo" color='blue' name='reply' />回复</div>

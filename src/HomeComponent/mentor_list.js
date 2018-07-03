@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import './home.css';
+import './home.less';
 import {fetchMentorList} from "../redux/mentorListAction";
 import store from '../redux'
 import {connect} from 'react-redux'
@@ -33,7 +33,7 @@ class MentorList extends Component {
 }
 
 const mapStateToProps = state => {
-  return {mentors: state.mentorStore.mentors};
+  return {mentors: state.mentorListStore.mentors};
 };
 
 export default connect(mapStateToProps)(MentorList);

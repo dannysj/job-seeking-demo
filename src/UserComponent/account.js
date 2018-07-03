@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router';
 import { Label, Icon, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import './account.css';
+import './account.less';
 import NavLink from '../NavLinkComponent/navlink';
 import AccountProfile from './AccountPartial/account_profile';
 import AccountMentor from './AccountPartial/account_mentor';

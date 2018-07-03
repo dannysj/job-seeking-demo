@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Checkbox, Divider, Icon, Menu, Dropdown, Table} from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
-import './mentor.css';
+import './mentor.less';
 import axios from "axios/index";
 import {fetchMentorList} from "../redux/mentorListAction";
 import store from "../redux";
@@ -241,7 +241,7 @@ unfollow_action(uid, mentor_uid){
                           </Table.Cell>
                           <Table.Cell>
 
-                            <div className="card-info">  {el.major.join(', ')} </div>
+                            <div className="card-info"> {(el.major) ? (el.major.join(', ')) : ("")}  </div>
                           </Table.Cell>
                         </Table.Row>
                       </Table.Body>
@@ -267,7 +267,7 @@ unfollow_action(uid, mentor_uid){
 }
 
 const mapStateToProps = state => {
-  return {...state.mentorStore};
+  return {...state.mentorListStore};
 };
 
 export default connect(mapStateToProps)(Mentor);

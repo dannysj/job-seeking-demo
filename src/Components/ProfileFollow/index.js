@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'semantic-ui-react';
-import './index.css';
+import './index.less';
 import axios from 'axios';
 
 class ProfileFollow extends Component {

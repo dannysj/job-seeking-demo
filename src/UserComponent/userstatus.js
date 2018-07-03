@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link} from 'react-router-dom';
 import { Icon} from 'semantic-ui-react';
-import './userstatus.css';
+import './userstatus.less';
 import {userStatus} from "../redux/userReducer";
 
 class UserStatus extends Component {

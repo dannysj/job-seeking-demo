@@ -16,7 +16,7 @@ app.post('/api/get_mentor_comment', (req, res) => {
 
 
 app.post('/api/create_mentor_comment', (req, res) => {
-  db.createMentorComment(req.body, (err) => {
+  db.createMentorComment(req.body.mid, req.body.text, req.body.uid, (err) => {
     if (err) {
       console.log(err);
       res.json({code: 1});
@@ -27,9 +27,19 @@ app.post('/api/create_mentor_comment', (req, res) => {
 });
 
 app.post('/api/create_mentor_reply', (req, res) => {
-  db.createMentorReply(req.body, (err) => {
+  db.createCommentReply(req.body.id, req.body.reply, (err) => {
     if (err) {
       console.log(err);
+      res.json({code: 1});
+      return;
+    }
+    res.json({code: 0});
+  });
+});
+
+app.post('/api/create_comment_like', (req, res) => {
+  db.createCommentLike(req.body.comment_id, req.body.uid, (err) => {
+    if (err) {
       res.json({code: 1});
       return;
     }

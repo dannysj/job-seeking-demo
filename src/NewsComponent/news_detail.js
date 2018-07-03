@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Icon, Button, Divider } from 'semantic-ui-react';
-import './news.css';
+import './news.less';
 import Footer from '../Components/Footer';
 import ProfileFollow from '../Components/ProfileFollow';
 

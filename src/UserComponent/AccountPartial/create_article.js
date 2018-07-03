@@ -5,7 +5,7 @@ import ReactQuill from 'react-quill';
 import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-quill/dist/quill.snow.css';
-import '../account.css';
+import '../account.less';
 
 class CreateArticle extends React.Component {
   constructor(props) {

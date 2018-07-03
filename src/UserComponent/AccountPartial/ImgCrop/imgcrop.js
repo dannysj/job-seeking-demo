@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactCrop, { makeAspectCrop }  from 'react-image-crop';
 import { Button } from 'semantic-ui-react'
 import 'react-image-crop/dist/ReactCrop.css';
-import './imgcrop.css';
+import './imgcrop.less';
 
 export default class ImgCrop extends Component {
   constructor(props) {
@@ -13,11 +13,17 @@ export default class ImgCrop extends Component {
         y: 0,
         aspect: 1
       },
-      maxHeight: 80,
       dataUrl: this.props.dataUrl,
       inlineStyle: {
         height: '50vh',
         objectFit: 'cover'
+      },
+      pixelCrop:{
+        aspect: 1,
+        height: 15,
+        width: 15,
+        x: 0,
+        y: 0,
       }
     }
   }
@@ -28,11 +34,9 @@ export default class ImgCrop extends Component {
   }
 
   onYesButtonClick = () => {
-    console.log(this.state.pixelCrop);
     var image = new Image();
     var handler = this;
     image.onload = () => {
-      console.log('FUCK!!');
       handler.getCroppedImg(image, this.state.pixelCrop, this.props.fileName, (croppedImg)=>{
         handler.props.onSuccess(croppedImg);
       });
@@ -77,7 +81,7 @@ export default class ImgCrop extends Component {
         x: 0,
         y: 0,
         aspect: 1,
-        height: 20,
+        height: 15,
       }, image.naturalWidth / image.naturalHeight),
       image
     });
@@ -92,9 +96,8 @@ export default class ImgCrop extends Component {
   }
 
   render() {
-    console.log(this.state.crop);
     return (
-      <div className="test">
+      <div className="img-crop-wrapper">
         <div className="img-crop-box ">
           <ReactCrop
             {...this.state}

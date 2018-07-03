@@ -4,7 +4,7 @@ import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import './user.css';
+import './user.less';
 import store from "../redux";
 import {setUser} from "../redux/userAction";
 
