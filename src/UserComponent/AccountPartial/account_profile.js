@@ -46,6 +46,11 @@ class AccountProfile extends React.Component {
         return;
       }
 
+      if ((attr === "first" || attr === "last") && val.trim() === "") {
+        NotificationManager.error('姓名不能为空', '错误');
+        return;
+      }
+
       store.dispatch(updateUser(attr, val));
 
       delete curState.attr_key[attr];
