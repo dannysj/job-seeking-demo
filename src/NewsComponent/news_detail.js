@@ -30,7 +30,7 @@ class NewsDetail extends Component {
         let curState = this.state;
         curState.news = res.data.news;
 
-        if (curState.news.delta["ops"] !== null) // compatibility, will be removed and use delta
+        if (curState.news.delta !== null) // compatibility, will be removed and use delta
           curState.news.content = new QuillDeltaToHtmlConverter(curState.news.delta["ops"]).convert();
         
         curState.loading = false;
