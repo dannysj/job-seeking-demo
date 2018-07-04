@@ -2,8 +2,87 @@
   width: 400px;
   margin: 50px auto;
 }
+
+.user-background {
+    position: relative;
+    min-height: 100%;
+    background: #0D0F41;
+    display: flex;
+    flex-flow: column;
+    justify-content: baseline;
+    align-items: center;
+
+    > .stars-background {
+      position: fixed;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+    }
+
+    &:nth-child(2).card {
+      margin-top: 4em;
+    }
+
+    > .card {
+      background: #FFF;
+      width: 400px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-flow: column;
+      z-index: 2;
+      text-align: center;
+      padding: 0em 2em;
+      margin: 1em 0em 1em 0em;
+
+      > img {
+        height: 16em !important;
+        width: 16em !important;
+        margin: 2em 0em 0em;
+      }
+
+      > .title {
+        margin: 1em 0em 0em;
+        font-size: 2em;
+        color: #0D0F41;
+      }
+
+      > .text-content {
+        padding: 2em 0em;
+      }
+      > .subtitle {
+        font-size: 1em;
+        padding-bottom: 1em;
+        text-align: center;
+      }
+
+      > .resume-holder {
+            margin: 1em 0em;
+      }
+
+      > .buttons {
+        color: inherit;
+        font-size: 1em;
+        padding-bottom: 2em;
+
+        > * {
+
+        }
+
+      }
+
+    }
+}
+
 @media screen and (max-width: 767px) {
   .login-signup-container {
     width: 80%;
+  }
+  .user-background {
+    > .card {
+      width: 90%;
+    }
   }
 }

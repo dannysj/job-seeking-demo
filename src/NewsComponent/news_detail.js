@@ -5,7 +5,7 @@ import { Icon, Button, Divider } from 'semantic-ui-react';
 import './news.less';
 import Footer from '../Components/Footer';
 import ProfileFollow from '../Components/ProfileFollow';
-import  QuillDeltaToHtmlConverter from  'quill-delta-to-html'
+import * as QuillDeltaToHtmlConverter from  'quill-delta-to-html'
 
 class NewsDetail extends Component {
 
@@ -15,10 +15,13 @@ class NewsDetail extends Component {
       news:{
         thumbnail: '/img/loading.gif'
       },
-      loading:true
+      loading:true,
+      image_loaded:false,
     };
 
     this.likeButtonPressed = this.likeButtonPressed.bind(this);
+    this.followButtonPressed = this.followButtonPressed.bind(this);
+      this.handleImageLoaded = this.handleImageLoaded.bind(this);
 
     axios.post('/api/get_news_detail',
       {nid:this.props.match.params.nid}).then(res => {
@@ -27,7 +30,7 @@ class NewsDetail extends Component {
         let curState = this.state;
         curState.news = res.data.news;
 
-        if (curState.news.delta["ops"] !== null) // compatibility, will be removed and use delta
+        if (curState.news.delta !== null) // compatibility, will be removed and use delta
           curState.news.content = new QuillDeltaToHtmlConverter(curState.news.delta["ops"]).convert();
         
         curState.loading = false;
@@ -40,9 +43,30 @@ class NewsDetail extends Component {
 
   }
 
+  handleImageLoaded() {
+      if (!this.state.image_loaded) {
+          let curState = this.state;
+          curState.image_loaded = true;
+          this.setState({ curState });
+      }
+
+}
+
   likeButtonPressed(e) {
 
   }
+
+  followButtonPressed(e) {
+    console.log("Test");
+    // User id, props.loggedInUser.uid
+    // The other one. this.state.news.author_id
+    // call the function
+    axios.post('/api/follow_user',
+     {follower_uid: this.props.loggedInUser.id , followee_uid: this.state.news.author_id}).then(res=>{
+        console.log("follow")
+    }).catch(err=> console.log(err))
+  }
+
 
   render() {
     const backimgstyle = {
@@ -60,7 +84,7 @@ class NewsDetail extends Component {
     else
     return (
       <div>
-        <div className="header-cover main-cover" style={backimgstyle}>
+        <div className={"header-cover main-cover "} style={backimgstyle} >
         </div>
         <div className="news-content">
           <div className="news-sidebar icon-sidebar">
