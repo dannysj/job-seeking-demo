@@ -150,8 +150,12 @@ class AccountAdmin extends React.Component {
             编写干货
             </div>
           </div>
+          </div>
+        <div className="category">
           <div className="item first">
-          标题: {' '}<Input placeholder='标题' onChange={this.handleTitleChange}/>
+          <div className="content dir">
+          <div className="inner-content write-section">
+          <div>标题: {' '}</div><Input placeholder='标题' onChange={this.handleTitleChange}/>
           <br />
           <label htmlFor="thumbnail-input" className="ui button">
             <i className="ui upload icon"/>
@@ -162,6 +166,8 @@ class AccountAdmin extends React.Component {
           <br />
           <ReactQuill value={this.state.news.content} onChange={this.handleChange} />
           <Button onClick={this.handleSubmitNews}>提交</Button>
+          </div>
+          </div>
           </div>
         </div>
         <div className="category">
@@ -188,7 +194,7 @@ class AccountAdmin extends React.Component {
           ))}
           </div>
         </div>
-        <div className="category">
+        <div className="category last">
           <div className="header">
             <div className="title">
             上传公司图片
