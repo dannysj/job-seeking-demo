@@ -5,7 +5,7 @@ import { Icon, Button, Divider } from 'semantic-ui-react';
 import './news.less';
 import Footer from '../Components/Footer';
 import ProfileFollow from '../Components/ProfileFollow';
-import  QuillDeltaToHtmlConverter from  'quill-delta-to-html'
+import * as QuillDeltaToHtmlConverter from  'quill-delta-to-html'
 
 class NewsDetail extends Component {
 
