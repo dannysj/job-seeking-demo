@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Checkbox, Divider, Icon, Menu, Segment, Sidebar, Table} from 'semantic-ui-react';
+import {Button, Checkbox, Divider, Icon, Menu, Dropdown, Table} from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import './mentor.less';
 import axios from "axios/index";
@@ -16,21 +16,24 @@ class Mentor extends Component {
 
     this.state = {
       selected: {
-        "Majors": [],
-        "Colleges": []
+        "majors": [],
+        "colleges": []
       },
-      filterBarShown: false,
-      followees: []
+      isLoading: false,
+      followees: [],
+      results: [],
+      filterPressed: false,
+      keyword: '',
+      left: 100
     };
     this.uid = 0;
-    this.handleMajorChange = this.handleMajorChange.bind(this);
-    this.handleCollegeChange = this.handleCollegeChange.bind(this);
     this.handleClearFilter = this.handleClearFilter.bind(this);
     this.filterBarPressed = this.filterBarPressed.bind(this);
     this.handleRemoveButton = this.handleRemoveButton.bind(this);
     this.renderFollowButton = this.renderFollowButton.bind(this);
     this.follow_action = this.follow_action.bind(this);
     this.unfollow_action = this.unfollow_action.bind(this);
+    this.toggle_outside = this.toggle_outside.bind(this);
     /*axios.post('/api/get_followees_by_uid', {account: 0}.then(
       res =>{
         if (res.data.code === 0){
@@ -49,67 +52,37 @@ class Mentor extends Component {
 
   }
 
+  toggle_outside(e) {
+    this.setState({filterPressed: false});
+  }
+
   componentWillMount(){
     store.dispatch(fetchMentorList());
   }
 
-  handleMajorChange(e, data){
+  handleRemoveButton(e,title) {
     let curState = this.state;
-    var majors = curState.selected.Majors;
-    var index = majors.indexOf(data.value);
-    if (data.checked) {
-      if (index < 0) {
-        majors.push(data.value);
-      }
-    } else {
-
-      if (index > -1) {
-        majors.splice(index, 1);
-      }
-    }
-    this.setState(curState);
-  }
-
-  handleCollegeChange(e,data){
-    let curState = this.state;
-    var colleges = curState.selected.Colleges;
-    var index = colleges.indexOf(data.value);
-    if (data.checked) {
-      if (index < 0) {
-        colleges.push(data.value);
-      }
-    } else {
-
-      if (index > -1) {
-        colleges.splice(index, 1);
-      }
-    }
-
-    this.setState(curState);
-  }
-
-  handleRemoveButton(e,title, val) {
-    let curState = this.state;
-    var array = curState.selected[title]
-    var index = array.indexOf(val);
-    if (index > -1) {
-          array.splice(index, 1)
-    }
-
+    curState.selected[title] = []
     this.setState(curState);
     e.stopPropagation();
   }
 
   handleClearFilter(e,data){
     let curState = this.state;
-    curState.selected.Majors = [];
-    curState.selected.Colleges = [];
+    curState.selected.majors = [];
+    curState.selected.colleges = [];
     this.setState(curState);
   }
 
-  filterBarPressed(e) {
+  filterBarPressed(e, val) {
     let curState = this.state;
-    curState.filterBarShown = !curState.filterBarShown;
+    curState.filterPressed = !curState.filterPressed;
+    curState.keyword = val;
+    if (val === "majors") {
+      curState.left = this.instance_major.getBoundingClientRect().left;
+    } else {
+      curState.left = this.instance_college.getBoundingClientRect().left;
+    }
     this.setState(curState);
   }
 
@@ -166,7 +139,11 @@ unfollow_action(uid, mentor_uid){
     const schoolIcon = '/icons/school.png';
     const posiIcon = '/icons/position.png';
     const ageIcon = '/icons/age.png';
+    // for search
+    const { filterPressed, keyword, isLoading, left } = this.state
+    console.log(this.state.selected[keyword]);
 
+    console.log(this.props[keyword]);
     if (this.props.loading) {
       return (
         <div className="loading-news-view">
@@ -176,78 +153,50 @@ unfollow_action(uid, mentor_uid){
     }
     else
     return (
-      <div className="flex-container">
-        <div className="ui top attached tabular menu top-bar">
+      <div className="flex-container" >
+        <div className="ui top attached tabular menu top-bar" >
           <div className="ui container inner-topbar">
-          {
-            (this.state.selected.Majors.length > 0) ? (this.state.selected.Majors.map((el, index) => (
-              <div className="filter-item" key={index} onClick={this.filterBarPressed}>
-                  <div className="item-top">Major</div>
-                  <div className="item-bottom">{el}</div>
-                <Icon className="delete-button" size="large" name='close' onClick={(e)=> this.handleRemoveButton(e,"Majors", el)}/>
-              </div>))
-            ) : (<div className="filter-item filter-item-all" onClick={this.filterBarPressed}>
-            <div className="item-central">All Majors</div>
-            </div>)
+            <div className="filter-item filter-item-all" onClick={(e) => this.filterBarPressed(e,"majors")}>
+            <div className="item-central" ref={(el) => this.instance_major = el}>Major{(this.state.selected.majors.length > 0) ? (" · " + this.state.selected.majors.length) : ""}</div>
+            {
+              (this.state.selected.majors.length > 0) ? ( <Icon className="delete-button"  name='repeat' onClick={(e)=> this.handleRemoveButton(e,"majors")}/>): (<div></div>)
+            }
+            </div>
 
-          }
-          {
-            (this.state.selected.Colleges.length > 0) ? (this.state.selected.Colleges.map((el,index) => (
-              <div className="filter-item" key={index} onClick={this.filterBarPressed}>
-              <div className="item-top">College</div>
-              <div className="item-bottom">{el}</div>
-              <Icon className="delete-button" size="large" name='close' onClick={(e)=> this.handleRemoveButton(e,"Colleges", el)}/>
-              </div>))
-            ) : (<div className="filter-item filter-item-all" onClick={this.filterBarPressed}>
-            <div className="item-central">All College</div>
-            </div>)
-          }
-            <div className="filter-item filter-item-all" onClick={this.filterBarPressed}>  <div className="item-central">More Filters</div></div>
+            <div className="filter-item filter-item-all" onClick={(e) => this.filterBarPressed(e,"colleges")}>
+            <div className="item-central" ref={(el) => this.instance_college = el} >College{(this.state.selected.colleges.length > 0) ? (" · " + this.state.selected.colleges.length) : ""}</div>
+            {
+              (this.state.selected.colleges.length > 0) ? ( <Icon className="delete-button"  name='repeat' onClick={(e)=> this.handleRemoveButton(e,"colleges")}/>): (<div></div>)
+            }
+            </div>
+            {
+              (this.state.filterPressed) ? (
+                <div className="filter-expand" style={{left: left+"px"}}>
+
+                  <Dropdown name='filter' placeholder='查一查' search selection multiple fluid closeOnChange
+                            options={this.props[keyword]}
+                            onChange={(e, data) =>
+                              {
+                                let curState = this.state;
+                                curState.selected[keyword] = data.value
+                                this.setState({curState});
+                              }
+                              }
+                            value={this.state.selected[keyword]}
+                            />
+
+                </div>
+              ) : (<div></div>)
+            }
+
           </div>
         </div>
-        <div className="content-container">
-        <Sidebar.Pushable as={Segment}>
-          <Sidebar as={Menu} animation='scale down' width='wide' visible={this.state.filterBarShown} icon='labeled' vertical className="sidebar-container">
-            <Menu.Item name='home' className="menu-container">
-              <div className="header-container">
-              <div className="section-header">Majors</div>
-              <div className="section-container">
-              {
-                this.props.majors.map((el, index) => (
-                  <Checkbox key={index} checked={(this.state.selected.Majors.indexOf(el) > -1)} value={el} onChange={this.handleMajorChange} label={<label>{el}</label>} />
-                ))
-              }
-              </div>
-              </div>
-              <Divider/>
-              <div className="header-container">
-              <div className="section-header">Colleges</div>
-              <div className="section-container">
-              {
-                this.props.colleges.map((el, index) => (
-                  <Checkbox key={index} checked={(this.state.selected.Colleges.indexOf(el) > -1)}  value={el} onChange={this.handleCollegeChange} label={<label>{el}</label>} />
-                ))
-              }
+        <div className="content-container listitem" onClick={this.toggle_outside}>
 
-              </div>
-              </div>
-            </Menu.Item>
-            <Menu.Item name='buttons'  className="button-group">
-              <Button.Group size='medium' fluid>
-                <Button onClick={this.filterBarPressed}>Cancel</Button>
-                <Button.Or />
-                <Button onClick={this.handleClearFilter}>Reset</Button>
-                <Button.Or />
-                <Button onClick={this.filterBarPressed} color='green'>Submit</Button>
-              </Button.Group>
-            </Menu.Item>
-          </Sidebar>
-          <Sidebar.Pusher>
-            <Segment basic>
-            <div className="ui container listitem">
+
               {this.props.mentors
-                .filter((el) => (this.state.selected.Majors.length === 0 || el.major.filter(e => this.state.selected.Majors.indexOf(e) > -1).length > 0 ))
-                .filter((el) => (this.state.selected.Colleges.length === 0  || this.state.selected.Colleges.indexOf(el.college_name) > -1)).map(el => (
+                .filter((el) => (this.state.selected.majors.length === 0 || el.major.filter(e => this.state.selected.majors.indexOf(e) > -1).length > 0 ))
+                .filter((el) => (this.state.selected.colleges.length === 0  || this.state.selected.colleges.indexOf(el.college_name) > -1)).map(el => (
                 <div className="mentor-container" key={el.id}>
                     <div className="inner-container">
                     <div className="mentor-profile">
@@ -261,38 +210,38 @@ unfollow_action(uid, mentor_uid){
                       <Table.Body>
                         <Table.Row className="table-clean-row">
                           <Table.Cell>
-                            Offer公司
+                            <img className="title-icon"  alt="position" src={companyIcon} ></img>
                           </Table.Cell>
                           <Table.Cell>
-                            <img className="title-icon"  alt="position" src={companyIcon} ></img>
+
                             <div className="card-info">  {el.offer_company}</div>
                           </Table.Cell>
                         </Table.Row>
                         <Table.Row className="table-clean-row">
                           <Table.Cell>
-                            Offer职位
+                            <img className="title-icon"  alt="position" src={posiIcon} ></img>
                           </Table.Cell>
                           <Table.Cell>
-                          <img className="title-icon"  alt="position" src={posiIcon} ></img>
+
                             <div className="card-info">  {el.offer_title} </div>
                           </Table.Cell>
                         </Table.Row>
                         <Table.Row className="table-clean-row">
                           <Table.Cell>
-                            院校
+                            <img className="title-icon"  alt="position" src={schoolIcon} ></img>
                           </Table.Cell>
                           <Table.Cell>
-                          <img className="title-icon"  alt="position" src={schoolIcon} ></img>
+
                               <div className="card-info">{el.college_name} </div>
                           </Table.Cell>
                         </Table.Row>
                         <Table.Row className="table-clean-row">
                           <Table.Cell>
-                            专业
+                            <img className="title-icon"  alt="position" src={ageIcon} ></img>
                           </Table.Cell>
                           <Table.Cell>
-                          <img className="title-icon"  alt="position" src={ageIcon} ></img>
-                            <div className="card-info">  {(el.major) ? (el.major.join(', ')) : ("")} </div>
+
+                            <div className="card-info"> {(el.major) ? (el.major.join(', ')) : ("")}  </div>
                           </Table.Cell>
                         </Table.Row>
                       </Table.Body>
@@ -307,19 +256,10 @@ unfollow_action(uid, mentor_uid){
                   </div>
                   </Link>
 
-                  <Link to={'/mentor/' + el.mid}>
-                    <div className="btm-more">
-                      <div className="">More</div>
-                      <div className="chinese-top">更多</div>
-                    </div>
-                  </Link>
                 </div>
               ))}
             </div>
-            </Segment>
-          </Sidebar.Pusher>
-        </Sidebar.Pushable>
-        </div>
+
 
       </div>
     );

@@ -24,8 +24,12 @@ export default (state = initState, action) => {
         last_fetched: new Date(),
         loading: false,
         mentors: list,
-        majors: Array.from(new Set([].concat.apply([], list.map(e => e.major)))),
-        colleges: Array.from(new Set(list.map(e => e.college_name)))
+        majors: Array.from((new Set([].concat.apply([], list.map(e => e.major))))).map(e => {
+          return {"key": e, "value":e,"text":e};
+        }),
+        colleges: Array.from(new Set(list.map(e => e.college_name))).map(e => {
+          return {"key": e, "value":e,"text":e};
+        })
       };
 
     default:

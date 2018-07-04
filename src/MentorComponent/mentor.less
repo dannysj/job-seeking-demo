@@ -69,10 +69,8 @@
 }
 
 .mentor-container {
-  width: 70%;
+  width: 60%;
   height: 18em;
-  left: 50%;
-  transform: translate(-50%, 0%);
   border-left: 5px solid #001BB1;
   margin-top: 30px;
   position: relative;
@@ -128,12 +126,27 @@
 }
 
 .mentor-text {
-  margin-left: 30px;
+  margin: 0 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   height: 80%;
   font-size: 1.2em;
+  flex: 1 0;
+  .ui.basic.table {
+    tbody {
+      tr {
+        &:nth-child(1) {
+          width: 10%;
+        }
+        &:nth-child(2) {
+          width: 90%;
+        }
+      }
+
+    }
+
+  }
 }
 
 .detail-btn {
@@ -191,7 +204,7 @@
 .filter-item {
   display: flex;
   border-radius: 5px;
-
+    cursor: pointer;
   border: 1px solid rgba(195, 195, 195, 0.3);
   height: 70%;
   min-width: 9em;
@@ -230,7 +243,9 @@
 
 }
 
-
+.title-icon {
+  height: 15px;
+}
 
 .filter-item > .item-central {
   color: rgba(31, 31, 31, 0.8);
@@ -241,7 +256,7 @@
 .filter-item > .delete-button {
   position: absolute;
   right: 0;
-  margin-right: 0.3em;
+  margin-right: 0.5em;
   top: 50%;
   transform: translate(0%, -50%);
   color: rgba(195, 195, 195, 0.8);
@@ -252,6 +267,20 @@
   overflow-y: scroll;
 }
 
+.filter-expand {
+  position: fixed;
+  padding: 1em;
+  z-index: 900;
+  background: #FFF;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  top: 10em;
+  min-width: 250px;
+      transform: translate(-30%,0);
+  > .content {
+    position: relative;
+  }
+}
 .filter-container {
   position: absolute;
   left: 0;
@@ -261,9 +290,12 @@
 }
 
 .content-container {
-  overflow-y: hidden;
+  overflow-y: auto;
   position: relative;
   flex: 1;
+  display: flex;
+  flex-flow: column;
+  padding-bottom: 5em;
 }
 
 .flex-container {
@@ -492,8 +524,8 @@
     display: inline-block;
     padding-bottom: 0.5em;
     font-size: 3em;
-    min-width: calc(180px + 4em);
-    max-width: calc(180px + 4em);
+    min-width: calc(180px + 4rem);
+    max-width: calc(180px + 4rem);
   }
   > .App-subtitle {
     padding-top: 0.5em;
@@ -505,6 +537,7 @@
     white-space: pre-wrap;
   }
 }
+
 
 
 .mentor-detail-info-container {
@@ -526,6 +559,12 @@
     justify-content: space-between;
   }
 
+}
+
+.ellipsis {
+    bottom: 0;
+    position: absolute;
+    right: 0;
 }
 
 .detail-item {
@@ -597,6 +636,7 @@
 
 .buy-button {
   width: 90%;
+  transition: transform .35s;
 }
 
 
@@ -654,17 +694,30 @@
     }
     > .service-title {
       transform: translate3d(0, 30px, 0);
+      opacity: 0;
     }
     > .service-description {
       opacity: 1;
+      transform: translate3d(0, 30px, 0);
+    }
+
+    > .buy-button {
+      transform: translate3d(0, 30px, 0);
     }
   }
   > .service-description {
     opacity: 0;
-    transition: opacity .35s;
+    transition: opacity .35s, transform .35s;
+    margin-top: 1em;
+    position: absolute;
+    top: 0;
+    padding: 1em 2em;
   }
   > .buy-button {
     z-index: 3;
+
+    transition: transform .35s;
+
   }
 
 
@@ -680,7 +733,7 @@
 
 
 .service-title {
-  transition: transform .35s;
+  transition: transform .35s, opacity .35s;
 }
 
 .service-title > .service-name {
@@ -695,17 +748,8 @@
   color: white;
 }
 
-.service-item > .service-description {
-  opacity: 0;
-  transition: opacity .35s;
-}
-
-.service-item > .buy-button {
-  z-index: 3;
-}
-
 .title > .title-icon {
-
+  height: auto;
   margin: 0 auto;
   display: block;
   padding-bottom: 1.5em;
@@ -736,9 +780,7 @@
   font-size: 1.3em;
 }
 
-.ui.basic.table tbody tr td .title-icon {
-  display: none;
-}
+
 
 @media screen and (max-width: 991px) {
 
@@ -815,13 +857,12 @@
         padding-top: 0;
         padding-bottom: 0.5em;
         td {
-          &:nth-child(1) {
-            display: none !important;
-          }
+
           .title-icon {
             height: auto;
             display: inline-block;
             margin-right: 1em;
+            height: 20px;
           }
         }
       }
@@ -852,6 +893,7 @@
 
   .service-description {
     opacity: 1;
+    position: relative !important;
   }
 
   .mentor-service-container {
@@ -866,7 +908,7 @@
   }
 
   .mentor-container {
-    width: 100%;
+    width: 95%;
     height: 13em;
   }
   .mentor-profile > b {
@@ -915,8 +957,9 @@
 
   .filter-item {
     height: 70%;
-    min-width: 7em;
+    min-width: 9em;
     margin: .2em;
+
   }
 
   .ui.top.attached.tabular.menu.top-bar {

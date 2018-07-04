@@ -73,20 +73,29 @@ class CreateArticle extends React.Component {
     return(
       <div>
         <NotificationContainer />
-        <Segment>
-          <h4>编写干货:</h4>
+        <div className="category">
+          <div className="header">
+            <div className="title">
+              编写干货
+            </div>
+          </div>
+          <div className="item">
           标题: {' '}<Input placeholder='标题' onChange={this.handleTitleChange}/>
           <br />
           <label htmlFor="thumbnail-input" className="ui button">
             <i className="ui upload icon"/>
             缩略图上传
           </label>
+          <br />
           <input type="file" className="input-file" id="thumbnail-input" onChange={this.handleThumbnail}/>
           {this.state.news.thumbnail && (<Image src={this.state.news.thumbnail} size='small' />)}
           <br />
+
           <ReactQuill ref={(el) => { this.reactQuillRef = el }} onChange={this.handleChange} />
+
           <Button onClick={this.handleSubmitNews}>提交</Button>
-        </Segment>
+        </div>
+        </div>
       </div>
     );
   }
