@@ -228,7 +228,7 @@ class AccountApply extends React.Component {
         <div className="category">
           <div className="header">
             <div className= "title">
-              {(this.props.user && this.props.user.ismentor) ? '申请成为导师' : '编辑导师资料'}
+              {(this.props.user && this.props.user.ismentor) ? '编辑导师资料' : '申请成为导师'}
             </div>
             <div className="subtitle">
             {!this.state.hasNotApplied ? (  <Message info>
