@@ -18,7 +18,7 @@ class AccountMentor extends React.Component {
 
   updateInfo(){
     let handler = this;
-    axios.post('/api/get_rel_mentors', {uid: this.props.user.id}).then(res => {
+    axios.post('/api/get_rel_mentors',{}, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
         handler.setState({mentors:res.data.mentors});
       }
@@ -32,7 +32,7 @@ class AccountMentor extends React.Component {
 
   handleConfirm(mid) {
     let handler = this;
-    axios.post('/api/mentee_confirm', {uid: this.props.user.id, mid: mid}).then(res => {
+    axios.post('/api/mentee_confirm', {mid: mid},{headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
         handler.updateInfo();
       }

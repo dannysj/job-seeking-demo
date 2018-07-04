@@ -3,7 +3,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('./server/_dbInit');
 const cors = require('cors');
-const router = require('./server/_router')
+const router = require('./server/_router');
+const access_token_validator = require('./server/security').access_token_validator;
 
 const app = express();
 const args = process.argv.slice(2);
@@ -18,7 +19,7 @@ app.use(express.static(__dirname + '/build'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
-
+app.use(access_token_validator);
 app.use('/', router);
 
 

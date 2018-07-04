@@ -86,6 +86,7 @@ class Mentor extends Component {
     this.setState(curState);
   }
 
+ // Follow action might not needed now.
  follow_action(uid, mentor_uid){
     // axios.post('/api/create_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
     //      .then(res=> ())
@@ -97,9 +98,6 @@ class Mentor extends Component {
  }
 
 unfollow_action(uid, mentor_uid){
-    // axios.post('/api/delete_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
-    //      .then(res=> ())
-    //      .catch(err => console.log(err))
     let followees = this.state.followees;
     let index = followees.indexOf(mentor_uid)
     if (index > -1){

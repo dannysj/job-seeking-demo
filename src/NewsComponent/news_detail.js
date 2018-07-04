@@ -21,7 +21,7 @@ class NewsDetail extends Component {
 
     this.likeButtonPressed = this.likeButtonPressed.bind(this);
     this.followButtonPressed = this.followButtonPressed.bind(this);
-    this.handleImageLoaded = this.handleImageLoaded.bind(this);
+      this.handleImageLoaded = this.handleImageLoaded.bind(this);
 
     axios.post('/api/get_news_detail',
       {nid:this.props.match.params.nid}).then(res => {

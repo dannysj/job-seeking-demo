@@ -120,7 +120,7 @@ class AccountAdmin extends React.Component {
 
     let handler = this;
 
-    axios.post('/api/admin/decide_mentor_app',{uid:uid,mid:mid,decision:decision}).then(res => {
+    axios.post('/api/admin/decide_mentor_app',{uid: uid, mid:mid,decision:decision}).then(res => {
       if(res.data.code===0){
         alert('success'); // TODO: change this
         // handler.state.applications.forEach(function(app, index){
@@ -182,8 +182,8 @@ class AccountAdmin extends React.Component {
                 <p>院校: {el.college_name}</p>
               </div>
               <Link to={'/mentor/'+el.mid}><Button floated='right' >查看细节>></Button></Link>
-              <Button floated='right' positive onClick={() => this.handleAppDecision(el.uid, el.mid, true)}>批准申请</Button>
-              <Button floated='right' negative onClick={() => this.handleAppDecision(el.uid, el.mid, false)}>拒绝申请</Button>
+              <Button floated='right' positive onClick={() => this.handleAppDecision(el.id, el.mid, true)}>批准申请</Button>
+              <Button floated='right' negative onClick={() => this.handleAppDecision(el.id, el.mid, false)}>拒绝申请</Button>
             </div>
           ))}
           </div>

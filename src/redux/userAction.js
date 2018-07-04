@@ -1,10 +1,10 @@
 import axios from "axios";
 import store from "./index";
 
-export function fetchUser(uid) {
+export function fetchUser(access_token) {
   return {
     type: "FETCH_USER",
-    payload: axios.post('/api/get_user_info', {uid})
+    payload: axios.post('/api/get_user_info', {},{headers:{access_token: access_token} })
   }
 }
 
@@ -25,7 +25,7 @@ export function updateUser(attr, val, {local = false} = {}) {
   } else {
     return {
       type: "UPDATE_USER",
-      payload: axios.post('/api/update_user', {uid, attr, val})
+      payload: axios.post('/api/update_user', {uid, attr, val}, {headers:{access_token: store.getState().user.access_token}})
     }
   }
 }

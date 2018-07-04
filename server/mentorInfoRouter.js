@@ -4,7 +4,7 @@ const app = express.Router();
 
 app.post('/api/mentor_apply', (req, res) => {
   db.verifyInfoCompletion(req.body.uid, (err, isCompleted) => {
-  
+
     db.createMentorApp(req.body, (err) => {
       if (err) {
         console.log(err);
