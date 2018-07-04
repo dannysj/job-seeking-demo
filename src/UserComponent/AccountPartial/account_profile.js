@@ -153,6 +153,9 @@ class AccountProfile extends React.Component {
                     名字、密码、专业、自我介绍以及头像设置
                   </div>
                 </div>
+
+
+                    {/*Profile Picture     */}
               <div className="item center">
                 <div className="img-crop-item">
                 {this.state.showImgCrop ? ( <ImgCrop dataUrl={this.state.imgCropDataUrl} fileName={this.state.imgCropName} onSuccess={this.onSuccessCrop}/> )
@@ -167,6 +170,9 @@ class AccountProfile extends React.Component {
                   )}
                   </div>
               </div>
+
+
+              {/*first and last*/}
               <div className={"item " + ((this.state.attr_key.hasOwnProperty('last')) ? "is-expanded" : "")}>
                 <div className="content">
                   <div className="inner-content">
@@ -184,6 +190,8 @@ class AccountProfile extends React.Component {
                     编辑
                   </div>
                 </div>
+
+                {/*first and last edit*/}
                 <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('last')) ? "is-expanded" : "")}>
                   <div className="form-text">
                     <input type="text" name="last" value={this.state.attr_key.last} onChange={this.handleInputChange}/>
@@ -205,6 +213,7 @@ class AccountProfile extends React.Component {
                 </div>
               </div>
 
+              {/*major     */}
               <div className={"item " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")} >
                 <div className="content">
                   <div className="inner-content">
@@ -217,6 +226,7 @@ class AccountProfile extends React.Component {
 
                 </div>
 
+                {/*major edit*/}
                 <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")}>
                   <div className="form-text">
                       <Dropdown name='major' placeholder='专业' search selection multiple fluid closeOnChange
@@ -239,6 +249,9 @@ class AccountProfile extends React.Component {
                   </div>
                 </div>
               </div>
+
+
+              {/*bio    */}
               <div className={"item " + ((this.state.attr_key.hasOwnProperty('cover')) ? "is-expanded" : "")}>
                 <div className="content">
                   <div className="inner-content">
@@ -249,6 +262,8 @@ class AccountProfile extends React.Component {
                     编辑
                   </div>
                 </div>
+
+               {/*bio edit */}
                 <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('cover')) ? "is-expanded" : "")}>
                   <div className="form-text">
                     <TextArea rows="8" name="cover" value={this.state.attr_key.cover} onChange={this.handleInputChange}/>
@@ -266,10 +281,64 @@ class AccountProfile extends React.Component {
                     </div>
                   </div>
                 </div>
-
-
               </div>
 
+
+              {/*password*/}
+
+              <div className={"item " + ((this.state.attr_key.hasOwnProperty('password')) ? "is-expanded" : "")}>
+                  <div className="content">
+                      <div className="inner-content">
+                          <div className="header">密码设置</div>
+                          <div className="info">{'密码不可见'}</div>
+                      </div>
+                      <div className="edit-toggle"  onClick={()=>this.initAttrChange('password')}>
+                          编辑
+                      </div>
+                  </div>
+
+
+                  {/*password edit */}
+                  <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('password')) ? "is-expanded" : "")}>
+
+                      {/*Add three box */}
+                      <div className="ui grid segment">
+                          <div className="row">
+                              <div className="ten wide column">
+                                  <label>旧密码</label>
+                                  <input type="password" name="old password" placeholder="Old Password" required/>
+                              </div>
+                          </div>
+
+                          <div className="row">
+                              <div className="ten wide column">
+                                <label>新密码</label>
+                                <input type="password" name="password" placeholder="New Password" required/>
+                              </div>
+                          </div>
+
+                          <div className="row">
+                              <div className="ten wide column">
+                              <label>确认密码</label>
+                              <input type="password" name="password" placeholder="Confirm Password" required />
+                              </div>
+                          </div>
+                      </div>
+
+                      {/*no need to change                 */}
+                      <div className="actions">
+                          <div className="ui gray deny button" onClick={() => {
+                              this.cancelAttrChange("password");
+                          }}>
+                              取消
+                          </div>
+                          <div className="ui blue right labeled icon button" onClick={this.confirmAttrChange}>
+                              确认
+                              <i className="checkmark icon"/>
+                          </div>
+                      </div>
+                  </div>
+              </div>
               </div>
 
               <div className="category">
