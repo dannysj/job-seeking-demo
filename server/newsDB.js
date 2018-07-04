@@ -2,9 +2,9 @@ const db = require('./_dbPool.js');
 
 exports.createNews = (news, callback) => {
   const query = `insert into news
-                  (author_id,publish_time,type,title,thumbnail,content)
-                  values($1,now(),$2,$3,$4,$5) returning id;`;
-  db.query(query, [news.author_id, news.type, news.title, news.thumbnail, news.content], (err, result) => {
+                  (author_id,publish_time,type,title,thumbnail,content, delta)
+                  values($1,now(),$2,$3,$4,$5,$6) returning id;`;
+  db.query(query, [news.author_id, news.type, news.title, news.thumbnail, news.content, news.delta], (err, result) => {
     if (err) {
       callback(err);
       return;
@@ -24,6 +24,7 @@ exports.getNewsDetail = (nid, callback) => {
       to_char(n.publish_time,'DD Mon HH24:MI') as publish_time,
       n.thumbnail as thumbnail,
       n.content as content,
+      n.delta as delta,
       n.author_id as author_id
     from news n, users u
     where n.author_id = u.id

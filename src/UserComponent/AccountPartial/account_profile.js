@@ -1,6 +1,6 @@
 import React from 'react';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
-import {Dropdown, Image} from 'semantic-ui-react';
+import {Dropdown, Image, TextArea} from 'semantic-ui-react';
 import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
 import '../account.less';
@@ -9,6 +9,7 @@ import store from "../../redux";
 import {updateUser} from "../../redux/userAction";
 import {fetchMajorList} from "../../redux/majorListAction";
 import {connect} from 'react-redux'
+import validator from 'validator';
 
 
 class AccountProfile extends React.Component {
@@ -20,7 +21,7 @@ class AccountProfile extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     store.dispatch(fetchMajorList());
   }
 
@@ -39,24 +40,20 @@ class AccountProfile extends React.Component {
     let curState = this.state;
     let attr_keys = curState.attr_key;
     //FIXME: Fixe bunches data update
-    for (const [key, value] of Object.entries(attr_keys)) {
-
-      store.dispatch(updateUser(key, value));
-
-      axios.post('/api/update_user',
-                {attr:key,val:value}, 
-                {headers:{access_token:this.props.user.access_token}}
-      ).then(res => {
-        if(res.data.code===0){
-          delete curState.attr_key[key];
-          this.setState({curState})
+    for (const [attr, val] of Object.entries(attr_keys)) {
+      if (attr === "email"){
+        if (!validator.isEmail(val)){
+          NotificationManager.error('Email格式不正确', '错误');
+          return;
         }
-        else {
-          NotificationManager.error('资料更新失败', '错误');
-        }
-    });
-  };
- }
+      }
+
+      store.dispatch(updateUser(attr, val)).then(()=>{
+        delete curState.attr_key[attr];
+        this.setState({curState});
+      });
+  }
+ };
 
 
   handleResume = (e) => {
@@ -76,11 +73,11 @@ class AccountProfile extends React.Component {
       if (res.data.code === 0) {
         store.dispatch(updateUser("resume", res.data.url));
 
-        axios.post('/api/update_user', 
+        axios.post('/api/update_user',
         {
           attr: 'resume',
           val: res.data.url
-        }, 
+        },
         {
           headers: {access_token: this.props.user.access_token}
         }).then(res => {
@@ -128,11 +125,11 @@ class AccountProfile extends React.Component {
       if (res.data.code === 0) {
         this.setState({showImgCrop: false});
         store.dispatch(updateUser("profile_pic", res.data.url));
-        axios.post('/api/update_user', 
+        axios.post('/api/update_user',
         {
           attr: 'profile_pic',
           val: res.data.url
-        }, 
+        },
         {
           headers:{access_token: this.props.user.access_token}
         }
@@ -166,7 +163,7 @@ class AccountProfile extends React.Component {
     render() {
       const user = this.props.user;
         return(
-            <div className="ui large celled list">
+            <div className="ui large celled list form">
               <NotificationContainer />
                 <div className="category">
                   <div className="header">
@@ -256,7 +253,7 @@ class AccountProfile extends React.Component {
                       <Dropdown name='major' placeholder='专业' search selection multiple fluid closeOnChange
                                 options={this.props.major_list}
                                 onChange={(e, data) => this.setState({attr_key: {major: data.value}})}
-                                value={this.state.attr_key.major}/>
+                                value={this.state.attr_key.major ? this.state.attr_key.major : []}/>
                     <div className="padding-text"></div>
 
                   </div>
@@ -285,7 +282,7 @@ class AccountProfile extends React.Component {
                 </div>
                 <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('cover')) ? "is-expanded" : "")}>
                   <div className="form-text">
-                    <input type="text" name="cover" value={this.state.attr_key.cover} onChange={this.handleInputChange}/>
+                    <TextArea rows="8" name="cover" value={this.state.attr_key.cover} onChange={this.handleInputChange}/>
                     <div className="padding-text"></div>
                   </div>
                   <div className="actions">
@@ -312,7 +309,7 @@ class AccountProfile extends React.Component {
                   联络
                 </div>
                 <div className="subtitle">
-                  邮件、微信绑定设置
+                  邮箱、微信号绑定设置
                 </div>
               </div>
               <div className={"item first "+ ((this.state.attr_key.hasOwnProperty('email')) ? "is-expanded" : "")}>
@@ -348,7 +345,7 @@ class AccountProfile extends React.Component {
               <div className="item">
                 <div className="content">
                   <div className="inner-content">
-                  <div className="header">微信</div>
+                  <div className="header">微信号</div>
                   <div className="info">{user.wechat ? user.wechat : '暂无资料'}</div>
                   </div>
                   <div className="edit-toggle"  onClick={()=>this.initAttrChange('wechat')}>
