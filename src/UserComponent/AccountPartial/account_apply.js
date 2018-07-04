@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Dropdown, Message, TextArea} from 'semantic-ui-react';
+import {Dropdown, Message, TextArea, Input} from 'semantic-ui-react';
 import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import '../account.less';
@@ -228,11 +228,11 @@ class AccountApply extends React.Component {
         <div className="category">
           <div className="header">
             <div className= "title">
-            申请成为导师
+              {(this.props.user && this.props.user.ismentor) ? '申请成为导师' : '编辑导师资料'}
             </div>
             <div className="subtitle">
             {!this.state.hasNotApplied ? (  <Message info>
-                  <Message.Header>我们已经收到了您的申请，您仍可以在此修改您的申请表格</Message.Header>
+                  <Message.Header>我们已经收到了您的表格，您仍可以在此修改您的申请表格</Message.Header>
                 </Message>
               ): (<div></div>)
               }
