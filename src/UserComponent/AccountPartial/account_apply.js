@@ -39,8 +39,7 @@ class AccountApply extends React.Component {
     componentWillMount(){
         axios.post('/api/get_mentor_detail_by_uid',{},
             {headers:{access_token: this.props.user.access_token}}).then(res => {
-            if (res.data.code 
-                0) {
+            if (res.data.code  === 0) {
                 let mentor = res.data.mentor;
                 this.setState({
                     mentor_info: mentor,
