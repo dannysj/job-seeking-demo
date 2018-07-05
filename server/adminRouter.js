@@ -39,16 +39,6 @@ app.post('/api/file/general_upload', upload.single('file'), (req, res) => {
   res.json({code: 0, url: '/files/' + req.file.filename});
 });
 
-app.post('/api/file/general_upload_name_perserved', upload_name_perserved.single('file'), (req, res) => {
-  if (!req.file)
-    return res.json({code: -21, errMsg: 'No files found'});
-
-  compressImage(req.file);
-
-  res.json({code: 0, url: '/files/' + req.file.filename});
-});
-
-
 function compressImage(file) {
   // All file types supported by `sharp`
   const imageMIME = ["image/gif", "image/png", "image/jpeg", "image/bmp", "image/webp", "image/tiff"];
@@ -65,6 +55,15 @@ function compressImage(file) {
     file.filename =  newFileName;
   }
 }
+
+app.post('/api/file/general_upload_name_perserved', upload_name_perserved.single('file'), (req, res) => {
+  if (!req.file)
+    return res.json({code: -21, errMsg: 'No files found'});
+
+  res.json({code: 0, url: '/files/' + req.file.filename});
+});
+
+
 
 app.post('/api/admin/get_applications', (req, res) => {
   db.getMentorApplications((err, list) => {
