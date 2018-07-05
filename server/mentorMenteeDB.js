@@ -91,7 +91,7 @@ exports.setMenteeConfirm = (uid, mrid, callback) => {
       select service_price from mentor_rel where id=$1
     ) where id=(
       select uid from mentor_info where id=(
-        select mid from mentor_rel where id=$1;
+        select mid from mentor_rel where id=$1
       )
     );
     `;
