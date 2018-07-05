@@ -8,18 +8,20 @@ import store from "../redux";
 import {setUser} from "../redux/userAction";
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 
-class Login extends Component {
+class Reset extends Component {
 
   constructor (props) {
     super(props);
-    this.state={user:{}};
+    this.state={user:{},success:false};
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit (e) {
     e.preventDefault();
-
+    this.setState({success: true})
+    //TODO:
+/*
     axios.post('/api/verify_user',this.state.user).then(res => {
       if(res.data.code===0){
         store.dispatch(setUser(res.data.user));
@@ -32,7 +34,7 @@ class Login extends Component {
       else{
         NotificationManager.error('登入失败', '错误');
       }
-    });
+    });*/
   }
 
   handleChange (e) {
@@ -44,30 +46,45 @@ class Login extends Component {
   render() {
     return (
       <div className="login-signup-container">
+      {
+        (this.state.success) ? (
+          <div className="small-title">重置密码链接已发送到您邮件。请查收😛</div>
+
+
+        ) : (<div><div className="small-title">忘了登入密码？</div>
         <form className="ui form" onSubmit={this.handleSubmit}>
           <div className="field">
-            <label>Email</label>
+            <label>请输入Email</label>
             <input type="email" name="email" placeholder="Email" onChange={this.handleChange} required />
           </div>
-          <div className="field">
-            <label>密码</label>
-            <input type="password" name="password" placeholder="Password" onChange={this.handleChange} required />
-          </div>
-          <div className="login-links">
-          <Link to="/signup">还没有账号？注册账号</Link>
-          <Link to="/reset">忘了密码？ 点我哦</Link>
-          </div>
-          <br /><br />
-          <button className="ui button" type="submit">登陆</button>
+          <button className="ui button" type="submit">发送重设密码链接</button>
         </form>
+        </div>
+      )
+      }
       </div>
     );
   }
 }
 
-Login.contextTypes = {
+Reset.contextTypes = {
   router: PropTypes.object
 };
 
 
-export default Login;
+export default Reset;
+
+/*
+  密码UI：
+  <form className="ui form" onSubmit={this.handleSubmit}>
+    <div className="field">
+      <label>密码</label>
+      <input type="password" name="password" placeholder="新密码" onChange={this.handleChange} required />
+    </div>
+    <div className="field">
+      <label>请输入Email</label>
+      <input type="password" name="password_agn" placeholder="确认新密码" onChange={this.handleChange} required />
+    </div>
+    <button className="ui button" type="submit">重置密码</button>
+  </form>
+*/
