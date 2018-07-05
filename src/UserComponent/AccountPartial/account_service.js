@@ -14,14 +14,16 @@ class AccountService extends React.Component {
         mentees: []
       };
 
-    this.updateInfo();
+    this.updateInfo = this.updateInfo.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
     this.handleDecision = this.handleDecision.bind(this);
+    this.updateInfo();
   }
 
   updateInfo(){
     var handler = this;
-    axios.post('/api/get_rel_mentees', {uid: this.props.user.id}).then(res => {
+    console.log(this.props.user.access_token);
+    axios.post('/api/get_rel_mentees', {}, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         handler.setState({mentees:res.data.mentees});
@@ -34,9 +36,9 @@ class AccountService extends React.Component {
     });
   }
 
-  handleConfirm(mentee_uid){
+  handleConfirm(mrid){
     var handler = this;
-    axios.post('/api/mentor_confirm', {uid: this.props.user.id, mentee_uid: mentee_uid}).then(res => {
+    axios.post('/api/mentor_confirm',{mrid: mrid}, {headers: {access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         handler.updateInfo();
@@ -49,9 +51,9 @@ class AccountService extends React.Component {
     });
   }
 
-  handleDecision(mentee_uid, agreed){
+  handleDecision(mrid, agreed){
     var handler = this;
-    axios.post('/api/mentor_decision', {uid: this.props.user.id, mentee_uid: mentee_uid, agreed: agreed}).then(res => {
+    axios.post('/api/mentor_decision', {mrid: mrid, agreed: agreed}, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         window.location.reload(); // TODO: the reason I used reload here is because
@@ -71,7 +73,8 @@ class AccountService extends React.Component {
     render() {
         return(
           <div className="account-inner-spacing">
-            <div>
+            <div className="category">
+              <div className="item">
               {this.state.mentees.length===0 && '您暂时并无Mentee签约'}
               {this.state.mentees.map(el => (
                 <div className="app-mentor-container" key={el.id}>
@@ -83,15 +86,16 @@ class AccountService extends React.Component {
                     <p>Mentee的备注: {el.note}</p>
                   </div>
                   {el.status===20 && (<div>
-                    <Button floated='right' positive onClick={() => this.handleDecision(el.uid, 1)}>通过申请</Button>
-                    <Button floated='right' negative onClick={() => this.handleDecision(el.uid, 0)}>拒绝申请</Button>
+                    <Button floated='right' positive onClick={() => this.handleDecision(el.mrid, 1)}>通过申请</Button>
+                    <Button floated='right' negative onClick={() => this.handleDecision(el.mrid, 0)}>拒绝申请</Button>
                     <Link to={'/user/'+el.uid}><Button floated='right'>查看简历</Button></Link>
                   </div>)}
-                  {el.status===1 && <Button floated='right' positive onClick={() => this.handleConfirm(el.uid)}>确认完成</Button>}
+                  {el.status===1 && <Button floated='right' positive onClick={() => this.handleConfirm(el.mrid)}>确认完成</Button>}
                   {el.status===2 && <Button floated='right' disabled>等待Mentee确认</Button>}
                   {el.status===3 && <Button floated='right' disabled>服务完成</Button>}
                 </div>
               ))}
+              </div>
             </div>
           </div>
         );

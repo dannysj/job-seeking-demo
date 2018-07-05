@@ -2,6 +2,7 @@ const db = require('./_dbPool.js');
 
 exports.patch = () => {
     db.query(`alter table mentor_info add bios jsonb`).catch(e => console.log(e));
+    db.query(`alter table news add delta jsonb null`).catch(e => console.log(e));
 };
 
 exports.reset = function () {
@@ -30,7 +31,8 @@ exports.reset = function () {
       balance numeric(8,2) default 0.00,
       wechat text,
       resume text,
-      isactivated boolean
+      isactivated boolean,
+      access_token varchar(255)
     );
     create table if not exists message (
       id serial unique primary key,

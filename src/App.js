@@ -44,9 +44,11 @@ class App extends Component {
   }
 
   componentWillMount(){
-    const uid = localStorage.getItem('uid');
-    if (uid) {
-      store.dispatch(fetchUser(uid));
+
+    // Change access_token
+    const access_token = localStorage.getItem('access_token');
+    if (access_token) {
+      store.dispatch(fetchUser(access_token));
     }
   }
 
@@ -221,7 +223,7 @@ class App extends Component {
             <Route path='/account' render={()=><Account user={user} width={this.state.width} height={this.state.height}/>} />
             <Route path="/mentor/:mid" render={(props)=><MentorDetail {...props} user={user}/>} />
             <Route path='/mentor' component={Mentor}/>
-            <Route path="/user/:uid" render={(props)=><UserDetail {...props} user={user}/>} />
+            <Route path="/user/:uid" render={(props)=><UserDetail {...props} user={user} width={this.state.width} height={this.state.height}/>} />
             <Route path='/news/:nid'   render={(props)=><NewsDetail {...props} loggedInUser={user}/> } />
             <Route path='/news' component={News}/>
             <Route path='/about' component={About}/>

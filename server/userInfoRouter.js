@@ -5,6 +5,7 @@ const security = require('./security');
 
 
 app.post('/api/get_user_info', (req, res) => {
+
   db.getUserInfo(req.body.uid, (err, user) => {
     if (err) {
       console.log(err);
@@ -36,11 +37,17 @@ app.post('/api/verify_user', (req, res) => {
       res.json({code: 1, errMsg: err});
       return;
     }
-    res.json({code: 0, user: user});
+    security.update_access_token(user.id, (err, access_token)=>{
+      if(err){
+        console.log(err);
+        res.json({code: 1, errMsg: 'Cannot generate access token'});
+        return;
+      }
+      user.access_token = access_token;
+      res.json({code: 0, user: user});
+    });
   });
 });
 
 
 module.exports = app;
-
-

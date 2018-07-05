@@ -2,7 +2,9 @@ const db = require('./_dbPool.js');
 
 exports.getRelMentors = (uid, callback) => {
   const query = `
-  select u.first as first,
+  select
+    mr.id as mrid,
+    u.first as first,
     u.profile_pic as profile_pic,
     u.last as last,
     u.email as email,
@@ -27,7 +29,9 @@ exports.getRelMentors = (uid, callback) => {
 
 exports.getRelMentees = (uid, callback) => {
   const query = `
-  select u.first as first,
+  select
+    mr.id as mrid,
+    u.first as first,
     u.profile_pic as profile_pic,
     u.last as last,
     u.email as email,
@@ -47,13 +51,11 @@ exports.getRelMentees = (uid, callback) => {
   });
 };
 
-exports.setMentorConfirm = (mentor_uid, mentee_uid, callback) => {
+exports.setMentorConfirm = (mentor_uid, mrid, callback) => {
   const query = `
-    update mentor_rel set status=2 where uid=$2 and mid=(
-      select id from mentor_info where uid=$1
-    );
+    update mentor_rel set status=2 where id=$1;
   `;
-  db.query(query, [mentor_uid, mentee_uid], (err, result) => {
+  db.query(query, [mrid], (err, result) => {
     if (err) {
       callback(err);
       return;
@@ -62,14 +64,12 @@ exports.setMentorConfirm = (mentor_uid, mentee_uid, callback) => {
   });
 };
 
-exports.setMentorDecision = (mentor_uid, mentee_uid, agreed, callback) => {
+exports.setMentorDecision = (mentor_uid, mrid, agreed, callback) => {
   let decision_status = (agreed == 1) ? 1 : 50;
   const query = `
-    update mentor_rel set status=$3 where uid=$2 and mid=(
-      select id from mentor_info where uid=$1
-    );
+    update mentor_rel set status=$2 where id=$1;
   `;
-  db.query(query, [mentor_uid, mentee_uid,decision_status], (err, result) => {
+  db.query(query, [mrid,decision_status], (err, result) => {
     if (err) {
       callback(err);
       return;
@@ -78,20 +78,24 @@ exports.setMentorDecision = (mentor_uid, mentee_uid, agreed, callback) => {
   });
 };
 
-exports.setMenteeConfirm = (uid, mid, callback) => {
+exports.setMenteeConfirm = (uid, mrid, callback) => {
   const query = `
-    update mentor_rel set status=3 where uid=$1 and mid=$2;
+    update mentor_rel set status=3 where id=$1;
     `;
-  db.query(query, [uid, mid], (err, result) => {
+  db.query(query, [mrid], (err, result) => {
     if (err) {
       callback(err);
       return;
     }
     const query = `update users set balance=balance+(
-      select service_price from mentor_rel where uid=$1 and mid=$2
-    ) where id=(select uid from mentor_info where id=$2);
+      select service_price from mentor_rel where id=$1
+    ) where id=(
+      select uid from mentor_info where id=(
+        select mid from mentor_rel where id=$1
+      )
+    );
     `;
-    db.query(query, [uid, mid], (err, result) => {
+    db.query(query, [mrid], (err, result) => {
       if (err) {
         callback(err);
         return;

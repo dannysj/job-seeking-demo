@@ -56,12 +56,11 @@ class MentorDetail extends Component {
     var handler = this;
     axios.post('/api/create_order',
     {
-      uid:this.props.user.id,
       mid:this.props.match.params.mid,
       service_name: this.state.service_name,
       service_price: this.state.service_price,
       note: this.state.note
-    }).then(res => {
+    }, {headers: {access_token: this.props.user.access_token}}).then(res => {
       if (res.data.code === 0) {
         window.location.href = res.data.url;
       }
@@ -97,9 +96,8 @@ class MentorDetail extends Component {
     var handler = this;
     axios.post('/api/poll_payment',
     {
-      uid:this.props.user.id,
       order_id:order_id
-    }).then(res => {
+    }, {headers: {access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code===0){
         // handler.setState({showAddServiceModal: false, qr_code: ''});
         alert('支付成功'); //TODO Notification System
@@ -211,8 +209,10 @@ class MentorDetail extends Component {
 
 
     let paragraphs = []
+
     if (mentor.bio) {
-      paragraphs = mentor.bio.split(/\n/g) || []
+      paragraphs = mentor.bio.split(/[\n\r]+/g) || []
+
     }
     paragraphs = paragraphs.map((text, i) => {
       return (
@@ -368,7 +368,7 @@ class MentorDetail extends Component {
                     <div className="service-item" >
                       <div className="service-title">
                         <div className="service-name">{el.name}</div>
-                        <div className="service-price">{el.price+' RMB'}</div>
+                        <div className="service-price">{el.price+' USD'}</div>
                       </div>
                       <div className="service-description">{el.description}</div>
                       <div className="buy-button"><Button className="buy-button-ani" onClick={()=>this.initBuy(el.name, el.price)}>免费体验</Button></div>

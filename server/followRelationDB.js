@@ -1,5 +1,5 @@
 const db = require('./_dbPool.js');
-
+const _ = require('lodash');
 // Table: follow_rel
 // follower
 // follower_uid
@@ -28,11 +28,11 @@ exports.createFollowerFolloweeRelationship= (follower_uid, followee_uid, callbac
     // What other information you might want? 
    
    //Check duplicate
-   var attemptToSelectQuery = `SELECT * FROM follow_rel WHERE follower_uid = $1 AND followee_uid = $2;`;
+   let attemptToSelectQuery = `SELECT * FROM follow_rel WHERE follower_uid = $1 AND followee_uid = $2;`;
    db.query(attemptToSelectQuery, [follower_uid, followee_uid])
-       .then(res => {if (res.rowCount == 0) {
+       .then(res => {if (res.rowCount === 0) {
                    // insert if none duplicate    
-                   var insertRelQuery = `INSERT INTO follow_rel (follower_uid, followee_uid, timestamp) 
+                   let insertRelQuery = `INSERT INTO follow_rel (follower_uid, followee_uid, timestamp) 
                      VALUES  ($1, $2, now()); `;
                    db.query(insertRelQuery, [follower_uid, followee_uid ] )
                    .then(res => callback(null) )
@@ -43,46 +43,50 @@ exports.createFollowerFolloweeRelationship= (follower_uid, followee_uid, callbac
       .catch(err => callback(err));
 }
    
-   exports.deleteFollowerFolloweeRelationship= (follower_uid, followee_uid)=>{
-     var deleteQuery = "DELETE FROM follow_rel WHERE follower_uid = $1 AND followee_uid = $2";
+   exports.deleteFollowerFolloweeRelationship= (follower_uid, followee_uid, callback)=>{
+     let deleteQuery = "DELETE FROM follow_rel WHERE follower_uid = $1 AND followee_uid = $2";
      db.query(deleteQuery, [follower_uid, followee_uid])
        .then(res=> callback(null))
        .catch(err=> callback(err));
-   }
+   };
    
    exports.findFollowersByAuthorID= (author_id, callback )=>{
-     var selectFollowersQuery = "SELECT follower_uid FROM follow_rel WHERE followee_uid = $1 ";
+     let selectFollowersQuery = "SELECT follower_uid FROM follow_rel WHERE followee_uid = $1 ";
      db.query(selectFollowersQuery, [author_id])
           .then( res =>  {
-             callback(null, res.rows.map(dic => dic["follower_uid"]));
+             callback(null, _.map(res.rows, dic => dic["follower_uid"]));
           } )
           .catch( err => callback(err, []) )
-   }
+   };
    
    exports.whetherFollowed = (follower_id, followee_uid, callback) =>{
-     var selectFolloweesQuery = "SELECT * FROM follow_rel WHERE follower_uid = $1 AND followee_uid = $2";
+     let selectFolloweesQuery = "SELECT * FROM follow_rel WHERE follower_uid = $1 AND followee_uid = $2";
      db.query(selectFolloweesQuery, [follower_id, followee_uid] )
        .then(res =>{
-         // If exists. 
+        console.log("--Check respons--")
+        console.log(res.rows) 
+        // If exists. 
          if (res.rowCount > 0){
            callback(null, true)
+           return
          }
          callback(null, false)
        })
        .catch(err => callback(err, false))
-   }
+   };
    
    exports.getFollowersForFollowee  = (followee_id, dealWithFollowers) =>{
-     var selectFollowersQuery = "SELECT follower_uid FROM  follow_rel WHERE followee_uid = $1";
+     let selectFollowersQuery = "SELECT follower_uid FROM  follow_rel WHERE followee_uid = $1";
      db.query(selectFollowersQuery, [followee_id])
        .then( res =>  dealWithFollowers(null, res.rows.map(dic=>dic["follower_uid"])) )
        .catch(err => dealWithFollowers(err, []))
-   }
+   };
 
+   /*
    exports.getFolloweesForFollower = (followee_uid, callback)=>{
-    var selectFolloweesQuery = "SELECT followee_uid FROM  follow_rel WHERE follower_uid = $1";
+    let selectFolloweesQuery = "SELECT followee_uid FROM  follow_rel WHERE follower_uid = $1";
      db.query(selectFollowersQuery, [followee_uid])
        .then( res =>  callback(null, res.rows.map(dic=>dic["followee_uid"])) )
        .catch(err => dealWithFollowers(err, []))
-   }
+   };*/
 
