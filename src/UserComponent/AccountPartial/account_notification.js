@@ -18,7 +18,7 @@ class AccountNotification extends React.Component {
   }
 
   retrieveMessage(){
-    axios.post('/api/get_system_notifications', {uid: this.props.user.id}).then(res => {
+    axios.post('/api/get_system_notifications', {}, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
 
         this.setState({messages:res.data.messages});
@@ -30,7 +30,7 @@ class AccountNotification extends React.Component {
       }
     });
 
-    axios.post('/api/read_system_notification', {uid: this.props.user.id}).then(res => {
+    axios.post('/api/read_system_notification', {}, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
         store.dispatch(updateUser('num_notifications', 0, {local: true}));
       }
@@ -41,7 +41,9 @@ class AccountNotification extends React.Component {
   render() {
     return(
       <div className="account-inner-spacing">
+        <div className="category">
         {this.state.messages.map(el=>(
+          <div className="item first">
           <Segment>
             <Image avatar src='/img/icon.png' />
             系统通知：{new Date(el.timestamp).toLocaleTimeString()}
@@ -50,7 +52,9 @@ class AccountNotification extends React.Component {
               {el.content}
             </div>
           </Segment>
+          </div>
         ))}
+        </div>
       </div>
     );
   }

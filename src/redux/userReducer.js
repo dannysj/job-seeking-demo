@@ -67,10 +67,12 @@ export default (state = initState, action) => {
   switch (action.type) {
     case "SET_USER":
       localStorage.setItem('uid', action.payload.id);
+      localStorage.setItem('access_token', action.payload.access_token);
       return {...action.payload, status: userStatus.login};
 
     case "LOGOUT":
       localStorage.removeItem('uid');
+      localStorage.removeItem('access_token');
       return {status: userStatus.logout};
 
 

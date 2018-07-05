@@ -14,14 +14,16 @@ class AccountService extends React.Component {
         mentees: []
       };
 
-    this.updateInfo();
+    this.updateInfo = this.updateInfo.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
     this.handleDecision = this.handleDecision.bind(this);
+    this.updateInfo();
   }
 
   updateInfo(){
     var handler = this;
-    axios.post('/api/get_rel_mentees', {uid: this.props.user.id}).then(res => {
+    console.log(this.props.user.access_token);
+    axios.post('/api/get_rel_mentees', {}, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         handler.setState({mentees:res.data.mentees});
@@ -36,7 +38,7 @@ class AccountService extends React.Component {
 
   handleConfirm(mrid){
     var handler = this;
-    axios.post('/api/mentor_confirm', {uid: this.props.user.id, mrid: mrid}).then(res => {
+    axios.post('/api/mentor_confirm',{mrid: mrid}, {headers: {access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         handler.updateInfo();
@@ -51,7 +53,7 @@ class AccountService extends React.Component {
 
   handleDecision(mrid, agreed){
     var handler = this;
-    axios.post('/api/mentor_decision', {uid: this.props.user.id, mrid: mrid, agreed: agreed}).then(res => {
+    axios.post('/api/mentor_decision', {mrid: mrid, agreed: agreed}, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
         console.log(res.data);
         window.location.reload(); // TODO: the reason I used reload here is because
@@ -71,7 +73,8 @@ class AccountService extends React.Component {
     render() {
         return(
           <div className="account-inner-spacing">
-            <div>
+            <div className="category">
+              <div className="item">
               {this.state.mentees.length===0 && '您暂时并无Mentee签约'}
               {this.state.mentees.map(el => (
                 <div className="app-mentor-container" key={el.id}>
@@ -92,6 +95,7 @@ class AccountService extends React.Component {
                   {el.status===3 && <Button floated='right' disabled>服务完成</Button>}
                 </div>
               ))}
+              </div>
             </div>
           </div>
         );

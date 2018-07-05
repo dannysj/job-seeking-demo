@@ -1,7 +1,7 @@
-
-// See account_apply.js 
-
-
+//
+// See account_apply.js
+//
+//
 // import React from 'react';
 // import PropTypes from 'prop-types';
 // import {Dropdown} from 'semantic-ui-react';

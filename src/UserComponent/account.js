@@ -25,6 +25,7 @@ class Account extends Component {
 
 
   render() {
+
     const user = this.props.user;
 
     if(user.status === userStatus.logout){
