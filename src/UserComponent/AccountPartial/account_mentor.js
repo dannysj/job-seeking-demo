@@ -30,9 +30,9 @@ class AccountMentor extends React.Component {
     });
   }
 
-  handleConfirm(mid) {
+  handleConfirm(mrid) {
     let handler = this;
-    axios.post('/api/mentee_confirm', {mid: mid},{headers:{access_token: this.props.user.access_token}}).then(res => {
+    axios.post('/api/mentee_confirm', {mrid: mrid},{headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
         handler.updateInfo();
       }
@@ -60,7 +60,7 @@ class AccountMentor extends React.Component {
                   <p>签约状态: {el.status===20?'等待导师通过':el.status==50?'已被导师拒绝':el.status===1?'正在服务':el.status===2?'等待您确认服务完成':'服务完成'}</p>
                 </div>
                 {el.status===1 && <Button floated='right' disabled>服务进行中</Button>}
-                {el.status===2 && <Button floated='right' positive onClick={() => this.handleConfirm(el.mid)}>确认完成</Button>}
+                {el.status===2 && <Button floated='right' positive onClick={() => this.handleConfirm(el.mrid)}>确认完成</Button>}
                 {el.status===3 && <Button floated='right'>评价导师</Button> }
                 {el.status===3 && <CommentBox className="comment-box" user={this.props.user} mid={el.id} hideComment={true}/>}
               </div>
