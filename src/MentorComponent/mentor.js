@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Dropdown, Icon} from 'semantic-ui-react';
-
+import {Button, Dropdown, Icon, Pagination} from 'semantic-ui-react';
 import './mentor.less';
 import {fetchMentorList} from "../redux/mentorListAction";
 import store from "../redux";
@@ -29,9 +28,6 @@ class Mentor extends Component {
     this.handleClearFilter = this.handleClearFilter.bind(this);
     this.filterBarPressed = this.filterBarPressed.bind(this);
     this.handleRemoveButton = this.handleRemoveButton.bind(this);
-    this.renderFollowButton = this.renderFollowButton.bind(this);
-    this.follow_action = this.follow_action.bind(this);
-    this.unfollow_action = this.unfollow_action.bind(this);
     this.toggle_outside = this.toggle_outside.bind(this);
     /*axios.post('/api/get_followees_by_uid', {account: 0}.then(
       res =>{
@@ -85,50 +81,6 @@ class Mentor extends Component {
     this.setState(curState);
   }
 
- // Follow action might not needed now.
- follow_action(uid, mentor_uid){
-    // axios.post('/api/create_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
-    //      .then(res=> ())
-    //      .catch(err => console.log(err))
-    console.log("Button click")
-    let followees = this.state.followees;
-    followees.push(mentor_uid);
-    this.setState({followees: followees})
- }
-
-unfollow_action(uid, mentor_uid){
-    let followees = this.state.followees;
-    let index = followees.indexOf(mentor_uid)
-    if (index > -1){
-      followees.splice(index, 1);
-    }
-    this.setState({followees: followees})
-
-}
-
-  renderFollowButton(mentor_uid){
-    let followee_list = this.state.followees;
-    if (followee_list.includes(mentor_uid)){
-      return (
-        // Need add onclick to delete the mentor_uid to table and reset state
-        // onclick = {create}
-
-        <button class="ui active button" onClick={()=>this.unfollow_action(0, mentor_uid)} >
-        <i class="user icon"></i>
-        Unfollow
-        </button>
-      )
-    }
-    else {
-      // Need add onclick to add the mentor_uid to table and reset state
-      return (
-        <button class="ui active button" onClick={()=>this.follow_action(0, mentor_uid)}>
-        <i class="user icon"></i>
-        Follow
-        </button>
-      )
-    }
-  }
 
   render() {
     //var blackout = this.state.search ? "blackout " : "";
@@ -191,6 +143,8 @@ unfollow_action(uid, mentor_uid){
             .filter((el) => (this.state.selected.colleges.length === 0 || this.state.selected.colleges.indexOf(el.college_name) > -1)).map(el => (
               <MentorProfile mentor={el}/>
             ))}
+
+          <Pagination defaultActivePage={5} totalPages={10} />
         </div>
       </div>
     );
