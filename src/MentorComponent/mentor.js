@@ -29,22 +29,6 @@ class Mentor extends Component {
     this.filterBarPressed = this.filterBarPressed.bind(this);
     this.handleRemoveButton = this.handleRemoveButton.bind(this);
     this.toggle_outside = this.toggle_outside.bind(this);
-    /*axios.post('/api/get_followees_by_uid', {account: 0}.then(
-      res =>{
-        if (res.data.code === 0){
-          this.setState({
-            followees = res.data.followees
-          })
-        }
-        else{
-          this.setState ({
-            followees = []
-          })
-        }
-        }
-      )
-    )*/
-
   }
 
   toggle_outside(e) {

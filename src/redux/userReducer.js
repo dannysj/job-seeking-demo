@@ -40,25 +40,25 @@ Object.freeze(userStatus);
  * @type {User}
  * */
 const initState = {
-  access_token: "",
-  balance: "0.00",
-  cover: "",
-  email: "",
-  first: "",
-  last: "",
-  id: -1,
-  isactivated: false,
-  isadmin: false,
-  ismentor: false,
-  major: [],
-  num_notifications: 0,
-  profile_pic: "/img/sample_profile.jpg",
-  resume: "",
-  wechat: "",
-  register_date: null,
-  status: userStatus.logout,
+    access_token: "",
+    balance: "0.00",
+    cover: "",
+    email: "",
+    first: "",
+    last: "",
+    id: -1,
+    isactivated: false,
+    isadmin: false,
+    ismentor: false,
+    major: [],
+    num_notifications: 0,
+    profile_pic: "/img/sample_profile.jpg",
+    resume: "",
+    wechat: "",
+    register_date: null,
+    status: userStatus.logout,
 
-  dob: null, // not used
+    dob: null, // not used
 
   }
 ;
@@ -71,14 +71,10 @@ export default (state = initState, action) => {
       return {...action.payload, status: userStatus.login};
 
 
-
-
     case "LOGOUT":
       localStorage.removeItem('uid');
       localStorage.removeItem('access_token');
       return {status: userStatus.logout};
-
-
 
 
     case "FETCH_USER_PENDING":
@@ -90,8 +86,6 @@ export default (state = initState, action) => {
 
     case "FETCH_USER_FULFILLED":
       return {...action.payload.data.user, status: userStatus.login};
-
-
 
 
     case "UPDATE_USER_PENDING":
@@ -108,11 +102,8 @@ export default (state = initState, action) => {
       return state;
 
 
-
-
     case "UPDATE_USER_LOCAL":
       return {...state, [action.payload.attr]: action.payload.val};
-
 
 
     case "FOLLOW_MENTOR_PENDING":
@@ -123,11 +114,15 @@ export default (state = initState, action) => {
       return state;
 
     case "FOLLOW_MENTOR_FULFILLED":
-      if (action.payload.data.code === 0)
-        NotificationManager.success('关注成功', '完成啦');
-      else
+      if (action.payload.data.code === 0) {
+        NotificationManager.success('关注成功', '成功');
+        const mid = JSON.parse(action.payload.config.data).followee_uid;
+        return {...state, followee: [ ...state.followee, mid ]};
+      } else {
         NotificationManager.error('关注失败', '错误');
-      return state;
+        return state;
+      }
+
 
     default:
       return state;

@@ -1,54 +1,15 @@
 import React, {Component} from 'react';
 import {Table} from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
+import {connect} from "react-redux";
+import {followMentor} from '../redux/userAction'
 
+@connect(state => ({
+  followee: state.user.followee ? state.user.followee : [],
+}), {
+  followMentor,
+})
 class MentorProfile extends Component {
-
-
-  // // Follow action might not needed now.
-  // follow_action = (uid, mentor_uid) => {
-  //   axios.post('/api/create_follower_followee_relationship', {follower_uid:uid , followee_uid: mentor_uid} )
-  //        .then(res=> ())
-  //        .catch(err => console.log(err))
-  //   console.log("Button click")
-  //   let followees = this.state.followees;
-  //   followees.push(mentor_uid);
-  //   this.setState({followees: followees})
-  // }
-  //
-  // unfollow_action = (uid, mentor_uid) => {
-  //   let followees = this.state.followees;
-  //   let index = followees.indexOf(mentor_uid)
-  //   if (index > -1){
-  //     followees.splice(index, 1);
-  //   }
-  //   this.setState({followees: followees})
-  //
-  // }
-  //
-  // renderFollowButton = (mentor_uid) => {
-  //   let followee_list = this.state.followees;
-  //   if (followee_list.includes(mentor_uid)){
-  //     return (
-  //       // Need add onclick to delete the mentor_uid to table and reset state
-  //       // onclick = {create}
-  //
-  //       <button class="ui active button" onClick={()=>this.unfollow_action(0, mentor_uid)} >
-  //         <i class="user icon"></i>
-  //         Unfollow
-  //       </button>
-  //     )
-  //   }
-  //   else {
-  //     // Need add onclick to add the mentor_uid to table and reset state
-  //     return (
-  //       <button class="ui active button" onClick={()=>this.follow_action(0, mentor_uid)}>
-  //         <i class="user icon"></i>
-  //         Follow
-  //       </button>
-  //     )
-  //   }
-  // }
 
   renderRow = (icon, text) =>
     (<Table.Row className="table-clean-row">
@@ -58,9 +19,10 @@ class MentorProfile extends Component {
 
   render() {
     const mentor = this.props.mentor;
+    const isFollowing = this.props.followee.includes(mentor.uid);
 
     return (
-      <div className="mentor-container" key={mentor.id}>
+      <div className="mentor-container" key={mentor.mid}>
         <div className="inner-container">
           <div className="mentor-profile">
             <img className="mentor-picture" src={mentor.profile_pic} alt={mentor.last + ' ' + mentor.first}/>
@@ -80,11 +42,19 @@ class MentorProfile extends Component {
           </div>
         </div>
 
-        <Link to={'/mentor/' + mentor.mid}>
+        <div className="connect-circle-container">
+          <Link to={'/mentor/' + mentor.mid}>
+            <div className="connect-circle">
+              <div>详情</div>
+            </div>
+          </Link>
           <div className="connect-circle">
-            <div>详情</div>
+            {isFollowing ?
+              <div>已关注</div> :
+              <div onClick={() => this.props.followMentor(mentor.uid)}>关注</div>}
+
           </div>
-        </Link>
+        </div>
 
       </div>
     )
