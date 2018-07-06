@@ -72,7 +72,7 @@ class CreateArticle extends React.Component {
   render() {
     return(
       <div>
-        <NotificationContainer />
+
         <div className="category">
           <div className="header">
             <div className="title">
