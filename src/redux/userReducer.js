@@ -116,13 +116,31 @@ export default (state = initState, action) => {
     case "FOLLOW_MENTOR_FULFILLED":
       if (action.payload.data.code === 0) {
         NotificationManager.success('关注成功', '成功');
-        const mid = JSON.parse(action.payload.config.data).followee_uid;
-        return {...state, followee: [ ...state.followee, mid ]};
+        const uid = JSON.parse(action.payload.config.data).followee_uid;
+        return {...state, followee: [ ...state.followee, uid ]};
       } else {
         NotificationManager.error('关注失败', '错误');
         return state;
       }
 
+
+    case "UNOLLOW_MENTOR_PENDING":
+      return state;
+
+    case "UNFOLLOW_MENTOR_REJECTED":
+      NotificationManager.error('取关失败', '错误');
+      return state;
+
+    case "UNFOLLOW_MENTOR_FULFILLED":
+      if (action.payload.data.code === 0) {
+        NotificationManager.success('取关成功', '成功');
+        const uid = JSON.parse(action.payload.config.data).followee_uid;
+        const followee = state.followee.filter(e => e!== uid);
+        return {...state, followee};
+      } else {
+        NotificationManager.error('取关失败', '错误');
+        return state;
+      }
 
     default:
       return state;

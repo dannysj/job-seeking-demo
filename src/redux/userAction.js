@@ -39,13 +39,42 @@ export function logout() {
 }
 
 
-export const followMentor = (mid) => {
+export const followMentor = (uid) => {
   if (store.getState().user.status === userStatus.login)
     return {
       type: "FOLLOW_MENTOR",
       payload: axios.post(
         '/api/follow_user',
-        {followee_uid: mid},
+        {followee_uid: uid},
+        {headers: {"access_token": store.getState().user.access_token}}
+      )
+    };
+  else
+    NotificationManager.error('请先登录', '错误');
+};
+
+
+export const followUser = (followee_uid) => {
+  if (store.getState().user.status === userStatus.login)
+    return {
+      type: "FOLLOW_MENTOR",
+      payload: axios.post(
+        '/api/follow_user',
+        {followee_uid},
+        {headers: {"access_token": store.getState().user.access_token}}
+      )
+    };
+  else
+    NotificationManager.error('请先登录', '错误');
+};
+
+export const unfollowUser = (followee_uid) => {
+  if (store.getState().user.status === userStatus.login)
+    return {
+      type: "UNFOLLOW_MENTOR",
+      payload: axios.post(
+        '/api/unfollow_user',
+        {followee_uid},
         {headers: {"access_token": store.getState().user.access_token}}
       )
     };

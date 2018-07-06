@@ -2,12 +2,13 @@ import React, {Component} from 'react';
 import {Table} from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import {connect} from "react-redux";
-import {followMentor} from '../redux/userAction'
+import {followUser, unfollowUser} from '../redux/userAction'
 
 @connect(state => ({
   followee: state.user.followee ? state.user.followee : [],
 }), {
-  followMentor,
+  followUser: followUser,
+  unfollowUser: unfollowUser
 })
 class MentorProfile extends Component {
 
@@ -50,9 +51,8 @@ class MentorProfile extends Component {
           </Link>
           <div className="connect-circle">
             {isFollowing ?
-              <div>已关注</div> :
-              <div onClick={() => this.props.followMentor(mentor.uid)}>关注</div>}
-
+              <div onClick={() => this.props.unfollowUser(mentor.uid)}>已关注</div> :
+              <div onClick={() => this.props.followUser(mentor.uid)}>关注</div>}
           </div>
         </div>
 

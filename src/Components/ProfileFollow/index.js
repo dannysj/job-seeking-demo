@@ -4,7 +4,7 @@ import './index.less';
 import axios from 'axios';
 import store from "../../redux/index";
 import {userStatus} from "../../redux/userReducer"
-import {followMentor} from "../../redux/userAction";
+import {followUser} from "../../redux/userAction";
 
 const FollowStatus = {
   UNKNOWN : 0,
@@ -32,7 +32,7 @@ class ProfileFollow extends Component {
     // call the function 
 
     // TODO: Change the acceptable environment in the backend.
-    store.dispatch(followMentor(this.state.author_id)).then(
+    store.dispatch(followUser(this.state.author_id)).then(
       this.setState({followStatus: FollowStatus.FOLLOWED})
     );
   }
