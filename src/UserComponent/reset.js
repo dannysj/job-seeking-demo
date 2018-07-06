@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import {NotificationManager} from 'react-notifications';
+import axios from 'axios';
 import './user.less';
 
 class Reset extends Component {
@@ -13,22 +15,17 @@ class Reset extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.setState({success: true})
-    //TODO:
-    /*
-        axios.post('/api/verify_user',this.state.user).then(res => {
-          if(res.data.code===0){
-            store.dispatch(setUser(res.data.user));
-            if(this.context.router.history.location.pathname === "/login"){
-              this.context.router.history.push("/");
-              return;
-            }
-            this.context.router.history.goBack();
-          }
-          else{
-            NotificationManager.error('登入失败', '错误');
-          }
-        });*/
+    axios.post('/api/forget_password', {email: this.state.user.email})
+      .then(res => {
+        if (res.data.code === 0) {
+          this.setState({success: true});
+        } else {
+          NotificationManager.error('无此账号', '错误');
+        }
+      }).catch(e => {
+      NotificationManager.error('网络错误', '错误')
+    });
+
   }
 
   handleChange(e) {

@@ -1,6 +1,7 @@
 const db = {
   ...require('./userSignupDB.js'),
-  ...require('./messageDB.js')
+  ...require('./messageDB.js'),
+  ...require('./userInfoDB')
 };
 const express = require('express');
 const app = express.Router();
@@ -58,6 +59,49 @@ app.post('/api/create_user', (req, res) => {
     });
 
     res.json({code: 0, user: user});
+  });
+});
+
+app.post('/api/forget_password', (req, res) => {
+
+  db.getUidbyEmail(req.body.email, (err, uid) => {
+    if (err) {
+      console.log(err);
+      res.json({code: 1, errMsg: err});
+      return;
+    }
+
+    const newPassword = Math.random().toString(32).replace(/[^a-z]+/g, '');
+    const hashedPassword = security.getHashedPassword(newPassword);
+
+    db.updateUser({uid, attr: 'password', val: hashedPassword}, (err) => {
+      if (err) {
+        console.log(err);
+        res.json({code: 1, errMsg: 'Operation Forbidden'});
+      }
+    });
+
+    const mailOptions = {
+      from: '"同行平台" <' + config.mail_config.auth.user + '>', // sender address
+      to: req.body.email, // list of receivers
+      subject: '密码重置', // Subject line
+      text: newPassword, // plaintext body
+      html: `亲爱的用户您好：<br>
+        感谢您使用同行平台，希望能和您一起在这里度过美好的时光！<br>
+        您的新密码是"${newPassword}"
+        如遇到问题可联系同行平台客服助手微信，微信号：tongxingplatform<br>` // html body
+    };
+
+    console.log(mailOptions)
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log('Message sent: ' + info.response);
+    });
+
+    res.json({code: 0});
   });
 });
 
