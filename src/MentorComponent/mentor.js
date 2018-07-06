@@ -1,16 +1,15 @@
 import React, {Component} from 'react';
-import {Button, Dropdown, Icon, Pagination} from 'semantic-ui-react';
+import {Button, Dropdown, Icon} from 'semantic-ui-react';
 import './mentor.less';
 import {fetchMentorList} from "../redux/mentorListAction";
 import store from "../redux";
 import {connect} from "react-redux";
-import MentorProfile from "./MentorProfile";
+import MentorProfileContainer from './MentorProfileContainer'
 
 @connect(state => ({
   mentors: state.mentorListStore.mentors,
   majors: state.mentorListStore.majors,
-  colleges: state.mentorListStore.colleges,
-  isLoading: state.mentorListStore.isLoading
+  colleges: state.mentorListStore.colleges
 }))
 class Mentor extends Component {
   constructor(props) {
@@ -24,7 +23,6 @@ class Mentor extends Component {
       filterPressed: false,
       keyword: '',
       left: 100,
-      page: 1
     };
   }
 
@@ -69,14 +67,6 @@ class Mentor extends Component {
       .filter((el) => (selected.majors.length === 0 || el.major.filter(e => selected.majors.indexOf(e) > -1).length > 0))
       .filter((el) => (selected.colleges.length === 0 || selected.colleges.indexOf(el.college_name) > -1));
 
-    if (this.props.loading) {
-      return (
-        <div className="loading-news-view">
-          <Button basic loading>Loading</Button>
-        </div>
-      );
-    }
-
     return (
       <div className="flex-container">
         <div className="ui top attached tabular menu top-bar">
@@ -111,12 +101,7 @@ class Mentor extends Component {
 
           </div>
         </div>
-
-        <div className="content-container listitem" onClick={this.toggle_outside}>
-          {filteredMentors.map(el => <MentorProfile mentor={el}/>)}
-          <br/>
-          <Pagination activePage={1} totalPages={10}/>
-        </div>
+        <MentorProfileContainer mentors={filteredMentors} onClick={this.toggle_outside}/>
       </div>
     );
   }
