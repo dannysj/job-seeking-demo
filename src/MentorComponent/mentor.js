@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
-import {Button, Checkbox, Divider, Icon, Menu, Dropdown, Table} from 'semantic-ui-react';
-import {Link} from 'react-router-dom';
+import {Button, Dropdown, Icon} from 'semantic-ui-react';
+
 import './mentor.less';
-import axios from "axios/index";
 import {fetchMentorList} from "../redux/mentorListAction";
 import store from "../redux";
 import {connect} from "react-redux";
-
-//import { createFollowerFolloweeRelationship } from '../../server/db/module/follow_relation';
+import MentorProfile from "./MentorProfile";
 
 
 class Mentor extends Component {
@@ -24,7 +22,8 @@ class Mentor extends Component {
       results: [],
       filterPressed: false,
       keyword: '',
-      left: 100
+      left: 100,
+      page: 1
     };
     this.uid = 0;
     this.handleClearFilter = this.handleClearFilter.bind(this);
@@ -133,10 +132,7 @@ unfollow_action(uid, mentor_uid){
 
   render() {
     //var blackout = this.state.search ? "blackout " : "";
-    const companyIcon = '/icons/company.png';
-    const schoolIcon = '/icons/school.png';
-    const posiIcon = '/icons/position.png';
-    const ageIcon = '/icons/age.png';
+
     // for search
     const { filterPressed, keyword, isLoading, left } = this.state
     console.log(this.state.selected[keyword]);
@@ -190,75 +186,12 @@ unfollow_action(uid, mentor_uid){
           </div>
         </div>
         <div className="content-container listitem" onClick={this.toggle_outside}>
-
-
-              {this.props.mentors
-                .filter((el) => (this.state.selected.majors.length === 0 || el.major.filter(e => this.state.selected.majors.indexOf(e) > -1).length > 0 ))
-                .filter((el) => (this.state.selected.colleges.length === 0  || this.state.selected.colleges.indexOf(el.college_name) > -1)).map(el => (
-                <div className="mentor-container" key={el.id}>
-                    <div className="inner-container">
-                    <div className="mentor-profile">
-                      <img className="mentor-picture" src={el.profile_pic} alt=""/>
-                      <br />
-                      <div><strong>{el.last + ' '}{el.first}</strong></div>
-                    </div>
-                    <div className="vertical-divider"></div>
-                    <div className="mentor-text">
-                    <Table className="table-clean-border" basic='very'>
-                      <Table.Body>
-                        <Table.Row className="table-clean-row">
-                          <Table.Cell>
-                            <img className="title-icon"  alt="position" src={companyIcon} ></img>
-                          </Table.Cell>
-                          <Table.Cell>
-
-                            <div className="card-info">  {el.offer_company}</div>
-                          </Table.Cell>
-                        </Table.Row>
-                        <Table.Row className="table-clean-row">
-                          <Table.Cell>
-                            <img className="title-icon"  alt="position" src={posiIcon} ></img>
-                          </Table.Cell>
-                          <Table.Cell>
-
-                            <div className="card-info">  {el.offer_title} </div>
-                          </Table.Cell>
-                        </Table.Row>
-                        <Table.Row className="table-clean-row">
-                          <Table.Cell>
-                            <img className="title-icon"  alt="position" src={schoolIcon} ></img>
-                          </Table.Cell>
-                          <Table.Cell>
-
-                              <div className="card-info">{el.college_name} </div>
-                          </Table.Cell>
-                        </Table.Row>
-                        <Table.Row className="table-clean-row">
-                          <Table.Cell>
-                            <img className="title-icon"  alt="position" src={ageIcon} ></img>
-                          </Table.Cell>
-                          <Table.Cell>
-
-                            <div className="card-info"> {(el.major) ? (el.major.join(', ')) : ("")}  </div>
-                          </Table.Cell>
-                        </Table.Row>
-                      </Table.Body>
-                    </Table>
-
-                    </div>
-
-                  </div>
-                  <Link to={'/mentor/' + el.mid}>
-                  <div className="connect-circle">
-                    <div>详情</div>
-                  </div>
-                  </Link>
-
-                </div>
-              ))}
-            </div>
-
-
+          {this.props.mentors
+            .filter((el) => (this.state.selected.majors.length === 0 || el.major.filter(e => this.state.selected.majors.indexOf(e) > -1).length > 0))
+            .filter((el) => (this.state.selected.colleges.length === 0 || this.state.selected.colleges.indexOf(el.college_name) > -1)).map(el => (
+              <MentorProfile mentor={el}/>
+            ))}
+        </div>
       </div>
     );
   }
