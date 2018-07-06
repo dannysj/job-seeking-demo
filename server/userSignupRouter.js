@@ -13,6 +13,7 @@ const security = require('./security');
 const transporter = nodemailer.createTransport(config.mail_config);
 
 
+
 app.post('/api/create_user', (req, res) => {
 
   req.body.password = security.getHashedPassword(req.body.password);
