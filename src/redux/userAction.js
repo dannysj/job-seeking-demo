@@ -1,5 +1,7 @@
 import axios from "axios";
 import store from "./index";
+import {NotificationManager} from "react-notifications";
+import {userStatus} from "./userReducer";
 
 export function fetchUser(access_token) {
   return {
@@ -35,3 +37,18 @@ export function logout() {
     type: "LOGOUT"
   }
 }
+
+
+export const followMentor = (mid) => {
+  if (store.getState().user.status === userStatus.login)
+    return {
+      type: "FOLLOW_MENTOR",
+      payload: axios.post(
+        '/api/follow_user',
+        {followee_uid: mid},
+        {headers: {"access_token": store.getState().user.access_token}}
+      )
+    };
+  else
+    NotificationManager.error('请先登录', '错误');
+};

@@ -70,10 +70,15 @@ export default (state = initState, action) => {
       localStorage.setItem('access_token', action.payload.access_token);
       return {...action.payload, status: userStatus.login};
 
+
+
+
     case "LOGOUT":
       localStorage.removeItem('uid');
       localStorage.removeItem('access_token');
       return {status: userStatus.logout};
+
+
 
 
     case "FETCH_USER_PENDING":
@@ -85,6 +90,8 @@ export default (state = initState, action) => {
 
     case "FETCH_USER_FULFILLED":
       return {...action.payload.data.user, status: userStatus.login};
+
+
 
 
     case "UPDATE_USER_PENDING":
@@ -100,8 +107,27 @@ export default (state = initState, action) => {
         NotificationManager.success('资料更新成功', '完成啦');
       return state;
 
+
+
+
     case "UPDATE_USER_LOCAL":
       return {...state, [action.payload.attr]: action.payload.val};
+
+
+
+    case "FOLLOW_MENTOR_PENDING":
+      return state;
+
+    case "FOLLOW_MENTOR_REJECTED":
+      NotificationManager.error('关注失败', '错误');
+      return state;
+
+    case "FOLLOW_MENTOR_FULFILLED":
+      if (action.payload.data.code === 0)
+        NotificationManager.success('关注成功', '完成啦');
+      else
+        NotificationManager.error('关注失败', '错误');
+      return state;
 
     default:
       return state;
