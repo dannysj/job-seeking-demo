@@ -6,7 +6,12 @@ import store from "../redux";
 import {connect} from "react-redux";
 import MentorProfile from "./MentorProfile";
 
-
+@connect(state => ({
+  mentors: state.mentorListStore.mentors,
+  majors: state.mentorListStore.majors,
+  colleges: state.mentorListStore.colleges,
+  isLoading: state.mentorListStore.isLoading
+}))
 class Mentor extends Component {
   constructor(props) {
     super(props);
@@ -16,44 +21,29 @@ class Mentor extends Component {
         "majors": [],
         "colleges": []
       },
-      isLoading: false,
-      followees: [],
-      results: [],
       filterPressed: false,
       keyword: '',
       left: 100,
       page: 1
     };
-    this.uid = 0;
-    this.handleClearFilter = this.handleClearFilter.bind(this);
-    this.filterBarPressed = this.filterBarPressed.bind(this);
-    this.handleRemoveButton = this.handleRemoveButton.bind(this);
-    this.toggle_outside = this.toggle_outside.bind(this);
   }
 
-  toggle_outside(e) {
-    this.setState({filterPressed: false});
-  }
-
-  componentWillMount(){
+  componentWillMount() {
     store.dispatch(fetchMentorList());
   }
 
-  handleRemoveButton(e,title) {
+  toggle_outside = (e) => {
+    this.setState({filterPressed: false});
+  };
+
+  handleRemoveButton = (e, title) => {
     let curState = this.state;
-    curState.selected[title] = []
+    curState.selected[title] = [];
     this.setState(curState);
     e.stopPropagation();
-  }
+  };
 
-  handleClearFilter(e,data){
-    let curState = this.state;
-    curState.selected.majors = [];
-    curState.selected.colleges = [];
-    this.setState(curState);
-  }
-
-  filterBarPressed(e, val) {
+  filterBarPressed = (e, val) => {
     let curState = this.state;
     curState.filterPressed = !curState.filterPressed;
     curState.keyword = val;
@@ -63,110 +53,74 @@ class Mentor extends Component {
       curState.left = this.instance_college.getBoundingClientRect().left;
     }
     this.setState(curState);
+  };
+
+  handleSearchInputChange = (e, data) => {
+    let curState = this.state;
+    curState.selected[this.state.keyword] = data.value;
+    this.setState({curState});
   }
 
 
   render() {
-    //var blackout = this.state.search ? "blackout " : "";
+    const {filterPressed, keyword, left, selected} = this.state;
 
-    // for search
-    const { filterPressed, keyword, isLoading, left } = this.state
-    console.log(this.state.selected[keyword]);
+    const filteredMentors = this.props.mentors
+      .filter((el) => (selected.majors.length === 0 || el.major.filter(e => selected.majors.indexOf(e) > -1).length > 0))
+      .filter((el) => (selected.colleges.length === 0 || selected.colleges.indexOf(el.college_name) > -1));
 
-    console.log(this.props[keyword]);
     if (this.props.loading) {
       return (
         <div className="loading-news-view">
-            <Button basic loading>Loading</Button>
+          <Button basic loading>Loading</Button>
         </div>
       );
     }
-    else
+
     return (
-      <div className="flex-container" >
-        <div className="ui top attached tabular menu top-bar" >
+      <div className="flex-container">
+        <div className="ui top attached tabular menu top-bar">
           <div className="ui container inner-topbar">
-            <div className="filter-item filter-item-all" onClick={(e) => this.filterBarPressed(e,"majors")}>
-            <div className="item-central" ref={(el) => this.instance_major = el}>Major{(this.state.selected.majors.length > 0) ? (" · " + this.state.selected.majors.length) : ""}</div>
-            {
-              (this.state.selected.majors.length > 0) ? ( <Icon className="delete-button"  name='repeat' onClick={(e)=> this.handleRemoveButton(e,"majors")}/>): (<div></div>)
-            }
+
+            <div className="filter-item filter-item-all" onClick={(e) => this.filterBarPressed(e, "majors")}>
+              <div className="item-central" ref={(el) => this.instance_major = el}>
+                Major{(selected.majors.length > 0) ? (" · " + selected.majors.length) : ""}
+              </div>
+              {selected.majors.length > 0 && <Icon className="delete-button" name='repeat'
+                                                   onClick={(e) => this.handleRemoveButton(e, "majors")}/>}
             </div>
 
-            <div className="filter-item filter-item-all" onClick={(e) => this.filterBarPressed(e,"colleges")}>
-            <div className="item-central" ref={(el) => this.instance_college = el} >College{(this.state.selected.colleges.length > 0) ? (" · " + this.state.selected.colleges.length) : ""}</div>
-            {
-              (this.state.selected.colleges.length > 0) ? ( <Icon className="delete-button"  name='repeat' onClick={(e)=> this.handleRemoveButton(e,"colleges")}/>): (<div></div>)
-            }
+            <div className="filter-item filter-item-all" onClick={(e) => this.filterBarPressed(e, "colleges")}>
+              <div className="item-central" ref={(el) => this.instance_college = el}>
+                College{(selected.colleges.length > 0) ? (" · " + selected.colleges.length) : ""}
+              </div>
+              {selected.colleges.length > 0 && <Icon className="delete-button" name='repeat'
+                                                     onClick={(e) => this.handleRemoveButton(e, "colleges")}/>}
             </div>
-            {
-              (this.state.filterPressed) ? (
-                <div className="filter-expand" style={{left: left+"px"}}>
 
+            {
+              (filterPressed) ? (
+                <div className="filter-expand" style={{left: left + "px"}}>
                   <Dropdown name='filter' placeholder='查一查' search selection multiple fluid closeOnChange
                             options={this.props[keyword]}
-                            onChange={(e, data) =>
-                              {
-                                let curState = this.state;
-                                curState.selected[keyword] = data.value
-                                this.setState({curState});
-                              }
-                              }
-                            value={this.state.selected[keyword]}
-                            />
-
+                            onChange={this.handleSearchInputChange}
+                            value={selected[keyword]}/>
                 </div>
               ) : (<div></div>)
             }
 
           </div>
         </div>
-        <div className="content-container listitem" onClick={this.toggle_outside}>
-          {this.props.mentors
-            .filter((el) => (this.state.selected.majors.length === 0 || el.major.filter(e => this.state.selected.majors.indexOf(e) > -1).length > 0))
-            .filter((el) => (this.state.selected.colleges.length === 0 || this.state.selected.colleges.indexOf(el.college_name) > -1)).map(el => (
-              <MentorProfile mentor={el}/>
-            ))}
 
-          <Pagination defaultActivePage={5} totalPages={10} />
+        <div className="content-container listitem" onClick={this.toggle_outside}>
+          {filteredMentors.map(el => <MentorProfile mentor={el}/>)}
+          <br/>
+          <Pagination activePage={1} totalPages={10}/>
         </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {...state.mentorListStore};
-};
 
-export default connect(mapStateToProps)(Mentor);
-
-/*
-<div className="ui right internal rail Filter-container">
-  <div className="filter-container">
-    <h3>筛选导师：</h3>
-    <label>选择领域</label>
-    <Dropdown placeholder='领域' fluid search selection options={this.props.majors} value={this.state.selectedMajor} onChange={this.handleMajorChange} />
-    <br/>
-    <label>选择院校</label>
-    <Dropdown placeholder='院校' fluid search selection options={this.props.colleges} value={this.state.selectedCollege} onChange={this.handleCollegeChange}/>
-    <br/>
-    <Button className="ui button right"  onClick={this.handleClearFilter}>清除筛选</Button>
-  </div>
-</div>
-<div className={blackout}></div>
-<div className="filter-container">
-  <div className="filter-list">
-  </div>
-  <div className="button-group">
-  <Button.Group size='medium' fluid>
-    <Button>Cancel</Button>
-    <Button.Or />
-    <Button>Reset</Button>
-    <Button.Or />
-    <Button color='green'>Submit</Button>
-  </Button.Group>
-  </div>
-</div>
-
-*/
+export default Mentor;

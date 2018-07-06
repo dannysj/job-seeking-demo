@@ -11,7 +11,6 @@ import {followUser, unfollowUser} from '../redux/userAction'
   unfollowUser: unfollowUser
 })
 class MentorProfile extends Component {
-
   renderRow = (icon, text) =>
     (<Table.Row className="table-clean-row">
       <Table.Cell><img className="title-icon" alt="position" src={icon}/></Table.Cell>
