@@ -8,14 +8,13 @@ class Reset extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {user: {}, success: false};
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {email: null, success: false};
   }
 
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('/api/forget_password', {email: this.state.user.email})
+
+    axios.post('/api/forget_password', {email: this.state.email})
       .then(res => {
         if (res.data.code === 0) {
           this.setState({success: true});
@@ -25,14 +24,11 @@ class Reset extends Component {
       }).catch(e => {
       NotificationManager.error('网络错误', '错误')
     });
+  };
 
-  }
-
-  handleChange(e) {
-    let curUser = this.state.user;
-    curUser[e.target.name] = e.target.value;
-    this.setState({user: curUser});
-  }
+  handleChange = (e) => {
+    this.setState({email: e.target.value});
+  };
 
   render() {
     return (

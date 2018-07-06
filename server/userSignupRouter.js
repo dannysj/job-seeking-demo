@@ -8,6 +8,7 @@ const app = express.Router();
 const nodemailer = require('nodemailer');
 const config = require('./_config.js');
 const security = require('./security');
+const password_generator = require('generate-password');
 
 
 // create reusable transporter object using the default SMTP transport
@@ -71,7 +72,11 @@ app.post('/api/forget_password', (req, res) => {
       return;
     }
 
-    const newPassword = Math.random().toString(32).replace(/[^a-z]+/g, '');
+    const newPassword = password_generator.generate({
+      length: 10,
+      numbers: true
+    });
+
     const hashedPassword = security.getHashedPassword(newPassword);
 
     db.updateUser({uid, attr: 'password', val: hashedPassword}, (err) => {
@@ -85,10 +90,10 @@ app.post('/api/forget_password', (req, res) => {
       from: '"同行平台" <' + config.mail_config.auth.user + '>', // sender address
       to: req.body.email, // list of receivers
       subject: '密码重置', // Subject line
-      text: newPassword, // plaintext body
+      text: '密码重置', // plaintext body
       html: `亲爱的用户您好：<br>
         感谢您使用同行平台，希望能和您一起在这里度过美好的时光！<br>
-        您的新密码是"${newPassword}"
+        您的新密码是"${newPassword}", 请尽快修改默认密码
         如遇到问题可联系同行平台客服助手微信，微信号：tongxingplatform<br>` // html body
     };
 
