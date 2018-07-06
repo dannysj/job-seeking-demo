@@ -9,7 +9,8 @@ import MentorProfileContainer from './MentorProfileContainer'
 @connect(state => ({
   mentors: state.mentorListStore.mentors,
   majors: state.mentorListStore.majors,
-  colleges: state.mentorListStore.colleges
+  colleges: state.mentorListStore.colleges,
+  isLoading: state.mentorListStore.isLoading
 }))
 class Mentor extends Component {
   constructor(props) {
@@ -66,6 +67,14 @@ class Mentor extends Component {
     const filteredMentors = this.props.mentors
       .filter((el) => (selected.majors.length === 0 || el.major.filter(e => selected.majors.indexOf(e) > -1).length > 0))
       .filter((el) => (selected.colleges.length === 0 || selected.colleges.indexOf(el.college_name) > -1));
+
+    if (this.props.loading) {
+      return (
+        <div className="loading-news-view">
+          <Button basic loading>Loading</Button>
+        </div>
+      );
+    }
 
     return (
       <div className="flex-container">
