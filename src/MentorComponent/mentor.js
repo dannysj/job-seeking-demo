@@ -110,7 +110,9 @@ class Mentor extends Component {
 
           </div>
         </div>
-        <MentorProfileContainer mentors={filteredMentors} onClick={this.toggle_outside}/>
+        <div onClick={this.toggle_outside}>
+          <MentorProfileContainer mentors={filteredMentors} />
+        </div>
       </div>
     );
   }
