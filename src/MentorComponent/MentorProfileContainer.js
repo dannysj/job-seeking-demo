@@ -9,16 +9,16 @@ class MentorProfileContainer extends Component {
     super(props);
     this.state = {
       page: 1,
-      totalPages: this.props.mentors.length / this.itemsPerPage
+      totalPages: Math.ceil(this.props.mentors.length / this.itemsPerPage)
     };
 
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot){
+  componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.mentors.length !== this.props.mentors.length)
       this.setState({
         page: 1,
-        totalPages: this.props.mentors.length / this.itemsPerPage
+        totalPages: Math.ceil(this.props.mentors.length / this.itemsPerPage)
       })
   }
 
@@ -26,14 +26,17 @@ class MentorProfileContainer extends Component {
 
   render() {
     const start = (this.state.page - 1) * this.itemsPerPage;
-    const end =  this.state.page * this.itemsPerPage;
+    const end = this.state.page * this.itemsPerPage;
     const mentors = this.props.mentors.slice(start, end);
 
     return (
       <div className="content-container listitem">
         {mentors.map(el => <MentorProfile mentor={el}/>)}
         <br/>
-        <Pagination activePage={this.state.page} totalPages={this.state.totalPages} onPageChange={this.handlePageChange}/>
+        {this.state.totalPages !== 1 &&
+        <Pagination activePage={this.state.page}
+                    totalPages={this.state.totalPages}
+                    onPageChange={this.handlePageChange}/>}
       </div>
     );
   }
