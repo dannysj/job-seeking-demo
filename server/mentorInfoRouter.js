@@ -72,6 +72,8 @@ app.post('/api/get_mentor_list', (req, res) => {
       return;
     }
 
+    list.filter(e => e.major === null).forEach(e =>  e.major = []);
+
     res.json({code: 0, list: list});
   });
 });
