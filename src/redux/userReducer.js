@@ -77,22 +77,14 @@ export default (state = initState, action) => {
 
 
     case "FETCH_USER_PENDING":
-      return {status: userStatus.pending};
+      return {...state, status: userStatus.pending};
 
-    case "FETCH_USER_REJECTED":
-      NotificationManager.error('无法读取登陆信息', '错误');
-      return {status: userStatus.logout};
 
     case "FETCH_USER_FULFILLED":
       return {...action.payload.data.user, status: userStatus.login};
 
 
     case "UPDATE_USER_PENDING":
-      return state;
-
-    case "UPDATE_USER_REJECTED":
-      if (JSON.parse(action.payload.config.data).attr !== 'last')
-        NotificationManager.error('资料更新失败', '错误');
       return state;
 
     case "UPDATE_USER_FULFILLED":

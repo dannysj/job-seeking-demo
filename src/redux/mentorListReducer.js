@@ -1,5 +1,3 @@
-import {NotificationManager} from "react-notifications";
-
 const initState = {
   last_fetched: new Date(0),
   loading: false,
@@ -13,10 +11,6 @@ export default (state = initState, action) => {
   switch (action.type) {
     case "FETCH_MENTOR_LIST_PENDING":
       return {...state, loading:true};
-
-    case "FETCH_MENTOR_LIST_REJECTED":
-      NotificationManager.error('无法获取导师列表', '错误');
-      return state;
 
     case "FETCH_MENTOR_LIST_FULFILLED":
       const list = action.payload.data.list;
