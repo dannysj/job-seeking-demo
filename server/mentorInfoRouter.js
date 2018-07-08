@@ -35,12 +35,14 @@ app.post('/api/mentor_edit', (req, res) => {
 
 
 app.post('/api/get_mentor_detail_by_uid', (req, res) => {
+
   db.getMentorDetailByUid(req.body.uid, (err, mentor) => {
     if (err) {
       console.log(err);
       res.json({code: 1});
       return;
     }
+
     if (mentor) {
       res.json({code: 0, mentor: mentor});
     }
@@ -69,6 +71,8 @@ app.post('/api/get_mentor_list', (req, res) => {
       res.json({code: 1});
       return;
     }
+
+    list.filter(e => e.major === null).forEach(e =>  e.major = []);
 
     res.json({code: 0, list: list});
   });

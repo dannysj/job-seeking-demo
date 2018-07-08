@@ -168,8 +168,8 @@ class AccountApply extends React.Component {
         }
 
         const apiUrl = this.state.hasNotApplied ? '/api/mentor_apply' : '/api/mentor_edit';
-
-        axios.post(apiUrl, {service: this.state.mentor_info.service},
+        delete this.state.mentor_info["uid"];
+        axios.post(apiUrl, this.state.mentor_info,
             {headers:{access_token: this.props.user.access_token}}).then(res => {
             if (res.data.code === 0) {
                 NotificationManager.success('我们已收到您的表格','成功');

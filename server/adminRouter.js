@@ -2,10 +2,13 @@ const db = {
   ...require('./adminDB.js'),
   ...require('./messageDB.js')
 };
+const path = require('path')
 
+const sharp = require('sharp');
 const express = require('express');
 const app = express();
 const multer = require('multer');
+const image_compression_size = require("./_config").image_compression_size;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -31,8 +34,27 @@ app.post('/api/file/general_upload', upload.single('file'), (req, res) => {
   if (!req.file)
     return res.json({code: -21, errMsg: 'No files found'});
 
+  compressImage(req.file);
+
   res.json({code: 0, url: '/files/' + req.file.filename});
 });
+
+function compressImage(file) {
+  // All file types supported by `sharp`
+  const imageMIME = ["image/gif", "image/png", "image/jpeg", "image/bmp", "image/webp", "image/tiff"];
+  if (imageMIME.indexOf(file.mimetype) !== -1) {
+
+    const fileExtension = path.extname(file.filename);
+    const fileBaseName = path.basename(file.filename, fileExtension);
+    const newFileName = fileBaseName + "_small" + fileExtension;
+
+    sharp(file.path)
+      .resize(image_compression_size)
+      .toFile(path.join(file.destination, newFileName));
+
+    file.filename =  newFileName;
+  }
+}
 
 app.post('/api/file/general_upload_name_perserved', upload_name_perserved.single('file'), (req, res) => {
   if (!req.file)
@@ -40,6 +62,8 @@ app.post('/api/file/general_upload_name_perserved', upload_name_perserved.single
 
   res.json({code: 0, url: '/files/' + req.file.filename});
 });
+
+
 
 app.post('/api/admin/get_applications', (req, res) => {
   db.getMentorApplications((err, list) => {
