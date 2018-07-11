@@ -17,7 +17,6 @@ import CreateArticle from "./AccountPartial/create_article";
 import AccountNotification from "./AccountPartial/account_notification";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-import {userStatus} from "../redux/userReducer";
 
 
 class Account extends Component {
@@ -28,12 +27,12 @@ class Account extends Component {
 
     const user = this.props.user;
 
-    if(user.status === userStatus.logout){
+    if(user){
       this.context.router.history.push('/login');
       return;
     }
 
-    if(user.status === userStatus.pending){
+    if(user.pending){
       return (
         <div className="loading-news-view">
             <Button basic loading>Loading</Button>

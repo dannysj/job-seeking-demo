@@ -20,10 +20,10 @@ import NewsDetail from './NewsComponent/news_detail';
 import About from './AboutComponent/about';
 // Redux
 import store from "./redux";
-import {fetchUser} from "./redux/userAction";
+import {setUser} from "./redux/userAction";
 import {connect, Provider} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import { hot } from 'react-hot-loader'
+import {hot} from 'react-hot-loader'
 
 class App extends Component {
   constructor(props){
@@ -44,12 +44,7 @@ class App extends Component {
   }
 
   componentWillMount(){
-
-    // Change access_token
-    const access_token = localStorage.getItem('access_token');
-    if (access_token) {
-      store.dispatch(fetchUser(access_token));
-    }
+    store.dispatch(setUser(JSON.parse(localStorage.getItem('user'))))
   }
 
   updateCurrentPage(name) {
