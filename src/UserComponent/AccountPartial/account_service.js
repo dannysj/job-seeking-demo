@@ -85,10 +85,10 @@ class AccountService extends React.Component {
                     <p>签约状态: {el.status===20?'等待您通过申请':el.status==50?'已被您拒绝':el.status===1?'请联系Mentee并开始服务，服务完成后点击确认完成':el.status===2?'等待Mentee确认服务完成':'服务完成'}</p>
                     <p>Mentee的备注: {el.note}</p>
                   </div>
+                  <Link to={'/user/'+el.uid}><Button floated='right'>查看资料</Button></Link>
                   {el.status===20 && (<div>
                     <Button floated='right' positive onClick={() => this.handleDecision(el.mrid, 1)}>通过申请</Button>
                     <Button floated='right' negative onClick={() => this.handleDecision(el.mrid, 0)}>拒绝申请</Button>
-                    <Link to={'/user/'+el.uid}><Button floated='right'>查看简历</Button></Link>
                   </div>)}
                   {el.status===1 && <Button floated='right' positive onClick={() => this.handleConfirm(el.mrid)}>确认完成</Button>}
                   {el.status===2 && <Button floated='right' disabled>等待Mentee确认</Button>}
