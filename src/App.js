@@ -45,10 +45,8 @@ class App extends Component {
   }
 
   componentWillMount(){
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.access_token){
-      store.dispatch(fetchUser(user.access_token));
-    }
+    if (this.props.user && this.props.user.access_token)
+      store.dispatch(fetchUser(this.props.user.access_token));
   }
 
   updateCurrentPage(name) {
