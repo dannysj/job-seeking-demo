@@ -43,10 +43,11 @@ class App extends Component {
     this.toggle_outside = this.toggle_outside.bind(this);
   }
 
-  componentDidMount(){
+  componentWillMount(){
     const user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.access_token)
-      store.dispatch(fetchUser(user.access_token))
+    if (user && user.access_token){
+      store.dispatch(fetchUser(user.access_token));
+    }
   }
 
   updateCurrentPage(name) {
