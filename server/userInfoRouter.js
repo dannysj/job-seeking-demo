@@ -5,8 +5,16 @@ const security = require('./security');
 
 
 app.post('/api/get_user_info', (req, res) => {
+  if (!!!req.body.uid) {
+    res.status(403).end();
+    return;
+  }
 
-  db.getUserInfo(req.body.uid, (err, user) => {
+  let dest_uid = req.body.mentee_uid || req.body.uid;
+
+  // TODO: Here, verify the request owner (req.body.uid) has access to target uid (mentee_uid)
+
+  db.getUserInfo(dest_uid, (err, user) => {
     if (err) {
       console.log(err);
       res.json({code: 1, errMsg: err});
@@ -30,7 +38,8 @@ app.post('/api/update_user', (req, res) => {
 
 
 app.post('/api/verify_user', (req, res) => {
-  req.body.password = security.getHashedPassword(req.body.password);
+    req.body.password = security.getHashedPassword(req.body.password);
+
   db.verifyUser(req.body, (err, user) => {
     if (err) {
       console.log(err);
@@ -47,6 +56,22 @@ app.post('/api/verify_user', (req, res) => {
       res.json({code: 0, user: user});
     });
   });
+});
+
+// receive a user with its email, uid, and password
+app.post('/api/change_password', (req, res) =>{
+
+    req.body.password = security.getHashedPassword(req.body.password);
+
+    db.changePassword(req.body, (err)=>{
+        if (err) {
+            console.log(err);
+            res.json({code: 1, errMsg: err});
+            return;
+        }
+        res.json({code: 0});
+    })
+
 });
 
 

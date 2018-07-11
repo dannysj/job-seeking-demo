@@ -32,6 +32,27 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
 
     case "UPDATE_USER_LOCAL":
       state = {...state, [action.payload.attr]: action.payload.val};
+    case "CHANGE_PASSWORD_PENDING":
+      return state;
+
+    case "CHANGE_PASSWORD_REJECTED":
+      NotificationManager.error('由于服务器原因，资料更新失败', '错误');
+      return state;
+
+    case "CHANGE_PASSWORD_FULFILLED":
+      console.log("CHANGE PASSWORD");
+      console.log(action.payload);
+      if (action.payload.data.code === 0) {
+          NotificationManager.success('资料更新成功', '完成啦');
+      }
+      if (action.payload.data.code === 1){
+          NotificationManager.error('后台无法更新资料', '错误');
+      }
+      return state;
+
+
+    default:
+      return state;
   }
 
   localStorage.setItem('user', JSON.stringify(state));

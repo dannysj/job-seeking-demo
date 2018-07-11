@@ -31,6 +31,11 @@
       /*border-bottom: none;*/
     }
   }
+  &.last {
+    &::after {
+      border-bottom: none;
+    }
+  }
   >.item {
     padding: 0 0 0 2.5em;
     padding-right: 1.5em;
@@ -54,7 +59,7 @@
   height: auto;
   padding-bottom: 1em;
   /*height: calc(100% - 70px);*/
-  min-height: calc(100vh - 65px);
+  min-height: ~"calc(100vh - 65px)";
   position: absolute;
 }
 .account-partial-container {
@@ -152,6 +157,9 @@
 .item.first {
   >.content {
     border-top: none;
+    &.dir {
+      padding-top: 0 !important;
+    }
   }
 }
 .padding-text {
@@ -188,6 +196,16 @@
   width: 100%;
   >.info {
     color: #939BAE;
+
+  }
+
+}
+.inner-content.write-section {
+  position: relative;
+  max-width: 100%;
+  
+  > * {
+    margin: 1em 0em 0em;
 
   }
 }
@@ -258,7 +276,7 @@
   display: inline-flex !important;
   -webkit-filter: brightness(50%);
   filter: brightness(50%);
-  max-height: 300px;
+  max-height: 230px;
 }
 .image-header {
   padding-top: 10px;
