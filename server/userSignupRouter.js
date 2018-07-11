@@ -8,7 +8,7 @@ const app = express.Router();
 const config = require('./_config.js');
 const security = require('./security');
 const password_generator = require('generate-password');
-
+const nodemailer = require('nodemailer')
 
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport(config.mail_config);
