@@ -79,8 +79,13 @@ class CreateArticle extends React.Component {
               编写干货
             </div>
           </div>
-          <div className="item">
-          标题: {' '}<Input placeholder='标题' onChange={this.handleTitleChange}/>
+        </div>
+        <div className="category last">
+          <div className="item first">
+          <div className="content dir">
+          <div className="inner-content write-section">
+          <div>
+          标题: {' '}</div><Input placeholder='标题' onChange={this.handleTitleChange}/>
           <br />
           <label htmlFor="thumbnail-input" className="ui button">
             <i className="ui upload icon"/>
@@ -94,6 +99,8 @@ class CreateArticle extends React.Component {
           <ReactQuill ref={(el) => { this.reactQuillRef = el }} onChange={this.handleChange} />
 
           <Button onClick={this.handleSubmitNews}>提交</Button>
+        </div>
+        </div>
         </div>
         </div>
       </div>

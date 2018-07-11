@@ -31,6 +31,7 @@ exports.updateUser = (data, callback) => {
 
 exports.verifyUser = function (user, callback) {
   console.log(user.email);
+  console.log(user.password);
   const query = `select * from users where email=$1 and password=$2;`;
   db.query(query, [user.email, user.password], (err, result) => {
     if (err) {
@@ -38,11 +39,26 @@ exports.verifyUser = function (user, callback) {
       return;
     }
     if (result.rows.length === 0) {
-      callback('No such email found');
+      callback('No such email or password found');
       return;
     }
     var userAccount = result.rows[0];
     delete userAccount.password;
     callback(null, userAccount);
   });
+};
+
+// Set password, callback only accepts one
+exports.changePassword = function(user, callback) {
+
+    const query = `UPDATE users SET password=$1 WHERE id=$2;`;
+    console.log(query);
+    db.query(query, [user.password, user.uid])
+        .then(res=> {
+          callback(null);
+          console.log("Has changed the password")
+        })
+        .catch(err => callback(err))
+
+
 };

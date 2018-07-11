@@ -250,7 +250,7 @@ class AccountApply extends React.Component {
         <form className="ui form">
           <div className="category">
           <div className="item first">
-          <div className="content">
+          <div className="content dir">
             <div className="inner-content">
             <div className="header">院校名称</div>
 
@@ -338,7 +338,7 @@ class AccountApply extends React.Component {
           </div>
           </div>
           </div>
-          <div className="category">
+          <div className="category last">
           <div className="item first">
           <div className="content">
           <div className="inner-content">

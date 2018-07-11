@@ -43,19 +43,22 @@ class Login extends Component {
 
   render() {
     return (
-      <div class="login-signup-container">
-        <form class="ui form" onSubmit={this.handleSubmit}>
-          <div class="field">
+      <div className="login-signup-container">
+        <form className="ui form" onSubmit={this.handleSubmit}>
+          <div className="field">
             <label>Email</label>
             <input type="email" name="email" placeholder="Email" onChange={this.handleChange} required />
           </div>
-          <div class="field">
+          <div className="field">
             <label>密码</label>
             <input type="password" name="password" placeholder="Password" onChange={this.handleChange} required />
           </div>
+          <div className="login-links">
           <Link to="/signup">还没有账号？注册账号</Link>
+          <Link to="/reset">忘了密码？ 点我哦</Link>
+          </div>
           <br /><br />
-          <button class="ui button" type="submit">登陆</button>
+          <button className="ui button" type="submit">登陆</button>
         </form>
       </div>
     );
