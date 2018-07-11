@@ -96,6 +96,10 @@ class AccountApply extends React.Component {
 
     confirmServiceChange = (e) => {
         e.preventDefault();
+        if(isNaN(this.state.tempService.price)){
+          NotificationManager.error('价格必须为数字', '错误');
+          return;
+        }
 
         const index = this.state.editMode ? this.state.editIndex : this.state.mentor_info.service.length;
         const service = Object.assign([], this.state.mentor_info.service, {[index]: this.state.tempService});
