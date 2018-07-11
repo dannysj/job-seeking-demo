@@ -15,7 +15,7 @@ const userInfoCallBack = callback => (err, result) => {
   }
 
   if (result.rows.length === 0) {
-    callback('No such email found');
+    callback('No such email or password found');
     return;
   }
 
@@ -37,4 +37,15 @@ exports.verifyUser = (user, callback) => {
 exports.updateUser = (data, callback) => {
   const query = `update users set ` + data.attr + `=$1 where id=$2;`;
   db.query(query, [data.val, data.uid]).then(() => callback(null)).catch(e => callback(e));
+};
+
+// Set password, callback only accepts one
+exports.changePassword = function(user, callback) {
+    const query = `UPDATE users SET password=$1 WHERE id=$2;`;
+    db.query(query, [user.password, user.uid])
+        .then(res=> {
+          callback(null);
+          console.log("Has changed the password")
+        })
+        .catch(err => callback(err));
 };

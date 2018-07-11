@@ -96,6 +96,10 @@ class AccountApply extends React.Component {
 
     confirmServiceChange = (e) => {
         e.preventDefault();
+        if(isNaN(this.state.tempService.price)){
+          NotificationManager.error('价格必须为数字', '错误');
+          return;
+        }
 
         const index = this.state.editMode ? this.state.editIndex : this.state.mentor_info.service.length;
         const service = Object.assign([], this.state.mentor_info.service, {[index]: this.state.tempService});
@@ -246,7 +250,7 @@ class AccountApply extends React.Component {
         <form className="ui form">
           <div className="category">
           <div className="item first">
-          <div className="content">
+          <div className="content dir">
             <div className="inner-content">
             <div className="header">院校名称</div>
 
@@ -334,7 +338,7 @@ class AccountApply extends React.Component {
           </div>
           </div>
           </div>
-          <div className="category">
+          <div className="category last">
           <div className="item first">
           <div className="content">
           <div className="inner-content">

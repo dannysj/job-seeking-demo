@@ -105,7 +105,6 @@ export default (state = initState, action) => {
     case "UPDATE_USER_LOCAL":
       return {...state, [action.payload.attr]: action.payload.val};
 
-
     case "FOLLOW_MENTOR_PENDING":
       return state;
 
@@ -122,7 +121,6 @@ export default (state = initState, action) => {
         NotificationManager.error('关注失败', '错误');
         return state;
       }
-
 
     case "UNOLLOW_MENTOR_PENDING":
       return state;
@@ -141,6 +139,22 @@ export default (state = initState, action) => {
         NotificationManager.error('取关失败', '错误');
         return state;
       }
+      
+    case "CHANGE_PASSWORD_PENDING":
+      return state;
+
+    case "CHANGE_PASSWORD_REJECTED":
+      NotificationManager.error('由于服务器原因，资料更新失败', '错误');
+      return state;
+
+    case "CHANGE_PASSWORD_FULFILLED":
+      if (action.payload.data.code === 0) {
+          NotificationManager.success('资料更新成功', '完成啦');
+      }
+      if (action.payload.data.code === 1){
+          NotificationManager.error('后台无法更新资料', '错误');
+      }
+      return state;
 
     default:
       return state;

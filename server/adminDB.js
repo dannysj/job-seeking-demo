@@ -2,8 +2,10 @@ const db = require('./_dbPool.js');
 
 exports.approveMentor = (uid, mid, callback) => {
   console.log(uid);
-  const query = `update users set ismentor=true where id=$1;`;
-  db.query(query, [uid], (err, result) => {
+  const query = `update users set ismentor=true where id=(
+    select uid from mentor_info where id=$1
+  );`;
+  db.query(query, [mid], (err, result) => {
     if (err) {
       callback(err);
       return;

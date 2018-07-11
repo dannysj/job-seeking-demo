@@ -60,6 +60,7 @@ app.post('/api/create_order', (req, res) => {
       if (err) {
         console.log(err);
         res.json({code: 1});
+        return;
       }
       res.json({code: 0, url: '/account/mentor'});
       console.log('Return: '+mentee_name+' '+mentor_uid+' '+mentor_name);

@@ -18,6 +18,7 @@ import UserDetail from './UserComponent/user_detail';
 import News from './NewsComponent/news';
 import NewsDetail from './NewsComponent/news_detail';
 import About from './AboutComponent/about';
+import Reset from './UserComponent/reset';
 // Redux
 import store from "./redux";
 import {fetchUser} from "./redux/userAction";
@@ -225,6 +226,7 @@ class App extends Component {
             <Route path='/mentor' component={Mentor}/>
             <Route path="/user/:uid" render={(props)=><UserDetail {...props} user={user} width={this.state.width} height={this.state.height}/>} />
             <Route path='/news/:nid'   render={(props)=><NewsDetail {...props} loggedInUser={user}/> } />
+            <Route path='/reset' component={Reset}/>
             <Route path='/news' component={News}/>
             <Route path='/about' component={About}/>
             <Route path='/' component={Home}/>
