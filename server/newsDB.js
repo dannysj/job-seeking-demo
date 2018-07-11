@@ -5,8 +5,8 @@ exports.createNews = (news, callback) => {
                   (author_id,publish_time,type,title,thumbnail,content, delta)
                   values($1,now(),$2,$3,$4,$5,$6) returning id;`;
   db.query(query, [news.author_id, news.type, news.title, news.thumbnail, news.content, news.delta], (err, result) => {
-    if (err) {
-      callback(err);
+    if (err || result.rows.length != 1) {
+      callback(`Error: ${err}`);
       return;
     }
     callback(null, result.rows[0].id);

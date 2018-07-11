@@ -6,8 +6,8 @@ exports.verifyInfoCompletion = (uid, callback) => {
     and wechat is not null) as res
     from users where id=$1;`;
   db.query(query, [uid], (err, result) => {
-    if (err) {
-      callback(err);
+    if (err || result.rows.length != 1) {
+      callback(`Error: ${err}`);
       return;
     }
     callback(null, result.rows[0].res)
