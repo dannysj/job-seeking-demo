@@ -48,3 +48,5 @@ exports.mail_config = {
     pass: 'nonreply123',
   }
 };
+
+exports.image_compression_size = 1024;

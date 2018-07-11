@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import { Button } from 'semantic-ui-react';
 import './index.less';
 import axios from 'axios';
+import store from "../../redux/index";
+import {userStatus} from "../../redux/userReducer"  
+
+const FollowStatus = {
+  UNKNOWN : 0,
+  FOLLOWED : 1,
+  UNFOLLOWED : 2
+}
 
 class ProfileFollow extends Component {
   constructor (props) {
@@ -10,16 +18,8 @@ class ProfileFollow extends Component {
       user: this.props.user,
       loggedInUser: this.props.loggedInUser,
       author_id: this.props.author_id,
-      followed: false
+      followStatus: FollowStatus.UNKNOWN,
     };
-
-    /*
-    if (this.props.loggedInUser != undefined){
-      axios.post('/api/whether_followed',
-      {follower_uid: this.props.loggedInUser.id , followee_uid: this.state.author_id}).then(res=>{
-            this.setState({followed: res.data.whetherFollowed })
-       })
-     }*/
 
     this.renderFollowButton = this.renderFollowButton.bind(this);
     this.followButtonPressed = this.followButtonPressed.bind(this);
@@ -31,42 +31,59 @@ class ProfileFollow extends Component {
     // The other one. this.state.news.author_id
     // call the function 
 
-    if (this.props.loggedInUser !== undefined){
+    // TODO: Change the acceptable environment in the backend.
+    if (store.getState().user.status === userStatus.login){
       axios.post('/api/follow_user',
-       {follower_uid: this.props.loggedInUser.id , followee_uid: this.state.author_id}).then(res=>{
-          console.log("follow")    
+       {followee_uid: this.state.author_id},
+       {headers: {"access_token": store.getState().user.access_token}}
+      ).then(res=>{
+          if (res.data.code === 0){
+            this.setState({followStatus: FollowStatus.FOLLOWED})
+            console.log("follow")
+          }else{
+            console.log("error")
+          }
       })
     }
   }
 
   renderFollowButton(){
-      /*if (!this.state.followed){
-         return (<Button
-          size='mini'
-          color='blue'
-          content='关注'
-          icon='plus'
-          onClick={this.followButtonPressed}
-        />) 
-      }else{
-        return (<Button
-          size='mini'
-          color='grey'
-          content='已关注'
-        />
-        )
-      }*/
-      return (<Button
-        size='mini'
-        color='blue'
-        content='关注'
-        icon='plus'
-        onClick={this.followButtonPressed}
-      />)
+      switch (this.state.followStatus) {
+        case FollowStatus.UNFOLLOWED:
+          return (<Button
+            size='mini'
+            color='blue'
+            content='关注'
+            icon='plus'
+            onClick={this.followButtonPressed}
+          />) 
+        
+        case FollowStatus.FOLLOWED:
+          return (<Button
+            size='mini'
+            color='grey'
+            content='已关注'
+          />)
+        case FollowStatus.UNKNOWN:
+          return (<div/>)
 
+        default:
+          return (<div/>);
+      }
   }
 
   render() {
+    if (store.getState().user.status === userStatus.login && this.state.followStatus === FollowStatus.UNKNOWN){
+      axios.post('/api/whether_followed',
+      {followee_uid: this.state.author_id}, {headers: {"access_token": store.getState().user.access_token}}).then(res=>{
+            if (res.data.whetherFollowed === true){
+              this.setState({followStatus: FollowStatus.FOLLOWED })  
+            }else{
+              this.setState({followStatus: FollowStatus.UNFOLLOWED})
+            }
+       })
+     }
+
     return (
       <div className="follow-container">
         <img src={this.state.user.profile_pic} alt="Profile"/>

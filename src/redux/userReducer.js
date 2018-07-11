@@ -67,10 +67,12 @@ export default (state = initState, action) => {
   switch (action.type) {
     case "SET_USER":
       localStorage.setItem('uid', action.payload.id);
+      localStorage.setItem('access_token', action.payload.access_token);
       return {...action.payload, status: userStatus.login};
 
     case "LOGOUT":
       localStorage.removeItem('uid');
+      localStorage.removeItem('access_token');
       return {status: userStatus.logout};
 
 
@@ -89,13 +91,14 @@ export default (state = initState, action) => {
       return state;
 
     case "UPDATE_USER_REJECTED":
-      NotificationManager.error('资料更新失败', '错误');
+      if (JSON.parse(action.payload.config.data).attr !== 'last')
+        NotificationManager.error('资料更新失败', '错误');
       return state;
 
     case "UPDATE_USER_FULFILLED":
-      const {attr, val} = JSON.parse(action.payload.config.data);
-      NotificationManager.success('资料更新成功', '完成啦');
-      return {...state, [attr]: val};
+      if (JSON.parse(action.payload.config.data).attr !== 'last')  // prevent multiple notifications when updating name
+        NotificationManager.success('资料更新成功', '完成啦');
+      return state;
 
     case "UPDATE_USER_LOCAL":
       return {...state, [action.payload.attr]: action.payload.val};

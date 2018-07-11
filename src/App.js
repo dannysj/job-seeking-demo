@@ -45,9 +45,11 @@ class App extends Component {
   }
 
   componentWillMount(){
-    const uid = localStorage.getItem('uid');
-    if (uid) {
-      store.dispatch(fetchUser(uid));
+
+    // Change access_token
+    const access_token = localStorage.getItem('access_token');
+    if (access_token) {
+      store.dispatch(fetchUser(access_token));
     }
   }
 

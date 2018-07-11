@@ -52,17 +52,20 @@ class AccountProfile extends React.Component {
 
     //FIXME: Fixe bunches data update
     for (const [attr, val] of Object.entries(attr_keys)) {
-      if (attr === "email"){
-        if (!validator.isEmail(val)){
-          NotificationManager.error('Email格式不正确', '错误');
-          return;
-        }
+      if (attr === "email" && !validator.isEmail(val)) {
+        NotificationManager.error('Email格式不正确', '错误');
+        return;
       }
 
-      store.dispatch(updateUser(attr, val)).then(()=>{
-        delete curState.attr_key[attr];
-        this.setState({curState});
-      });
+      if ((attr === "first" || attr === "last") && val.trim() === "") {
+        NotificationManager.error('姓名不能为空', '错误');
+        return;
+      }
+
+      store.dispatch(updateUser(attr, val));
+
+      delete curState.attr_key[attr];
+      this.setState({curState});
   }
  };
 
@@ -118,7 +121,22 @@ class AccountProfile extends React.Component {
     axios.post('/api/file/general_upload', data).then(res => {
       if (res.data.code === 0) {
         store.dispatch(updateUser("resume", res.data.url));
-      } else {
+
+        axios.post('/api/update_user',
+        {
+          attr: 'resume',
+          val: res.data.url
+        },
+        {
+          headers: {access_token: this.props.user.access_token}
+        }).then(res => {
+          if (res.data.code === 0)
+            NotificationManager.success('简历上传成功', '完成啦');
+          else
+            NotificationManager.error('资料更新失败', '错误');
+        });
+      }
+      else {
         NotificationManager.error('简历上传失败', '错误');
       }
     });
@@ -156,6 +174,22 @@ class AccountProfile extends React.Component {
       if (res.data.code === 0) {
         this.setState({showImgCrop: false});
         store.dispatch(updateUser("profile_pic", res.data.url));
+        axios.post('/api/update_user',
+        {
+          attr: 'profile_pic',
+          val: res.data.url
+        },
+        {
+          headers:{access_token: this.props.user.access_token}
+        }
+        ).then(res => {
+          if (res.data.code === 0) {
+            NotificationManager.success('头像上传成功', '上传成功');
+          }
+          else {
+            NotificationManager.error('资料更新失败', '错误');
+          }
+        });
       }
       else {
         NotificationManager.error('头像上传失败', '错误');

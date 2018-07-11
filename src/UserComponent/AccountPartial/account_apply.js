@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Dropdown, Message, TextArea} from 'semantic-ui-react';
+import {Dropdown, Message, TextArea, Input} from 'semantic-ui-react';
 import axios from 'axios';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import '../account.less';
@@ -10,185 +10,191 @@ import '../account.less';
 
 
 class AccountApply extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      statusChecked: false,
-      hasNotApplied: false,
-      mentor_info:
-        {
-          service: [],
-          uid: this.props.user.id
-        },
-      showAddServiceModal: false,
-      editMode: false,
-      editIndex: -1,
-      college_list: [],
-      user_college: [],
-      collegeQuery: "",
-      isLoadingCollegeList: false,
-      tempService: {
-        name: "",
-        price: "",
-        description : "",
-      }
-    };
-    this.timer = null;
-  }
-
-  componentWillMount(){
-    axios.post('/api/get_mentor_detail_by_uid', {uid: this.props.user.id}).then(res => {
-      if (res.data.code === 0) {
-        let mentor = res.data.mentor;
-        this.setState({
-          mentor_info: mentor,
-          statusChecked:true,
-          hasNotApplied: false,
-          user_college:[
-            {
-              value: mentor.cid,
-              text: mentor.college_name
+    constructor(props) {
+        super(props);
+        this.state = {
+            statusChecked: false,
+            hasNotApplied: false,
+            mentor_info:
+                {
+                    service: [],
+                    uid: this.props.user.id
+                },
+            showAddServiceModal: false,
+            editMode: false,
+            editIndex: -1,
+            college_list: [],
+            user_college: [],
+            collegeQuery: "",
+            isLoadingCollegeList: false,
+            tempService: {
+                name: "",
+                price: "",
+                description : "",
             }
-          ]
+        };
+        this.timer = null;
+    }
+
+    componentWillMount(){
+        axios.post('/api/get_mentor_detail_by_uid',{},
+            {headers:{access_token: this.props.user.access_token}}).then(res => {
+            if (res.data.code  === 0) {
+                let mentor = res.data.mentor;
+                this.setState({
+                    mentor_info: mentor,
+                    statusChecked:true,
+                    hasNotApplied: false,
+                    user_college:[
+                        {
+                            value: mentor.cid,
+                            text: mentor.college_name
+                        }
+                    ]
+                });
+            }
+            else {
+                if(res.data.code === 55){
+                    this.setState({statusChecked: true, hasNotApplied: true});
+                }
+                else{
+                    NotificationManager.error('数据库错误', '错误')
+                }
+            }
         });
-      }
-      else {
-        if(res.data.code === 55){
-          this.setState({statusChecked: true, hasNotApplied: true});
-        }
-        else{
-          NotificationManager.error('数据库错误', '错误')
-        }
-      }
-    });
 
-    this.triggerSearch();
-  }
-
-
-  showAddServicePopup = (e) => {
-    e.preventDefault();
-    this.setState({editMode: false, showAddServiceModal: true});
-  };
-
-  showEditServicePopup = (index) => {
-    this.setState({
-      tempService: this.state.mentor_info.service[index],
-      editMode: true,
-      editIndex: index,
-      showAddServiceModal: true
-    });
-  };
-
-  resetServicePopup = () => {
-    this.setState({
-      tempService: {
-        name: "",
-        price: "",
-        description : "",
-      },
-      showAddServiceModal: false,
-      editMode: false,
-      editIndex: -1
-    })
-  };
-
-  confirmServiceChange = (e) => {
-    e.preventDefault();
-
-    const index = this.state.editMode ? this.state.editIndex : this.state.mentor_info.service.length;
-    const service = Object.assign([], this.state.mentor_info.service, {[index]: this.state.tempService});
-
-    this.setState({mentor_info: {...this.state.mentor_info, service},});
-
-    this.resetServicePopup();
-  };
-
-  cancelServiceChange = (e) => {
-    e.preventDefault();
-    this.resetServicePopup();
-  };
-
-  deleteService = (index) => {
-    let curServices = this.state.mentor_info.service.slice();
-    let curInfo = this.state.mentor_info;
-    curServices.splice(index, 1);
-    curInfo.service = curServices;
-    this.setState({mentor_info: curInfo, showAddServiceModal: false});
-  };
-
-
-  handleServiceInputChange = (e) => {
-    this.setState({
-      tempService: {...this.state.tempService, [e.target.name]: e.target.value},
-    });
-  };
-
-
-
-  handleSearchChange = (e, {searchQuery}) =>{
-    clearTimeout(this.timer);
-
-    this.setState({collegeQuery: searchQuery});
-
-    this.timer = setTimeout(this.triggerSearch, 500);
-  };
-
-  triggerSearch = () =>{
-    this.setState({isLoadingCollegeList : true});
-
-    axios.post('/api/get_college_list', {query: this.state.collegeQuery}).then(res => {
-      if (res.data.code === 0) {
-        this.setState({college_list: res.data.list});
-      } else {
-        NotificationManager.error('无法获取大学列表', '错误');
-      }
-      this.setState({isLoadingCollegeList : false})
-    });
-  };
-
-  handleChange = (e, data) => {
-    let curState = this.state;
-    if (data) {
-      curState.mentor_info[data.name] = data.value;
-    }
-    else {
-      curState.mentor_info[e.target.name] = e.target.value;
-    }
-    this.setState(curState);
-  };
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-
-    if(this.state.mentor_info.num_weekly_slots < 0){
-      NotificationManager.error('每周愿意服务次数必须为自然数','错误');
-      return;
+        this.triggerSearch();
     }
 
-    const apiUrl = this.state.hasNotApplied ? '/api/mentor_apply' : '/api/mentor_edit';
 
-    axios.post(apiUrl, this.state.mentor_info).then(res => {
-      if (res.data.code === 0) {
-        NotificationManager.success('我们已收到您的表格','成功');
-      }
-      else {
-        if(res.data.code === 45) {
-          NotificationManager.success('我们已收到您的表格，请尽快完善您的基础资料','成功');
+    showAddServicePopup = (e) => {
+        e.preventDefault();
+        this.setState({editMode: false, showAddServiceModal: true});
+    };
+
+    showEditServicePopup = (index) => {
+        this.setState({
+            tempService: this.state.mentor_info.service[index],
+            editMode: true,
+            editIndex: index,
+            showAddServiceModal: true
+        });
+    };
+
+    resetServicePopup = () => {
+        this.setState({
+            tempService: {
+                name: "",
+                price: "",
+                description : "",
+            },
+            showAddServiceModal: false,
+            editMode: false,
+            editIndex: -1
+        })
+    };
+
+    confirmServiceChange = (e) => {
+        e.preventDefault();
+        if(isNaN(this.state.tempService.price)){
+          NotificationManager.error('价格必须为数字', '错误');
+          return;
         }
-        else{
-          NotificationManager.error('数据库错误','错误');
+
+        const index = this.state.editMode ? this.state.editIndex : this.state.mentor_info.service.length;
+        const service = Object.assign([], this.state.mentor_info.service, {[index]: this.state.tempService});
+
+        this.setState({mentor_info: {...this.state.mentor_info, service},});
+
+        this.resetServicePopup();
+    };
+
+    cancelServiceChange = (e) => {
+        e.preventDefault();
+        this.resetServicePopup();
+    };
+
+    deleteService = (index) => {
+        let curServices = this.state.mentor_info.service.slice();
+        let curInfo = this.state.mentor_info;
+        curServices.splice(index, 1);
+        curInfo.service = curServices;
+        this.setState({mentor_info: curInfo, showAddServiceModal: false});
+    };
+
+
+    handleServiceInputChange = (e) => {
+        this.setState({
+            tempService: {...this.state.tempService, [e.target.name]: e.target.value},
+        });
+    };
+
+
+
+    handleSearchChange = (e, {searchQuery}) =>{
+        clearTimeout(this.timer);
+
+        this.setState({collegeQuery: searchQuery});
+
+        this.timer = setTimeout(this.triggerSearch, 500);
+    };
+
+    triggerSearch = () =>{
+        this.setState({isLoadingCollegeList : true});
+
+        axios.post('/api/get_college_list', {query: this.state.collegeQuery}).then(res => {
+            if (res.data.code === 0) {
+                this.setState({college_list: res.data.list});
+            } else {
+                NotificationManager.error('无法获取大学列表', '错误');
+            }
+            this.setState({isLoadingCollegeList : false})
+        });
+    };
+
+    handleChange = (e, data) => {
+        let curState = this.state;
+        if (data) {
+            curState.mentor_info[data.name] = data.value;
         }
-      }
-    });
-  };
+        else {
+            curState.mentor_info[e.target.name] = e.target.value;
+        }
+        this.setState(curState);
+    };
 
-  render() {
+    handleSubmit = (e) => {
+        e.preventDefault();
 
-    let modalClassName = 'ui modal';
-    if (this.state.showAddServiceModal) {
-      modalClassName += ' add-service-container';
-    }
+        if(this.state.mentor_info.num_weekly_slots < 0){
+            NotificationManager.error('每周愿意服务次数必须为自然数','错误');
+            return;
+        }
+
+        const apiUrl = this.state.hasNotApplied ? '/api/mentor_apply' : '/api/mentor_edit';
+        delete this.state.mentor_info["uid"];
+        axios.post(apiUrl, this.state.mentor_info,
+            {headers:{access_token: this.props.user.access_token}}).then(res => {
+            if (res.data.code === 0) {
+                NotificationManager.success('我们已收到您的表格','成功');
+            }
+            else {
+                if(res.data.code === 45) {
+                    NotificationManager.success('我们已收到您的表格，请尽快完善您的基础资料','成功');
+                }
+                else{
+                    NotificationManager.error('数据库错误','错误');
+                }
+            }
+        });
+    };
+
+    render() {
+
+        let modalClassName = 'ui modal';
+        if (this.state.showAddServiceModal) {
+            modalClassName += ' add-service-container';
+        }
 
     return (
       !this.state.statusChecked?("请稍后..."):(
@@ -228,11 +234,11 @@ class AccountApply extends React.Component {
         <div className="category">
           <div className="header">
             <div className= "title">
-            申请成为导师
+              {(this.props.user && this.props.user.ismentor) ? '编辑导师资料' : '申请成为导师'}
             </div>
             <div className="subtitle">
             {!this.state.hasNotApplied ? (  <Message info>
-                  <Message.Header>我们已经收到了您的申请，您仍可以在此修改您的申请表格</Message.Header>
+                  <Message.Header>我们已经收到了您的表格，您仍可以在此修改您的申请表格</Message.Header>
                 </Message>
               ): (<div></div>)
               }
@@ -357,7 +363,7 @@ class AccountApply extends React.Component {
 }
 
 AccountApply.contextTypes = {
-  router: PropTypes.object
+    router: PropTypes.object
 };
 
 export default AccountApply;

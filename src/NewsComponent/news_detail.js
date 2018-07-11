@@ -5,7 +5,7 @@ import { Icon, Button, Divider } from 'semantic-ui-react';
 import './news.less';
 import Footer from '../Components/Footer';
 import ProfileFollow from '../Components/ProfileFollow';
-import  QuillDeltaToHtmlConverter from  'quill-delta-to-html'
+import * as QuillDeltaToHtmlConverter from  'quill-delta-to-html'
 
 class NewsDetail extends Component {
 
@@ -21,7 +21,7 @@ class NewsDetail extends Component {
 
     this.likeButtonPressed = this.likeButtonPressed.bind(this);
     this.followButtonPressed = this.followButtonPressed.bind(this);
-    this.handleImageLoaded = this.handleImageLoaded.bind(this);
+      this.handleImageLoaded = this.handleImageLoaded.bind(this);
 
     axios.post('/api/get_news_detail',
       {nid:this.props.match.params.nid}).then(res => {
@@ -30,7 +30,7 @@ class NewsDetail extends Component {
         let curState = this.state;
         curState.news = res.data.news;
 
-        if (curState.news.delta["ops"] !== null) // compatibility, will be removed and use delta
+        if (curState.news.delta !== null) // compatibility, will be removed and use delta
           curState.news.content = new QuillDeltaToHtmlConverter(curState.news.delta["ops"]).convert();
         
         curState.loading = false;

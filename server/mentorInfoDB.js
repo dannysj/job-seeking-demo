@@ -6,8 +6,8 @@ exports.verifyInfoCompletion = (uid, callback) => {
     and wechat is not null) as res
     from users where id=$1;`;
   db.query(query, [uid], (err, result) => {
-    if (err) {
-      callback(err);
+    if (err || result.rows.length != 1) {
+      callback(`Error: ${err}`);
       return;
     }
     callback(null, result.rows[0].res)
@@ -72,6 +72,7 @@ exports.editMentorInfo = (mentor_info, callback) => {
 
 
 exports.getMentorDetailByUid = (uid, callback) => {
+  console.log("uid before query: " + uid);
   var query = `
     select u.id as uid,
       u.first as first,
@@ -93,7 +94,7 @@ exports.getMentorDetailByUid = (uid, callback) => {
     where m.uid = u.id and m.cid = c.id and u.id = $1;
   `;
   db.query(query, [uid], (err, result) => {
-    if (err) {
+      if (err) {
       callback(err);
       return;
     }
