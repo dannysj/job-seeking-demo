@@ -11,7 +11,12 @@ import store from "./redux";
 
 // axios setting
 import axios from "axios";
+
 axios.defaults.baseURL = process.env.REACT_APP_API_HOST;
+
+const user = store.getState().user;
+if(user && user.access_token)
+  axios.defaults.headers.common['access_token'] = user.access_token;
 
 ReactDOM.render(
   <Provider store={store}>

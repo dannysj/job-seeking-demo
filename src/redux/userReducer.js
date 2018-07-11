@@ -1,13 +1,16 @@
 import {NotificationManager} from "react-notifications";
+import axios from "axios/index";
 
 export default (state = JSON.parse(localStorage.getItem('user')), action) => {
   switch (action.type) {
     case "LOGOUT":
+      delete axios.defaults.headers.common['access_token'];
       localStorage.removeItem('user');
       return null;
 
 
     case "SET_USER":
+      axios.defaults.headers.common['access_token'] = action.payload.access_token;
       state = action.payload;
       break;
 
@@ -18,6 +21,7 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
       break;
 
     case "FETCH_USER_FULFILLED":
+      axios.defaults.headers.common['access_token'] = action.payload.access_token;
       state = action.payload.data.user;
       break;
 

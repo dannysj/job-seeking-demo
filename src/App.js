@@ -45,8 +45,8 @@ class App extends Component {
   }
 
   componentWillMount(){
-    if (this.props.user && this.props.user.access_token)
-      store.dispatch(fetchUser(this.props.user.access_token));
+    if (this.props.user)
+      store.dispatch(fetchUser());
   }
 
   updateCurrentPage(name) {
