@@ -20,16 +20,12 @@ import {withRouter} from "react-router-dom";
 
 
 class Account extends Component {
-
-
-
   render() {
 
     const user = this.props.user;
 
-    if(user){
+    if(!user){
       this.context.router.history.push('/login');
-      return;
     }
 
     if(user.pending){
@@ -109,7 +105,7 @@ class Account extends Component {
                   <Route path='/account/balance' render={()=><AccountBalance user={user}/>} />
                   <Route path='/account/apply' render={()=><AccountApply user={user}/>} />
                   <Route path='/account/service' render={()=><AccountService user={user}/>} />
-                  <Route path='/account/mentor_edit' render={()=><AccountApply user={user}/>} />  {/** Temporarily change to AccountApply, used to be MentorEdit**/}
+                  <Route path='/account/mentor_edit' render={()=><AccountApply user={user}/>} />
                   <Route path='/account/create_article' render={()=><CreateArticle user={user}/>} />
                   <Route path='/account/notification' render={()=><AccountNotification user={user}/>} />
                   <Route path='/account/admin' render={()=><AccountAdmin user={user}/>} />

@@ -20,7 +20,7 @@ import NewsDetail from './NewsComponent/news_detail';
 import About from './AboutComponent/about';
 // Redux
 import store from "./redux";
-import {setUser} from "./redux/userAction";
+import {fetchUser, setUser} from "./redux/userAction";
 import {connect, Provider} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import {hot} from 'react-hot-loader'
@@ -43,8 +43,10 @@ class App extends Component {
     this.toggle_outside = this.toggle_outside.bind(this);
   }
 
-  componentWillMount(){
-    store.dispatch(setUser(JSON.parse(localStorage.getItem('user'))))
+  componentDidMount(){
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.access_token)
+      store.dispatch(fetchUser(user.access_token))
   }
 
   updateCurrentPage(name) {

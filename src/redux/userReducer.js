@@ -2,22 +2,23 @@ import {NotificationManager} from "react-notifications";
 
 export default (state = JSON.parse(localStorage.getItem('user')), action) => {
   switch (action.type) {
+    case "LOGOUT":
+      localStorage.removeItem('user');
+      return null;
+
+
     case "SET_USER":
       state = action.payload;
       break;
 
-    case "LOGOUT":
-      localStorage.removeItem('user');
-      state = null;
-      break;
 
 
     case "FETCH_USER_PENDING":
-      state = {pending: true};
+      state = {...state, pending: true};
       break;
 
     case "FETCH_USER_FULFILLED":
-      state = {...action.payload.data.user};
+      state = action.payload.data.user;
       break;
 
 
