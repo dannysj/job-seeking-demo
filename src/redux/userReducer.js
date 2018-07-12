@@ -56,7 +56,10 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
       break;
   }
 
-  axios.defaults.headers.common['access_token'] = state.access_token;
-  localStorage.setItem('user', JSON.stringify(state));
+  if (state !== null) {
+    axios.defaults.headers.common['access_token'] = state.access_token;
+    localStorage.setItem('user', JSON.stringify(state));
+  }
+
   return state;
 }
