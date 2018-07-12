@@ -16,19 +16,17 @@ export const setUser = (user) => {
   }
 };
 
-export function updateUser(attr, val, {local = false} = {}) {
-  return dispatch => {
+export const updateUser = (attr, val, {local = false} = {}) => dispatch => {
+  dispatch({
+    type: "UPDATE_USER_LOCAL",
+    payload: {attr, val}
+  });
+  if (!local)
     dispatch({
-      type: "UPDATE_USER_LOCAL",
-      payload: {attr, val}
+      type: "UPDATE_USER",
+      payload: axios.post('/api/update_user', {attr, val})
     });
-    if (!local)
-      dispatch({
-        type: "UPDATE_USER",
-        payload: axios.post('/api/update_user', {attr, val})
-      });
-  }
-}
+};
 
 export function changeUserPassword(new_password, user) {
   return {
@@ -49,11 +47,7 @@ export const followUser = (followee_uid) => {
   if (store.getState().user)
     return {
       type: "FOLLOW_MENTOR",
-      payload: axios.post(
-        '/api/follow_user',
-        {followee_uid},
-        {headers: {"access_token": store.getState().user.access_token}}
-      )
+      payload: axios.post('/api/follow_user', {followee_uid})
     };
   else
     NotificationManager.error('请先登录', '错误');
@@ -63,11 +57,7 @@ export const unfollowUser = (followee_uid) => {
   if (store.getState().user)
     return {
       type: "UNFOLLOW_MENTOR",
-      payload: axios.post(
-        '/api/unfollow_user',
-        {followee_uid},
-        {headers: {"access_token": store.getState().user.access_token}}
-      )
+      payload: axios.post('/api/unfollow_user', {followee_uid})
     };
   else
     NotificationManager.error('请先登录', '错误');
