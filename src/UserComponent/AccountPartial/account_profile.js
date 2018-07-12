@@ -51,7 +51,7 @@ class AccountProfile extends React.Component {
         return;
       }
 
-      store.dispatch(updateUser(attr, val));
+      store.dispatch(updateUser(attr, val, this.props.user.access_token));
 
       delete curState.attr_key[attr];
       this.setState({curState});
@@ -74,7 +74,7 @@ class AccountProfile extends React.Component {
 
     axios.post('/api/file/general_upload', data).then(res => {
       if (res.data.code === 0) {
-        store.dispatch(updateUser("resume", res.data.url));
+        store.dispatch(updateUser("resume", res.data.url, this.props.user.access_token));
 
         axios.post('/api/update_user',
         {
@@ -127,7 +127,7 @@ class AccountProfile extends React.Component {
     axios.post('/api/file/general_upload', data).then(res => {
       if (res.data.code === 0) {
         this.setState({showImgCrop: false});
-        store.dispatch(updateUser("profile_pic", res.data.url));
+        store.dispatch(updateUser("profile_pic", res.data.url, this.props.user.access_token));
         axios.post('/api/update_user',
         {
           attr: 'profile_pic',

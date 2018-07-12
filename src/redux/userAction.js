@@ -15,7 +15,7 @@ export function setUser(user) {
   }
 }
 
-export function updateUser(attr, val, {local = false} = {}) {
+export function updateUser(attr, val, access_token, {local = false} = {}) {
   const uid = store.getState().user.id;
   return dispatch => {
     dispatch({
@@ -25,7 +25,11 @@ export function updateUser(attr, val, {local = false} = {}) {
     if (!local)
       dispatch({
         type: "UPDATE_USER",
-        payload: axios.post('/api/update_user', {uid, attr, val})
+        payload: axios.post('/api/update_user', {uid, attr, val}, {
+          headers: {
+            access_token: access_token
+          }
+        })
       });
   }
 }
