@@ -213,7 +213,7 @@ class AccountProfile extends React.Component {
       const user = this.props.user;
         return(
             <div className="ui large celled list form">
-              <NotificationContainer />
+
                 <div className="category">
                   <div className="header">
                     <div className="title">

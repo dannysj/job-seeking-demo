@@ -1,4 +1,7 @@
 import axios from "axios";
+import store from "./index";
+import {NotificationManager} from "react-notifications";
+import {userStatus} from "./userReducer";
 
 export const fetchUser = () => {
   return {
@@ -41,3 +44,32 @@ export function logout() {
     type: "LOGOUT"
   }
 }
+
+
+export const followUser = (followee_uid) => {
+  if (store.getState().user.status === userStatus.login)
+    return {
+      type: "FOLLOW_MENTOR",
+      payload: axios.post(
+        '/api/follow_user',
+        {followee_uid},
+        {headers: {"access_token": store.getState().user.access_token}}
+      )
+    };
+  else
+    NotificationManager.error('请先登录', '错误');
+};
+
+export const unfollowUser = (followee_uid) => {
+  if (store.getState().user.status === userStatus.login)
+    return {
+      type: "UNFOLLOW_MENTOR",
+      payload: axios.post(
+        '/api/unfollow_user',
+        {followee_uid},
+        {headers: {"access_token": store.getState().user.access_token}}
+      )
+    };
+  else
+    NotificationManager.error('请先登录', '错误');
+};

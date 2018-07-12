@@ -223,7 +223,7 @@ class MentorDetail extends Component {
     });
       return (
       <div className="mentor-detail-container">
-        <NotificationContainer />
+
         <Modal open={this.state.showNoteModal} style={{
           marginTop: '0px !important',
           marginLeft: 'auto',

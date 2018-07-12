@@ -53,7 +53,6 @@ class Signup extends Component {
   render() {
     return (
       <div className="login-signup-container">
-        <NotificationContainer />
         <form className="ui form" onSubmit={this.handleSubmit}>
           <div className="field">
             <label>姓</label>
