@@ -41,27 +41,28 @@ Object.freeze(userStatus);
  * @type {User}
  * */
 const initState = {
-    access_token: "",
-    balance: "0.00",
-    cover: "",
-    email: "",
-    first: "",
-    last: "",
-    id: -1,
-    isactivated: false,
-    isadmin: false,
-    ismentor: false,
-    major: [],
-    num_notifications: 0,
-    profile_pic: "/img/sample_profile.jpg",
-    resume: "",
-    wechat: "",
-    register_date: null,
-    status: userStatus.logout,
+  access_token: "",
+  balance: "0.00",
+  cover: "",
+  email: "",
+  first: "",
+  last: "",
+  id: -1,
+  isactivated: false,
+  isadmin: false,
+  ismentor: false,
+  major: [],
+  num_notifications: 0,
+  profile_pic: "/img/sample_profile.jpg",
+  resume: "",
+  wechat: "",
+  register_date: null,
+  status: userStatus.logout,
 
-    dob: null, // not used
+  dob: null, // not used
+}
 
- export default (state = JSON.parse(localStorage.getItem('user')), action) => {
+export default (state = JSON.parse(localStorage.getItem('user')), action) => {
   switch (action.type) {
     case "LOGOUT":
       delete axios.defaults.headers.common['access_token'];
@@ -92,7 +93,6 @@ const initState = {
       break;
 
 
-
     case "UPDATE_USER_LOCAL":
       state = {...state, [action.payload.attr]: action.payload.val};
       break;
@@ -108,7 +108,7 @@ const initState = {
       if (action.payload.data.code === 0) {
         NotificationManager.success('关注成功', '成功');
         const uid = JSON.parse(action.payload.config.data).followee_uid;
-        return {...state, followee: [ ...state.followee, uid ]};
+        return {...state, followee: [...state.followee, uid]};
       } else {
         NotificationManager.error('关注失败', '错误');
         return state;
@@ -125,13 +125,13 @@ const initState = {
       if (action.payload.data.code === 0) {
         NotificationManager.success('取关成功', '成功');
         const uid = JSON.parse(action.payload.config.data).followee_uid;
-        const followee = state.followee.filter(e => e!== uid);
+        const followee = state.followee.filter(e => e !== uid);
         return {...state, followee};
       } else {
         NotificationManager.error('取关失败', '错误');
         return state;
       }
-      
+
     case "CHANGE_PASSWORD_PENDING":
       return state;
 
@@ -141,10 +141,10 @@ const initState = {
 
     case "CHANGE_PASSWORD_FULFILLED":
       if (action.payload.data.code === 0) {
-          NotificationManager.success('资料更新成功', '完成啦');
+        NotificationManager.success('资料更新成功', '完成啦');
       }
-      if (action.payload.data.code === 1){
-          NotificationManager.error('后台无法更新资料', '错误');
+      if (action.payload.data.code === 1) {
+        NotificationManager.error('后台无法更新资料', '错误');
       }
       return state;
 
