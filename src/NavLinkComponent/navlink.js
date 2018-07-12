@@ -4,10 +4,6 @@ import PropTypes from 'prop-types';
 import './navlink.less';
 
 class NavLink extends React.Component {
-  static propTypes = {
-    isHorizontal: PropTypes.bool
-  };
-
   render() {
     const isActive = this.context.router.route.location.pathname === this.props.to;
     let className = 'item ';
@@ -18,8 +14,11 @@ class NavLink extends React.Component {
       className += isActive ? 'active-custom ' : ' ';
     }
 
+    // prevent isHorizontal passing to Link
+    const {isHorizontal, ...newProps} = this.props;
+
     return (
-      <Link className={className} {...this.props}>
+      <Link className={className} {...newProps}>
         {this.props.children}
       </Link>
     );

@@ -243,7 +243,7 @@ class AccountProfile extends React.Component {
                   ( <div className="imgContainer">
                     <div className="image-text-centered">点击更换头像</div>
                     <label className="header-input-label" htmlFor="header-input">
-                      <Image className="center-profile" small bordered src={user.profile_pic} />
+                      <Image className="center-profile" small="true" bordered src={user.profile_pic} />
                     </label>
                     <input type="file" accept="image/*" className="input-file" id="header-input" onChange={this.handleHeader} />
                     </div>
