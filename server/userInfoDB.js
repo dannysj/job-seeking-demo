@@ -1,27 +1,37 @@
 const db = require('./_dbPool.js');
 
+const selectClause = `
+  select
+    users.*,
+    (select count(*)::int from message where is_read=false and destination = users.id) as num_notifications,
+    array(select follow_rel.followee_uid from follow_rel where follow_rel.follower_uid = users.id) as followee
+  from users
+  `;
+
+const userInfoCallBack = callback => (err, result) => {
+  if (err) {
+    callback(err);
+    return;
+  }
+
+  if (result.rows.length === 0) {
+    callback('No such email or password found');
+    return;
+  }
+
+  let userAccount = result.rows[0];
+  delete userAccount.password;
+  callback(null, userAccount);
+};
+
 exports.getUserInfo = (uid, callback) => {
-  const query = `select * from users where users.id = $1`;
-  db.query(query, [uid], (err, result) => {
-    if (err) {
-      callback(err);
-      return;
-    }
+  const query = selectClause + `where users.id = $1;`;
+  db.query(query, [uid], userInfoCallBack(callback));
+};
 
-    if (result.rows.length === 0) {
-      callback('No such email found');
-      return;
-    }
-
-    let userAccount = result.rows[0];
-    userAccount.password = null;
-    db.query(`select count(*) as count from message
-              where is_read=false and destination=$1`, [uid])
-      .then(result => {
-        userAccount.num_notifications = parseInt(result.rows[0].count);
-        callback(null, userAccount);
-      }).catch(err => callback(err))
-  });
+exports.verifyUser = (user, callback) => {
+  const query = selectClause + `where email=$1 and password=$2;`;
+  db.query(query, [user.email, user.password], userInfoCallBack(callback));
 };
 
 exports.updateUser = (data, callback) => {
@@ -29,36 +39,13 @@ exports.updateUser = (data, callback) => {
   db.query(query, [data.val, data.uid]).then(() => callback(null)).catch(e => callback(e));
 };
 
-exports.verifyUser = function (user, callback) {
-  console.log(user.email);
-  console.log(user.password);
-  const query = `select * from users where email=$1 and password=$2;`;
-  db.query(query, [user.email, user.password], (err, result) => {
-    if (err) {
-      callback(err);
-      return;
-    }
-    if (result.rows.length === 0) {
-      callback('No such email or password found');
-      return;
-    }
-    var userAccount = result.rows[0];
-    delete userAccount.password;
-    callback(null, userAccount);
-  });
-};
-
 // Set password, callback only accepts one
 exports.changePassword = function(user, callback) {
-
     const query = `UPDATE users SET password=$1 WHERE id=$2;`;
-    console.log(query);
     db.query(query, [user.password, user.uid])
         .then(res=> {
           callback(null);
           console.log("Has changed the password")
         })
-        .catch(err => callback(err))
-
-
+        .catch(err => callback(err));
 };

@@ -40,25 +40,25 @@ Object.freeze(userStatus);
  * @type {User}
  * */
 const initState = {
-  access_token: "",
-  balance: "0.00",
-  cover: "",
-  email: "",
-  first: "",
-  last: "",
-  id: -1,
-  isactivated: false,
-  isadmin: false,
-  ismentor: false,
-  major: [],
-  num_notifications: 0,
-  profile_pic: "/img/sample_profile.jpg",
-  resume: "",
-  wechat: "",
-  register_date: null,
-  status: userStatus.logout,
+    access_token: "",
+    balance: "0.00",
+    cover: "",
+    email: "",
+    first: "",
+    last: "",
+    id: -1,
+    isactivated: false,
+    isadmin: false,
+    ismentor: false,
+    major: [],
+    num_notifications: 0,
+    profile_pic: "/img/sample_profile.jpg",
+    resume: "",
+    wechat: "",
+    register_date: null,
+    status: userStatus.logout,
 
-  dob: null, // not used
+    dob: null, // not used
 
   }
 ;
@@ -69,6 +69,7 @@ export default (state = initState, action) => {
       localStorage.setItem('uid', action.payload.id);
       localStorage.setItem('access_token', action.payload.access_token);
       return {...action.payload, status: userStatus.login};
+
 
     case "LOGOUT":
       localStorage.removeItem('uid');
@@ -100,9 +101,45 @@ export default (state = initState, action) => {
         NotificationManager.success('资料更新成功', '完成啦');
       return state;
 
+
     case "UPDATE_USER_LOCAL":
       return {...state, [action.payload.attr]: action.payload.val};
 
+    case "FOLLOW_MENTOR_PENDING":
+      return state;
+
+    case "FOLLOW_MENTOR_REJECTED":
+      NotificationManager.error('关注失败', '错误');
+      return state;
+
+    case "FOLLOW_MENTOR_FULFILLED":
+      if (action.payload.data.code === 0) {
+        NotificationManager.success('关注成功', '成功');
+        const uid = JSON.parse(action.payload.config.data).followee_uid;
+        return {...state, followee: [ ...state.followee, uid ]};
+      } else {
+        NotificationManager.error('关注失败', '错误');
+        return state;
+      }
+
+    case "UNOLLOW_MENTOR_PENDING":
+      return state;
+
+    case "UNFOLLOW_MENTOR_REJECTED":
+      NotificationManager.error('取关失败', '错误');
+      return state;
+
+    case "UNFOLLOW_MENTOR_FULFILLED":
+      if (action.payload.data.code === 0) {
+        NotificationManager.success('取关成功', '成功');
+        const uid = JSON.parse(action.payload.config.data).followee_uid;
+        const followee = state.followee.filter(e => e!== uid);
+        return {...state, followee};
+      } else {
+        NotificationManager.error('取关失败', '错误');
+        return state;
+      }
+      
     case "CHANGE_PASSWORD_PENDING":
       return state;
 
@@ -111,8 +148,6 @@ export default (state = initState, action) => {
       return state;
 
     case "CHANGE_PASSWORD_FULFILLED":
-      console.log("CHANGE PASSWORD");
-      console.log(action.payload);
       if (action.payload.data.code === 0) {
           NotificationManager.success('资料更新成功', '完成啦');
       }
@@ -120,7 +155,6 @@ export default (state = initState, action) => {
           NotificationManager.error('后台无法更新资料', '错误');
       }
       return state;
-
 
     default:
       return state;

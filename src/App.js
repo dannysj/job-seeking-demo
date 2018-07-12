@@ -93,7 +93,7 @@ class App extends Component {
     const user = this.props.user;
     return (
       <div className="app-flex">
-        <NotificationContainer />
+
         <input type="checkbox" id="reveal-menu" className="reveal-m" role="button" checked={this.state.is_checked ? "checked" : ""}/>
         <input type="checkbox" id="reveal-user-menu" className="reveal-um" role="button" checked={this.state.is_user_checked ? "checked" : ""}/>
         <div className={"navbar "} onClick={this.toggle_outside}>
@@ -233,6 +233,8 @@ class App extends Component {
           </Switch>
           </Provider>
         </div>
+
+        <NotificationContainer />
       </div>
     );
   }
