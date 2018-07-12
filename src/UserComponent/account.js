@@ -17,23 +17,18 @@ import CreateArticle from "./AccountPartial/create_article";
 import AccountNotification from "./AccountPartial/account_notification";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-import {userStatus} from "../redux/userReducer";
 
 
 class Account extends Component {
-
-
-
   render() {
 
     const user = this.props.user;
 
-    if(user.status === userStatus.logout){
+    if(!user){
       this.context.router.history.push('/login');
-      return;
     }
 
-    if(user.status === userStatus.pending){
+    if(user.pending){
       return (
         <div className="loading-news-view">
             <Button basic loading>Loading</Button>
@@ -110,7 +105,7 @@ class Account extends Component {
                   <Route path='/account/balance' render={()=><AccountBalance user={user}/>} />
                   <Route path='/account/apply' render={()=><AccountApply user={user}/>} />
                   <Route path='/account/service' render={()=><AccountService user={user}/>} />
-                  <Route path='/account/mentor_edit' render={()=><AccountApply user={user}/>} />  {/** Temporarily change to AccountApply, used to be MentorEdit**/}
+                  <Route path='/account/mentor_edit' render={()=><AccountApply user={user}/>} />
                   <Route path='/account/create_article' render={()=><CreateArticle user={user}/>} />
                   <Route path='/account/notification' render={()=><AccountNotification user={user}/>} />
                   <Route path='/account/admin' render={()=><AccountAdmin user={user}/>} />

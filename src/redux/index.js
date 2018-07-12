@@ -8,6 +8,7 @@ import majorListReducer from './majorListReducer'
 import mentorListReducer from './mentorListReducer'
 import newsListReducer from "./newsListReducer";
 import mentorDetailReducer from "./mentorDetailReducer";
+import {NotificationManager} from "react-notifications";
 
 const reducers = combineReducers({
   user: userReducer,
@@ -17,14 +18,34 @@ const reducers = combineReducers({
   mentorDetailStore: mentorDetailReducer,
 });
 
+const errorReporter = store => next => action => {
+  if (action.type.endsWith('REJECTED')){
+    NotificationManager.error(action.type, '网络错误');
+    return next(action);
+  }
 
-let middleware = [promise(),  thunk];
 
-if(process.env.NODE_ENV === 'development'){
+  if (action.type.endsWith('FULFILLED') && action.payload && action.payload.data.code === 1){
+    NotificationManager.error(action.type, '数据库错误');
+    return next(action);
+  }
+
+  return next(action)
+};
+
+let middleware = [promise(), thunk, errorReporter];
+
+if (process.env.NODE_ENV === 'development') {
   middleware = [...middleware, logger];
 }
 
 
-const store = createStore(reducers, applyMiddleware(...middleware));
+
+const store = createStore(
+  reducers,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  applyMiddleware(...middleware)
+);
+
 
 export default store;

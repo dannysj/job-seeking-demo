@@ -63,7 +63,7 @@ class ProfileFollow extends Component {
   }
 
   render() {
-    if (store.getState().user.status === userStatus.login && this.state.followStatus === FollowStatus.UNKNOWN){
+    if (store.getState().user && this.state.followStatus === FollowStatus.UNKNOWN){
       axios.post('/api/whether_followed',
       {followee_uid: this.state.author_id}, {headers: {"access_token": store.getState().user.access_token}}).then(res=>{
             if (res.data.whetherFollowed === true){

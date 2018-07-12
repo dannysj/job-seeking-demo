@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import { Link} from 'react-router-dom';
 import { Icon} from 'semantic-ui-react';
 import './userstatus.less';
-import {userStatus} from "../redux/userReducer";
 
 class UserStatus extends Component {
 
   render() {
-    if(this.props.user.status === userStatus.login){
+    if(this.props.user){
       return (
         <div className="right-menu" onClick={this.props.onClick}>
 

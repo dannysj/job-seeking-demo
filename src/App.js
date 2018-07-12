@@ -21,10 +21,10 @@ import About from './AboutComponent/about';
 import Reset from './UserComponent/reset';
 // Redux
 import store from "./redux";
-import {fetchUser} from "./redux/userAction";
+import {fetchUser, setUser} from "./redux/userAction";
 import {connect, Provider} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import { hot } from 'react-hot-loader'
+import {hot} from 'react-hot-loader'
 
 class App extends Component {
   constructor(props){
@@ -45,12 +45,8 @@ class App extends Component {
   }
 
   componentWillMount(){
-
-    // Change access_token
-    const access_token = localStorage.getItem('access_token');
-    if (access_token) {
-      store.dispatch(fetchUser(access_token));
-    }
+    if (this.props.user)
+      store.dispatch(fetchUser());
   }
 
   updateCurrentPage(name) {

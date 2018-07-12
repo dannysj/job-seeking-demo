@@ -1,4 +1,5 @@
 import {NotificationManager} from "react-notifications";
+import axios from "axios/index";
 
 /**
  * @readonly
@@ -60,50 +61,41 @@ const initState = {
 
     dob: null, // not used
 
-  }
-;
-
-export default (state = initState, action) => {
+ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
   switch (action.type) {
-    case "SET_USER":
-      localStorage.setItem('uid', action.payload.id);
-      localStorage.setItem('access_token', action.payload.access_token);
-      return {...action.payload, status: userStatus.login};
-
-
     case "LOGOUT":
-      localStorage.removeItem('uid');
-      localStorage.removeItem('access_token');
-      return {status: userStatus.logout};
+      delete axios.defaults.headers.common['access_token'];
+      localStorage.removeItem('user');
+      return null;
 
+
+    case "SET_USER":
+      axios.defaults.headers.common['access_token'] = action.payload.access_token;
+      state = action.payload;
+      break;
 
     case "FETCH_USER_PENDING":
-      return {status: userStatus.pending};
-
-    case "FETCH_USER_REJECTED":
-      NotificationManager.error('无法读取登陆信息', '错误');
-      return {status: userStatus.logout};
+      state = {...state, pending: true};
+      break;
 
     case "FETCH_USER_FULFILLED":
-      return {...action.payload.data.user, status: userStatus.login};
+      axios.defaults.headers.common['access_token'] = action.payload.access_token;
+      state = action.payload.data.user;
+      break;
 
-
-    case "UPDATE_USER_PENDING":
-      return state;
-
-    case "UPDATE_USER_REJECTED":
-      if (JSON.parse(action.payload.config.data).attr !== 'last')
-        NotificationManager.error('资料更新失败', '错误');
-      return state;
 
     case "UPDATE_USER_FULFILLED":
-      if (JSON.parse(action.payload.config.data).attr !== 'last')  // prevent multiple notifications when updating name
+      const data = JSON.parse(action.payload.config.data);
+      if (data.attr !== 'last')  // prevent multiple notifications when updating name
         NotificationManager.success('资料更新成功', '完成啦');
-      return state;
+      state = {...state, [data.attr]: data.val};
+      break;
+
 
 
     case "UPDATE_USER_LOCAL":
-      return {...state, [action.payload.attr]: action.payload.val};
+      state = {...state, [action.payload.attr]: action.payload.val};
+      break;
 
     case "FOLLOW_MENTOR_PENDING":
       return state;
@@ -159,4 +151,7 @@ export default (state = initState, action) => {
     default:
       return state;
   }
+
+  localStorage.setItem('user', JSON.stringify(state));
+  return state;
 }
