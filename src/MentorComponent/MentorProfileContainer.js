@@ -31,7 +31,7 @@ class MentorProfileContainer extends Component {
 
     return (
       <div className="content-container listitem">
-        {mentors.map(el => <MentorProfile mentor={el}/>)}
+        {mentors.map(el => <MentorProfile mentor={el} key={el.mid}/>)}
         <br/>
         {this.state.totalPages !== 1 &&
         <Pagination activePage={this.state.page}
