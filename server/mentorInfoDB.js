@@ -88,7 +88,11 @@ const mentorSelectQuery  = `
       m.service as service,
       m.num_weekly_slots as num_weekly_slots,
       (m.num_weekly_slots - (select count(*) from mentor_rel
-        where mid=m.id and now()-start_time<'1 week'))::integer as num_availability,
+        where mid=m.id
+          and status=1
+          and now()-start_time<'1 week'
+        )
+      )::integer as num_availability,
 
       (select
          json_agg(
@@ -111,7 +115,7 @@ const mentorSelectQuery  = `
        ) as comments
 
     from users u, mentor_info m, college c
-    
+
 `;
 
 exports.getMentorDetailByUid = (uid, callback) => {
