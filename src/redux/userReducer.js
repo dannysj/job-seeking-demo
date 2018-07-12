@@ -10,7 +10,6 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
 
 
     case "SET_USER":
-      axios.defaults.headers.common['access_token'] = action.payload.access_token;
       state = action.payload;
       break;
 
@@ -19,7 +18,6 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
       break;
 
     case "FETCH_USER_FULFILLED":
-      axios.defaults.headers.common['access_token'] = action.payload.access_token;
       state = action.payload.data.user;
       break;
 
@@ -58,6 +56,7 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
       break;
   }
 
+  axios.defaults.headers.common['access_token'] = state.access_token;
   localStorage.setItem('user', JSON.stringify(state));
   return state;
 }
