@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 import {followUser, unfollowUser} from '../redux/userAction'
 
 @connect(state => ({
-  followee: state.user.followee ? state.user.followee : [],
+  followee: (state.user && state.user.followee) ? state.user.followee : [],
 }), {
   followUser: followUser,
   unfollowUser: unfollowUser
