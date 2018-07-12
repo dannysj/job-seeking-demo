@@ -10,7 +10,6 @@ export function fetchMentorList() {
     };
   else
     return {
-      type: "USE_CACHED_MENTOR_LIST",
-      payload: new Promise(f=>f())
+      type: "USE_CACHED_MENTOR_LIST"
     }
 }

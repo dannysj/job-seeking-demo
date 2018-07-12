@@ -25,9 +25,8 @@ class NewsList extends Component {
 }
 
   componentWillMount(){
-    store.dispatch(fetchNewsList(this.batch_num)).then(()=>{
-      this.batch_num++;
-    });
+    store.dispatch(fetchNewsList(this.batch_num));
+    this.batch_num++;
   }
 
   componentDidMount() {
