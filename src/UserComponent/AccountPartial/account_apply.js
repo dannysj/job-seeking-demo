@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Dropdown, Message, TextArea, Input} from 'semantic-ui-react';
 import axios from 'axios';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {NotificationManager} from 'react-notifications';
 import '../account.less';
 
 //TODO: Bugs: Description text is not blank on next form input after submit edit
@@ -47,7 +47,7 @@ class AccountApply extends React.Component {
                     hasNotApplied: false,
                     user_college:[
                         {
-                            value: mentor.cid,
+                            value: -1,
                             text: mentor.college_name
                         }
                     ]
@@ -261,7 +261,7 @@ class AccountApply extends React.Component {
                         onSearchChange={this.handleSearchChange}
                         options={this.state.college_list.concat(this.state.user_college)}
                         onChange={this.handleChange}
-                        value={this.state.mentor_info.cid}/>
+                        defaultValue={-1}/>
             </b>
           </div>
           </div>
