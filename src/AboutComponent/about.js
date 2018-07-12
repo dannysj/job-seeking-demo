@@ -103,7 +103,7 @@ class About extends React.Component {
             {
               this.state.share.map((e) => {
                 return (
-                  <div className="share-box">
+                  <div className="share-box" key={e.name}>
                     <div className="title">
                     {e.name}
                     </div>

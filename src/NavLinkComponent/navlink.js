@@ -1,29 +1,33 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './navlink.less';
 
 class NavLink extends React.Component {
-    render() {
-        var isActive = this.context.router.route.location.pathname === this.props.to;
-        var className = 'item ';
+  static propTypes = {
+    isHorizontal: PropTypes.bool
+  };
 
-        if (!this.props.isHorizontal) {
-          className += isActive ? 'vertical-col ' : ' ';
-        } else {
-          className += isActive ? 'active-custom ' : ' ';
-        }
+  render() {
+    const isActive = this.context.router.route.location.pathname === this.props.to;
+    let className = 'item ';
 
-        return(
-            <Link className={className} {...this.props}>
-                {this.props.children}
-            </Link>
-        );
+    if (!this.props.isHorizontal) {
+      className += isActive ? 'vertical-col ' : ' ';
+    } else {
+      className += isActive ? 'active-custom ' : ' ';
     }
+
+    return (
+      <Link className={className} {...this.props}>
+        {this.props.children}
+      </Link>
+    );
+  }
 }
 
 NavLink.contextTypes = {
-    router: PropTypes.object
+  router: PropTypes.object
 };
 
 
