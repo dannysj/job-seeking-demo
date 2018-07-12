@@ -1,5 +1,4 @@
 import axios from "axios";
-import store from "./index";
 
 export const fetchUser = () => {
   return {
@@ -32,7 +31,7 @@ export function updateUser(attr, val, {local = false} = {}) {
 export function changeUserPassword(new_password, user) {
   return {
     type: "CHANGE_PASSWORD",
-    payload: axios.post('/api/change_password', {email: user.email, password: new_password, uid: user.id}),
+    payload: axios.post('/api/change_password', {email: user.email, password: new_password}),
     password: new_password
   }
 }
