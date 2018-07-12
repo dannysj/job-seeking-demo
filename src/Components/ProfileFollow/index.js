@@ -3,7 +3,6 @@ import { Button } from 'semantic-ui-react';
 import './index.less';
 import axios from 'axios';
 import store from "../../redux/index";
-import {userStatus} from "../../redux/userReducer"
 import {followUser} from "../../redux/userAction";
 
 const FollowStatus = {

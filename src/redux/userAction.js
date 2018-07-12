@@ -1,7 +1,6 @@
 import axios from "axios";
 import store from "./index";
 import {NotificationManager} from "react-notifications";
-import {userStatus} from "./userReducer";
 
 export const fetchUser = () => {
   return {
@@ -47,7 +46,7 @@ export function logout() {
 
 
 export const followUser = (followee_uid) => {
-  if (store.getState().user.status === userStatus.login)
+  if (store.getState().user)
     return {
       type: "FOLLOW_MENTOR",
       payload: axios.post(
@@ -61,7 +60,7 @@ export const followUser = (followee_uid) => {
 };
 
 export const unfollowUser = (followee_uid) => {
-  if (store.getState().user.status === userStatus.login)
+  if (store.getState().user)
     return {
       type: "UNFOLLOW_MENTOR",
       payload: axios.post(

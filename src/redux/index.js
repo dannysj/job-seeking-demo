@@ -21,13 +21,13 @@ const reducers = combineReducers({
 const errorReporter = store => next => action => {
   if (action.type.endsWith('REJECTED')){
     NotificationManager.error(action.type, '网络错误');
-    return next(action);
+    return;
   }
 
 
   if (action.type.endsWith('FULFILLED') && action.payload && action.payload.data.code === 1){
     NotificationManager.error(action.type, '数据库错误');
-    return next(action);
+    return;
   }
 
   return next(action)
