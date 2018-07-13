@@ -37,8 +37,8 @@ class MentorProfile extends Component {
             <Table className="table-clean-border" basic='very'>
               <Table.Body>
                 {this.renderRow('/icons/company.png', mentor.offer_company)}
-                {this.renderRow('/icons/school.png', mentor.offer_title)}
-                {this.renderRow('/icons/position.png', mentor.college_name)}
+                {this.renderRow('/icons/school.png', mentor.college_name)}
+                {this.renderRow('/icons/position.png', mentor.offer_title)}
                 {this.renderRow('/icons/age.png', mentor.major.join(', '))}
               </Table.Body>
             </Table>
