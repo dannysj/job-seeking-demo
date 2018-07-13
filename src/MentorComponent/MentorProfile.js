@@ -3,6 +3,7 @@ import {Table} from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import {connect} from "react-redux";
 import {followUser, unfollowUser} from '../redux/userAction'
+import './MentorProfile.less'
 
 @connect(state => ({
   followee: (state.user && state.user.followee) ? state.user.followee : [],
@@ -14,7 +15,9 @@ class MentorProfile extends Component {
   renderRow = (icon, text) =>
     (<Table.Row className="table-clean-row">
       <Table.Cell><img className="title-icon" alt="position" src={icon}/></Table.Cell>
-      <Table.Cell><div className="card-info">{text}</div></Table.Cell>
+      <Table.Cell>
+        <div className="card-info">{text}</div>
+      </Table.Cell>
     </Table.Row>);
 
   render() {
@@ -48,10 +51,8 @@ class MentorProfile extends Component {
               <div>详情</div>
             </div>
           </Link>
-          <div className="connect-circle">
-            {isFollowing ?
-              <div onClick={() => this.props.unfollowUser(mentor.uid)}>已关注</div> :
-              <div onClick={() => this.props.followUser(mentor.uid)}>关注</div>}
+          <div className={`connect-circle ${isFollowing ? 'following' : 'not-following'}-button`}>
+            <div onClick={() => isFollowing ? this.props.unfollowUser(mentor.uid) : this.props.followUser(mentor.uid)}/>
           </div>
         </div>
 
