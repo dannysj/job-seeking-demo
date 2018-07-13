@@ -9,6 +9,9 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
       state = null;
       break;
 
+    case "UPDATE_ACCESS_TOKEN":
+      state = {...state, access_token: action.payload};
+      break;
 
     case "SET_USER":
       state = action.payload;

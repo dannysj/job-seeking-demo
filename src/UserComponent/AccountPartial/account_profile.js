@@ -7,7 +7,7 @@ import '../account.less';
 import './account_profile.less'
 import ImgCrop from './ImgCrop/imgcrop.js';
 import store from "../../redux";
-import {changeUserPassword, updateUser} from "../../redux/userAction";
+import {changeUserPassword, updateUser, updateAccessToken} from "../../redux/userAction";
 import {fetchMajorList} from "../../redux/majorListAction";
 import {connect} from 'react-redux'
 import validator from 'validator';
@@ -80,6 +80,8 @@ class AccountProfile extends React.Component {
                   return
               }
 
+              store.dispatch(updateAccessToken(res.data.user.access_token));
+
               if (this.state.attr_key["new_password"] === ""){
                   NotificationManager.error("新密码不能为空", "错误");
                   return
@@ -91,7 +93,7 @@ class AccountProfile extends React.Component {
               }
 
               //this.confirmAttrChange(e)
-              store.dispatch(changeUserPassword(this.state.attr_key["new_password"], this.props.user)).then(()=>{
+              store.dispatch(changeUserPassword(this.state.attr_key["new_password"], store.getState().user)).then(()=>{
                   curState.attr_key["new_password"] = ""
                   curState.attr_key["old_password"] = ""
                   curState.attr_key["confirm_password"] = ""

@@ -16,6 +16,14 @@ export const setUser = (user) => {
   }
 };
 
+export const updateAccessToken = (access_token) =>{
+  return {
+    type: "UPDATE_ACCESS_TOKEN",
+    payload: access_token
+  }
+};
+
+
 export const updateUser = (attr, val, {local = false} = {}) => dispatch => {
   dispatch({
     type: "UPDATE_USER_LOCAL",
@@ -31,7 +39,8 @@ export const updateUser = (attr, val, {local = false} = {}) => dispatch => {
 export function changeUserPassword(new_password, user) {
   return {
     type: "CHANGE_PASSWORD",
-    payload: axios.post('/api/change_password', {email: user.email, password: new_password}),
+    payload: axios.post('/api/change_password', {email: user.email, password: new_password},
+        {headers: {access_token:user.access_token}}),
     password: new_password
   }
 }
