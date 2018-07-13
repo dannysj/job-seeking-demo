@@ -278,6 +278,7 @@ class AccountApply extends React.Component {
                 <th>服务名称</th>
                 <th>服务价格</th>
                 <th>具体介绍</th>
+                <th>编辑服务</th>
               </tr>
               </thead>
               <tbody>
