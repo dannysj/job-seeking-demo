@@ -297,10 +297,11 @@ class AccountProfile extends React.Component {
                 {/*major edit*/}
                 <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")}>
                   <div className="form-text">
-                      <Dropdown name='major' placeholder='专业' search selection multiple fluid closeOnChange
-                                options={this.props.major_list}
-                                onChange={(e, data) => this.setState({attr_key: {major: data.value}})}
-                                value={this.state.attr_key.major ? this.state.attr_key.major : []}/>
+                    {(this.state.attr_key.hasOwnProperty('major')) &&
+                    <Dropdown name='major' placeholder='专业' search selection multiple fluid closeOnChange
+                              options={this.props.major_list}
+                              onChange={(e, data) => this.setState({attr_key: {major: data.value}})}
+                              value={this.state.attr_key.major ? this.state.attr_key.major : []}/>}
                     <div className="padding-text"></div>
 
                   </div>
