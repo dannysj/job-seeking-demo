@@ -519,7 +519,7 @@ class AccountProfile extends React.Component {
                              onClick={() => {
                                store.dispatch(updateUser("resume", null))
                              }}>
-                        <i className="ui upload icon"/> 删除简历
+                        <i className="ui trash icon"/> 删除简历
                       </label>
                     </div>
                   ) : (
