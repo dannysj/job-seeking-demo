@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Dropdown, Message, TextArea, Input} from 'semantic-ui-react';
+import {Message, TextArea} from 'semantic-ui-react';
 import axios from 'axios';
 import {NotificationManager} from 'react-notifications';
 import '../account.less';
+import CollegeSelector from './Component/CollegeSelector'
 
 //TODO: Bugs: Description text is not blank on next form input after submit edit
 //TODO: verification
@@ -23,17 +24,12 @@ class AccountApply extends React.Component {
             showAddServiceModal: false,
             editMode: false,
             editIndex: -1,
-            college_list: [],
-            user_college: [],
-            collegeQuery: "",
-            isLoadingCollegeList: false,
             tempService: {
                 name: "",
                 price: "",
                 description : "",
             }
         };
-        this.timer = null;
     }
 
     componentWillMount(){
@@ -44,13 +40,7 @@ class AccountApply extends React.Component {
                 this.setState({
                     mentor_info: mentor,
                     statusChecked:true,
-                    hasNotApplied: false,
-                    user_college:[
-                        {
-                            value: -1,
-                            text: mentor.college_name
-                        }
-                    ]
+                    hasNotApplied: false
                 });
             }
             else {
@@ -62,8 +52,6 @@ class AccountApply extends React.Component {
                 }
             }
         });
-
-        this.triggerSearch();
     }
 
 
@@ -129,28 +117,6 @@ class AccountApply extends React.Component {
         });
     };
 
-
-
-    handleSearchChange = (e, {searchQuery}) =>{
-        clearTimeout(this.timer);
-
-        this.setState({collegeQuery: searchQuery});
-
-        this.timer = setTimeout(this.triggerSearch, 500);
-    };
-
-    triggerSearch = () =>{
-        this.setState({isLoadingCollegeList : true});
-
-        axios.post('/api/get_college_list', {query: this.state.collegeQuery}).then(res => {
-            if (res.data.code === 0) {
-                this.setState({college_list: res.data.list});
-            } else {
-                NotificationManager.error('无法获取大学列表', '错误');
-            }
-            this.setState({isLoadingCollegeList : false})
-        });
-    };
 
     handleChange = (e, data) => {
         let curState = this.state;
@@ -255,13 +221,10 @@ class AccountApply extends React.Component {
             <div className="header">院校名称</div>
 
             <b className="notification-msg">
-              <Dropdown name='cid' placeholder='院校名称' fluid search selection allowAdditions
-                        loading={this.state.isLoadingCollegeList}
-                        noResultsMessage={null}
-                        onSearchChange={this.handleSearchChange}
-                        options={this.state.college_list.concat(this.state.user_college)}
-                        onChange={this.handleChange}
-                        defaultValue={-1}/>
+              <CollegeSelector
+                defaultValue={{value: -1, text: this.state.mentor_info.college_name}}
+                handleChange={this.handleChange}
+              />
             </b>
           </div>
           </div>
