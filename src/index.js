@@ -11,6 +11,8 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   const {protocol, hostname} = window.location;
   const port = 3005;
   axios.defaults.baseURL = protocol + '//' + hostname + ':' + port;
+} else if (process.env.REACT_APP_API_HOST) {
+  axios.defaults.baseURL = process.env.REACT_APP_API_HOST;
 }
 
 
