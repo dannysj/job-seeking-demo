@@ -49,7 +49,7 @@ class CollegeSelector extends Component {
                       onSearchChange={this.handleSearchChange}
                       options={this.state.college_list.concat(this.state.custom_college)}
                       onChange={this.props.handleChange}
-                      onAddItem={this.handleAddition}
+                      // onAddItem={this.handleAddition}
                       defaultValue={-1}/>)
   }
 }
