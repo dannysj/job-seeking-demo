@@ -175,11 +175,11 @@ class AccountApply extends React.Component {
             <form className="ui form">
               <div className="field">
                 <label>服务名称：</label>
-                <input type="text" name="name" placeholder= "服务名称" defaultValue={this.state.tempService.name} onChange={this.handleServiceInputChange}/>
+                <input type="text" name="name" placeholder= "服务名称" value={this.state.tempService.name} onChange={this.handleServiceInputChange}/>
               </div>
               <div className="field">
                 <label>服务价格：</label>
-                <input type="text" name="price" placeholder="服务价格" defaultValue={this.state.tempService.price} onChange={this.handleServiceInputChange}/>
+                <input type="text" name="price" placeholder="服务价格" value={this.state.tempService.price} onChange={this.handleServiceInputChange}/>
               </div>
               <div className="field">
                 <label>服务描述：</label>
@@ -289,7 +289,11 @@ class AccountApply extends React.Component {
                       <td>{service.name}</td>
                       <td>{service.price}</td>
                       <td>{service.description}</td>
-                      <td><label onClick={() => this.showEditServicePopup(i)} style={{cursor: 'pointer'}}>编辑</label><label> | </label><label onClick={() => this.deleteService(i)} style={{cursor: 'pointer'}}>删除</label></td>
+                      <td>
+                        <label onClick={() => this.showEditServicePopup(i)} style={{cursor: 'pointer'}}>编辑</label>
+                        <label> | </label>
+                        <label onClick={() => this.deleteService(i)} style={{cursor: 'pointer'}}>删除</label>
+                      </td>
                     </tr>
                   );
                 })
