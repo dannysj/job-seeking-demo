@@ -122,22 +122,7 @@ class AccountProfile extends React.Component {
     axios.post('/api/file/general_upload', data).then(res => {
       if (res.data.code === 0) {
         store.dispatch(updateUser("resume", res.data.url));
-
-        axios.post('/api/update_user',
-        {
-          attr: 'resume',
-          val: res.data.url
-        },
-        {
-          headers: {access_token: this.props.user.access_token}
-        }).then(res => {
-          if (res.data.code === 0)
-            NotificationManager.success('简历上传成功', '完成啦');
-          else
-            NotificationManager.error('资料更新失败', '错误');
-        });
-      }
-      else {
+      } else {
         NotificationManager.error('简历上传失败', '错误');
       }
     });
