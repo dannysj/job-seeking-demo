@@ -84,8 +84,8 @@ class AccountApply extends React.Component {
 
     confirmServiceChange = (e) => {
         e.preventDefault();
-        if(isNaN(this.state.tempService.price)){
-          NotificationManager.error('价格必须为数字', '错误');
+        if(isNaN(this.state.tempService.price) || this.state.tempService.price < 0 ){
+          NotificationManager.error('价格必须为正数', '错误');
           return;
         }
 
@@ -132,7 +132,7 @@ class AccountApply extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();
 
-        if(this.state.mentor_info.num_weekly_slots < 0){
+        if(isNaN(this.state.mentor_info.num_weekly_slots) || this.state.mentor_info.num_weekly_slots < 0){
             NotificationManager.error('每周愿意服务次数必须为自然数','错误');
             return;
         }
@@ -178,7 +178,7 @@ class AccountApply extends React.Component {
                 <input type="text" name="name" placeholder= "服务名称" value={this.state.tempService.name} onChange={this.handleServiceInputChange}/>
               </div>
               <div className="field">
-                <label>服务价格：</label>
+                <label>服务价格：（请输入数字，单位美元）</label>
                 <input type="text" name="price" placeholder="服务价格" value={this.state.tempService.price} onChange={this.handleServiceInputChange}/>
               </div>
               <div className="field">
@@ -261,8 +261,8 @@ class AccountApply extends React.Component {
           <div className="item first">
           <div className="content">
           <div className="inner-content">
-            <div className="header">每周愿意服务次数</div>
-            <input type="number" name="num_weekly_slots" placeholder="服务次数" onChange={this.handleChange}
+            <div className="header">每周愿意服务次数（请填写正整数）</div>
+            <input name="num_weekly_slots" placeholder="服务次数" onChange={this.handleChange}
                    value={this.state.mentor_info.num_weekly_slots} required/>
           </div>
           </div>
