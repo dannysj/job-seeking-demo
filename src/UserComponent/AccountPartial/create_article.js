@@ -1,22 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, Image, Input, Segment} from 'semantic-ui-react';
+import {Button, Image, Input} from 'semantic-ui-react';
 import ReactQuill from 'react-quill';
 import axios from 'axios';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {NotificationManager} from 'react-notifications';
 import 'react-quill/dist/quill.snow.css';
 import '../account.less';
 
 class CreateArticle extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-        news: {thumbnail: null, delta: []}
-    };
-    let reactQuillRef = null;
-    let quillRef = null;
-  }
+  state = {
+    news: {thumbnail: null, delta: []}
+  };
 
   componentDidMount() {
     if (typeof this.reactQuillRef.getEditor !== 'function') return;
@@ -38,7 +32,7 @@ class CreateArticle extends React.Component {
         NotificationManager.error('无法上传图片','错误');
       }
     });
-  }
+  };
 
   handleChange = () => {
     let curState = this.state;
@@ -50,11 +44,10 @@ class CreateArticle extends React.Component {
     let curState = this.state;
     curState.news.title = e.target.value;
     this.setState(curState);
-  }
+  };
 
   handleSubmitNews = () => {
     let data = this.state.news;
-    console.log(data)
     data.author_id = this.props.user.id;
     axios.post('/api/create_news',data,{headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code===0){
@@ -66,13 +59,12 @@ class CreateArticle extends React.Component {
         NotificationManager.error('无法上传干货','错误');
       }
     });
-  }
+  };
 
 
   render() {
     return(
       <div>
-
         <div className="category">
           <div className="header">
             <div className="title">
