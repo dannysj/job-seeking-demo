@@ -1,12 +1,13 @@
 import React from 'react';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {NotificationManager} from 'react-notifications';
 import {Dropdown, Image, TextArea} from 'semantic-ui-react';
 import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
 import '../account.less';
+import './account_profile.less'
 import ImgCrop from './ImgCrop/imgcrop.js';
 import store from "../../redux";
-import {updateUser,changeUserPassword} from "../../redux/userAction";
+import {changeUserPassword, updateUser} from "../../redux/userAction";
 import {fetchMajorList} from "../../redux/majorListAction";
 import {connect} from 'react-redux'
 import validator from 'validator';
@@ -525,17 +526,28 @@ class AccountProfile extends React.Component {
               </div>
               <div className="item first">
                 <div className="content">
-                <div className="inner-content">
-                  <div className="header">简历</div>
-                  <div className="info">{user.resume ? '' : '暂无资料'}</div>
-                  <label htmlFor="resume-input" className={user.resume ? 'ui button positive' : 'ui button'}>
-                    <i className="ui upload icon"/>
-                    {user.resume ? '成功' : '上传简历'}
-                  </label>
-                  <input type="file" accept="application/pdf" className="input-file" id="resume-input" onChange={this.handleResume}/>
-                  {user.resume ? (<embed className="resume-holder" src={user.resume} width="100%"
-                                                 type='application/pdf'/>) : (<div></div>)}
-                </div>
+                  {user.resume ? (
+                    <div className="inner-content">
+                      <embed className="resume-holder" src={user.resume} type='application/pdf'/>
+                      <br />
+                      <label htmlFor="resume-input" className='ui button negative'
+                             onClick={() => {
+                               store.dispatch(updateUser("resume", null))
+                             }}>
+                        <i className="ui upload icon"/> 删除简历
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="inner-content">
+                      <div className="info">暂无资料</div>
+                      <label htmlFor="resume-input" className='ui button positive'>
+                        <i className="ui upload icon"/>上传简历
+                      </label>
+                      <input type="file" accept="application/pdf" className="input-file" id="resume-input"
+                             onChange={this.handleResume}/>
+                    </div>
+                  )}
+
                 </div>
               </div>
               </div>
