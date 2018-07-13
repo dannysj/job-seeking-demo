@@ -255,7 +255,7 @@ class AccountApply extends React.Component {
             <div className="header">院校名称</div>
 
             <b className="notification-msg">
-              <Dropdown name='cid' placeholder='院校名称' fluid search selection
+              <Dropdown name='cid' placeholder='院校名称' fluid search selection allowAdditions
                         loading={this.state.isLoadingCollegeList}
                         noResultsMessage={null}
                         onSearchChange={this.handleSearchChange}
