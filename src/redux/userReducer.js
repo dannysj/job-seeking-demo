@@ -6,7 +6,8 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
     case "LOGOUT":
       delete axios.defaults.headers.common['access_token'];
       localStorage.removeItem('user');
-      return null;
+      state = null;
+      break;
 
 
     case "SET_USER":
