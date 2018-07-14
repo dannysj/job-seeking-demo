@@ -31,9 +31,8 @@ class News extends React.Component {
   }
 
   componentWillMount(){
-    store.dispatch(fetchNewsList(this.batch_num)).then(()=>{
-      this.batch_num++;
-    });
+    store.dispatch(fetchNewsList(this.batch_num));
+    this.batch_num++;
   }
 
   handleImageLoaded(index, type) {
@@ -75,7 +74,7 @@ class News extends React.Component {
         <div className="news-detail-content">
         {
           this.props.news_list.map((el,index) => (
-            <Link to={'/news/'+el.id}>
+            <Link to={'/news/'+el.id} key={el.id}>
             <div className="list-news-container new-big" key={el.id}>
               <img className={"list-news-picture" + (this.state.loaded[index] ? "" : " on-load")} src={el.thumbnail} alt={el.title} onLoad={() => {
                 this.handleImageLoaded(index, "top")}}/>
@@ -106,7 +105,7 @@ class News extends React.Component {
           <div className="news-detail-content">
           {
             this.props.news_list.map((el,index) => (
-              <Link to={'/news/'+el.id}>
+              <Link to={'/news/'+el.id} key={el.id}>
               <div className="list-news-container" key={el.id}>
                 <img className={"list-news-picture" + (this.state.loaded_now[index] ? "" : " on-load")} src={el.thumbnail} alt={el.title} onLoad={() => {
                   this.handleImageLoaded(index, "trend")}}/>

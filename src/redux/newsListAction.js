@@ -10,7 +10,6 @@ export function fetchNewsList(batch_num = 0) {
     };
   else
     return {
-      type: "USE_CACHED_NEWS_LIST",
-      payload: new Promise(f=>f())
+      type: "USE_CACHED_NEWS_LIST"
     }
 }

@@ -5,7 +5,7 @@ import { Modal, Button, Image, Header, Dropdown, Container } from 'semantic-ui-r
 import PropTypes from 'prop-types';
 import Arrow from "../Components/Arrow";
 import Footer from '../Components/Footer';
-import css from './user.css';
+import './user.less';
 
 class UserDetail extends Component {
 

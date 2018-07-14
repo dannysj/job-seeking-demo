@@ -71,47 +71,14 @@ exports.editMentorInfo = (mentor_info, callback) => {
 };
 
 
-exports.getMentorDetailByUid = (uid, callback) => {
-  console.log("uid before query: " + uid);
-  var query = `
+const mentorSelectQuery  = `
     select u.id as uid,
       u.first as first,
       u.last as last,
       u.dob as dob,
       u.profile_pic as profile_pic,
       u.resume as resume,
-      u.ismentor as ismentor,
-      c.name as college_name,
-      c.id as cid,
-      m.id as mid,
-      m.offer_title as offer_title,
-      m.offer_company as offer_company,
-      m.bio as bio,
-      m.bios as bios,
-      m.service as service,
-      m.num_weekly_slots as num_weekly_slots
-    from users u, mentor_info m, college c
-    where m.uid = u.id and m.cid = c.id and u.id = $1;
-  `;
-  db.query(query, [uid], (err, result) => {
-      if (err) {
-      callback(err);
-      return;
-    }
-    callback(null, result.rows[0]);
-  });
-};
-
-
-
-exports.getMentorDetail = (mid, callback) => {
-  const query = `
-    select u.id as uid,
-      u.first as first,
-      u.last as last,
-      u.dob as dob,
-      u.profile_pic as profile_pic,
-      u.resume as resume,
+      u.id as uid,
       c.name as college_name,
       m.id as mid,
       m.offer_title as offer_title,
@@ -121,7 +88,11 @@ exports.getMentorDetail = (mid, callback) => {
       m.service as service,
       m.num_weekly_slots as num_weekly_slots,
       (m.num_weekly_slots - (select count(*) from mentor_rel
-        where mid=m.id and now()-start_time<'1 week'))::integer as num_availability,
+        where mid=m.id
+          and status=1
+          and now()-start_time<'1 week'
+        )
+      )::integer as num_availability,
 
       (select
          json_agg(
@@ -144,15 +115,23 @@ exports.getMentorDetail = (mid, callback) => {
        ) as comments
 
     from users u, mentor_info m, college c
-    where m.uid = u.id and m.cid = c.id and m.id = $1;
-  `;
-  db.query(query, [mid], (err, result) => {
-    if (err) {
-      callback(err);
-      return;
-    }
-    callback(null, result.rows[0]);
-  });
+
+`;
+
+exports.getMentorDetailByUid = (uid, callback) => {
+  const query = mentorSelectQuery + ` where m.uid = u.id and m.cid = c.id and u.id = $1;`;
+  db.query(query, [uid])
+    .then(result => callback(null, result.rows[0]))
+    .catch(err => callback(err))
+};
+
+
+
+exports.getMentorDetail = (mid, callback) => {
+  const query = mentorSelectQuery + ` where m.uid = u.id and m.cid = c.id and m.id = $1;`;
+  db.query(query, [mid])
+    .then(result => callback(null, result.rows[0]))
+    .catch(err => callback(err))
 };
 
 
@@ -165,7 +144,8 @@ exports.getMentorList = (filter, callback) => {
       c.name as college_name,
       m.offer_title as offer_title,
       m.offer_company as offer_company,
-      m.id as mid
+      m.id as mid,
+      u.id as uid
     from users u, mentor_info m, college c
     where m.uid = u.id and m.cid = c.id and u.ismentor = true;
   `;

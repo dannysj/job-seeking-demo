@@ -18,12 +18,13 @@ import UserDetail from './UserComponent/user_detail';
 import News from './NewsComponent/news';
 import NewsDetail from './NewsComponent/news_detail';
 import About from './AboutComponent/about';
+import Reset from './UserComponent/reset';
 // Redux
 import store from "./redux";
-import {fetchUser} from "./redux/userAction";
+import {fetchUser, setUser} from "./redux/userAction";
 import {connect, Provider} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import { hot } from 'react-hot-loader'
+import {hot} from 'react-hot-loader'
 
 class App extends Component {
   constructor(props){
@@ -44,12 +45,8 @@ class App extends Component {
   }
 
   componentWillMount(){
-
-    // Change access_token
-    const access_token = localStorage.getItem('access_token');
-    if (access_token) {
-      store.dispatch(fetchUser(access_token));
-    }
+    if (this.props.user)
+      store.dispatch(fetchUser());
   }
 
   updateCurrentPage(name) {
@@ -92,7 +89,7 @@ class App extends Component {
     const user = this.props.user;
     return (
       <div className="app-flex">
-        <NotificationContainer />
+
         <input type="checkbox" id="reveal-menu" className="reveal-m" role="button" checked={this.state.is_checked ? "checked" : ""}/>
         <input type="checkbox" id="reveal-user-menu" className="reveal-um" role="button" checked={this.state.is_user_checked ? "checked" : ""}/>
         <div className={"navbar "} onClick={this.toggle_outside}>
@@ -225,12 +222,15 @@ class App extends Component {
             <Route path='/mentor' component={Mentor}/>
             <Route path="/user/:uid" render={(props)=><UserDetail {...props} user={user} width={this.state.width} height={this.state.height}/>} />
             <Route path='/news/:nid'   render={(props)=><NewsDetail {...props} loggedInUser={user}/> } />
+            <Route path='/reset' component={Reset}/>
             <Route path='/news' component={News}/>
             <Route path='/about' component={About}/>
             <Route path='/' component={Home}/>
           </Switch>
           </Provider>
         </div>
+
+        <NotificationContainer />
       </div>
     );
   }

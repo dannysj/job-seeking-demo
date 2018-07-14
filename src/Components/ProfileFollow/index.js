@@ -3,7 +3,7 @@ import { Button } from 'semantic-ui-react';
 import './index.less';
 import axios from 'axios';
 import store from "../../redux/index";
-import {userStatus} from "../../redux/userReducer"  
+import {followUser} from "../../redux/userAction";
 
 const FollowStatus = {
   UNKNOWN : 0,
@@ -26,25 +26,14 @@ class ProfileFollow extends Component {
   }
 
   followButtonPressed() {
-    console.log("Test");
     // User id, props.loggedInUser.uid
     // The other one. this.state.news.author_id
     // call the function 
 
     // TODO: Change the acceptable environment in the backend.
-    if (store.getState().user.status === userStatus.login){
-      axios.post('/api/follow_user',
-       {followee_uid: this.state.author_id},
-       {headers: {"access_token": store.getState().user.access_token}}
-      ).then(res=>{
-          if (res.data.code === 0){
-            this.setState({followStatus: FollowStatus.FOLLOWED})
-            console.log("follow")
-          }else{
-            console.log("error")
-          }
-      })
-    }
+    store.dispatch(followUser(this.state.author_id)).then(
+      this.setState({followStatus: FollowStatus.FOLLOWED})
+    );
   }
 
   renderFollowButton(){
@@ -73,7 +62,7 @@ class ProfileFollow extends Component {
   }
 
   render() {
-    if (store.getState().user.status === userStatus.login && this.state.followStatus === FollowStatus.UNKNOWN){
+    if (store.getState().user && this.state.followStatus === FollowStatus.UNKNOWN){
       axios.post('/api/whether_followed',
       {followee_uid: this.state.author_id}, {headers: {"access_token": store.getState().user.access_token}}).then(res=>{
             if (res.data.whetherFollowed === true){

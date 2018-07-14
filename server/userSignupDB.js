@@ -49,3 +49,23 @@ exports.addUserVerificationCode = (email, verification_code, callback) => {
     callback(null, result.rows[0]);
   });
 };
+
+
+exports.getUidbyEmail = function (email, callback) {
+  console.log(email)
+  const query = `select users.id from users where email=$1`;
+  db.query(query, [email], (err, result) => {
+    if (err) {
+      callback(err);
+      return;
+    }
+
+    if (result.rows.length === 0) {
+      callback('No such email found');
+      return;
+    }
+
+    const uid = result.rows[0].id;
+    callback(null, uid);
+  });
+};

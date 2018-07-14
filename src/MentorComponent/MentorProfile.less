@@ -1,0 +1,33 @@
+.connect-circle-container {
+  .following-button {
+    &:not(:hover) {
+      > div:before {
+        content: "已关注";
+      }
+    }
+
+    // TODO: Better Color...
+    &:hover {
+      background-color: dodgerblue;
+      > div:before {
+        content: "取消关注";
+      }
+    }
+
+  }
+
+  .not-following-button {
+    &:not(:hover) {
+      > div:before {
+        content: "未关注";
+      }
+    }
+
+    &:hover {
+      background-color: dodgerblue;
+      > div:before {
+        content: "关注导师";
+      }
+    }
+  }
+}

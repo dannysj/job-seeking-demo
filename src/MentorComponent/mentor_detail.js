@@ -85,6 +85,11 @@ class MentorDetail extends Component {
       NotificationManager.error('请先在个人资料中填好您的微信号', '错误');
       return;
     }
+    const mentor = this.props.mentorDetailStore[this.props.match.params.mid];
+    if(!(mentor.num_availability >= 1)){
+      NotificationManager.error('该Mentor本周服务已被订满', '错误');
+      return;
+    }
     this.setState({service_name: service_name, service_price: service_price, showNoteModal: true});
   }
 
@@ -223,7 +228,7 @@ class MentorDetail extends Component {
     });
       return (
       <div className="mentor-detail-container">
-        <NotificationContainer />
+
         <Modal open={this.state.showNoteModal} style={{
           marginTop: '0px !important',
           marginLeft: 'auto',
@@ -334,7 +339,9 @@ class MentorDetail extends Component {
               <img className="title-icon"  alt="age" src={ageIcon} height={50}/>
               本周服务次数
             </div>
-            <div className="subtitle">{mentor.num_availability}</div>
+            <div className="subtitle">{
+              (mentor.num_availability>=0) ? mentor.num_availability : 0
+            }</div>
 
           </div>
 
@@ -358,7 +365,9 @@ class MentorDetail extends Component {
                 </div>
               <div className="para-medium">
                 <b>{mentor.last+mentor.first}</b>
-                本周还可提供{mentor.num_availability}次服务
+                本周还可提供{
+                  (mentor.num_availability>=0) ? mentor.num_availability : 0
+                }次服务
               </div>
               <div className="mentor-service-container">
               {

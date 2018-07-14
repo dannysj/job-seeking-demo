@@ -153,11 +153,14 @@
   margin-left: 50px;
 }
 
-.connect-circle {
+.connect-circle-container {
   position: absolute;
-  bottom: 0;
-  margin-bottom: 0;
   left: 50%;
+  display: flex;
+  bottom: 0;
+}
+.connect-circle {
+  margin-bottom: 0;
   transform: translate(-50%, 0%);
   height: 50px;
   width: 100px;
@@ -168,6 +171,7 @@
   text-align: center;
   display: flex;
   justify-content: center;
+  cursor: pointer;
 }
 
 .connect-circle > * {

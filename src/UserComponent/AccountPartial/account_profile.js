@@ -1,12 +1,13 @@
 import React from 'react';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {NotificationManager} from 'react-notifications';
 import {Dropdown, Image, TextArea} from 'semantic-ui-react';
 import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
 import '../account.less';
+import './account_profile.less'
 import ImgCrop from './ImgCrop/imgcrop.js';
 import store from "../../redux";
-import {updateUser} from "../../redux/userAction";
+import {changeUserPassword, updateUser, updateAccessToken} from "../../redux/userAction";
 import {fetchMajorList} from "../../redux/majorListAction";
 import {connect} from 'react-redux'
 import validator from 'validator';
@@ -34,11 +35,22 @@ class AccountProfile extends React.Component {
     this.setState({attr_key:attr_keys});
   };
 
+
+    initAttrChangePassword = (key_name) => {
+        let curState = this.state;
+        let attr_keys = curState.attr_key;
+
+        attr_keys[key_name] = "";
+
+        this.setState({attr_key:attr_keys});
+    };
+
   confirmAttrChange = (e) => {
     e.preventDefault();
     // TODO: Process and upload data
     let curState = this.state;
     let attr_keys = curState.attr_key;
+
     //FIXME: Fixe bunches data update
     for (const [attr, val] of Object.entries(attr_keys)) {
       if (attr === "email" && !validator.isEmail(val)) {
@@ -51,13 +63,50 @@ class AccountProfile extends React.Component {
         return;
       }
 
-      store.dispatch(updateUser(attr, val, this.props.user.access_token));
+      store.dispatch(updateUser(attr, val));
 
       delete curState.attr_key[attr];
       this.setState({curState});
   }
  };
 
+  confirmPasswordChange = (e) =>{
+      e.preventDefault();
+      let curState = this.state;
+      axios.post("/api/verify_user", {password: this.state.attr_key["old_password"], email: this.props.user.email})
+          .then(res =>{
+              if (res.data.code === 1){
+                  NotificationManager.error("原密码不正确，请重新输入", "错误");
+                  return
+              }
+
+              store.dispatch(updateAccessToken(res.data.user.access_token));
+
+              if (this.state.attr_key["new_password"] === ""){
+                  NotificationManager.error("新密码不能为空", "错误");
+                  return
+              }
+
+              if ( this.state.attr_key["new_password"] !== this.state.attr_key["confirm_password"] ){
+                  NotificationManager.error("确认密码和新密码不一致", "错误");
+                  return;
+              }
+
+              //this.confirmAttrChange(e)
+              store.dispatch(changeUserPassword(this.state.attr_key["new_password"], store.getState().user)).then(()=>{
+                  curState.attr_key["new_password"] = ""
+                  curState.attr_key["old_password"] = ""
+                  curState.attr_key["confirm_password"] = ""
+                  delete curState.attr_key["new_password"];
+                  delete curState.attr_key["old_password"];
+                  delete curState.attr_key["confirm_password"];
+                  this.setState({curState});
+              });
+
+          }
+          )
+          .catch(err => console.log(err));
+  };
 
   handleResume = (e) => {
     const fileType = e.target.files[0]["type"];
@@ -74,23 +123,8 @@ class AccountProfile extends React.Component {
 
     axios.post('/api/file/general_upload', data).then(res => {
       if (res.data.code === 0) {
-        store.dispatch(updateUser("resume", res.data.url, this.props.user.access_token));
-
-        axios.post('/api/update_user',
-        {
-          attr: 'resume',
-          val: res.data.url
-        },
-        {
-          headers: {access_token: this.props.user.access_token}
-        }).then(res => {
-          if (res.data.code === 0)
-            NotificationManager.success('简历上传成功', '完成啦');
-          else
-            NotificationManager.error('资料更新失败', '错误');
-        });
-      }
-      else {
+        store.dispatch(updateUser("resume", res.data.url));
+      } else {
         NotificationManager.error('简历上传失败', '错误');
       }
     });
@@ -127,7 +161,7 @@ class AccountProfile extends React.Component {
     axios.post('/api/file/general_upload', data).then(res => {
       if (res.data.code === 0) {
         this.setState({showImgCrop: false});
-        store.dispatch(updateUser("profile_pic", res.data.url, this.props.user.access_token));
+        store.dispatch(updateUser("profile_pic", res.data.url));
         axios.post('/api/update_user',
         {
           attr: 'profile_pic',
@@ -155,19 +189,19 @@ class AccountProfile extends React.Component {
     let curState = this.state;
     delete curState.attr_key[key_name];
     this.setState(curState);
-  }
+  };
 
   handleInputChange = (e, data) => {
     let attr_keys = this.state.attr_key;
-    attr_keys[e.target.name] = e.target.value
+    attr_keys[e.target.name] = e.target.value;
     this.setState({attr_key:attr_keys});
-  }
+  };
 
     render() {
       const user = this.props.user;
         return(
             <div className="ui large celled list form">
-              <NotificationContainer />
+
                 <div className="category">
                   <div className="header">
                     <div className="title">
@@ -187,6 +221,9 @@ class AccountProfile extends React.Component {
                     名字、密码、专业、自我介绍以及头像设置
                   </div>
                 </div>
+
+
+                    {/*Profile Picture     */}
               <div className="item center">
                 <div className="img-crop-item">
                 {this.state.showImgCrop ? ( <ImgCrop dataUrl={this.state.imgCropDataUrl} fileName={this.state.imgCropName} onSuccess={this.onSuccessCrop}/> )
@@ -194,13 +231,16 @@ class AccountProfile extends React.Component {
                   ( <div className="imgContainer">
                     <div className="image-text-centered">点击更换头像</div>
                     <label className="header-input-label" htmlFor="header-input">
-                      <Image className="center-profile" small bordered src={user.profile_pic} />
+                      <Image className="center-profile" small="true" bordered src={user.profile_pic} />
                     </label>
                     <input type="file" accept="image/*" className="input-file" id="header-input" onChange={this.handleHeader} />
                     </div>
                   )}
                   </div>
               </div>
+
+
+              {/*first and last*/}
               <div className={"item " + ((this.state.attr_key.hasOwnProperty('last')) ? "is-expanded" : "")}>
                 <div className="content">
                   <div className="inner-content">
@@ -218,6 +258,8 @@ class AccountProfile extends React.Component {
                     编辑
                   </div>
                 </div>
+
+                {/*first and last edit*/}
                 <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('last')) ? "is-expanded" : "")}>
                   <div className="form-text">
                     <input type="text" name="last" value={this.state.attr_key.last} onChange={this.handleInputChange}/>
@@ -239,6 +281,7 @@ class AccountProfile extends React.Component {
                 </div>
               </div>
 
+              {/*major     */}
               <div className={"item " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")} >
                 <div className="content">
                   <div className="inner-content">
@@ -251,12 +294,14 @@ class AccountProfile extends React.Component {
 
                 </div>
 
+                {/*major edit*/}
                 <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('major')) ? "is-expanded" : "")}>
                   <div className="form-text">
-                      <Dropdown name='major' placeholder='专业' search selection multiple fluid closeOnChange
-                                options={this.props.major_list}
-                                onChange={(e, data) => this.setState({attr_key: {major: data.value}})}
-                                value={this.state.attr_key.major ? this.state.attr_key.major : []}/>
+                    {(this.state.attr_key.hasOwnProperty('major')) &&
+                    <Dropdown name='major' placeholder='专业' search selection multiple fluid closeOnChange
+                              options={this.props.major_list}
+                              onChange={(e, data) => this.setState({attr_key: {major: data.value}})}
+                              value={this.state.attr_key.major ? this.state.attr_key.major : []}/>}
                     <div className="padding-text"></div>
 
                   </div>
@@ -273,6 +318,9 @@ class AccountProfile extends React.Component {
                   </div>
                 </div>
               </div>
+
+
+              {/*bio    */}
               <div className={"item " + ((this.state.attr_key.hasOwnProperty('cover')) ? "is-expanded" : "")}>
                 <div className="content">
                   <div className="inner-content">
@@ -283,6 +331,8 @@ class AccountProfile extends React.Component {
                     编辑
                   </div>
                 </div>
+
+               {/*bio edit */}
                 <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('cover')) ? "is-expanded" : "")}>
                   <div className="form-text">
                     <TextArea rows="8" name="cover" value={this.state.attr_key.cover} onChange={this.handleInputChange}/>
@@ -300,10 +350,87 @@ class AccountProfile extends React.Component {
                     </div>
                   </div>
                 </div>
-
-
               </div>
 
+
+              {/*password*/}
+              <div className={"item " + ((this.state.attr_key.hasOwnProperty('old_password')) ? "is-expanded" : "")}>
+                  <div className="content">
+                      <div className="inner-content">
+                          <div className="header">密码设置</div>
+                          <div className="info">{'密码不可见'}</div>
+                      </div>
+                      <div className="edit-toggle"
+                           onClick={()=>{
+                                this.initAttrChangePassword('old_password');
+                                this.initAttrChangePassword('new_password');
+                                this.initAttrChangePassword('confirm_password');}}>
+                          更改
+                      </div>
+                  </div>
+
+
+                  {/*password edit */}
+                  <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('old_password')) ? "is-expanded" : "")}>
+
+                      {/*Add three box */}
+                      <div className="form-text">
+                      <div className="ui segment">
+                      <div className="ui grid">
+                          <div className="row">
+                              <div className="ten wide column">
+                                  <label>旧密码</label>
+                                  <input type="password"
+                                         name="old_password"
+                                         placeholder="Old Password"
+                                         onChange={this.handleInputChange}
+                                         value={this.state.attr_key.old_password}
+                                         required/>
+                              </div>
+                          </div>
+
+                          <div className="row">
+                              <div className="ten wide column">
+                                <label>新密码</label>
+                                <input type="password"
+                                       name="new_password"
+                                       placeholder="New Password"
+                                       onChange={this.handleInputChange}
+                                       value={this.state.attr_key.new_password}
+                                       required/>
+                              </div>
+                          </div>
+
+                          <div className="row">
+                              <div className="ten wide column">
+                              <label>确认密码</label>
+                              <input type="password" name="confirm_password"
+                                     placeholder="Confirm Password"
+                                     onChange={this.handleInputChange}
+                                     value={this.state.attr_key.confirm_password}
+                                     required />
+                              </div>
+                          </div>
+                      </div>
+                      </div>
+                      </div>
+
+                      {/*no need to change                 */}
+                      <div className="actions">
+                          <div className="ui gray deny button" onClick={() => {
+                              this.cancelAttrChange("new_password");
+                              this.cancelAttrChange("old_password");
+                              this.cancelAttrChange("confirm_password");
+                          }}>
+                              取消
+                          </div>
+                          <div className="ui blue right labeled icon button" onClick={this.confirmPasswordChange}>
+                              确认
+                              <i className="checkmark icon"/>
+                          </div>
+                      </div>
+                  </div>
+              </div>
               </div>
 
               <div className="category">
@@ -387,17 +514,28 @@ class AccountProfile extends React.Component {
               </div>
               <div className="item first">
                 <div className="content">
-                <div className="inner-content">
-                  <div className="header">简历</div>
-                  <div className="info">{user.resume ? '' : '暂无资料'}</div>
-                  <label htmlFor="resume-input" className={user.resume ? 'ui button positive' : 'ui button'}>
-                    <i className="ui upload icon"/>
-                    {user.resume ? '成功' : '上传简历'}
-                  </label>
-                  <input type="file" accept="application/pdf" className="input-file" id="resume-input" onChange={this.handleResume}/>
-                  {user.resume ? (<embed className="resume-holder" src={user.resume} width="100%"
-                                                 type='application/pdf'/>) : (<div></div>)}
-                </div>
+                  {user.resume ? (
+                    <div className="inner-content">
+                      <embed className="resume-holder" src={user.resume} type='application/pdf'/>
+                      <br />
+                      <label htmlFor="resume-input" className='ui button negative'
+                             onClick={() => {
+                               store.dispatch(updateUser("resume", null))
+                             }}>
+                        <i className="ui trash icon"/> 删除简历
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="inner-content">
+                      <div className="info">暂无资料</div>
+                      <label htmlFor="resume-input" className='ui button positive'>
+                        <i className="ui upload icon"/>上传简历
+                      </label>
+                      <input type="file" accept="application/pdf" className="input-file" id="resume-input"
+                             onChange={this.handleResume}/>
+                    </div>
+                  )}
+
                 </div>
               </div>
               </div>

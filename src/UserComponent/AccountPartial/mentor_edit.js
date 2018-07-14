@@ -198,7 +198,7 @@
 //
 //     return (
 //       <div>
-//         <NotificationContainer />
+//
 //         <div className={modalClassName}>
 //           <i className="close icon"/>
 //           <div className="header">

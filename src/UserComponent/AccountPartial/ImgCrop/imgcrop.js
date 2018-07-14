@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import ReactCrop, { makeAspectCrop }  from 'react-image-crop';
-import { Button } from 'semantic-ui-react'
+import React, {Component} from 'react';
+import ReactCrop, {makeAspectCrop} from 'react-image-crop';
+import {Button} from 'semantic-ui-react'
 import 'react-image-crop/dist/ReactCrop.css';
 import './imgcrop.less';
 
@@ -25,6 +25,29 @@ export default class ImgCrop extends Component {
         x: 0,
         y: 0,
       }
+    }
+  }
+
+  componentWillMount() {
+    // Add toBlob support to Edge
+    // See https://stackoverflow.com/questions/47475647/canvas-to-blob-on-edge
+    if (!HTMLCanvasElement.prototype.toBlob) {
+      Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+        value: function (callback, type, quality) {
+          const canvas = this;
+          setTimeout(function () {
+            const binStr = atob(canvas.toDataURL(type, quality).split(',')[1]),
+              len = binStr.length,
+              arr = new Uint8Array(len);
+
+            for (let i = 0; i < len; i++) {
+              arr[i] = binStr.charCodeAt(i);
+            }
+
+            callback(new Blob([arr], {type: type || 'image/png'}));
+          });
+        }
+      });
     }
   }
 
@@ -72,7 +95,7 @@ export default class ImgCrop extends Component {
       file.name = fileName;
       callback(file);
     }, 'image/jpeg');
-  }
+  };
 
   onImageLoaded = (image) => {
     // var splitName = this.state.dataUrl.split('\\').pop().split('/').pop();

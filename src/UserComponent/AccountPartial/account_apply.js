@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Dropdown, Message, TextArea, Input} from 'semantic-ui-react';
+import {Message, TextArea} from 'semantic-ui-react';
 import axios from 'axios';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {NotificationManager} from 'react-notifications';
 import '../account.less';
+import CollegeSelector from './Component/CollegeSelector'
 
 //TODO: Bugs: Description text is not blank on next form input after submit edit
 //TODO: verification
@@ -23,17 +24,12 @@ class AccountApply extends React.Component {
             showAddServiceModal: false,
             editMode: false,
             editIndex: -1,
-            college_list: [],
-            user_college: [],
-            collegeQuery: "",
-            isLoadingCollegeList: false,
             tempService: {
                 name: "",
                 price: "",
                 description : "",
             }
         };
-        this.timer = null;
     }
 
     componentWillMount(){
@@ -44,13 +40,7 @@ class AccountApply extends React.Component {
                 this.setState({
                     mentor_info: mentor,
                     statusChecked:true,
-                    hasNotApplied: false,
-                    user_college:[
-                        {
-                            value: mentor.cid,
-                            text: mentor.college_name
-                        }
-                    ]
+                    hasNotApplied: false
                 });
             }
             else {
@@ -62,8 +52,6 @@ class AccountApply extends React.Component {
                 }
             }
         });
-
-        this.triggerSearch();
     }
 
 
@@ -96,8 +84,8 @@ class AccountApply extends React.Component {
 
     confirmServiceChange = (e) => {
         e.preventDefault();
-        if(isNaN(this.state.tempService.price)){
-          NotificationManager.error('价格必须为数字', '错误');
+        if(isNaN(this.state.tempService.price) || this.state.tempService.price < 0 ){
+          NotificationManager.error('价格必须为正数', '错误');
           return;
         }
 
@@ -130,28 +118,6 @@ class AccountApply extends React.Component {
     };
 
 
-
-    handleSearchChange = (e, {searchQuery}) =>{
-        clearTimeout(this.timer);
-
-        this.setState({collegeQuery: searchQuery});
-
-        this.timer = setTimeout(this.triggerSearch, 500);
-    };
-
-    triggerSearch = () =>{
-        this.setState({isLoadingCollegeList : true});
-
-        axios.post('/api/get_college_list', {query: this.state.collegeQuery}).then(res => {
-            if (res.data.code === 0) {
-                this.setState({college_list: res.data.list});
-            } else {
-                NotificationManager.error('无法获取大学列表', '错误');
-            }
-            this.setState({isLoadingCollegeList : false})
-        });
-    };
-
     handleChange = (e, data) => {
         let curState = this.state;
         if (data) {
@@ -166,7 +132,7 @@ class AccountApply extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();
 
-        if(this.state.mentor_info.num_weekly_slots < 0){
+        if(isNaN(this.state.mentor_info.num_weekly_slots) || this.state.mentor_info.num_weekly_slots < 0){
             NotificationManager.error('每周愿意服务次数必须为自然数','错误');
             return;
         }
@@ -199,7 +165,7 @@ class AccountApply extends React.Component {
     return (
       !this.state.statusChecked?("请稍后..."):(
         <div className="account-inner-spacing">
-        <NotificationContainer />
+
         <div className={modalClassName}>
           <i className="close icon"/>
           <div className="header">
@@ -209,11 +175,11 @@ class AccountApply extends React.Component {
             <form className="ui form">
               <div className="field">
                 <label>服务名称：</label>
-                <input type="text" name="name" placeholder= "服务名称" defaultValue={this.state.tempService.name} onChange={this.handleServiceInputChange}/>
+                <input type="text" name="name" placeholder= "服务名称" value={this.state.tempService.name} onChange={this.handleServiceInputChange}/>
               </div>
               <div className="field">
-                <label>服务价格：</label>
-                <input type="text" name="price" placeholder="服务价格" defaultValue={this.state.tempService.price} onChange={this.handleServiceInputChange}/>
+                <label>服务价格：（请输入数字，单位美元）</label>
+                <input type="text" name="price" placeholder="服务价格" value={this.state.tempService.price} onChange={this.handleServiceInputChange}/>
               </div>
               <div className="field">
                 <label>服务描述：</label>
@@ -250,18 +216,15 @@ class AccountApply extends React.Component {
         <form className="ui form">
           <div className="category">
           <div className="item first">
-          <div className="content">
+          <div className="content dir">
             <div className="inner-content">
             <div className="header">院校名称</div>
 
             <b className="notification-msg">
-              <Dropdown name='cid' placeholder='院校名称' fluid search selection
-                        loading={this.state.isLoadingCollegeList}
-                        noResultsMessage={null}
-                        onSearchChange={this.handleSearchChange}
-                        options={this.state.college_list.concat(this.state.user_college)}
-                        onChange={this.handleChange}
-                        value={this.state.mentor_info.cid}/>
+              <CollegeSelector
+                defaultValue={{value: -1, text: this.state.mentor_info.college_name}}
+                handleChange={this.handleChange}
+              />
             </b>
           </div>
           </div>
@@ -298,8 +261,8 @@ class AccountApply extends React.Component {
           <div className="item first">
           <div className="content">
           <div className="inner-content">
-            <div className="header">每周愿意服务次数</div>
-            <input type="number" name="num_weekly_slots" placeholder="服务次数" onChange={this.handleChange}
+            <div className="header">每周愿意服务次数（请填写正整数）</div>
+            <input name="num_weekly_slots" placeholder="服务次数" onChange={this.handleChange}
                    value={this.state.mentor_info.num_weekly_slots} required/>
           </div>
           </div>
@@ -315,6 +278,7 @@ class AccountApply extends React.Component {
                 <th>服务名称</th>
                 <th>服务价格</th>
                 <th>具体介绍</th>
+                <th>编辑服务</th>
               </tr>
               </thead>
               <tbody>
@@ -326,7 +290,11 @@ class AccountApply extends React.Component {
                       <td>{service.name}</td>
                       <td>{service.price}</td>
                       <td>{service.description}</td>
-                      <td><label onClick={() => this.showEditServicePopup(i)} style={{cursor: 'pointer'}}>编辑</label><label> | </label><label onClick={() => this.deleteService(i)} style={{cursor: 'pointer'}}>删除</label></td>
+                      <td>
+                        <label onClick={() => this.showEditServicePopup(i)} style={{cursor: 'pointer'}}>编辑</label>
+                        <label> | </label>
+                        <label onClick={() => this.deleteService(i)} style={{cursor: 'pointer'}}>删除</label>
+                      </td>
                     </tr>
                   );
                 })
@@ -338,7 +306,7 @@ class AccountApply extends React.Component {
           </div>
           </div>
           </div>
-          <div className="category">
+          <div className="category last">
           <div className="item first">
           <div className="content">
           <div className="inner-content">
