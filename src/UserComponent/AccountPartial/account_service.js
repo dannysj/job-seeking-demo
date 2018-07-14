@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 import axios from 'axios';
 import '../account.less';
+import {NotificationManager} from 'react-notifications';
 
 class AccountService extends React.Component {
   constructor(props) {
@@ -30,7 +31,7 @@ class AccountService extends React.Component {
       }
       else{
         // TODO: error handling
-        alert('Database Error');
+        NotificationManager.error('数据库错误','错误');
         console.log(res.data);
       }
     });
@@ -45,7 +46,7 @@ class AccountService extends React.Component {
       }
       else{
         // TODO: error handling
-        alert('Database Error');
+        NotificationManager.error('数据库错误','错误');
         console.log(res.data);
       }
     });
@@ -63,7 +64,7 @@ class AccountService extends React.Component {
       }
       else{
         // TODO: error handling
-        alert('Database Error');
+        NotificationManager.error('数据库错误','错误');
         console.log(res.data);
       }
     });

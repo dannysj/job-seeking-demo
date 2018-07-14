@@ -3,6 +3,7 @@ import {Button} from 'semantic-ui-react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import CommentBox from "../../MentorComponent/CommentBox";
+import {NotificationManager} from 'react-notifications';
 
 class AccountMentor extends React.Component {
   constructor(props) {
@@ -24,7 +25,7 @@ class AccountMentor extends React.Component {
       }
       else{
         // TODO: error handling
-        alert('Database Error');
+        NotificationManager.error('数据库错误','错误');
         console.log(res.data);
       }
     });
@@ -38,7 +39,7 @@ class AccountMentor extends React.Component {
       }
       else{
         // TODO: error handling
-        alert('Database Error');
+        NotificationManager.error('数据库错误','错误');
         console.log(res.data);
       }
     });

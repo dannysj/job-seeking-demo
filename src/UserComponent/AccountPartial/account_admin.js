@@ -6,6 +6,7 @@ import ReactQuill from 'react-quill';
 import axios from 'axios';
 import 'react-quill/dist/quill.snow.css';
 import '../account.less';
+import {NotificationManager} from "react-notifications";
 
 class AccountAdmin extends React.Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class AccountAdmin extends React.Component {
       }
       else{
         // TODO: error handling
-        alert('Database Error');
+        NotificationManager.error('数据库错误','错误');
         console.log(res.data);
       }
     });
@@ -59,7 +60,7 @@ class AccountAdmin extends React.Component {
       }
       else{
         // TODO: error handling
-        alert('Thumbnail Error');
+        NotificationManager.error('缩略图上传错误','错误');
         console.log(res.data);
       }
     });
@@ -91,11 +92,11 @@ class AccountAdmin extends React.Component {
 
     axios.post('/api/file/general_upload_name_perserved', data).then(res => {
       if(res.data.code === 0){
-        alert('Success!');
+        NotificationManager.success('上传成功','成功');
       }
       else{
         // TODO: error handling
-        alert('Thumbnail Error');
+        NotificationManager.error('上传错误','错误');
         console.log(res.data);
       }
     });
@@ -106,11 +107,11 @@ class AccountAdmin extends React.Component {
     data.author_id = this.props.user.id;
     axios.post('/api/create_news',data).then(res => {
       if(res.data.code===0){
-        alert('success'); // TODO: change this
+        NotificationManager.success('干货成功上传','成功');
         this.context.router.history.push('/news/'+res.data.nid);
       }
       else{
-        alert(); // TODO: proper err
+        NotificationManager.error('数据库错误','错误');
       }
     });
   }
@@ -122,7 +123,7 @@ class AccountAdmin extends React.Component {
 
     axios.post('/api/admin/decide_mentor_app',{uid: uid, mid:mid,decision:decision}).then(res => {
       if(res.data.code===0){
-        alert('success'); // TODO: change this
+        NotificationManager.success('操作成功','成功');
         // handler.state.applications.forEach(function(app, index){
         //   if(app.id == mid){
         //     handler.state.applications.slice(index, 1);
@@ -132,7 +133,7 @@ class AccountAdmin extends React.Component {
         handler.updateInfo();
       }
       else{
-        alert(res.data.errMsg); // TODO: proper err
+        NotificationManager.error('数据库错误','错误');
       }
     });
   }

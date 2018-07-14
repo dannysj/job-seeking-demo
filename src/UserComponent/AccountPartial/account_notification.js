@@ -4,7 +4,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import store from "../../redux";
 import {updateUser} from "../../redux/userAction";
-
+import {NotificationManager} from 'react-notifications';
 class AccountNotification extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +25,7 @@ class AccountNotification extends React.Component {
       }
       else{
         // TODO: error handling
-        alert('Database Error');
+        NotificationManager.error('数据库错误','错误');
         console.log(res.data);
       }
     });

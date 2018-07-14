@@ -105,7 +105,7 @@ class MentorDetail extends Component {
     }, {headers: {access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code===0){
         // handler.setState({showAddServiceModal: false, qr_code: ''});
-        alert('支付成功'); //TODO Notification System
+        NotificationManager.success('支付成功','成功');
         this.context.router.history.push('/account/mentor');
       }
       else if(res.data.code === 15){
