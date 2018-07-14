@@ -8,8 +8,6 @@ import './user.less';
 import store from "../redux";
 import {setUser} from "../redux/userAction";
 
-//TODO Replace all alert with custom error message system
-
 class Signup extends Component {
 
   constructor (props) {
