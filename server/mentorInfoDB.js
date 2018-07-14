@@ -79,6 +79,7 @@ const mentorSelectQuery  = `
       u.profile_pic as profile_pic,
       u.resume as resume,
       u.id as uid,
+      c.id as cid,
       c.name as college_name,
       m.id as mid,
       m.offer_title as offer_title,

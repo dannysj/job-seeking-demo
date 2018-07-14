@@ -222,7 +222,7 @@ class AccountApply extends React.Component {
 
             <b className="notification-msg">
               <CollegeSelector
-                defaultValue={{value: -1, text: this.state.mentor_info.college_name}}
+                defaultValue={{value: this.state.mentor_info.cid, text: this.state.mentor_info.college_name}}
                 handleChange={this.handleChange}
               />
             </b>

@@ -50,7 +50,7 @@ class CollegeSelector extends Component {
                       options={this.state.college_list.concat(this.state.custom_college)}
                       onChange={this.props.handleChange}
                       // onAddItem={this.handleAddition}
-                      defaultValue={-1}/>)
+                      defaultValue={this.props.defaultValue.value}/>)
   }
 }
 
