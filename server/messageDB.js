@@ -20,7 +20,6 @@ exports.createMessage = (origin, dest, type, content, callback) => {
       }
 
       let email = result.rows[0].email;
-      console.log('FUCKKKKKKKKK! '+email);
 
       mailingDispatch.sendEmail((email, '同行平台系统通知', '您有新的通知请查看', `亲爱的用户您好：<br>
         您有一条来自同行平台的通知<br>
