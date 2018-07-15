@@ -42,8 +42,10 @@ class NewsList extends Component {
         {this.props.news_list.slice(0,6).map((el, index) => (
           <Link to={'/news/'+el.id} key={index}>
             <div className="news-overview_container" key={el.id}>
-              <img className={"news-overview-picture" + (this.state.loaded[index] ? "" : " on-load")} src={el.thumbnail} alt={el.title} onLoad={() => {
+              <div className={(this.state.loaded[index] ? "" : "news-overview-picture on-load")}>
+              <img className="news-overview-picture" src={el.thumbnail} alt={el.title} onLoad={() => {
                 this.handleImageLoaded(index)}}/>
+                </div>
               <div className="news-overview-second">
                 <div className="news-overview-text">
                   <h4>{el.title}</h4>

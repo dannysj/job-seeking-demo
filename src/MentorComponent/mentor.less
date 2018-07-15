@@ -75,7 +75,7 @@ margin-bottom: 1em;
 .mentor-container {
   width: 30%;
   height: 40rem;
-
+max-width: 420px;
        min-width: 400px;
   margin: 1em 2em;
   position: relative;
@@ -490,7 +490,7 @@ margin-bottom: 1em;
   flex-wrap: wrap;
 
   justify-content: space-around;
-  align-items: center;
+
   align-content: space-evenly;
   > .item {
     display: inline-block;
@@ -500,6 +500,10 @@ margin-bottom: 1em;
     min-width: 40%;
 
     justify-content: space-between;
+
+    > .logo-item {
+      padding-bottom: 0.5em;
+    }
     &:nth-child(even) {
       text-align: left;
     }
