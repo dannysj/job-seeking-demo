@@ -2,7 +2,6 @@ const db = {
   ...require('./newsDB.js'),
   ...require('./messageDB.js'),
   ...require('./followRelationDB.js'),
-  ...require('./userInfoDB.js')
 };
 const express = require('express');
 const app = express.Router();

@@ -1,4 +1,4 @@
-const db = require('./_dbPool.js');
+const db = require('./model/pool.js');
 
 // exports.getMentorComment = (mid, callback) => {
 //   const query = `select
