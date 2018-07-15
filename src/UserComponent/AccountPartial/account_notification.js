@@ -7,6 +7,7 @@ import {updateUser} from "../../redux/userAction";
 import {NotificationManager} from 'react-notifications';
 class AccountNotification extends React.Component {
   constructor(props) {
+
     super(props);
 
     this.state =

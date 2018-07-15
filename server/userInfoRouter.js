@@ -1,4 +1,4 @@
-const db = require('./userInfoDB.js');
+const User = require('./model/user');
 const express = require('express');
 const app = express.Router();
 const security = require('./security');
@@ -10,12 +10,11 @@ app.post('/api/get_user_info', async (req, res) => {
     return;
   }
 
-  let dest_uid = req.body.mentee_uid || req.body.uid;
+  const uid = req.body.mentee_uid || req.body.uid;
 
   // TODO: Here, verify the request owner (req.body.uid) has access to target uid (mentee_uid)
-
-  try{
-    const user = await db.getUserInfoByUID(dest_uid);
+  try {
+    const user = await User.getUserByUID(uid);
     res.json({code: 0, user});
   } catch (e) {
     console.log(e);
@@ -23,53 +22,40 @@ app.post('/api/get_user_info', async (req, res) => {
   }
 });
 
-app.post('/api/update_user', (req, res) => {
-  db.updateUser(req.body, (err) => {
-    if (err) {
-      console.log(err);
-      res.json({code: 1, errMsg: 'Operation Forbidden'});
-      return;
-    }
+app.post('/api/update_user', async (req, res) => {
+  try {
+    const {uid, attr, val} = req.body;
+    await User.updateUserAttribute(uid, attr, val);
     res.json({code: 0});
-
-  });
+  } catch (e) {
+    res.json({code: 1, errMsg: 'Operation Forbidden'});
+  }
 });
 
 
 app.post('/api/verify_user', async (req, res) => {
-  try{
+  try {
     let {email, password} = req.body;
     password = security.getHashedPassword(password);
-    const user  = await db.getUserInfoByEmailAndPassword(email, password);
-    security.update_access_token(user.id, (err, access_token)=>{
-      if(err){
-        console.log(err);
-        res.json({code: 1, errMsg: 'Cannot generate access token'});
-        return;
-      }
-      user.access_token = access_token;
-      res.json({code: 0, user: user});
-    });
+    const user = await User.getUserByEmailAndPassword(email, password);
+    user.access_token = await security.update_access_token(user.id);
+    res.json({code: 0, user: user});
   } catch (e) {
     console.log(e);
     res.json({code: 1, errMsg: e});
   }
 });
 
-// receive a user with its email, uid, and password
-app.post('/api/change_password', (req, res) =>{
-
-    req.body.password = security.getHashedPassword(req.body.password);
-
-    db.changePassword(req.body, (err)=>{
-        if (err) {
-            console.log(err);
-            res.json({code: 1, errMsg: err});
-            return;
-        }
-        res.json({code: 0});
-    })
-
+app.post('/api/change_password', async (req, res) => {
+  try {
+    let {uid, password} = req.body;
+    password = security.getHashedPassword(password);
+    await User.updateUserAttribute(uid, 'password', password);
+    res.json({code: 0});
+  } catch (e) {
+    console.log(e);
+    res.json({code: 1, errMsg: e});
+  }
 });
 
 

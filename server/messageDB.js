@@ -1,4 +1,4 @@
-const db = require('./_dbPool.js');
+const db = require('./model/pool.js');
 const mailingDispatch = require('../mailing/mailingDispatch');
 
 exports.createMessage = (origin, dest, type, content, callback) => {
@@ -21,19 +21,13 @@ exports.createMessage = (origin, dest, type, content, callback) => {
 
       let email = result.rows[0].email;
 
-      mailingDispatch.sendEmail((email, '同行平台系统通知', '您有新的通知请查看', `亲爱的用户您好：<br>
-        您有一条来自同行平台的通知<br>
-        通知内容：<br>
-        ${content}<br>
-        您可以前往同行平台查看<br>
-        如遇到问题可联系同行平台客服助手微信，微信号：tongxingplatform<br>`, (err, info) => {
-          if(err){
-            console.log('Unable to send emails for message: '+info);
-          }
-          else{
-            console.log('Email for message sent for: uid' + destination);
-          }
-        }));
+      mailingDispatch.sendMessageEmail(email, content)
+        .then(() => {
+          console.log('Email for message sent for: ' + email);
+        }).catch(e => {
+        console.log('Unable to send emails for message: ' + e)
+      });
+
     });
 
     callback(null);

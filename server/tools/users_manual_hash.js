@@ -10,7 +10,7 @@ result in irrevertable consequences (i.e. failure in user auth)
 
 
 const security = require('../security');
-const db = require('../_dbPool');
+const db = require('../model/pool');
 
 const selection_query = `select * from users;`;
 

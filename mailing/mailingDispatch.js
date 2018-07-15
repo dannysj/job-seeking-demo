@@ -4,9 +4,8 @@ const config = require('../server/_config.js');
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport(config.mail_config);
 
-exports.sendEmail = (dest, subject, text, html, callback) => {
-  // setup e-mail data
-  let mailOptions = {
+exports.sendEmail = async (dest, subject, text, html) => {
+  const mailOptions = {
     from: '"同行平台" <' + config.mail_config.auth.user + '>', // sender address
     to: dest, // list of receivers
     subject: subject, // Subject line
@@ -14,17 +13,16 @@ exports.sendEmail = (dest, subject, text, html, callback) => {
     html: html// html body
   };
 
+  await transporter.sendMail(mailOptions)
+};
 
-  // send mail with defined transport object
-  // TODO Use PROMISE to handle this GOD DAMN callback cascade
-  transporter.sendMail(mailOptions, (error, info) => {
-    if(callback) {
-      callback(error, info);
-    }
-  });
-}
-
-exports.sendWelcomeEmail = async (dest, link) => {
+/**
+ *
+ * @param email: receiver
+ * @param link: activation link
+ */
+exports.sendActivationEmail = async (email, link) => {
+  const subject = '欢迎您使用同行平台';
   const html = `
     亲爱的用户您好：<br>
     感谢您注册使用同行平台，希望能和您一起在这里度过美好的时光！<br>
@@ -32,5 +30,35 @@ exports.sendWelcomeEmail = async (dest, link) => {
     若无法点击，请使用此链接: ` + link + `<br>
     如遇到问题可联系同行平台客服助手微信，微信号：tongxingplatform<br>`;
 
-  this.sendEmail(dest, '欢迎您使用同行平台', link, html);
+  await this.sendEmail(email, subject, link, html);
+};
+
+/**
+ *
+ * @param email: receiver
+ * @param newPassword: new password generated
+ */
+exports.sendPasswordResetEmail = async (email, newPassword) => {
+  const subject = '密码重置';
+  const html = `
+    亲爱的用户您好：<br>
+    感谢您使用同行平台，希望能和您一起在这里度过美好的时光！<br>
+    您的新密码是"${newPassword}", 请尽快修改默认密码
+    如遇到问题可联系同行平台客服助手微信，微信号：tongxingplatform<br>`;
+
+  await this.sendEmail(email, subject, subject, html);
+};
+
+exports.sendMessageEmail = async (email, message) => {
+  const subject = '同行平台系统通知';
+  const text = '您有新的通知请查看';
+  const html = `
+    亲爱的用户您好：<br>
+    您有一条来自同行平台的通知<br>
+    通知内容：<br>
+    ${message}<br>
+    您可以前往同行平台查看<br>
+    如遇到问题可联系同行平台客服助手微信，微信号：tongxingplatform<br>`;
+
+  await this.sendEmail(email, subject, text, html);
 };
