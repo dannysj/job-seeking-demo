@@ -36,7 +36,9 @@ class MentorProfileContainer extends Component {
         {this.state.totalPages !== 1 &&
         <Pagination activePage={this.state.page}
                     totalPages={this.state.totalPages}
-                    onPageChange={this.handlePageChange}/>}
+                    onPageChange={this.handlePageChange}
+                    className="page-bottom"
+                    />}
       </div>
     );
   }

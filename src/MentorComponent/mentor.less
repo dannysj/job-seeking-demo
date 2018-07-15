@@ -52,7 +52,11 @@
   color: white;
   margin-top: 3em;
 }
-
+.page-bottom {
+  position: absolute;
+bottom: 0;
+margin-bottom: 1em;
+}
 .triangle-open {
   display: block;
 }
@@ -69,10 +73,11 @@
 }
 
 .mentor-container {
-  width: 60%;
-  height: 18em;
-  border-left: 5px solid #001BB1;
-  margin-top: 30px;
+  width: 30%;
+  height: 40rem;
+
+       min-width: 400px;
+  margin: 1em 2em;
   position: relative;
   text-align: left;
   box-shadow: 2px 2px 5px rgba(195, 195, 195, 0.2);
@@ -83,28 +88,51 @@
   display: flex;
   width: 100%;
   height: 100%;
+  flex-flow: column;
 }
 
 .mentor-profile {
-  width: 40%;
+  position: relative;
   text-align: center;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+      justify-content: space-evenly;
   align-items: center;
+  height: 55%;
+  overflow: hidden;
+  > * {
+    padding-bottom: 4em;
+  }
+  .mentor-picture {
+    border-radius: 50%;
+    height: 8em;
+    width: 8em;
+    object-fit: cover;
+
+  }
+  .mentor-profile-background {
+    color: white;
+    background-color: #797979;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-blend-mode: overlay;
+    filter:blur(1em);
+    z-index: -1;
+  }
+  b {
+    font-size: 2em;
+    color: white;
+  }
+
 }
 
-.mentor-profile > b {
-  font-size: 1.5em;
+.mentor-button {
+  border-radius: 5px;
+  padding: 0.5em 1em;
+  min-width: 5em;
+  margin-bottom: 1em;
 }
-
-.mentor-picture {
-  border-radius: 50%;
-  height: 9em;
-  width: 9em;
-  object-fit: cover;
-}
-
 
 .resume-section {
   position: relative;
@@ -298,8 +326,12 @@
   position: relative;
   flex: 1;
   display: flex;
-  flex-flow: column;
+  flex-flow: row;
   padding-bottom: 5em;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .flex-container {
@@ -443,7 +475,68 @@
   top: calc(50% - 1.5px);
 }
 
+.mentor-text-inner{
+  padding: 0em 0em 2em 0em;
+  text-align: center;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  min-width: 100%;
+  max-height: 100%;
+  min-height: 100%;
+  position: relative;
+  flex: 0;
+  flex-wrap: wrap;
 
+  justify-content: space-around;
+  align-items: center;
+  align-content: space-evenly;
+  > .item {
+    display: inline-block;
+    align-items: center;
+    flex-flow: column;
+    flex: 0;
+    min-width: 40%;
+
+    justify-content: space-between;
+    &:nth-child(even) {
+      text-align: left;
+    }
+    &:nth-child(odd) {
+      text-align: right;
+    }
+  }
+  > .divider {
+    position: absolute;
+    &::before {
+      position: absolute;
+      content: '';
+
+      top: 40px;
+
+      bottom: 80px;
+      left: 50%;
+      width: 1px;
+      border-left: 1px solid #BFBFBF;
+
+    }
+    &::after {
+      position: absolute;
+      content: '';
+      height: 1px;
+      top: 47%;
+      border-radius: 5px;
+      right: 40px;
+      transform: translate(0%,-50%);
+      left: 40px;
+      border-top: 1px solid #BFBFBF;
+
+    }
+  }
+
+
+}
 
 .border-navi {
   position: relative;
@@ -794,10 +887,7 @@
   }
 
 
-  .mentor-container {
-    width: 90%;
-    height: 17em;
-  }
+
   .mentor-profile > b {
     font-size: 1.2em;
   }
@@ -807,6 +897,7 @@
     height: 8em;
     width: 8em;
     object-fit: cover;
+
   }
 
   .ui.table tr td {
@@ -912,8 +1003,8 @@
   }
 
   .mentor-container {
-    width: 95%;
-    height: 13em;
+    width: 80%;
+
   }
   .mentor-profile > b {
     font-size: 1em;
@@ -929,11 +1020,6 @@
   .ui.table tr td {
     border: none;
     padding: 0.1em;
-  }
-
-  .mentor-text {
-    font-size: 0.9em;
-    margin-left: 0px;
   }
 
   .connect-circle {
@@ -986,17 +1072,37 @@
 
   }
 
-  .service-item::before, .service-item::after {
-    opacity: 1;
-    transform: scale(1);
+  .service-item {
+    &::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+    &::after {
+      opacity: 1;
+      transform: scale(1);
+    }
+    &:hover {
+      transform: none !important;
+      opacity: 1;
+    }
+    > .service-description {
+      opacity: 1;
+
+      transform: none !important;
+    }
+    > .buy-button {
+      transform: none !important;
+
+    }
+    > .service-title {
+      transform: translate3d(0,30px,0);
+    }
+
+
   }
 
-  .service-item > .service-title {
-    transform: translate3d(0,30px,0);
-  }
-  .service-item > .service-description {
-    opacity: 1;
-  }
+
+
 
   .mentor-detail-info-container {
     flex-wrap: wrap;
@@ -1015,6 +1121,7 @@
   }
   .mentor-sep-container .small-bio {
     margin: 2em 1em 1em 1em;
+    width: auto;
   }
 
   .mentor-name {
