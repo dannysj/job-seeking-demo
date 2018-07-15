@@ -2,20 +2,15 @@ const db = require('./_dbPool.js');
 
 
 // TODO: check and return proper error first if the user's email is duplicated
-exports.createUser = function (user, callback) {
+exports.createUser = async (user) => {
   const query = `insert into users
                  (first,last,password,email,profile_pic,register_date,isadmin,ismentor)
                  values($1,$2,$3,$4,'/img/sample_profile.jpg',now(),false,false)
                  returning *;`;
-  db.query(query, [user.first, user.last, user.password, user.email], (err, result) => {
-    if (err) {
-      callback(err);
-      return;
-    }
-    var userInfo = result.rows[0];
-    userInfo.password = null;
-    callback(null, userInfo);
-  });
+  const result = await db.query(query, [user.first, user.last, user.password, user.email]);
+  const userInfo = result.rows[0];
+  delete userInfo.password;
+  return userInfo;
 };
 
 
@@ -36,18 +31,13 @@ exports.confirmVerification = (verification_code, callback) => {
   });
 };
 
-exports.addUserVerificationCode = (email, verification_code, callback) => {
+exports.addUserVerificationCode = async (email, verification_code) => {
   const query = `insert into user_verification (uid, verification_code)
                   values ((select id from users where email = $1),$2)
                   on CONFLICT (uid) do update set verification_code = $2, time_added=now()
                   returning * ;`;
-  db.query(query, [email, verification_code], (err, result) => {
-    if (err) {
-      callback(err);
-      return;
-    }
-    callback(null, result.rows[0]);
-  });
+  const result = await db.query(query, [email, verification_code]);
+  return result.rows[0];
 };
 
 

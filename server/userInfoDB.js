@@ -8,30 +8,25 @@ const selectClause = `
   from users
   `;
 
-const userInfoCallBack = callback => (err, result) => {
-  if (err) {
-    callback(err);
-    return;
-  }
+const processUserResult = (result) => {
+  if (result.rows.length === 0)
+    throw('No such email or password found');
 
-  if (result.rows.length === 0) {
-    callback('No such email or password found');
-    return;
-  }
-
-  let userAccount = result.rows[0];
-  delete userAccount.password;
-  callback(null, userAccount);
+  let user = result.rows[0];
+  delete user.password;
+  return user;
 };
 
-exports.getUserInfo = (uid, callback) => {
+exports.getUserInfoByUID = async (uid) => {
   const query = selectClause + `where users.id = $1;`;
-  db.query(query, [uid], userInfoCallBack(callback));
+  const result = await db.query(query, [uid]);
+  return processUserResult(result);
 };
 
-exports.verifyUser = (user, callback) => {
+exports.getUserInfoByEmailAndPassword = async (email, password) => {
   const query = selectClause + `where email=$1 and password=$2;`;
-  db.query(query, [user.email, user.password], userInfoCallBack(callback));
+  const result = await db.query(query, [email, password]);
+  return processUserResult(result);
 };
 
 exports.updateUser = (data, callback) => {

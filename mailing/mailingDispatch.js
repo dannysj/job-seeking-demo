@@ -24,10 +24,13 @@ exports.sendEmail = (dest, subject, text, html, callback) => {
   });
 }
 
-exports.sendWelcomeEmail = (dest, link, callback) => {
-  this.sendEmail(dest, '欢迎您使用同行平台', link, `亲爱的用户您好：<br>
+exports.sendWelcomeEmail = async (dest, link) => {
+  const html = `
+    亲爱的用户您好：<br>
     感谢您注册使用同行平台，希望能和您一起在这里度过美好的时光！<br>
-    <a href='`+link+`'>点击此处</a> 即可完成邮箱验证。<br>
-    若无法点击，请使用此链接: `+link+`<br>
-    如遇到问题可联系同行平台客服助手微信，微信号：tongxingplatform<br>`, callback);
-}
+    <a href='` + link + `'>点击此处</a> 即可完成邮箱验证。<br>
+    若无法点击，请使用此链接: ` + link + `<br>
+    如遇到问题可联系同行平台客服助手微信，微信号：tongxingplatform<br>`;
+
+  this.sendEmail(dest, '欢迎您使用同行平台', link, html);
+};

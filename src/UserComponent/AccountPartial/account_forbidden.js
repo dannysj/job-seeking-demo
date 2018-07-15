@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import '../account.less';
 import { Button} from 'semantic-ui-react';
+import axios from 'axios'
 
 class AccountForbidden extends React.Component {
   constructor(props) {
@@ -10,8 +11,8 @@ class AccountForbidden extends React.Component {
   }
 
   handleResend = () => {
-
-  }
+    axios.post("/api/resend_verification_code");
+  };
 
   render() {
     return (

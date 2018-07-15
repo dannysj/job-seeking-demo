@@ -8,44 +8,41 @@ const app = express.Router();
 const config = require('./_config.js');
 const security = require('./security');
 const password_generator = require('generate-password');
-const nodemailer = require('nodemailer')
+const nodemailer = require('nodemailer');
 
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport(config.mail_config);
 const mailingDispatch = require('../mailing/mailingDispatch');
 
 
+const generateVerificationCodeAndSendWelcomeEmail = async (hostname, email) => {
+  let verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
+  await db.addUserVerificationCode(email, verificationCode);
+  const link = `http://${hostname}/activate?code=${verificationCode}`;
+  await mailingDispatch.sendWelcomeEmail(email, link)
+};
 
-app.post('/api/create_user', (req, res) => {
-
-  req.body.password = security.getHashedPassword(req.body.password);
-
-  db.createUser(req.body, (err, user) => {
-    if (err) {
-      console.log(err);
-      res.json({code: 1, errMsg: err});
-      return;
-    }
-
-    let verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
-
-    db.addUserVerificationCode(user.email, verificationCode, (error, data) => {
-      if (error) {
-        console.log(error);
-        res.json({code: 1, errMsg: error});
-      }
-    });
-    let link = "http://" + req.get('host') + "/activate?code=" + verificationCode;
-
-    mailingDispatch.sendWelcomeEmail(user.email, link, (error, info) => {
-      if (error) {
-        return console.log(error);
-      }
-      console.log('Message sent: ' + info.response);
-    });
-
+app.post('/api/create_user', async (req, res) => {
+  try{
+    req.body.password = security.getHashedPassword(req.body.password);
+    const user = await db.createUser(req.body);
+    await generateVerificationCodeAndSendWelcomeEmail(req.hostname, user.email);
     res.json({code: 0, user: user});
-  });
+  } catch (e) {
+    console.log(e);
+    res.json({code: 1, errMsg: e});
+  }
+});
+
+app.post('/api/resend_verification_code', async (req, res) => {
+  try{
+    const user = await db.getUserInfoByUID(req.body.uid);
+    await generateVerificationCodeAndSendWelcomeEmail(req.hostname, user.email);
+    res.json({code: 0});
+  } catch (e) {
+    console.log(e);
+    res.json({code: 1, errMsg: e});
+  }
 });
 
 app.post('/api/forget_password', (req, res) => {
