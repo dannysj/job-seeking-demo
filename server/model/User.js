@@ -20,7 +20,7 @@ exports.getUserByUID = async (uid) => {
  * @returns the user object without password entry
  */
 exports.getUserByEmailAndUnhashedPassword = async (email, password) => {
-  return await getUserHelper(`where email=$1 and password=$2`, [santicizeEmail(email), hashedPassword(password)]);
+  return await getUserHelper(`where email=$1 and password=$2`, [sanitizeEmail(email), hashedPassword(password)]);
 };
 
 /**
@@ -65,7 +65,7 @@ const getUserHelper = async (whereClause, values) => {
  * @returns user id
  */
 exports.getUserIDByEmail = async (email) => {
-  return await getUserIDHelper(`where email=$1`, [santicizeEmail(email)]);
+  return await getUserIDHelper(`where email=$1`, [sanitizeEmail(email)]);
 };
 
 /**
@@ -141,7 +141,7 @@ exports.createUser = async (first, last, password, email) => {
                  (first,last,password,email,profile_pic,register_date,isadmin,ismentor)
                  values($1,$2,$3,$4,'/img/sample_profile.jpg',now(),false,false)
                  returning *;`;
-  const {rows} = await db.query(query, [first, last, hashedPassword(password), santicizeEmail(email)]);
+  const {rows} = await db.query(query, [first, last, hashedPassword(password), sanitizeEmail(email)]);
   const userInfo = rows[0];
   delete userInfo.password;
   return userInfo;
@@ -172,7 +172,7 @@ exports.addVerificationCode = async (email, verification_code) => {
   const query = `insert into user_verification (uid, verification_code)
                   values ((select id from users where email = $1),$2)
                   on CONFLICT (uid) do update set verification_code = $2, time_added=now();`;
-  await db.query(query, [santicizeEmail(email), verification_code]);
+  await db.query(query, [sanitizeEmail(email), verification_code]);
 };
 
 /*                                                   Helper Methods                                                  */
@@ -185,16 +185,18 @@ const hashedPassword = (password) => {
   return bcrypt.hashSync(password, config.hash_salt);
 };
 
-
-const santicizeEmail = (email) => {
-
-  // TODO: we might have to use GDPR standard in the future
-  // It depends on the law in the US.
-  // Since our transactions happen when the customer is physically in US,
-  // This website might have to conform to GDPR standard if U.S. government
-  // decides to endorse GDPR nation-wise.
-  // If this happens, we need to santicize all email in database (hash them)
-  //
-  // Now this method only ensures the email to be lower case.
+/**
+ * TODO: we might have to use GDPR standard in the future
+ * It depends on the law in the US.
+ * Since our transactions happen when the customer is physically in US,
+ * This website might have to conform to GDPR standard if U.S. government
+ * decides to endorse GDPR nation-wise.
+ * If this happens, we need to santicize all email in database (hash them)
+ *
+ * Now this method only ensures the email to be lower case.
+ * @param email: raw email address
+ * @returns sanitized email address
+ */
+const sanitizeEmail = (email) => {
   return email.toLowerCase();
 };
