@@ -1,7 +1,7 @@
 const db = {
   ...require('./messageDB.js'),
 };
-const User = require('./model/user');
+const User = require('./model/User');
 const express = require('express');
 const app = express.Router();
 const security = require('./security');
@@ -11,16 +11,9 @@ const mailingDispatch = require('../mailing/mailingDispatch');
 app.post('/api/create_user', async (req, res) => {
   try {
     let {first, last, password, email} = req.body;
-
-    // Pre processing for password and email
-    password = security.getHashedPassword(password);
-    email = security.santicize_email(email);
-
+    email = security.santicize_email(email); // Pre processing for email
     const user = await User.createUser(first, last, password, email);
-
-    // Post processing for access_token
-    user.access_token = await security.update_access_token(user.id);
-
+    user.access_token = await security.update_access_token(user.id); // Post processing for access_token
     await verificationCodeHelper(req.hostname, user.email);
     res.json({code: 0, user: user});
   } catch (e) {
@@ -59,10 +52,9 @@ const verificationCodeHelper = async (hostname, email) => {
 app.post('/api/forget_password', async (req, res) => {
   try {
     const {id} = await User.getUserByEmail(req.body.email);
-    const newPassword = password_generator.generate({length: 10});
-    const hashedPassword = security.getHashedPassword(newPassword);
-    await User.updateUserAttribute(id, 'password', hashedPassword);
-    await mailingDispatch.sendPasswordResetEmail(req.body.email, newPassword);
+    const password = password_generator.generate({length: 10});
+    await User.updateUserWithUnhashedPassword(id, password);
+    await mailingDispatch.sendPasswordResetEmail(req.body.email, password);
     res.json({code: 0});
   } catch (e) {
     console.log(e);
@@ -77,6 +69,7 @@ app.get('/activate', async (req, res) => {
     db.sendSystemMessage(uid, "欢迎来到伙伴求职。在这里您将接触到最好的求职干货和导师资源。如有任何疑问 ，可发送邮件至help@buddycareer.com联系我们");
     res.redirect('/account');
   } catch (e) {
+    console.log(e);
     res.redirect('/');
   }
 });

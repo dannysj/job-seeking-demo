@@ -1,11 +1,5 @@
-const config = require('./_config.js');
-const bcrypt = require('bcrypt');
 const uuid4 = require('uuid/v4');
-const User = require("./model/user");
-
-exports.getHashedPassword = (input) => {
-  return bcrypt.hashSync(input, config.hash_salt);
-};
+const User = require("./model/User");
 
 exports.access_token_validator = async (req, res, next) => {
   req.body.uid = null;
@@ -27,7 +21,7 @@ exports.access_token_validator = async (req, res, next) => {
 
 exports.update_access_token = async (uid) => {
   const access_token = uuid4();
-  await User.updateUserAttribute(uid, 'access_token', access_token);
+  await User.updateUserWithAccessToken(uid, access_token);
   return access_token;
 };
 

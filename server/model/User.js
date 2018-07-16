@@ -1,5 +1,9 @@
 const db = require('./pool.js');
+const bcrypt = require("bcrypt");
+const config = require("../_config");
 
+
+/*                                                   Get User                                                        */
 /**
  * @param uid: user id
  * @returns the user object without password entry
@@ -12,11 +16,11 @@ exports.getUserByUID = async (uid) => {
  * This method is used to verify user information on log in
  *
  * @param email
- * @param password
+ * @param password: UNHASHED password
  * @returns the user object without password entry
  */
-exports.getUserByEmailAndPassword = async (email, password) => {
-  return await getUserHelper(`where email=$1 and password=$2`, [email, password]);
+exports.getUserByEmailAndUnhashedPassword = async (email, password) => {
+  return await getUserHelper(`where email=$1 and password=$2`, [email, this.getHashedPassword(password)]);
 };
 
 /**
@@ -72,6 +76,8 @@ const getUserHelper = async (whereClause, values) => {
   return rows[0];
 };
 
+
+/*                                                   Update User                                                     */
 /**
  * This method is used to update a column for user table
  *
@@ -84,12 +90,30 @@ exports.updateUserAttribute = async (uid, attr, val) => {
   await db.query(query, [val, uid]);
 };
 
+/**
+ *
+ * @param uid: user id
+ * @param password: UNHASHED password
+ */
+exports.updateUserWithUnhashedPassword = async (uid, password) => {
+  await this.updateUserAttribute(uid, 'password', this.getHashedPassword(password));
+};
 
+/**
+ *
+ * @param uid: user id
+ * @param access_token
+ */
+exports.updateUserWithAccessToken = async (uid, access_token) => {
+  await this.updateUserAttribute(uid, 'access_token', access_token);
+};
+
+/*                                                   Create User                                                     */
 /**
  *
  * @param first: first name of the user
  * @param last: last name of the user
- * @param password: HASHED password of user
+ * @param password: UNHASHED password of user
  * @param email: email address of the user
  * @returns the user object without password entry
  */
@@ -98,16 +122,17 @@ exports.createUser = async (first, last, password, email) => {
                  (first,last,password,email,profile_pic,register_date,isadmin,ismentor)
                  values($1,$2,$3,$4,'/img/sample_profile.jpg',now(),false,false)
                  returning *;`;
-  const {rows} = await db.query(query, [first, last, password, email]);
+  const {rows} = await db.query(query, [first, last, this.getHashedPassword(password), email]);
   const userInfo = rows[0];
   delete userInfo.password;
   return userInfo;
 };
 
 
+/*                                                   Activate User                                                   */
 /**
  * @param verification_code: verification code of a given user
- * @returns User id
+ * @returns User ID for sending message
  */
 exports.confirmVerification = async (verification_code) => {
   const query = `update users set isactivated=true where
@@ -129,4 +154,14 @@ exports.addVerificationCode = async (email, verification_code) => {
                   values ((select id from users where email = $1),$2)
                   on CONFLICT (uid) do update set verification_code = $2, time_added=now();`;
   await db.query(query, [email, verification_code]);
+};
+
+/*                                                   Helper Methods                                                  */
+/**
+ * Generate hashed password from unhashed password
+ * @param password
+ * @returns hashed password
+ */
+exports.getHashedPassword = (password) => {
+  return bcrypt.hashSync(password, config.hash_salt);
 };

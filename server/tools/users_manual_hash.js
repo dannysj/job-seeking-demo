@@ -9,8 +9,8 @@ result in irrevertable consequences (i.e. failure in user auth)
 *****************************************************************/
 
 
-const security = require('../security');
 const db = require('../model/pool');
+const User = require("../model/User");
 
 const selection_query = `select * from users;`;
 
@@ -21,7 +21,7 @@ db.query(selection_query, (err, result)=>{
   }
   let update_query_base = `update users set password = CASE id`;
   result.rows.forEach((user)=>{
-    let hashed = security.getHashedPassword(user.password);
+    let hashed = User.getHashedPassword(user.password);
     update_query_base += ` when ${user.id} then '${hashed}' `;
   });
   update_query_base += ` else password end`;
