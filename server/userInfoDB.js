@@ -2,7 +2,21 @@ const db = require('./_dbPool.js');
 
 const selectClause = `
   select
-    users.*,
+    id,
+    first,
+    last,
+    profile_pic,
+    register_date,
+    ismentor,
+    isadmin,
+    LOWER(email) as email,
+    major,
+    cover,
+    balance,
+    wechat,
+    resume,
+    isactivated,
+    access_token,
     (select count(*)::int from message where is_read=false and destination = users.id) as num_notifications,
     array(select follow_rel.followee_uid from follow_rel where follow_rel.follower_uid = users.id) as followee
   from users
