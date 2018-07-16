@@ -27,24 +27,33 @@ app.post('/api/create_user', (req, res) => {
       return;
     }
 
-    let verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
-
-    db.addUserVerificationCode(user.email, verificationCode, (error, data) => {
-      if (error) {
-        console.log(error);
-        res.json({code: 1, errMsg: error});
+    security.update_access_token(user.id, (err, access_token)=>{
+      if(err){
+        console.log(err);
+        res.json({code: 1, errMsg: 'Cannot generate access token'});
+        return;
       }
-    });
-    let link = "http://" + req.get('host') + "/activate?code=" + verificationCode;
+      user.access_token = access_token;
 
-    mailingDispatch.sendWelcomeEmail(user.email, link, (error, info) => {
-      if (error) {
-        return console.log(error);
-      }
-      console.log('Message sent: ' + info.response);
-    });
+      let verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
 
-    res.json({code: 0, user: user});
+      db.addUserVerificationCode(user.email, verificationCode, (error, data) => {
+        if (error) {
+          console.log(error);
+          res.json({code: 1, errMsg: error});
+        }
+      });
+      let link = "http://" + req.get('host') + "/activate?code=" + verificationCode;
+
+      mailingDispatch.sendWelcomeEmail(user.email, link, (error, info) => {
+        if (error) {
+          return console.log(error);
+        }
+        console.log('Message sent: ' + info.response);
+      });
+
+      res.json({code: 0, user: user});
+    });
   });
 });
 
