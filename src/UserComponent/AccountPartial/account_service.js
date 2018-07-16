@@ -12,13 +12,73 @@ class AccountService extends React.Component {
 
     this.state =
       {
-        mentees: []
+        loaded: [],
+        mentees: [
+          {
+            id: 1,
+            uid: 12,
+            profile_pic: '/files/ew-blob_small',
+            last: 'C',
+            first: "D",
+            email: 'csji4202@hotmail.com',
+            note: "SFSDKFLJSDKFJLSKDFJLSDJFKLSDJFLSKDJFLSDf",
+            status: 20,
+          },{
+            id: 4,
+            uid: 129,
+            profile_pic: 'test',
+            last: 'C',
+            first: "D",
+            email: 'csji4202@hotmail.com',
+            note: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            status: 20,
+          },{
+            id: 21,
+            uid: 122,
+            profile_pic: '/files/1531630954032-blob_small',
+            last: 'C',
+            first: "D",
+            email: 'csji4202@hotmail.com',
+            note: "wtf",
+            status: 20,
+          }
+          ,{
+            id: 3,
+            uid: 121,
+            profile_pic: '/files/1531630954032-blob_small',
+            last: 'C',
+            first: "D",
+            email: 'csji4202@hotmail.com',
+            note: "No",
+            status: 20,
+          },
+          {
+            id: 5,
+            uid: 19,
+            profile_pic: '/files/1531630954032-blob_small',
+            last: 'C',
+            first: "D",
+            email: 'csji4202@hotmail.com',
+            note: "SFSDKFLJSDKFJLSKDFJLSDJFKLSDJFLSKDJFLSDf",
+            status: 20,
+          }
+        ]
       };
 
     this.updateInfo = this.updateInfo.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
     this.handleDecision = this.handleDecision.bind(this);
-    this.updateInfo();
+    this.handleImageLoaded = this.handleImageLoaded.bind(this);
+    //this.updateInfo();
+  }
+  componentDidMount() {
+    //FIXME:
+
+    //let list = this.props.mentees.map((e) => {
+    let list = this.state.mentees.map((e) => {
+      return e.id;
+    })
+    this.setState({loaded: list});
   }
 
   updateInfo(){
@@ -35,6 +95,13 @@ class AccountService extends React.Component {
         console.log(res.data);
       }
     });
+  }
+
+  handleImageLoaded(index) {
+    let loaded = this.state.loaded;
+    let newLoaded = loaded.filter(e => e !== index)
+    this.setState({ loaded: newLoaded });
+
   }
 
   handleConfirm(mrid){
@@ -77,17 +144,26 @@ class AccountService extends React.Component {
             <div className="category last">
               <div className="item first">
               <div className="content">
-              <div className="inner-content">
+              <div className="inner-content service-card-container">
               {this.state.mentees.length===0 && '您暂时并无Mentee签约'}
               {this.state.mentees.map(el => (
                 <div className="app-mentor-container" key={el.id}>
-                  <img className="app-mentor-picture" src={el.profile_pic} alt={el.last + ' ' + el.first}/>
-                  <div className="app-mentor-text">
-                    <h4>{el.last+' '}{el.first}</h4>
-                    <p>Email: {el.email}</p>
-                    <p>签约状态: {el.status===20?'等待您通过申请':el.status==50?'已被您拒绝':el.status===1?'请联系Mentee并开始服务，服务完成后点击确认完成':el.status===2?'等待Mentee确认服务完成':'服务完成'}</p>
-                    <p>Mentee的备注: {el.note}</p>
+                  <div className="mentee-top">
+                  <div className="info">
+                    <div className="name">{el.last+' '}{el.first}</div>
+                    <div>{el.email}</div>
+                    <div>{el.status===20?'等待您通过申请':el.status==50?'已被您拒绝':el.status===1?'请联系Mentee并开始服务，服务完成后点击确认完成':el.status===2?'等待Mentee确认服务完成':'服务完成'}</div>
+
                   </div>
+                  <div className={((this.state.loaded.indexOf(el.id) == -1) ? "" : "app-mentor-picture on-load circular")}>
+                  <img className="app-mentor-picture" src={el.profile_pic} alt={el.last + ' ' + el.first} onLoad={() => {this.handleImageLoaded(el.id)}}/>
+                  </div>
+                  </div>
+                  <div className="app-mentor-text">
+                    
+                    <p>{el.note}</p>
+                  </div>
+                  <div className="button-group">
                   <Link to={'/user/'+el.uid}><Button floated='right'>查看资料</Button></Link>
                   {el.status===20 && (<div>
                     <Button floated='right' positive onClick={() => this.handleDecision(el.mrid, 1)}>通过申请</Button>
@@ -96,6 +172,7 @@ class AccountService extends React.Component {
                   {el.status===1 && <Button floated='right' positive onClick={() => this.handleConfirm(el.mrid)}>确认完成</Button>}
                   {el.status===2 && <Button floated='right' disabled>等待Mentee确认</Button>}
                   {el.status===3 && <Button floated='right' disabled>服务完成</Button>}
+                </div>
                 </div>
               ))}
               </div>

@@ -15,7 +15,8 @@ class AccountAdmin extends React.Component {
     this.state =
       {
         news: { content: '' , thumbnail: '' },
-        applications: []
+        applications: [],
+        loaded: []
       };
     this.handleChange = this.handleChange.bind(this);
     this.handleThumbnail = this.handleThumbnail.bind(this);
@@ -23,15 +24,21 @@ class AccountAdmin extends React.Component {
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleAppDecision = this.handleAppDecision.bind(this);
     this.handleCompanyIcon = this.handleCompanyIcon.bind(this);
-
+    this.handleImageLoaded = this.handleImageLoaded.bind(this);
     this.updateInfo();
   }
+
 
   updateInfo() {
     let handler = this;
     axios.post('/api/admin/get_applications').then(res => {
       if(res.data.code === 0){
-        handler.setState({applications: res.data.applications});
+        let list = res.data.applications.map((e) => {
+
+          return e.id;
+        });
+
+        handler.setState({applications: res.data.applications, loaded: list});
       }
       else{
         // TODO: error handling
@@ -45,6 +52,13 @@ class AccountAdmin extends React.Component {
     let curState = this.state;
     curState.news.content = value;
     this.setState(curState);
+  }
+
+  handleImageLoaded(index) {
+    let loaded = this.state.loaded;
+    let newLoaded = loaded.filter(e => e !== index)
+    this.setState({ loaded: newLoaded });
+
   }
 
   handleThumbnail(e){
@@ -138,6 +152,13 @@ class AccountAdmin extends React.Component {
     });
   }
 
+  renderRow = (name, text) =>
+    (<div className="item">
+        <div className="logo-item">{name}</div>
+        <div className="card-info">{text}</div>
+      </div>
+    );
+
 
   render() {
     if(!this.props.user.isadmin){
@@ -178,21 +199,38 @@ class AccountAdmin extends React.Component {
             </div>
           </div>
           <div className="item first">
+          <div className="content">
+          <div className="inner-content service-card-container">
           {this.state.applications.length===0 && '暂无申请'}
           {this.state.applications.map(el => (
             <div className="app-mentor-container" key={el.id}>
-              <img className="app-mentor-picture" src={el.profile_pic} alt="mentor"/>
+            <div className="mentee-top">
+            <div className={((this.state.loaded.indexOf(el.id) == -1) ? "" : "app-mentor-picture on-load circular")}>
+            <img className="app-mentor-picture" src={el.profile_pic} alt={el.last + ' ' + el.first} onLoad={() => {this.handleImageLoaded(el.id)}}/>
+            </div>
+            <div className="info">
+              <div className="name superlarge">{el.last+' '}{el.first}</div>
+            </div>
+
+
+            </div>
               <div className="app-mentor-text">
-                <h4>{el.last+' '}{el.first}</h4>
-                <p>Offer公司: {el.offer_company}</p>
-                <p>Offer职位: {el.offer_title}</p>
-                <p>院校: {el.college_name}</p>
+                <div className="mentor-text-inner">
+                {this.renderRow('在读院校', el.college_name)}
+                {this.renderRow('offer公司', el.offer_company)}
+                {this.renderRow('专业', "")}
+                {this.renderRow('offer职位', el.offer_title)}
+                </div>
               </div>
+              <div className="button-group">
               <Link to={'/mentor/'+el.mid}><Button floated='right' >查看细节>></Button></Link>
               <Button floated='right' positive onClick={() => this.handleAppDecision(el.id, el.mid, true)}>批准申请</Button>
               <Button floated='right' negative onClick={() => this.handleAppDecision(el.id, el.mid, false)}>拒绝申请</Button>
+              </div>
             </div>
           ))}
+          </div>
+          </div>
           </div>
         </div>
         <div className="category last">
