@@ -17,7 +17,8 @@ const mailingDispatch = require('../mailing/mailingDispatch');
 
 
 app.post('/api/create_user', (req, res) => {
-
+  
+  req.body.email = security.santicize_email(req.body.email);
   req.body.password = security.getHashedPassword(req.body.password);
 
   db.createUser(req.body, (err, user) => {
