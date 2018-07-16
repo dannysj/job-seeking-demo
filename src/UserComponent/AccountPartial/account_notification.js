@@ -41,7 +41,7 @@ class AccountNotification extends React.Component {
   render() {
     return(
       <div className="account-inner-spacing">
-        <div className="category notification">
+        <div className="category last notification">
         {this.state.messages.map(el=>(
           <div className="item">
           <Segment>
