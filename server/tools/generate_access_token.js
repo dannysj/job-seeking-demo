@@ -7,7 +7,7 @@ Use this script with caution
 *****************************************************************/
 
 
-const security = require('../security');
+const security = require('../middleware/access_token_validator');
 const db = require('../model/pool');
 const uuid4 = require('uuid/v4');
 

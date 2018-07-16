@@ -20,27 +20,7 @@ exports.getUserByUID = async (uid) => {
  * @returns the user object without password entry
  */
 exports.getUserByEmailAndUnhashedPassword = async (email, password) => {
-  return await getUserHelper(`where email=$1 and password=$2`, [email, this.getHashedPassword(password)]);
-};
-
-/**
- * This method is used when the user forget the password
- *
- * @param email
- * @returns the user object without password entry
- */
-exports.getUserByEmail = async (email) => {
-  return await getUserHelper(`where email=$1`, [email]);
-};
-
-/**
- * This method is used to convert access token to user id
- *
- * @param access_token
- * @returns the user object without password entry
- */
-exports.getUserByAccessToken = async (access_token) => {
-  return await getUserHelper(`where access_token=$1`, [access_token]);
+  return await getUserHelper(`where email=$1 and password=$2`, [santicizeEmail(email), hashedPassword(password)]);
 };
 
 /**
@@ -76,6 +56,41 @@ const getUserHelper = async (whereClause, values) => {
   return rows[0];
 };
 
+/*                                                   Get User ID                                                      */
+
+/**
+ * This method is used when the user forget the password
+ *
+ * @param email
+ * @returns user id
+ */
+exports.getUserIDByEmail = async (email) => {
+  return await getUserIDHelper(`where email=$1`, [santicizeEmail(email)]);
+};
+
+/**
+ * This method is used to convert access token to user id
+ *
+ * @param access_token
+ * @returns user id
+ */
+exports.getUserIDByAccessToken = async (access_token) => {
+  return await getUserIDHelper(`where access_token=$1`, [access_token]);
+};
+
+/**
+ * A helper method used to get user id by passing the constraints
+ * @param whereClause
+ * @param values
+ * @returns user id
+ */
+const getUserIDHelper = async (whereClause, values) => {
+  const query = `select id from users ${whereClause};`;
+  const {rows} = await db.query(query, values);
+  if (rows.length === 0)
+    throw('No such user found');
+  return rows[0].id;
+};
 
 /*                                                   Update User                                                     */
 /**
@@ -96,16 +111,20 @@ exports.updateUserAttribute = async (uid, attr, val) => {
  * @param password: UNHASHED password
  */
 exports.updateUserWithUnhashedPassword = async (uid, password) => {
-  await this.updateUserAttribute(uid, 'password', this.getHashedPassword(password));
+  await this.updateUserAttribute(uid, 'password', hashedPassword(password));
 };
 
 /**
+ * This method modify the given user object with new access token
  *
- * @param uid: user id
- * @param access_token
+ * Note that this method take in the entire user object as parameter instead of uid
+ *
+ * @param user: the user object
  */
-exports.updateUserWithAccessToken = async (uid, access_token) => {
-  await this.updateUserAttribute(uid, 'access_token', access_token);
+exports.updateUserAccessToken = async (user) => {
+  const access_token = uuid4();
+  await this.updateUserAttribute(user.uid, 'access_token', access_token);
+  user.access_token = access_token;
 };
 
 /*                                                   Create User                                                     */
@@ -122,7 +141,7 @@ exports.createUser = async (first, last, password, email) => {
                  (first,last,password,email,profile_pic,register_date,isadmin,ismentor)
                  values($1,$2,$3,$4,'/img/sample_profile.jpg',now(),false,false)
                  returning *;`;
-  const {rows} = await db.query(query, [first, last, this.getHashedPassword(password), email]);
+  const {rows} = await db.query(query, [first, last, hashedPassword(password), santicizeEmail(email)]);
   const userInfo = rows[0];
   delete userInfo.password;
   return userInfo;
@@ -153,7 +172,7 @@ exports.addVerificationCode = async (email, verification_code) => {
   const query = `insert into user_verification (uid, verification_code)
                   values ((select id from users where email = $1),$2)
                   on CONFLICT (uid) do update set verification_code = $2, time_added=now();`;
-  await db.query(query, [email, verification_code]);
+  await db.query(query, [santicizeEmail(email), verification_code]);
 };
 
 /*                                                   Helper Methods                                                  */
@@ -162,6 +181,20 @@ exports.addVerificationCode = async (email, verification_code) => {
  * @param password
  * @returns hashed password
  */
-exports.getHashedPassword = (password) => {
+const hashedPassword = (password) => {
   return bcrypt.hashSync(password, config.hash_salt);
+};
+
+
+const santicizeEmail = (email) => {
+
+  // TODO: we might have to use GDPR standard in the future
+  // It depends on the law in the US.
+  // Since our transactions happen when the customer is physically in US,
+  // This website might have to conform to GDPR standard if U.S. government
+  // decides to endorse GDPR nation-wise.
+  // If this happens, we need to santicize all email in database (hash them)
+  //
+  // Now this method only ensures the email to be lower case.
+  return email.toLowerCase();
 };

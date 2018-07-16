@@ -3,8 +3,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('./server/_dbInit');
 const cors = require('cors');
-const router = require('./server/_router');
-const access_token_validator = require('./server/security').access_token_validator;
+const router = require('./server/router/index');
+const access_token_validator = require('./server/middleware/access_token_validator');
 
 const app = express();
 const args = process.argv.slice(2);

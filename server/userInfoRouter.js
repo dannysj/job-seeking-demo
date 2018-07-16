@@ -1,7 +1,6 @@
 const User = require('./model/User');
 const express = require('express');
 const app = express.Router();
-const security = require('./security');
 
 
 app.post('/api/get_user_info', async (req, res) => {
@@ -37,9 +36,9 @@ app.post('/api/update_user', async (req, res) => {
 
 app.post('/api/verify_user', async (req, res) => {
   try {
-    let {email, password} = req.body;
+    const {email, password} = req.body;
     const user = await User.getUserByEmailAndUnhashedPassword(email, password);
-    user.access_token = await security.update_access_token(user.id);
+    await User.updateUserAccessToken(user);
     res.json({code: 0, user: user});
   } catch (e) {
     console.log(e);
@@ -49,7 +48,7 @@ app.post('/api/verify_user', async (req, res) => {
 
 app.post('/api/change_password', async (req, res) => {
   try {
-    let {uid, password} = req.body;
+    const {uid, password} = req.body;
     await User.updateUserWithUnhashedPassword(uid, password);
     res.json({code: 0});
   } catch (e) {
