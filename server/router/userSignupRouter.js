@@ -1,11 +1,11 @@
 const db = {
-  ...require('./messageDB.js'),
+  ...require('../messageDB.js'),
 };
-const User = require('./model/User');
+const User = require('../model/User');
 const express = require('express');
 const app = express.Router();
 const password_generator = require('generate-password');
-const mailingDispatch = require('../mailing/mailingDispatch');
+const mailingDispatch = require('../../mailing/mailingDispatch');
 
 app.post('/api/create_user', async (req, res) => {
   try {
