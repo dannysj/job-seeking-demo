@@ -23,8 +23,9 @@ app.post('/api/get_user_info', async (req, res) => {
 app.post('/api/update_user', async (req, res) => {
   try {
     const {uid, attr, val} = req.body;
-    if (attr === 'password' || attr === 'access_token')
-      throw ('Operation Forbidden');
+    const allowedAttr = ['profile_pic', 'resume', 'first', 'last', 'major', 'cover', 'email', 'wechat'];
+    if (!allowedAttr.contains(attr))
+      throw('Operation Forbidden');
     await User.updateUserAttribute(uid, attr, val);
     res.json({code: 0});
   } catch (e) {
