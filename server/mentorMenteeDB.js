@@ -87,21 +87,21 @@ exports.setMenteeConfirm = (uid, mrid, callback) => {
       callback(err);
       return;
     }
-    const query = `update users set balance=balance+(
-      select service_price from mentor_rel where id=$1
-    ) where id=(
-      select uid from mentor_info where id=(
-        select mid from mentor_rel where id=$1
-      )
-    );
-    `;
-    db.query(query, [mrid], (err, result) => {
-      if (err) {
-        callback(err);
-        return;
-      }
+    // const query = `update users set balance=balance+(
+    //   select service_price from mentor_rel where id=$1
+    // ) where id=(
+    //   select uid from mentor_info where id=(
+    //     select mid from mentor_rel where id=$1
+    //   )
+    // );
+    // `;
+    // db.query(query, [mrid], (err, result) => {
+    //   if (err) {
+    //     callback(err);
+    //     return;
+    //   }
       callback(null);
-    });
+    // });
   });
 
 };
