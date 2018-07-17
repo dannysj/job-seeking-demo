@@ -128,7 +128,7 @@ exports.updateUserWithUnhashedPassword = async (uid, password) => {
  */
 exports.updateUserAccessToken = async (user) => {
   const access_token = uuid4();
-  await this.updateUserAttribute(user.uid, 'access_token', access_token);
+  await this.updateUserAttribute(user.id, 'access_token', access_token);
   user.access_token = access_token;
 };
 

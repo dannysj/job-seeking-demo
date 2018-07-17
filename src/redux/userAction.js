@@ -3,7 +3,7 @@ import store from "./index";
 import {NotificationManager} from "react-notifications";
 
 export const fetchUser = () => {
-  const user = store.getState();
+  const user = store.getState().user;
   return {
     type: "FETCH_USER",
     payload: axios.post('/api/get_user_info', {}, {headers: {access_token:user.access_token}})
@@ -26,7 +26,7 @@ export const updateAccessToken = (access_token) =>{
 
 
 export const updateUser = (attr, val, {local = false} = {}) => dispatch => {
-  const user = store.getState();
+  const user =store.getState().user;
   dispatch({
     type: "UPDATE_USER_LOCAL",
     payload: {attr, val}
@@ -55,8 +55,8 @@ export function logout() {
 
 
 export const followUser = (followee_uid) => {
-  const user = store.getState();
-  if (store.getState().user)
+  const user = store.getState().user;
+  if (user)
     return {
       type: "FOLLOW_MENTOR",
       payload: axios.post('/api/follow_user', {followee_uid}, {headers: {access_token:user.access_token}})
@@ -66,8 +66,8 @@ export const followUser = (followee_uid) => {
 };
 
 export const unfollowUser = (followee_uid) => {
-  const user = store.getState();
-  if (store.getState().user)
+  const user = store.getState().user;
+  if (user)
     return {
       type: "UNFOLLOW_MENTOR",
       payload: axios.post('/api/unfollow_user', {followee_uid}, {headers: {access_token:user.access_token}})

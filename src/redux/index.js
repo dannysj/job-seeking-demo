@@ -43,7 +43,7 @@ const errorReporter = store => next => action => {
     return;
   }
 
-  return next(action)
+  return next(action);
 };
 
 let middleware = [promise(), thunk, errorReporter];
