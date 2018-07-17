@@ -68,7 +68,7 @@ class MentorProfile extends Component {
         </div>
 
         <div className="connect-circle-container">
-          <Link to={'/mentor/' + mentor.mid}>
+          <Link to={'/mentor/' + mentor.mid} onClick={this.props.saveState}>
             <div className="connect-circle">
               <div>详情</div>
             </div>

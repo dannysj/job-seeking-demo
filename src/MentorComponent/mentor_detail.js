@@ -37,6 +37,7 @@ class MentorDetail extends Component {
     store.dispatch(fetchMentorDetail(this.props.match.params.mid));
   }
 
+
   handleCompanyIconError (e) {
     e.preventDefault();
     e.target.style.display = 'none';

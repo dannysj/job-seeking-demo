@@ -32,7 +32,7 @@ class NewsDetail extends Component {
 
         if (curState.news.delta !== null) // compatibility, will be removed and use delta
           curState.news.content = new QuillDeltaToHtmlConverter(curState.news.delta["ops"]).convert();
-        
+
         curState.loading = false;
         this.setState(curState);
       }
@@ -81,6 +81,7 @@ class NewsDetail extends Component {
         </div>
       );
     }
+    //TODO: Onload event for this
     else
     return (
       <div>

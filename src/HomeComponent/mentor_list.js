@@ -35,8 +35,10 @@ class MentorList extends Component {
         {this.props.mentors.slice(0,8).map((el, index) => (
           <Link to={'/mentor/'+el.mid} key={index}>
             <div className="mentor-overview_container" key={el.id}>
-              <img className={"mentor-overview-picture" + (this.state.loaded[index] ? "" : " on-load")} src={el.profile_pic} alt={el.last + '' + el.first} onLoad={() => {
+            <div className={(this.state.loaded[index] ? "" : "mentor-overview-picture on-load")}>
+              <img className="mentor-overview-picture"  src={el.profile_pic} alt={el.last + '' + el.first} onLoad={() => {
                 this.handleImageLoaded(index)}}/>
+                </div>
               <div className="mentor-overview-placeholder">
                 <h4>{el.last+' '}{el.first}</h4>
                 <p className="mentor-overview-text">{el.offer_company+' '+el.offer_title}</p>
