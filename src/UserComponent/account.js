@@ -26,6 +26,7 @@ class Account extends Component {
 
     if(!user){
       this.context.router.history.push('/login');
+      return (<div></div>)
     }
 
     if(user.pending){

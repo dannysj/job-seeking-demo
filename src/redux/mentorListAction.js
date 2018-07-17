@@ -6,7 +6,7 @@ export function fetchMentorList() {
   if (new Date() - store.getState().mentorListStore.last_fetched > config.expire_time)
     return {
       type: "FETCH_MENTOR_LIST",
-      payload: axios.post('/api/get_mentor_list')
+      payload: axios.post('/api/get_mentor_list',{}, {headers: {access_token: null}})
     };
   else
     return {

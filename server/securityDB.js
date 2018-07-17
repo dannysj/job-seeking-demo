@@ -7,7 +7,7 @@ exports.getUidByAccessToken = (access_token, callback) => {
       callback(err);
       return;
     }
-    if(result.rows.length != 1){
+    if(result.rows.length !== 1){
       console.log('NO SUCH ACCESS TOKEN');
       callback('No Such Access Token');
     }

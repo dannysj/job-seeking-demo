@@ -8,21 +8,27 @@ exports.getHashedPassword = (input) => {
 }
 
 exports.access_token_validator = (req, res, next) => {
+
+  // I probably can chop off the code here
   console.log('VALIDATING ACCESS TOKEN: '+req.get('access_token'));
   req.body.uid = null;
-  if(!!req.get('access_token')) {
+
+  if(!!req.get('access_token') && req.get('access_token') !== "null") {
     db.getUidByAccessToken(req.get('access_token'), (err, uid) => {
+
       if(err) {
-        console.log(err);
+        console.log("ERROR: 44 "+ err);
+        res.json({code:44})
       }
       else {
         req.body.uid = uid;
         console.log('UID SET: '+req.body.uid);
+        next();
       }
-      next();
     });
   }
   else{
+    // If the request is a non-privilege function
     next();
   }
 }

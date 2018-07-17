@@ -6,7 +6,7 @@ export function fetchNewsList(batch_num = 0) {
   if (new Date() - store.getState().newsStore.last_fetched[batch_num] > config.expire_time)
     return {
       type: "FETCH_NEWS_LIST",
-      payload: axios.post('/api/get_news_list', {batch_size: config.news_batch_size, batch_num})
+      payload: axios.post('/api/get_news_list', {batch_size: config.news_batch_size, batch_num}, {headers:{access_token: null}})
     };
   else
     return {

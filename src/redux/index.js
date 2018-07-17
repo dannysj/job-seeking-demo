@@ -2,7 +2,7 @@ import {applyMiddleware, combineReducers, createStore} from 'redux'
 import thunk from 'redux-thunk'
 import logger from "redux-logger";
 import promise from "redux-promise-middleware";
-
+import history from "../history"
 import userReducer from './userReducer'
 import majorListReducer from './majorListReducer'
 import mentorListReducer from './mentorListReducer'
@@ -19,11 +19,24 @@ const reducers = combineReducers({
 });
 
 const errorReporter = store => next => action => {
+  console.log("Error reporting for " + action.type);
   if (action.type.endsWith('REJECTED')){
     NotificationManager.error(action.type, '网络错误');
     return;
   }
 
+  if (action.type.endsWith('FULFILLED') && action.payload.data.code === 44){
+    // resign up
+    if (store.getState().user !== null) {
+      NotificationManager.error("请重新登陆", '登陆过期');
+      store.dispatch({type:"LOGOUT"});
+      history.push("/login");
+      history.go(0);
+
+    }
+    // Send notification.
+    return
+  }
 
   if (action.type.endsWith('FULFILLED') && action.payload.data.code === 1){
     NotificationManager.error(action.type, '数据库错误');
