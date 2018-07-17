@@ -35,15 +35,14 @@ class Mentor extends Component {
     store.dispatch(fetchMentorList());
     if (this.props.history.location.state) {
       if (this.props.history.location.state.page) {
-      console.log("page is "+ this.props.history.location.state.page)
+    
       this.setState({page: this.props.history.location.state.page});
     }
     }
   }
 
   saveState() {
-    console.log(this.props.history)
-    console.log("Saving state");
+
     this.props.history.push('/mentor',this.state)
   }
 
