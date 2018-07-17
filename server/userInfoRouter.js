@@ -39,7 +39,7 @@ app.post('/api/update_user', (req, res) => {
 
 app.post('/api/verify_user', (req, res) => {
   req.body.password = security.getHashedPassword(req.body.password);
-  req.body.email = security.santicizeEmail(req.body.email);
+  req.body.email = security.santicize_email(req.body.email);
 
   db.verifyUser(req.body, (err, user) => {
     if (err) {
