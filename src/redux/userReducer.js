@@ -24,6 +24,11 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
       break;
 
 
+    case "FETCH_USER_REJECTED":
+      state = null;
+      break;
+
+
     case "UPDATE_USER_FULFILLED":
       const data = JSON.parse(action.payload.config.data);
       if (data.attr !== 'last')  // prevent multiple notifications when updating name
