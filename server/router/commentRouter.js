@@ -1,9 +1,9 @@
 const db = require('../model/Comment.js');
-const express = require('express');
-const app = express.Router();
+const app = require('express').Router();
 
 
 app.post('/api/create_mentor_comment', async (req, res) => {
+  throw new Error("access denied");
   try {
     await db.createMentorComment(req.body.mid, req.body.text, req.body.uid);
     res.json({code: 0});

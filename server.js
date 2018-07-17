@@ -5,6 +5,7 @@ const db = require('./server/_dbInit');
 const cors = require('cors');
 const router = require('./server/router/index');
 const access_token_validator = require('./server/middleware/access_token_validator');
+const error_handler = require('./server/middleware/error_handler');
 
 const app = express();
 const args = process.argv.slice(2);
@@ -19,8 +20,11 @@ app.use(express.static(__dirname + '/build'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
+
+
 app.use(access_token_validator);
 app.use('/', router);
+app.use(error_handler);
 
 
 const send_index = (req, res) => {

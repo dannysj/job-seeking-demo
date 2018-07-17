@@ -1,5 +1,5 @@
-const express = require('express');
-const app = express.Router();
+require('express-async-errors');
+const app = require('express').Router();
 const fs = require("fs");
 const path = require("path");
 
