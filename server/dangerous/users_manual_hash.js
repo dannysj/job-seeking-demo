@@ -11,7 +11,7 @@ result in irrevertable consequences (i.e. failure in user auth)
 
 const db = require('../model/pool');
 const bcrypt = require("bcrypt");
-const config = require("../_config");
+const config = require("../config");
 
 const selection_query = `select * from users;`;
 

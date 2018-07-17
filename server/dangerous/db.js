@@ -1,4 +1,4 @@
-const db = require('./model/pool.js');
+const db = require('../model/pool.js');
 
 exports.patch = () => {
     db.query(`alter table mentor_info add bios jsonb`).catch(e => console.log(e));

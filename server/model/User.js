@@ -1,6 +1,6 @@
 const db = require('./pool.js');
 const bcrypt = require("bcrypt");
-const config = require("../_config");
+const config = require("../config");
 
 
 /*                                                   Get User                                                        */

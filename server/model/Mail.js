@@ -1,20 +1,6 @@
 const nodemailer = require('nodemailer');
-const config = require('../server/_config.js');
-
-// create reusable transporter object using the default SMTP transport
+const config = require('../config.js');
 const transporter = nodemailer.createTransport(config.mail_config);
-
-exports.sendEmail = async (dest, subject, text, html) => {
-  const mailOptions = {
-    from: '"同行平台" <' + config.mail_config.auth.user + '>', // sender address
-    to: dest, // list of receivers
-    subject: subject, // Subject line
-    text: text, // plaintext body
-    html: html// html body
-  };
-
-  await transporter.sendMail(mailOptions)
-};
 
 /**
  *
@@ -30,7 +16,7 @@ exports.sendActivationEmail = async (email, link) => {
     若无法点击，请使用此链接: ` + link + `<br>
     如遇到问题可联系同行平台客服助手微信，微信号：tongxingplatform<br>`;
 
-  await this.sendEmail(email, subject, link, html);
+  await sendEmailHelper(email, subject, link, html);
 };
 
 /**
@@ -46,9 +32,14 @@ exports.sendPasswordResetEmail = async (email, newPassword) => {
     您的新密码是"${newPassword}", 请尽快修改默认密码
     如遇到问题可联系同行平台客服助手微信，微信号：tongxingplatform<br>`;
 
-  await this.sendEmail(email, subject, subject, html);
+  await sendEmailHelper(email, subject, subject, html);
 };
 
+/**
+ *
+ * @param email: receiver
+ * @param message: in-site message
+ */
 exports.sendMessageEmail = async (email, message) => {
   const subject = '同行平台系统通知';
   const text = '您有新的通知请查看';
@@ -60,5 +51,17 @@ exports.sendMessageEmail = async (email, message) => {
     您可以前往同行平台查看<br>
     如遇到问题可联系同行平台客服助手微信，微信号：tongxingplatform<br>`;
 
-  await this.sendEmail(email, subject, text, html);
+  await sendEmailHelper(email, subject, text, html);
+};
+
+const sendEmailHelper = async (dest, subject, text, html) => {
+  const mailOptions = {
+    from: '"同行平台" <' + config.mail_config.auth.user + '>', // sender address
+    to: dest, // list of receivers
+    subject: subject, // Subject line
+    text: text, // plaintext body
+    html: html// html body
+  };
+
+  await transporter.sendMail(mailOptions)
 };

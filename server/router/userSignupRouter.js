@@ -5,7 +5,7 @@ const User = require('../model/User');
 const express = require('express');
 const app = express.Router();
 const password_generator = require('generate-password');
-const mailingDispatch = require('../../mailing/mailingDispatch');
+const Mail = require('../model/Mail');
 
 app.post('/api/create_user', async (req, res) => {
   const {first, last, password, email} = req.body;
@@ -26,7 +26,7 @@ app.post('/api/forget_password', async (req, res) => {
   const uid = await User.getUserIDByEmail(req.body.email);
   const password = password_generator.generate({length: 10});
   await User.updateUserWithUnhashedPassword(uid, password);
-  await mailingDispatch.sendPasswordResetEmail(req.body.email, password);
+  await Mail.sendPasswordResetEmail(req.body.email, password);
   res.json({code: 0});
 });
 
@@ -55,7 +55,7 @@ const verificationCodeHelper = async (hostname, email) => {
   let verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
   await User.addVerificationCode(email, verificationCode);
   const link = `http://${hostname}/activate?code=${verificationCode}`;
-  await mailingDispatch.sendActivationEmail(email, link)
+  await Mail.sendActivationEmail(email, link)
 };
 
 module.exports = app;
