@@ -3,6 +3,7 @@ import thunk from 'redux-thunk'
 import logger from "redux-logger";
 import promise from "redux-promise-middleware";
 import history from "../history"
+import axios from "axios/index";
 import userReducer from './userReducer'
 import majorListReducer from './majorListReducer'
 import mentorListReducer from './mentorListReducer'
@@ -21,8 +22,16 @@ const reducers = combineReducers({
 const errorReporter = store => next => action => {
   console.log("Error reporting for " + action.type);
   if (action.type.endsWith('REJECTED')){
-    NotificationManager.error(action.type, '网络错误');
-    return;
+    // TODO: In the future, all error will be received as non-20x code
+    let errMsg = '';
+    switch (action.type) {
+      case 'FETCH_USER_REJECTED':
+        errMsg = '登录信息已过期';
+        break;
+      default:
+        errMsg = action.type;
+    }
+    NotificationManager.error(errMsg, '网络错误');
   }
 
   if (action.type.endsWith('FULFILLED') && action.payload.data.code === 44){
@@ -38,9 +47,8 @@ const errorReporter = store => next => action => {
     return
   }
 
-  if (action.type.endsWith('FULFILLED') && action.payload.data.code === 1){
+  if (action.type.endsWith('FULFILLED') && action.payload.data.code !== 0){
     NotificationManager.error(action.type, '数据库错误');
-    return;
   }
 
   return next(action)
