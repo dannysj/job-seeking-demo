@@ -9,6 +9,7 @@ import mentorListReducer from './mentorListReducer'
 import newsListReducer from "./newsListReducer";
 import mentorDetailReducer from "./mentorDetailReducer";
 import {NotificationManager} from "react-notifications";
+import {logout} from "./userAction";
 
 const reducers = combineReducers({
   user: userReducer,
@@ -27,15 +28,14 @@ const errorReporter = store => next => action => {
 
   if (action.type.endsWith('FULFILLED') && action.payload.data.code === 44){
     // resign up
-    if (store.getState().user !== null) {
+    if (store.getState().user) {
       NotificationManager.error("请重新登陆", '登陆过期');
-      store.dispatch({type:"LOGOUT"});
+      store.dispatch(logout());
       history.push("/login");
       history.go(0);
-
     }
     // Send notification.
-    return
+    return;
   }
 
   if (action.type.endsWith('FULFILLED') && action.payload.data.code === 1){

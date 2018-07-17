@@ -1,6 +1,7 @@
 const db = require('./pool.js');
 const bcrypt = require("bcrypt");
 const config = require("../config");
+const uuid4 = require('uuid/v4');
 
 
 /*                                                   Get User                                                        */
@@ -52,7 +53,7 @@ const getUserHelper = async (whereClause, values) => {
   from users ${whereClause};`;
   const {rows} = await db.query(query, values);
   if (rows.length === 0)
-    throw('No such user found');
+    throw new Error('No such user found');
   return rows[0];
 };
 
@@ -75,7 +76,11 @@ exports.getUserIDByEmail = async (email) => {
  * @returns user id
  */
 exports.getUserIDByAccessToken = async (access_token) => {
-  return await getUserIDHelper(`where access_token=$1`, [access_token]);
+  try {
+    return await getUserIDHelper(`where access_token=$1`, [access_token]);
+  } catch (e) {
+    throw new Error('Access token invalid');
+  }
 };
 
 /**

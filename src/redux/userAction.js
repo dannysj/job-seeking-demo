@@ -3,9 +3,10 @@ import store from "./index";
 import {NotificationManager} from "react-notifications";
 
 export const fetchUser = () => {
+  const user = store.getState();
   return {
     type: "FETCH_USER",
-    payload: axios.post('/api/get_user_info')
+    payload: axios.post('/api/get_user_info', {}, {headers: {access_token:user.access_token}})
   }
 };
 
@@ -25,6 +26,7 @@ export const updateAccessToken = (access_token) =>{
 
 
 export const updateUser = (attr, val, {local = false} = {}) => dispatch => {
+  const user = store.getState();
   dispatch({
     type: "UPDATE_USER_LOCAL",
     payload: {attr, val}
@@ -32,7 +34,7 @@ export const updateUser = (attr, val, {local = false} = {}) => dispatch => {
   if (!local)
     dispatch({
       type: "UPDATE_USER",
-      payload: axios.post('/api/update_user', {attr, val})
+      payload: axios.post('/api/update_user', {attr, val}, {headers: {access_token:user.access_token}})
     });
 };
 
@@ -53,20 +55,22 @@ export function logout() {
 
 
 export const followUser = (followee_uid) => {
+  const user = store.getState();
   if (store.getState().user)
     return {
       type: "FOLLOW_MENTOR",
-      payload: axios.post('/api/follow_user', {followee_uid})
+      payload: axios.post('/api/follow_user', {followee_uid}, {headers: {access_token:user.access_token}})
     };
   else
     NotificationManager.error('请先登录', '错误');
 };
 
 export const unfollowUser = (followee_uid) => {
+  const user = store.getState();
   if (store.getState().user)
     return {
       type: "UNFOLLOW_MENTOR",
-      payload: axios.post('/api/unfollow_user', {followee_uid})
+      payload: axios.post('/api/unfollow_user', {followee_uid}, {headers: {access_token:user.access_token}})
     };
   else
     NotificationManager.error('请先登录', '错误');

@@ -1,28 +1,32 @@
 const error_handler = (err, req, res, next) => {
-  res.json({code: 1, errMsg: err});
-  // if (!err.message) {
-  //   res.status(403);
-  //   res.json({error: 'Unknown Error'});
-  // }
-  //
-  // switch (err.message) {
-  //   case 'access denied': {
-  //     res.status(403);
-  //     res.json({error: 'Access Denied'});
-  //     break;
-  //   }
-  //
-  //   case 'DB Error': { // TODO: fixme
-  //     res.status(403);
-  //     res.json({error: 'Database Error'});
-  //     break;
-  //   }
-  //
-  //   default: {
-  //     res.status(403);
-  //     res.json({error: err.message});
-  //   }
-  // }
+  if (!err) {
+    next(err);
+  }
+
+  if (!err.message) {
+    res.json({code: 1, errMsg: err});
+    next(err);
+    return;
+  }
+
+  const errMsg = err.message;
+  switch (errMsg) {
+    case 'Access denied': {
+      res.status(403);
+      res.json({error: 'Access Denied'});
+      break;
+    }
+
+    case 'Access token invalid': {
+      res.json({code: 44, errMsg});
+      break;
+    }
+
+    default: {
+      res.json({code: 1, errMsg});
+      break;
+    }
+  }
 
   next(err);
 };
