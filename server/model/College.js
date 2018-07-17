@@ -3,7 +3,7 @@ const db = require('./pool.js');
 /**
  * Used for applying mentor
  *
- * @param search: search query
+ * @param search search query
  * @returns up to 20 colleges that matches the search query
  */
 exports.getCollegeList = async (search) => {
