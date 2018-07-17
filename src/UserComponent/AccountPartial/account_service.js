@@ -13,56 +13,7 @@ class AccountService extends React.Component {
     this.state =
       {
         loaded: [],
-        mentees: [
-          {
-            id: 1,
-            uid: 12,
-            profile_pic: '/files/ew-blob_small',
-            last: 'C',
-            first: "D",
-            email: 'csji4202@hotmail.com',
-            note: "SFSDKFLJSDKFJLSKDFJLSDJFKLSDJFLSKDJFLSDf",
-            status: 20,
-          },{
-            id: 4,
-            uid: 129,
-            profile_pic: 'test',
-            last: 'C',
-            first: "D",
-            email: 'csji4202@hotmail.com',
-            note: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            status: 20,
-          },{
-            id: 21,
-            uid: 122,
-            profile_pic: '/files/1531630954032-blob_small',
-            last: 'C',
-            first: "D",
-            email: 'csji4202@hotmail.com',
-            note: "wtf",
-            status: 20,
-          }
-          ,{
-            id: 3,
-            uid: 121,
-            profile_pic: '/files/1531630954032-blob_small',
-            last: 'C',
-            first: "D",
-            email: 'csji4202@hotmail.com',
-            note: "No",
-            status: 20,
-          },
-          {
-            id: 5,
-            uid: 19,
-            profile_pic: '/files/1531630954032-blob_small',
-            last: 'C',
-            first: "D",
-            email: 'csji4202@hotmail.com',
-            note: "SFSDKFLJSDKFJLSKDFJLSDJFKLSDJFLSKDJFLSDf",
-            status: 20,
-          }
-        ]
+        mentees: []
       };
 
     this.updateInfo = this.updateInfo.bind(this);
@@ -71,23 +22,25 @@ class AccountService extends React.Component {
     this.handleImageLoaded = this.handleImageLoaded.bind(this);
     //this.updateInfo();
   }
-  componentDidMount() {
+/*  componentDidMount() {
     //FIXME:
 
-    //let list = this.props.mentees.map((e) => {
-    let list = this.state.mentees.map((e) => {
+    let list = this.props.mentees.map((e) => {
+    //let list = this.state.mentees.map((e) => {
       return e.id;
     })
     this.setState({loaded: list});
-  }
+  }*/
 
   updateInfo(){
     var handler = this;
     console.log(this.props.user.access_token);
     axios.post('/api/get_rel_mentees', {}, {headers:{access_token: this.props.user.access_token}}).then(res => {
       if(res.data.code === 0){
-        console.log(res.data);
-        handler.setState({mentees:res.data.mentees});
+        let list = res.data.mentees.map((e) => {
+          return e.id;
+        })
+        handler.setState({mentees:res.data.mentees, loaded: list});
       }
       else{
         // TODO: error handling
@@ -160,7 +113,7 @@ class AccountService extends React.Component {
                   </div>
                   </div>
                   <div className="app-mentor-text">
-                    
+
                     <p>{el.note}</p>
                   </div>
                   <div className="button-group">
