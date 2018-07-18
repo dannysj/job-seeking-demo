@@ -164,6 +164,7 @@ to prevent one user click like multiple times
         * [~getUserIDHelper(whereClause, values)](#module_User..getUserIDHelper) ⇒ <code>number</code>
         * [~hashedPassword(password)](#module_User..hashedPassword) ⇒ <code>string</code>
         * [~sanitizeEmail(email)](#module_User..sanitizeEmail) ⇒ <code>string</code>
+        * [~user](#module_User..user) : <code>Object</code>
 
 <a name="module_User.getUserByUID"></a>
 
@@ -171,9 +172,9 @@ to prevent one user click like multiple times
 **Kind**: static method of [<code>User</code>](#module_User)  
 **Returns**: <code>user</code> - the user object without password entry  
 
-| Param | Description |
-| --- | --- |
-| uid | User ID |
+| Param | Type | Description |
+| --- | --- | --- |
+| uid | <code>number</code> | User ID |
 
 <a name="module_User.getUserByEmailAndUnhashedPassword"></a>
 
@@ -183,10 +184,10 @@ This method is used to verify user information on log in
 **Kind**: static method of [<code>User</code>](#module_User)  
 **Returns**: <code>user</code> - the user object without password entry  
 
-| Param | Description |
-| --- | --- |
-| email |  |
-| password | UNHASHED password |
+| Param | Type | Description |
+| --- | --- | --- |
+| email | <code>string</code> | Unsanitized Email |
+| password | <code>string</code> | UNHASHED password |
 
 <a name="module_User.getUserIDByEmail"></a>
 
@@ -196,9 +197,9 @@ This method is used when the user forget the password
 **Kind**: static method of [<code>User</code>](#module_User)  
 **Returns**: <code>number</code> - User ID  
 
-| Param |
-| --- |
-| email | 
+| Param | Type | Description |
+| --- | --- | --- |
+| email | <code>string</code> | Unsanitized Email |
 
 <a name="module_User.getUserIDByAccessToken"></a>
 
@@ -208,9 +209,9 @@ This method is used to convert access token to user id
 **Kind**: static method of [<code>User</code>](#module_User)  
 **Returns**: <code>number</code> - User ID  
 
-| Param |
-| --- |
-| access_token | 
+| Param | Type | Description |
+| --- | --- | --- |
+| access_token | <code>string</code> | User's Access Token |
 
 <a name="module_User.updateUserAttribute"></a>
 
@@ -219,21 +220,21 @@ This method is used to update a column for user table
 
 **Kind**: static method of [<code>User</code>](#module_User)  
 
-| Param | Description |
-| --- | --- |
-| uid | user id |
-| attr | column in the user table |
-| val | value you want to set |
+| Param | Type | Description |
+| --- | --- | --- |
+| uid | <code>number</code> | User ID |
+| attr | <code>string</code> | Column in the user table |
+| val | <code>\*</code> | The value you want to set to |
 
 <a name="module_User.updateUserWithUnhashedPassword"></a>
 
 ### User.updateUserWithUnhashedPassword(uid, password)
 **Kind**: static method of [<code>User</code>](#module_User)  
 
-| Param | Description |
-| --- | --- |
-| uid | user id |
-| password | UNHASHED password |
+| Param | Type | Description |
+| --- | --- | --- |
+| uid | <code>number</code> | User ID |
+| password | <code>string</code> | UNHASHED password |
 
 <a name="module_User.updateUserAccessToken"></a>
 
@@ -254,12 +255,12 @@ Note that this method take in the entire user object as parameter instead of uid
 **Kind**: static method of [<code>User</code>](#module_User)  
 **Returns**: <code>user</code> - the user object without password entry  
 
-| Param | Description |
-| --- | --- |
-| first | first name of the user |
-| last | last name of the user |
-| password | UNHASHED password of user |
-| email | email address of the user |
+| Param | Type | Description |
+| --- | --- | --- |
+| first | <code>string</code> | first name of the user |
+| last | <code>string</code> | last name of the user |
+| password | <code>string</code> | UNHASHED password of user |
+| email | <code>string</code> | email address of the user |
 
 <a name="module_User.confirmVerification"></a>
 
@@ -267,19 +268,19 @@ Note that this method take in the entire user object as parameter instead of uid
 **Kind**: static method of [<code>User</code>](#module_User)  
 **Returns**: <code>number</code> - User ID for sending message  
 
-| Param | Description |
-| --- | --- |
-| verification_code | verification code of a given user |
+| Param | Type | Description |
+| --- | --- | --- |
+| verification_code | <code>string</code> | verification code of a given user |
 
 <a name="module_User.addVerificationCode"></a>
 
 ### User.addVerificationCode(email, verification_code)
 **Kind**: static method of [<code>User</code>](#module_User)  
 
-| Param |
-| --- |
-| email | 
-| verification_code | 
+| Param | Type | Description |
+| --- | --- | --- |
+| email | <code>string</code> | Unsanitized Email |
+| verification_code | <code>string</code> |  |
 
 <a name="module_User..getUserHelper"></a>
 
@@ -289,10 +290,10 @@ A helper method used to get user information by passing the constraints
 **Kind**: inner method of [<code>User</code>](#module_User)  
 **Returns**: <code>user</code> - the user object without password entry  
 
-| Param |
-| --- |
-| whereClause | 
-| values | 
+| Param | Type |
+| --- | --- |
+| whereClause | <code>string</code> | 
+| values | <code>Array.&lt;\*&gt;</code> | 
 
 <a name="module_User..getUserIDHelper"></a>
 
@@ -302,10 +303,10 @@ A helper method used to get user id by passing the constraints
 **Kind**: inner method of [<code>User</code>](#module_User)  
 **Returns**: <code>number</code> - User ID  
 
-| Param |
-| --- |
-| whereClause | 
-| values | 
+| Param | Type |
+| --- | --- |
+| whereClause | <code>string</code> | 
+| values | <code>Array.&lt;\*&gt;</code> | 
 
 <a name="module_User..hashedPassword"></a>
 
@@ -315,9 +316,9 @@ Generate hashed password from unhashed password
 **Kind**: inner method of [<code>User</code>](#module_User)  
 **Returns**: <code>string</code> - hashed password  
 
-| Param |
-| --- |
-| password | 
+| Param | Type | Description |
+| --- | --- | --- |
+| password | <code>string</code> | Unhashed password |
 
 <a name="module_User..sanitizeEmail"></a>
 
@@ -334,7 +335,34 @@ Now this method only ensures the email to be lower case.
 **Kind**: inner method of [<code>User</code>](#module_User)  
 **Returns**: <code>string</code> - sanitized email address  
 
-| Param | Description |
-| --- | --- |
-| email | raw email address |
+| Param | Type | Description |
+| --- | --- | --- |
+| email | <code>string</code> | raw email address |
+
+<a name="module_User..user"></a>
+
+### User~user : <code>Object</code>
+**Kind**: inner typedef of [<code>User</code>](#module_User)  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| id | <code>number</code> | User ID |
+| uid | <code>number</code> | User ID |
+| first | <code>string</code> | First Name |
+| last | <code>string</code> | Last Name |
+| profile_pic | <code>string</code> | Profile Picture |
+| register_date | <code>Date</code> | When the user is registered |
+| ismentor | <code>boolean</code> | Whether the user is a mentor |
+| isadmin | <code>boolean</code> | Whether the user is a system administrator |
+| email | <code>string</code> | Sanitized Email Address |
+| major | <code>Array.&lt;string&gt;</code> | A list of major |
+| cover | <code>string</code> | Self Introduction |
+| balance | <code>number</code> | Balance Available |
+| wechat | <code>string</code> | WeChat Number |
+| resume | <code>string</code> | Relative Path to the Resume File |
+| isactivated | <code>boolean</code> | Whether the user is activated |
+| access_token | <code>string</code> | Access Token |
+| num_notifications | <code>number</code> | Number of Notifications |
+| followee | <code>Array.&lt;number&gt;</code> | A List of User ID the User is Following |
 

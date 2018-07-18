@@ -7,10 +7,34 @@ const bcrypt = require("bcrypt");
 const config = require("../config");
 const uuid4 = require('uuid/v4');
 
+/**
+ * @typedef {Object} user
+ *
+ * @property {number} id User ID
+ * @property {number} uid User ID
+ * @property {string} first First Name
+ * @property {string} last Last Name
+ * @property {string} profile_pic Profile Picture
+ * @property {Date} register_date When the user is registered
+ * @property {boolean} ismentor Whether the user is a mentor
+ * @property {boolean} isadmin Whether the user is a system administrator
+ * @property {string} email Sanitized Email Address
+ * @property {Array<string>} major A list of major
+ * @property {string} cover Self Introduction
+ * @property {number} balance Balance Available
+ * @property {string} wechat WeChat Number
+ * @property {string} resume Relative Path to the Resume File
+ * @property {boolean} isactivated Whether the user is activated
+ * @property {string} access_token Access Token
+ * @property {number} num_notifications Number of Notifications
+ * @property {Array<number>} followee A List of User ID the User is Following
+ *
+ */
+
 
 /*                                                   Get User                                                        */
 /**
- * @param uid User ID
+ * @param {number} uid User ID
  * @returns {user} the user object without password entry
  */
 exports.getUserByUID = async (uid) => {
@@ -20,8 +44,8 @@ exports.getUserByUID = async (uid) => {
 /**
  * This method is used to verify user information on log in
  *
- * @param email
- * @param password UNHASHED password
+ * @param {string} email Unsanitized Email
+ * @param {string} password UNHASHED password
  * @returns {user} the user object without password entry
  */
 exports.getUserByEmailAndUnhashedPassword = async (email, password) => {
@@ -30,8 +54,8 @@ exports.getUserByEmailAndUnhashedPassword = async (email, password) => {
 
 /**
  * A helper method used to get user information by passing the constraints
- * @param whereClause
- * @param values
+ * @param {string} whereClause
+ * @param {Array<*>} values
  * @returns {user} the user object without password entry
  */
 const getUserHelper = async (whereClause, values) => {
@@ -67,7 +91,7 @@ const getUserHelper = async (whereClause, values) => {
 /**
  * This method is used when the user forget the password
  *
- * @param email
+ * @param {string} email Unsanitized Email
  * @returns {number} User ID
  */
 exports.getUserIDByEmail = async (email) => {
@@ -77,7 +101,7 @@ exports.getUserIDByEmail = async (email) => {
 /**
  * This method is used to convert access token to user id
  *
- * @param access_token
+ * @param {string} access_token User's Access Token
  * @returns {number} User ID
  */
 exports.getUserIDByAccessToken = async (access_token) => {
@@ -90,8 +114,8 @@ exports.getUserIDByAccessToken = async (access_token) => {
 
 /**
  * A helper method used to get user id by passing the constraints
- * @param whereClause
- * @param values
+ * @param {string} whereClause
+ * @param {Array<*>} values
  * @returns {number} User ID
  */
 const getUserIDHelper = async (whereClause, values) => {
@@ -106,9 +130,9 @@ const getUserIDHelper = async (whereClause, values) => {
 /**
  * This method is used to update a column for user table
  *
- * @param uid user id
- * @param attr column in the user table
- * @param val value you want to set
+ * @param {number} uid User ID
+ * @param {string} attr Column in the user table
+ * @param {*} val The value you want to set to
  */
 exports.updateUserAttribute = async (uid, attr, val) => {
   const query = `update users set ${attr}=$1 where id=$2;`;
@@ -117,8 +141,8 @@ exports.updateUserAttribute = async (uid, attr, val) => {
 
 /**
  *
- * @param uid user id
- * @param password UNHASHED password
+ * @param {number} uid User ID
+ * @param {string} password UNHASHED password
  */
 exports.updateUserWithUnhashedPassword = async (uid, password) => {
   await this.updateUserAttribute(uid, 'password', hashedPassword(password));
@@ -140,10 +164,10 @@ exports.updateUserAccessToken = async (user) => {
 /*                                                   Create User                                                     */
 /**
  *
- * @param first first name of the user
- * @param last last name of the user
- * @param password UNHASHED password of user
- * @param email email address of the user
+ * @param {string} first first name of the user
+ * @param {string} last last name of the user
+ * @param {string} password UNHASHED password of user
+ * @param {string} email email address of the user
  * @returns {user} the user object without password entry
  */
 exports.createUser = async (first, last, password, email) => {
@@ -160,7 +184,7 @@ exports.createUser = async (first, last, password, email) => {
 
 /*                                                   Activate User                                                   */
 /**
- * @param verification_code verification code of a given user
+ * @param {string} verification_code verification code of a given user
  * @returns {number} User ID for sending message
  */
 exports.confirmVerification = async (verification_code) => {
@@ -175,8 +199,8 @@ exports.confirmVerification = async (verification_code) => {
 
 /**
  *
- * @param email
- * @param verification_code
+ * @param {string} email Unsanitized Email
+ * @param {string} verification_code
  */
 exports.addVerificationCode = async (email, verification_code) => {
   const query = `insert into user_verification (uid, verification_code)
@@ -188,7 +212,7 @@ exports.addVerificationCode = async (email, verification_code) => {
 /*                                                   Helper Methods                                                  */
 /**
  * Generate hashed password from unhashed password
- * @param password
+ * @param {string} password Unhashed password
  * @returns {string} hashed password
  */
 const hashedPassword = (password) => {
@@ -204,7 +228,7 @@ const hashedPassword = (password) => {
  * If this happens, we need to santicize all email in database (hash them)
  *
  * Now this method only ensures the email to be lower case.
- * @param email raw email address
+ * @param {string} email raw email address
  * @returns {string} sanitized email address
  */
 const sanitizeEmail = (email) => {
