@@ -7,7 +7,7 @@ const db = require('./pool.js');
 /**
  * Used for applying mentor
  *
- * @param search search query
+ * @param {string} search_query search query
  * @returns {Promise<Array<college>>} up to 20 college objects that matches the search query
  */
 

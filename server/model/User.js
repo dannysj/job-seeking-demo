@@ -11,7 +11,7 @@ const uuid4 = require('uuid/v4');
 /*                                                   Get User                                                        */
 /**
  * @param uid User ID
- * @returns the user object without password entry
+ * @returns {user} the user object without password entry
  */
 exports.getUserByUID = async (uid) => {
   return await getUserHelper(`where id = $1;`, [uid]);
@@ -22,7 +22,7 @@ exports.getUserByUID = async (uid) => {
  *
  * @param email
  * @param password UNHASHED password
- * @returns the user object without password entry
+ * @returns {user} the user object without password entry
  */
 exports.getUserByEmailAndUnhashedPassword = async (email, password) => {
   return await getUserHelper(`where email=$1 and password=$2`, [sanitizeEmail(email), hashedPassword(password)]);
@@ -32,7 +32,7 @@ exports.getUserByEmailAndUnhashedPassword = async (email, password) => {
  * A helper method used to get user information by passing the constraints
  * @param whereClause
  * @param values
- * @returns the user object without password entry
+ * @returns {user} the user object without password entry
  */
 const getUserHelper = async (whereClause, values) => {
   const query = `
@@ -68,7 +68,7 @@ const getUserHelper = async (whereClause, values) => {
  * This method is used when the user forget the password
  *
  * @param email
- * @returns User ID
+ * @returns {number} User ID
  */
 exports.getUserIDByEmail = async (email) => {
   return await getUserIDHelper(`where email=$1`, [sanitizeEmail(email)]);
@@ -78,7 +78,7 @@ exports.getUserIDByEmail = async (email) => {
  * This method is used to convert access token to user id
  *
  * @param access_token
- * @returns user id
+ * @returns {number} User ID
  */
 exports.getUserIDByAccessToken = async (access_token) => {
   try {
@@ -92,7 +92,7 @@ exports.getUserIDByAccessToken = async (access_token) => {
  * A helper method used to get user id by passing the constraints
  * @param whereClause
  * @param values
- * @returns user id
+ * @returns {number} User ID
  */
 const getUserIDHelper = async (whereClause, values) => {
   const query = `select id from users ${whereClause};`;
@@ -129,7 +129,7 @@ exports.updateUserWithUnhashedPassword = async (uid, password) => {
  *
  * Note that this method take in the entire user object as parameter instead of uid
  *
- * @param user the user object
+ * @param {user} user the user object
  */
 exports.updateUserAccessToken = async (user) => {
   const access_token = uuid4();
@@ -144,7 +144,7 @@ exports.updateUserAccessToken = async (user) => {
  * @param last last name of the user
  * @param password UNHASHED password of user
  * @param email email address of the user
- * @returns{user} the user object without password entry
+ * @returns {user} the user object without password entry
  */
 exports.createUser = async (first, last, password, email) => {
   const query = `insert into users
@@ -161,7 +161,7 @@ exports.createUser = async (first, last, password, email) => {
 /*                                                   Activate User                                                   */
 /**
  * @param verification_code verification code of a given user
- * @returns User ID for sending message
+ * @returns {number} User ID for sending message
  */
 exports.confirmVerification = async (verification_code) => {
   const query = `update users set isactivated=true where
@@ -189,7 +189,7 @@ exports.addVerificationCode = async (email, verification_code) => {
 /**
  * Generate hashed password from unhashed password
  * @param password
- * @returns hashed password
+ * @returns {string} hashed password
  */
 const hashedPassword = (password) => {
   return bcrypt.hashSync(password, config.hash_salt);
@@ -205,7 +205,7 @@ const hashedPassword = (password) => {
  *
  * Now this method only ensures the email to be lower case.
  * @param email raw email address
- * @returns sanitized email address
+ * @returns {string} sanitized email address
  */
 const sanitizeEmail = (email) => {
   return email.toLowerCase();

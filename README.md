@@ -24,20 +24,20 @@ then run server with `node server`
 ## College
 
 * [College](#module_College)
-    * [.getCollegeList(search)](#module_College.getCollegeList) ⇒ <code>Promise.&lt;Array.&lt;college&gt;&gt;</code>
+    * [.getCollegeList(search_query)](#module_College.getCollegeList) ⇒ <code>Promise.&lt;Array.&lt;college&gt;&gt;</code>
     * [.addCollege(college_name)](#module_College.addCollege) ⇒ <code>Promise.&lt;college&gt;</code>
 
 <a name="module_College.getCollegeList"></a>
 
-### College.getCollegeList(search) ⇒ <code>Promise.&lt;Array.&lt;college&gt;&gt;</code>
+### College.getCollegeList(search_query) ⇒ <code>Promise.&lt;Array.&lt;college&gt;&gt;</code>
 Used for applying mentor
 
 **Kind**: static method of [<code>College</code>](#module_College)  
 **Returns**: <code>Promise.&lt;Array.&lt;college&gt;&gt;</code> - up to 20 college objects that matches the search query  
 
-| Param | Description |
-| --- | --- |
-| search | search query |
+| Param | Type | Description |
+| --- | --- | --- |
+| search_query | <code>string</code> | search query |
 
 <a name="module_College.addCollege"></a>
 
@@ -149,27 +149,27 @@ to prevent one user click like multiple times
 
 * [User](#module_User)
     * _static_
-        * [.getUserByUID(uid)](#module_User.getUserByUID) ⇒
-        * [.getUserByEmailAndUnhashedPassword(email, password)](#module_User.getUserByEmailAndUnhashedPassword) ⇒
-        * [.getUserIDByEmail(email)](#module_User.getUserIDByEmail) ⇒
-        * [.getUserIDByAccessToken(access_token)](#module_User.getUserIDByAccessToken) ⇒
+        * [.getUserByUID(uid)](#module_User.getUserByUID) ⇒ <code>user</code>
+        * [.getUserByEmailAndUnhashedPassword(email, password)](#module_User.getUserByEmailAndUnhashedPassword) ⇒ <code>user</code>
+        * [.getUserIDByEmail(email)](#module_User.getUserIDByEmail) ⇒ <code>number</code>
+        * [.getUserIDByAccessToken(access_token)](#module_User.getUserIDByAccessToken) ⇒ <code>number</code>
         * [.updateUserAttribute(uid, attr, val)](#module_User.updateUserAttribute)
         * [.updateUserWithUnhashedPassword(uid, password)](#module_User.updateUserWithUnhashedPassword)
         * [.updateUserAccessToken(user)](#module_User.updateUserAccessToken)
-        * [.createUser(first, last, password, email)](#module_User.createUser)
-        * [.confirmVerification(verification_code)](#module_User.confirmVerification) ⇒
+        * [.createUser(first, last, password, email)](#module_User.createUser) ⇒ <code>user</code>
+        * [.confirmVerification(verification_code)](#module_User.confirmVerification) ⇒ <code>number</code>
         * [.addVerificationCode(email, verification_code)](#module_User.addVerificationCode)
     * _inner_
-        * [~getUserHelper(whereClause, values)](#module_User..getUserHelper) ⇒
-        * [~getUserIDHelper(whereClause, values)](#module_User..getUserIDHelper) ⇒
-        * [~hashedPassword(password)](#module_User..hashedPassword) ⇒
-        * [~sanitizeEmail(email)](#module_User..sanitizeEmail) ⇒
+        * [~getUserHelper(whereClause, values)](#module_User..getUserHelper) ⇒ <code>user</code>
+        * [~getUserIDHelper(whereClause, values)](#module_User..getUserIDHelper) ⇒ <code>number</code>
+        * [~hashedPassword(password)](#module_User..hashedPassword) ⇒ <code>string</code>
+        * [~sanitizeEmail(email)](#module_User..sanitizeEmail) ⇒ <code>string</code>
 
 <a name="module_User.getUserByUID"></a>
 
-### User.getUserByUID(uid) ⇒
+### User.getUserByUID(uid) ⇒ <code>user</code>
 **Kind**: static method of [<code>User</code>](#module_User)  
-**Returns**: the user object without password entry  
+**Returns**: <code>user</code> - the user object without password entry  
 
 | Param | Description |
 | --- | --- |
@@ -177,11 +177,11 @@ to prevent one user click like multiple times
 
 <a name="module_User.getUserByEmailAndUnhashedPassword"></a>
 
-### User.getUserByEmailAndUnhashedPassword(email, password) ⇒
+### User.getUserByEmailAndUnhashedPassword(email, password) ⇒ <code>user</code>
 This method is used to verify user information on log in
 
 **Kind**: static method of [<code>User</code>](#module_User)  
-**Returns**: the user object without password entry  
+**Returns**: <code>user</code> - the user object without password entry  
 
 | Param | Description |
 | --- | --- |
@@ -190,11 +190,11 @@ This method is used to verify user information on log in
 
 <a name="module_User.getUserIDByEmail"></a>
 
-### User.getUserIDByEmail(email) ⇒
+### User.getUserIDByEmail(email) ⇒ <code>number</code>
 This method is used when the user forget the password
 
 **Kind**: static method of [<code>User</code>](#module_User)  
-**Returns**: User ID  
+**Returns**: <code>number</code> - User ID  
 
 | Param |
 | --- |
@@ -202,11 +202,11 @@ This method is used when the user forget the password
 
 <a name="module_User.getUserIDByAccessToken"></a>
 
-### User.getUserIDByAccessToken(access_token) ⇒
+### User.getUserIDByAccessToken(access_token) ⇒ <code>number</code>
 This method is used to convert access token to user id
 
 **Kind**: static method of [<code>User</code>](#module_User)  
-**Returns**: user id  
+**Returns**: <code>number</code> - User ID  
 
 | Param |
 | --- |
@@ -244,15 +244,15 @@ Note that this method take in the entire user object as parameter instead of uid
 
 **Kind**: static method of [<code>User</code>](#module_User)  
 
-| Param | Description |
-| --- | --- |
-| user | the user object |
+| Param | Type | Description |
+| --- | --- | --- |
+| user | <code>user</code> | the user object |
 
 <a name="module_User.createUser"></a>
 
-### User.createUser(first, last, password, email)
+### User.createUser(first, last, password, email) ⇒ <code>user</code>
 **Kind**: static method of [<code>User</code>](#module_User)  
-**Returns{user}**: the user object without password entry  
+**Returns**: <code>user</code> - the user object without password entry  
 
 | Param | Description |
 | --- | --- |
@@ -263,9 +263,9 @@ Note that this method take in the entire user object as parameter instead of uid
 
 <a name="module_User.confirmVerification"></a>
 
-### User.confirmVerification(verification_code) ⇒
+### User.confirmVerification(verification_code) ⇒ <code>number</code>
 **Kind**: static method of [<code>User</code>](#module_User)  
-**Returns**: User ID for sending message  
+**Returns**: <code>number</code> - User ID for sending message  
 
 | Param | Description |
 | --- | --- |
@@ -283,11 +283,11 @@ Note that this method take in the entire user object as parameter instead of uid
 
 <a name="module_User..getUserHelper"></a>
 
-### User~getUserHelper(whereClause, values) ⇒
+### User~getUserHelper(whereClause, values) ⇒ <code>user</code>
 A helper method used to get user information by passing the constraints
 
 **Kind**: inner method of [<code>User</code>](#module_User)  
-**Returns**: the user object without password entry  
+**Returns**: <code>user</code> - the user object without password entry  
 
 | Param |
 | --- |
@@ -296,11 +296,11 @@ A helper method used to get user information by passing the constraints
 
 <a name="module_User..getUserIDHelper"></a>
 
-### User~getUserIDHelper(whereClause, values) ⇒
+### User~getUserIDHelper(whereClause, values) ⇒ <code>number</code>
 A helper method used to get user id by passing the constraints
 
 **Kind**: inner method of [<code>User</code>](#module_User)  
-**Returns**: user id  
+**Returns**: <code>number</code> - User ID  
 
 | Param |
 | --- |
@@ -309,11 +309,11 @@ A helper method used to get user id by passing the constraints
 
 <a name="module_User..hashedPassword"></a>
 
-### User~hashedPassword(password) ⇒
+### User~hashedPassword(password) ⇒ <code>string</code>
 Generate hashed password from unhashed password
 
 **Kind**: inner method of [<code>User</code>](#module_User)  
-**Returns**: hashed password  
+**Returns**: <code>string</code> - hashed password  
 
 | Param |
 | --- |
@@ -321,7 +321,7 @@ Generate hashed password from unhashed password
 
 <a name="module_User..sanitizeEmail"></a>
 
-### User~sanitizeEmail(email) ⇒
+### User~sanitizeEmail(email) ⇒ <code>string</code>
 TODO: we might have to use GDPR standard in the future
 It depends on the law in the US.
 Since our transactions happen when the customer is physically in US,
@@ -332,7 +332,7 @@ If this happens, we need to santicize all email in database (hash them)
 Now this method only ensures the email to be lower case.
 
 **Kind**: inner method of [<code>User</code>](#module_User)  
-**Returns**: sanitized email address  
+**Returns**: <code>string</code> - sanitized email address  
 
 | Param | Description |
 | --- | --- |
