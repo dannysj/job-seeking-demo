@@ -1,3 +1,7 @@
+/**
+ * @module User
+ */
+
 const db = require('./pool.js');
 const bcrypt = require("bcrypt");
 const config = require("../config");
@@ -125,7 +129,7 @@ exports.updateUserWithUnhashedPassword = async (uid, password) => {
  *
  * Note that this method take in the entire user object as parameter instead of uid
  *
- * @param user: the user object
+ * @param user the user object
  */
 exports.updateUserAccessToken = async (user) => {
   const access_token = uuid4();
@@ -140,7 +144,7 @@ exports.updateUserAccessToken = async (user) => {
  * @param last last name of the user
  * @param password UNHASHED password of user
  * @param email email address of the user
- * @returns the user object without password entry
+ * @returns{user} the user object without password entry
  */
 exports.createUser = async (first, last, password, email) => {
   const query = `insert into users

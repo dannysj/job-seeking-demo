@@ -1,9 +1,3 @@
-# Buddy Career
-
-## How to Run
-first type in `npm run-script build`
-then run server with `node server`
-
 ## Modules
 
 <dl>
@@ -155,7 +149,7 @@ to prevent one user click like multiple times
         * [.getUserIDByAccessToken(access_token)](#module_User.getUserIDByAccessToken) ⇒
         * [.updateUserAttribute(uid, attr, val)](#module_User.updateUserAttribute)
         * [.updateUserWithUnhashedPassword(uid, password)](#module_User.updateUserWithUnhashedPassword)
-        * [.updateUserAccessToken(user)](#module_User.updateUserAccessToken)
+        * [.updateUserAccessToken()](#module_User.updateUserAccessToken)
         * [.createUser(first, last, password, email)](#module_User.createUser)
         * [.confirmVerification(verification_code)](#module_User.confirmVerification) ⇒
         * [.addVerificationCode(email, verification_code)](#module_User.addVerificationCode)
@@ -237,17 +231,13 @@ This method is used to update a column for user table
 
 <a name="module_User.updateUserAccessToken"></a>
 
-### User.updateUserAccessToken(user)
+### User.updateUserAccessToken()
 This method modify the given user object with new access token
 
 Note that this method take in the entire user object as parameter instead of uid
 
 **Kind**: static method of [<code>User</code>](#module_User)  
-
-| Param | Description |
-| --- | --- |
-| user | the user object |
-
+**Param{user}**: user the user object  
 <a name="module_User.createUser"></a>
 
 ### User.createUser(first, last, password, email)

@@ -1,11 +1,15 @@
+/**
+ * @module Mail
+ */
+
 const nodemailer = require('nodemailer');
 const config = require('../config.js');
 const transporter = nodemailer.createTransport(config.mail_config);
 
 /**
  *
- * @param email: receiver
- * @param link: activation link
+ * @param email receiver's email address
+ * @param link activation link
  */
 exports.sendActivationEmail = async (email, link) => {
   const subject = '欢迎您使用同行平台';
@@ -21,8 +25,8 @@ exports.sendActivationEmail = async (email, link) => {
 
 /**
  *
- * @param email: receiver
- * @param newPassword: new password generated
+ * @param email receiver's email address
+ * @param newPassword new password generated
  */
 exports.sendPasswordResetEmail = async (email, newPassword) => {
   const subject = '密码重置';
@@ -37,8 +41,8 @@ exports.sendPasswordResetEmail = async (email, newPassword) => {
 
 /**
  *
- * @param email: receiver
- * @param message: in-site message
+ * @param email receiver's email address
+ * @param message in-site message
  */
 exports.sendMessageEmail = async (email, message) => {
   const subject = '同行平台系统通知';
