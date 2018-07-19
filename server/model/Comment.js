@@ -13,7 +13,8 @@ const db = require('./pool.js');
  */
 
 exports.createMentorComment = async (mid, text, uid) => {
-  const query = `insert into mentor_comment (mid,text,uid) values($1, $2, $3)`;
+  const query = `insert into mentor_comment (mid, text, uid)
+                 values ($1, $2, $3)`;
   await db.query(query, [mid, text, uid]);
 };
 
@@ -25,7 +26,8 @@ exports.createMentorComment = async (mid, text, uid) => {
  * @param uid User ID
  */
 exports.createCommentLike = async (comment_id, uid) => {
-  const query = `insert into mentor_comment_like (comment_id, uid) values($1, $2)`;
+  const query = `insert into mentor_comment_like (comment_id, uid)
+                 values ($1, $2)`;
   await db.query(query, [comment_id, uid]);
 };
 
@@ -35,7 +37,9 @@ exports.createCommentLike = async (comment_id, uid) => {
  * @param reply Reply text
  */
 exports.createMentorReply = async (comment_id, reply) => {
-  const query = `update mentor_comment set reply = $2 where id=$1`;
+  const query = `update mentor_comment
+                 set reply = $2
+                 where id = $1`;
   await db.query(query, [comment_id, reply]);
 
   // TODO: Authentication

@@ -109,7 +109,7 @@ exports.getUserIDByEmail = async (email) => {
  */
 exports.getUserIDByAccessToken = async (access_token) => {
   try {
-    return await getUserInfoHelper('id' ,`where access_token = $1`, [access_token]);
+    return await getUserInfoHelper('id', `where access_token = $1`, [access_token]);
   } catch (e) {
     throw new Error('Access token invalid');
   }
@@ -122,7 +122,7 @@ exports.getUserIDByAccessToken = async (access_token) => {
  * @returns {boolean} isAdmin
  */
 exports.isUserAdmin = async (uid) => {
-  return await getUserInfoHelper('isadmin' ,`where id = $1`, [uid]);
+  return await getUserInfoHelper('isadmin', `where id = $1`, [uid]);
 };
 
 /**
@@ -132,7 +132,7 @@ exports.isUserAdmin = async (uid) => {
  * @returns {string} Email Address
  */
 exports.getUserEmail = async (uid) => {
-  return await getUserInfoHelper('email' ,`where id = $1`, [uid]);
+  return await getUserInfoHelper('email', `where id = $1`, [uid]);
 };
 
 /**
@@ -195,10 +195,9 @@ exports.updateAccessToken = async (user) => {
  * @returns {user} the user object without password entry
  */
 exports.createUser = async (first, last, password, email) => {
-  const query = `insert into users
-                 (first,last,password,email,profile_pic,register_date,isadmin,ismentor)
-                 values($1,$2,$3,$4,'/img/sample_profile.jpg',now(),false,false)
-                 returning *;`;
+  const query = `insert into users (first, last, password, email, profile_pic, register_date, isadmin, ismentor)
+                 values ($1, $2, $3, $4, '/img/sample_profile.jpg', now(), false, false)
+      returning *;`;
   const {rows} = await db.query(query, [first, last, hashPassword(password), sanitizeEmail(email)]);
   const userInfo = rows[0];
   delete userInfo.password;
@@ -212,9 +211,10 @@ exports.createUser = async (first, last, password, email) => {
  * @returns {number} User ID for sending message
  */
 exports.confirmVerification = async (verification_code) => {
-  const query = `update users set isactivated=true where
-                id=(select uid from user_verification where verification_code=$1)
-                returning id;`;
+  const query = `update users
+                 set isactivated = true
+                 where id = (select uid from user_verification where verification_code = $1)
+      returning id;`;
   const {rows} = await db.query(query, [verification_code]);
   if (rows.length === 0)
     throw (`No user with verification code "${verification_code}" found `);
@@ -228,8 +228,8 @@ exports.confirmVerification = async (verification_code) => {
  */
 exports.addVerificationCode = async (email, verification_code) => {
   const query = `insert into user_verification (uid, verification_code)
-                  values ((select id from users where email = $1),$2)
-                  on CONFLICT (uid) do update set verification_code = $2, time_added=now();`;
+                 values ((select id from users where email = $1), $2)
+                 on CONFLICT (uid) do update set verification_code = $2, time_added = now();`;
   await db.query(query, [sanitizeEmail(email), verification_code]);
 };
 

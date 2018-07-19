@@ -16,12 +16,19 @@ exports.sendSystemMessage = async (dest, content) => {
 };
 
 exports.getNotificationsByUserID = async (uid) => {
-  const query = `select * from message where origin=0 and destination=$1 order by timestamp desc;`;
+  const query = `select *
+                 from message
+                 where origin = 0
+                   and destination = $1
+                 order by timestamp desc;`;
   const {rows} = await db.query(query, [uid]);
   return rows;
 };
 
 exports.setNotificationsAsRead = async (uid) => {
-  const query = `update message set is_read=true where origin=0 and destination=$1;`;
+  const query = `update message
+                 set is_read = true
+                 where origin = 0
+                   and destination = $1;`;
   await db.query(query, [uid]);
 };
