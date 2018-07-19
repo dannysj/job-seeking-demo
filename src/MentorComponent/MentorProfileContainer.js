@@ -3,7 +3,7 @@ import {Pagination} from 'semantic-ui-react';
 import MentorProfile from "./MentorProfile";
 
 class MentorProfileContainer extends Component {
-  itemsPerPage = 10;
+  itemsPerPage = 12;
 
   constructor(props) {
     super(props);

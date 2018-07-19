@@ -48,7 +48,7 @@ module.exports = function(proxy, allowedHost) {
     // for files like `favicon.ico`, `manifest.json`, and libraries that are
     // for some reason broken when imported through Webpack. If you just want to
     // use an image, put it in `src` and `import` it from JavaScript instead.
-    contentBase: paths.appPublic,
+    contentBase: [paths.appPublic,paths.staticPath],
     // By default files from `contentBase` will not trigger a page reload.
     watchContentBase: true,
     // Enable hot reloading server. It will provide /sockjs-node/ endpoint
@@ -59,7 +59,7 @@ module.exports = function(proxy, allowedHost) {
     hot: true,
     // It is important to tell WebpackDevServer to use the same "root" path
     // as we specified in the config. In development, we always serve from /.
-    publicPath: [config.output.publicPath, config.output.staticPath],
+    publicPath: config.output.publicPath,
     // WebpackDevServer is noisy by default so we emit custom message instead
     // by listening to the compiler events with `compiler.plugin` calls above.
     quiet: true,
