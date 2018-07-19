@@ -20,13 +20,13 @@ const Mail = require('../model/Mail');
 app.post('/api/create_user', async (req, res) => {
   const {first, last, password, email} = req.body;
   const user = await User.createUser(first, last, password, email);
-  await User.updateUserAccessToken(user);
+  await User.updateAccessToken(user);
   await verificationCodeHelper(req.hostname, user.email);
   res.json({code: 0, user: user});
 });
 
 app.post('/api/resend_verification_code', async (req, res) => {
-  const user = await User.getUserByUID(req.body.uid);
+  const user = await User.getUserByUserID(req.body.uid);
   await verificationCodeHelper(req.hostname, user.email);
   res.json({code: 0});
 });
@@ -35,7 +35,7 @@ app.post('/api/resend_verification_code', async (req, res) => {
 app.post('/api/forget_password', async (req, res) => {
   const uid = await User.getUserIDByEmail(req.body.email);
   const password = password_generator.generate({length: 10});
-  await User.updateUserWithUnhashedPassword(uid, password);
+  await User.updatePassword(uid, password);
   await Mail.sendPasswordResetEmail(req.body.email, password);
   res.json({code: 0});
 });

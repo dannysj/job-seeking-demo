@@ -40,7 +40,7 @@ const uuid4 = require('uuid/v4');
  * @param {number} uid User ID
  * @returns {user} the user object without password entry
  */
-exports.getUserByUID = async (uid) => {
+exports.getUserByUserID = async (uid) => {
   return await getUserHelper(`where id = $1;`, [uid]);
 };
 
@@ -51,8 +51,8 @@ exports.getUserByUID = async (uid) => {
  * @param {string} password UNHASHED password
  * @returns {user} the user object without password entry
  */
-exports.getUserByEmailAndUnhashedPassword = async (email, password) => {
-  return await getUserHelper(`where email=$1 and password=$2`, [sanitizeEmail(email), hashedPassword(password)]);
+exports.getUserByEmailAndPassword = async (email, password) => {
+  return await getUserHelper(`where email=$1 and password=$2`, [sanitizeEmail(email), hashPassword(password)]);
 };
 
 /**
@@ -89,7 +89,7 @@ const getUserHelper = async (whereClause, values) => {
   return rows[0];
 };
 
-/*                                                   Get User ID                                                      */
+/*                                                   Get User Info                                                    */
 
 /**
  * This method is used when the user forget the password
@@ -98,7 +98,7 @@ const getUserHelper = async (whereClause, values) => {
  * @returns {number} User ID
  */
 exports.getUserIDByEmail = async (email) => {
-  return await getUserIDHelper(`where email=$1`, [sanitizeEmail(email)]);
+  return await getUserInfoHelper('id', `where email=$1`, [sanitizeEmail(email)]);
 };
 
 /**
@@ -109,27 +109,38 @@ exports.getUserIDByEmail = async (email) => {
  */
 exports.getUserIDByAccessToken = async (access_token) => {
   try {
-    return await getUserIDHelper(`where access_token=$1`, [access_token]);
+    return await getUserInfoHelper('id' ,`where access_token=$1`, [access_token]);
   } catch (e) {
     throw new Error('Access token invalid');
   }
 };
 
 /**
- * A helper method used to get user id by passing the constraints
+ * Whether a given user is admin
+ *
+ * @param {string} uid User ID
+ * @returns {number} User ID
+ */
+exports.isAdmin = async (uid) => {
+  return await getUserInfoHelper('isadmin' ,`where access_token=$1`, [uid]);
+};
+
+/**
+ * A helper method used to get user info by passing the constraints
+ * @param {string} column
  * @param {string} whereClause
  * @param {Array<*>} values
  * @returns {number} User ID
  */
-const getUserIDHelper = async (whereClause, values) => {
-  const query = `select id from users ${whereClause};`;
+const getUserInfoHelper = async (column, whereClause, values) => {
+  const query = `select ${column} from users ${whereClause};`;
   const {rows} = await db.query(query, values);
   if (rows.length === 0)
     throw('No such user found');
   return rows[0].id;
 };
 
-/*                                                   Update User                                                     */
+/*                                                  Update User Info                                                  */
 /**
  * This method is used to update a column for user table
  *
@@ -137,7 +148,7 @@ const getUserIDHelper = async (whereClause, values) => {
  * @param {string} attr Column in the user table
  * @param {*} val The value you want to set to
  */
-exports.updateUserAttribute = async (uid, attr, val) => {
+exports.updateAttribute = async (uid, attr, val) => {
   const query = `update users set ${attr}=$1 where id=$2;`;
   await db.query(query, [val, uid]);
 };
@@ -147,8 +158,8 @@ exports.updateUserAttribute = async (uid, attr, val) => {
  * @param {number} uid User ID
  * @param {string} password UNHASHED password
  */
-exports.updateUserWithUnhashedPassword = async (uid, password) => {
-  await this.updateUserAttribute(uid, 'password', hashedPassword(password));
+exports.updatePassword = async (uid, password) => {
+  await this.updateAttribute(uid, 'password', hashPassword(password));
 };
 
 /**
@@ -158,9 +169,9 @@ exports.updateUserWithUnhashedPassword = async (uid, password) => {
  *
  * @param {user} user the user object
  */
-exports.updateUserAccessToken = async (user) => {
+exports.updateAccessToken = async (user) => {
   const access_token = uuid4();
-  await this.updateUserAttribute(user.id, 'access_token', access_token);
+  await this.updateAttribute(user.id, 'access_token', access_token);
   user.access_token = access_token;
 };
 
@@ -178,7 +189,7 @@ exports.createUser = async (first, last, password, email) => {
                  (first,last,password,email,profile_pic,register_date,isadmin,ismentor)
                  values($1,$2,$3,$4,'/img/sample_profile.jpg',now(),false,false)
                  returning *;`;
-  const {rows} = await db.query(query, [first, last, hashedPassword(password), sanitizeEmail(email)]);
+  const {rows} = await db.query(query, [first, last, hashPassword(password), sanitizeEmail(email)]);
   const userInfo = rows[0];
   delete userInfo.password;
   return userInfo;
@@ -218,7 +229,7 @@ exports.addVerificationCode = async (email, verification_code) => {
  * @param {string} password Unhashed password
  * @returns {string} hashed password
  */
-const hashedPassword = (password) => {
+const hashPassword = (password) => {
   return bcrypt.hashSync(password, config.hash_salt);
 };
 

@@ -170,26 +170,27 @@ to prevent one user click like multiple times
 
 * [model/User](#module_model/User)
     * _static_
-        * [.getUserByUID(uid)](#module_model/User.getUserByUID) ⇒ <code>user</code>
-        * [.getUserByEmailAndUnhashedPassword(email, password)](#module_model/User.getUserByEmailAndUnhashedPassword) ⇒ <code>user</code>
+        * [.getUserByUserID(uid)](#module_model/User.getUserByUserID) ⇒ <code>user</code>
+        * [.getUserByEmailAndPassword(email, password)](#module_model/User.getUserByEmailAndPassword) ⇒ <code>user</code>
         * [.getUserIDByEmail(email)](#module_model/User.getUserIDByEmail) ⇒ <code>number</code>
         * [.getUserIDByAccessToken(access_token)](#module_model/User.getUserIDByAccessToken) ⇒ <code>number</code>
-        * [.updateUserAttribute(uid, attr, val)](#module_model/User.updateUserAttribute)
-        * [.updateUserWithUnhashedPassword(uid, password)](#module_model/User.updateUserWithUnhashedPassword)
-        * [.updateUserAccessToken(user)](#module_model/User.updateUserAccessToken)
+        * [.isAdmin(uid)](#module_model/User.isAdmin) ⇒ <code>number</code>
+        * [.updateAttribute(uid, attr, val)](#module_model/User.updateAttribute)
+        * [.updatePassword(uid, password)](#module_model/User.updatePassword)
+        * [.updateAccessToken(user)](#module_model/User.updateAccessToken)
         * [.createUser(first, last, password, email)](#module_model/User.createUser) ⇒ <code>user</code>
         * [.confirmVerification(verification_code)](#module_model/User.confirmVerification) ⇒ <code>number</code>
         * [.addVerificationCode(email, verification_code)](#module_model/User.addVerificationCode)
         * [.user](#module_model/User.user) : <code>Object</code>
     * _inner_
         * [~getUserHelper(whereClause, values)](#module_model/User..getUserHelper) ⇒ <code>user</code>
-        * [~getUserIDHelper(whereClause, values)](#module_model/User..getUserIDHelper) ⇒ <code>number</code>
-        * [~hashedPassword(password)](#module_model/User..hashedPassword) ⇒ <code>string</code>
+        * [~getUserInfoHelper(column, whereClause, values)](#module_model/User..getUserInfoHelper) ⇒ <code>number</code>
+        * [~hashPassword(password)](#module_model/User..hashPassword) ⇒ <code>string</code>
         * [~sanitizeEmail(email)](#module_model/User..sanitizeEmail) ⇒ <code>string</code>
 
-<a name="module_model/User.getUserByUID"></a>
+<a name="module_model/User.getUserByUserID"></a>
 
-### model/User.getUserByUID(uid) ⇒ <code>user</code>
+### model/User.getUserByUserID(uid) ⇒ <code>user</code>
 **Kind**: static method of [<code>model/User</code>](#module_model/User)  
 **Returns**: <code>user</code> - the user object without password entry  
 
@@ -197,9 +198,9 @@ to prevent one user click like multiple times
 | --- | --- | --- |
 | uid | <code>number</code> | User ID |
 
-<a name="module_model/User.getUserByEmailAndUnhashedPassword"></a>
+<a name="module_model/User.getUserByEmailAndPassword"></a>
 
-### model/User.getUserByEmailAndUnhashedPassword(email, password) ⇒ <code>user</code>
+### model/User.getUserByEmailAndPassword(email, password) ⇒ <code>user</code>
 This method is used to verify user information on log in
 
 **Kind**: static method of [<code>model/User</code>](#module_model/User)  
@@ -234,9 +235,21 @@ This method is used to convert access token to user id
 | --- | --- | --- |
 | access_token | <code>string</code> | User's Access Token |
 
-<a name="module_model/User.updateUserAttribute"></a>
+<a name="module_model/User.isAdmin"></a>
 
-### model/User.updateUserAttribute(uid, attr, val)
+### model/User.isAdmin(uid) ⇒ <code>number</code>
+Whether a given user is admin
+
+**Kind**: static method of [<code>model/User</code>](#module_model/User)  
+**Returns**: <code>number</code> - User ID  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uid | <code>string</code> | User ID |
+
+<a name="module_model/User.updateAttribute"></a>
+
+### model/User.updateAttribute(uid, attr, val)
 This method is used to update a column for user table
 
 **Kind**: static method of [<code>model/User</code>](#module_model/User)  
@@ -247,9 +260,9 @@ This method is used to update a column for user table
 | attr | <code>string</code> | Column in the user table |
 | val | <code>\*</code> | The value you want to set to |
 
-<a name="module_model/User.updateUserWithUnhashedPassword"></a>
+<a name="module_model/User.updatePassword"></a>
 
-### model/User.updateUserWithUnhashedPassword(uid, password)
+### model/User.updatePassword(uid, password)
 **Kind**: static method of [<code>model/User</code>](#module_model/User)  
 
 | Param | Type | Description |
@@ -257,9 +270,9 @@ This method is used to update a column for user table
 | uid | <code>number</code> | User ID |
 | password | <code>string</code> | UNHASHED password |
 
-<a name="module_model/User.updateUserAccessToken"></a>
+<a name="module_model/User.updateAccessToken"></a>
 
-### model/User.updateUserAccessToken(user)
+### model/User.updateAccessToken(user)
 This method modify the given user object with new access token
 
 Note that this method take in the entire user object as parameter instead of uid
@@ -343,22 +356,23 @@ A helper method used to get user information by passing the constraints
 | whereClause | <code>string</code> | 
 | values | <code>Array.&lt;\*&gt;</code> | 
 
-<a name="module_model/User..getUserIDHelper"></a>
+<a name="module_model/User..getUserInfoHelper"></a>
 
-### model/User~getUserIDHelper(whereClause, values) ⇒ <code>number</code>
-A helper method used to get user id by passing the constraints
+### model/User~getUserInfoHelper(column, whereClause, values) ⇒ <code>number</code>
+A helper method used to get user info by passing the constraints
 
 **Kind**: inner method of [<code>model/User</code>](#module_model/User)  
 **Returns**: <code>number</code> - User ID  
 
 | Param | Type |
 | --- | --- |
+| column | <code>string</code> | 
 | whereClause | <code>string</code> | 
 | values | <code>Array.&lt;\*&gt;</code> | 
 
-<a name="module_model/User..hashedPassword"></a>
+<a name="module_model/User..hashPassword"></a>
 
-### model/User~hashedPassword(password) ⇒ <code>string</code>
+### model/User~hashPassword(password) ⇒ <code>string</code>
 Generate hashed password from unhashed password
 
 **Kind**: inner method of [<code>model/User</code>](#module_model/User)  
