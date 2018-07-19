@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('./server/dangerous/db_reset');
 const cors = require('cors');
@@ -11,20 +10,15 @@ const app = express();
 const args = process.argv.slice(2);
 const PORT = process.env.PORT || 3005;
 
-app.set('view engine', 'ejs');
-
 app.use(cors());
 app.use(express.static(__dirname + '/static'));
 app.use(express.static(__dirname + '/build'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
-
-
 app.use(access_token_validator);
 app.use('/', router);
 app.use(error_handler);
-
 
 const send_index = (req, res) => {
   res.sendFile(__dirname + '/build/index.html');
@@ -60,7 +54,7 @@ const main = () => {
   else {
     console.log('Invalid command.');
   }
-}
+};
 
 process.on('unhandledRejection', (reason, p) => {
   console.log('Unhandled Rejection at:', p, 'reason:', reason);

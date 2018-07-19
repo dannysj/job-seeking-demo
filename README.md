@@ -1,8 +1,19 @@
 # Buddy Career
 
-## How to Run
-first type in `npm run-script build`
-then run server with `node server`
+## Getting Started
+
+0. install dependencies
+`npm install`
+
+1. start back-end (express) server @ localhost:3005
+`npm run-script api` or `node server`
+
+2. start front-end (React) server @ localhost:3000
+`npm start`
+
+3. (optional) build front-end to `/build` and run the entire server at one place
+`npm run-script build`
+`npm run-script api` or `node server`
 
 ## Modules
 
