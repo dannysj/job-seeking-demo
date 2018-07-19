@@ -27,15 +27,15 @@ export const updateAccessToken = (access_token) =>{
 
 export const updateUser = (attr, val, {local = false} = {}) => dispatch => {
   const user =store.getState().user;
-  dispatch({
-    type: "UPDATE_USER_LOCAL",
-    payload: {attr, val}
-  });
   if (!local)
     dispatch({
       type: "UPDATE_USER",
       payload: axios.post('/api/update_user', {attr, val}, {headers: {access_token:user.access_token}})
     });
+  dispatch({
+    type: "UPDATE_USER_LOCAL",
+    payload: {attr, val}
+  });
 };
 
 export function changeUserPassword(new_password, user) {

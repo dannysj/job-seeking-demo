@@ -162,22 +162,6 @@ class AccountProfile extends React.Component {
       if (res.data.code === 0) {
         this.setState({showImgCrop: false});
         store.dispatch(updateUser("profile_pic", res.data.url));
-        axios.post('/api/update_user',
-        {
-          attr: 'profile_pic',
-          val: res.data.url
-        },
-        {
-          headers:{access_token: this.props.user.access_token}
-        }
-        ).then(res => {
-          if (res.data.code === 0) {
-            NotificationManager.success('头像上传成功', '上传成功');
-          }
-          else {
-            NotificationManager.error('资料更新失败', '错误');
-          }
-        });
       }
       else {
         NotificationManager.error('头像上传失败', '错误');

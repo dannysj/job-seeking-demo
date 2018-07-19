@@ -12,7 +12,6 @@ const args = process.argv.slice(2);
 const PORT = process.env.PORT || 3005;
 
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
 
 app.use(cors());
 app.use(express.static(__dirname + '/static'));
