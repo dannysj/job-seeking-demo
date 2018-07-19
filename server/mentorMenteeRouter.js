@@ -1,69 +1,36 @@
-const db = require('./mentorMenteeDB.js');
-const express = require('express');
-const app = express.Router();
-const messageDispatch = require('./messageDB.js');
+const db = {...require('./model/Relation.js'), ... require('./followRelationDB')};
+const app = require('express').Router();
+const Message = require('./model/Message.js');
 
-app.post('/api/get_rel_mentors', (req, res) => {
-  db.getRelMentors(req.body.uid, (err, mentors) => {
-    if (err) {
-      console.log(err);
-      res.json({code: 1, errMsg: 'Database Error'});
-      return;
-    }
-    res.json({code: 0, mentors: mentors});
-  });
+app.post('/api/get_rel_mentors', async (req, res) => {
+  const mentors = await db.getRelMentors(req.body.uid);
+  res.json({code: 0, mentors});
 });
 
-app.post('/api/get_rel_mentees', (req, res) => {
-  console.log('GET REL MENTEE: '+req.body.uid);
-  db.getRelMentees(req.body.uid, (err, mentees) => {
-    if (err) {
-      console.log(err);
-      res.json({code: 1, errMsg: 'Database Error'});
-      return;
-    }
-    res.json({code: 0, mentees: mentees});
-  });
+app.post('/api/get_rel_mentees', async (req, res) => {
+  const mentees = await db.getRelMentees(req.body.uid);
+  res.json({code: 0, mentees});
 });
 
-app.post('/api/mentor_confirm', (req, res) => {
-  db.setMentorConfirm(req.body.uid, req.body.mrid, (err) => {
-    if (err) {
-      console.log(err);
-      res.json({code: 1, errMsg: 'Database Error'});
-      return;
-    }
-    res.json({code: 0});
-  });
+app.post('/api/mentor_confirm', async (req, res) => {
+  await db.setMentorConfirm(req.body.uid, req.body.mrid);
+  res.json({code: 0});
 });
 
-app.post('/api/mentor_decision', (req, res) => {
-  db.setMentorDecision(req.body.uid, req.body.mrid, req.body.agreed, (err) => {
-    if (err) {
-      console.log(err);
-      res.json({code: 1, errMsg: 'Database Error'});
-      return;
-    }
-    res.json({code: 0});
-    let is_passed_str = (req.body.agreed == 1)?'通过':'拒绝';
-    messageDispatch.sendSystemMessage(req.body.uid,
-      `您刚刚${is_passed_str}了Mentee的申请，请前往“我的mentee页”查看`,
-      (err)=>  console.log(err));
-    messageDispatch.sendSystemMessage(req.body.mentee_uid,
-      `您的申请已被${is_passed_str}，请前往“我的导师”页查看`,
-      (err)=>  console.log(err));
-  });
+app.post('/api/mentor_decision', async (req, res) => {
+  const {uid, mrid, agreed, mentee_uid} = req.body;
+  await db.setMentorDecision(uid, mrid, agreed);
+
+  const is_passed_str = (req.body.agreed === 1) ? '通过' : '拒绝';
+  await Message.sendSystemMessage(uid, `您刚刚${is_passed_str}了Mentee的申请，请前往“我的mentee页”查看`,);
+  await Message.sendSystemMessage(mentee_uid, `您的申请已被${is_passed_str}，请前往“我的导师”页查看`,);
+
+  res.json({code: 0});
 });
 
-app.post('/api/mentee_confirm', (req, res) => {
-  db.setMenteeConfirm(req.body.uid, req.body.mrid, (err) => {
-    if (err) {
-      console.log(err);
-      res.json({code: 1, errMsg: 'Database Error'});
-      return;
-    }
-    res.json({code: 0});
-  });
+app.post('/api/mentee_confirm', async (req, res) => {
+  await db.setMenteeConfirm(req.body.uid, req.body.mrid);
+  res.json({code: 0});
 });
 
 
@@ -72,16 +39,18 @@ app.post('/api/mentee_confirm', (req, res) => {
 
 app.post('/api/whether_followed', (req, res) => {
   // Request body. req.body{follower_uid, followee_uid"}
-  db.whetherFollowed(req.body.follower_uid, req.body.followee_uid,  (err, whetherFollowed) =>{
-    if (err) {
-      console.log(err);
-      res.json({code: 1, errMsg: 'Database Error'});
-      return;
+  db.whetherFollowed(req.body.follower_uid, req.body.followee_uid, (err, whetherFollowed) => {
+      if (err) {
+        console.log(err);
+        res.json({code: 1, errMsg: 'Database Error'});
+        return;
+      }
+      if (whetherFollowed) {
+        res.json({whetherFollowed: "true"})
+      } else {
+        res.json({whetherFollowed: "false"})
+      }
     }
-    if (whetherFollowed){
-      res.json({whetherFollowed: "true"})
-    }else{ res.json({whetherFollowed: "false"}) }
-  }
-)
+  )
 })
 module.exports = app;

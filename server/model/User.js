@@ -98,7 +98,7 @@ const getUserHelper = async (whereClause, values) => {
  * @returns {number} User ID
  */
 exports.getUserIDByEmail = async (email) => {
-  return await getUserInfoHelper('id', `where email=$1`, [sanitizeEmail(email)]);
+  return await getUserInfoHelper('id', `where email = $1`, [sanitizeEmail(email)]);
 };
 
 /**
@@ -109,7 +109,7 @@ exports.getUserIDByEmail = async (email) => {
  */
 exports.getUserIDByAccessToken = async (access_token) => {
   try {
-    return await getUserInfoHelper('id' ,`where access_token=$1`, [access_token]);
+    return await getUserInfoHelper('id' ,`where access_token = $1`, [access_token]);
   } catch (e) {
     throw new Error('Access token invalid');
   }
@@ -118,11 +118,21 @@ exports.getUserIDByAccessToken = async (access_token) => {
 /**
  * Whether a given user is admin
  *
- * @param {string} uid User ID
- * @returns {number} User ID
+ * @param {number} uid User ID
+ * @returns {boolean} isAdmin
  */
-exports.isAdmin = async (uid) => {
-  return await getUserInfoHelper('isadmin' ,`where access_token=$1`, [uid]);
+exports.isUserAdmin = async (uid) => {
+  return await getUserInfoHelper('isadmin' ,`where id = $1`, [uid]);
+};
+
+/**
+ * Get the email address for a given user
+ *
+ * @param {number} uid User ID
+ * @returns {string} Email Address
+ */
+exports.getUserEmail = async (uid) => {
+  return await getUserInfoHelper('email' ,`where id = $1`, [uid]);
 };
 
 /**
@@ -137,7 +147,7 @@ const getUserInfoHelper = async (column, whereClause, values) => {
   const {rows} = await db.query(query, values);
   if (rows.length === 0)
     throw('No such user found');
-  return rows[0].id;
+  return rows[0][column];
 };
 
 /*                                                  Update User Info                                                  */

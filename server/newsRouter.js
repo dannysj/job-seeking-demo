@@ -1,6 +1,6 @@
 const db = {
   ...require('./newsDB.js'),
-  ...require('./messageDB.js'),
+  ...require('./model/Message.js'),
   ...require('./followRelationDB.js'),
 };
 const express = require('express');
@@ -17,16 +17,13 @@ app.post('/api/create_news', function(req, res){
     }
 
 
-    db.findFollowersByAuthorID(req.body.author_id, (err, followerIDs) => {
+    db.findFollowersByAuthorID(req.body.author_id, async (err, followerIDs) => {
       console.log(followerIDs);
       console.log(typeof followerIDs);
 
       // For in iterate through index, not value in javascript :( HATE JAVASCRIPT
       for (let index in followerIDs) {
-        console.log(followerIDs[index]);
-        db.sendSystemMessage(followerIDs[index]
-          , "你关注的导师发了一篇文章 ：\"" + req.body.title + "\"。请阅读"
-          , (err) => console.log(err))
+        await db.sendSystemMessage(followerIDs[index], "你关注的导师发了一篇文章 ：\"" + req.body.title + "\"。请阅读")
       }
     });
 

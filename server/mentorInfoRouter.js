@@ -1,6 +1,5 @@
 const db = require('./mentorInfoDB.js');
-const express = require('express');
-const app = express.Router();
+const app = require('express').Router();
 
 app.post('/api/mentor_apply', (req, res) => {
   db.verifyInfoCompletion(req.body.uid, (err, isCompleted) => {

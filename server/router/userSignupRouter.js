@@ -1,15 +1,11 @@
 /**
  * @module router/user
  */
-
-const db = {
-  ...require('../messageDB.js'),
-};
+const app = require('express').Router();
+const Message = require('../model/Message.js');
 const User = require('../model/User');
-const express = require('express');
-const app = express.Router();
-const password_generator = require('generate-password');
 const Mail = require('../model/Mail');
+const password_generator = require('generate-password');
 
 /**
  * @param {string} first
@@ -43,7 +39,7 @@ app.post('/api/forget_password', async (req, res) => {
 app.get('/activate', async (req, res) => {
   try {
     const uid = await User.confirmVerification(req.query.code);
-    db.sendSystemMessage(uid, "欢迎来到伙伴求职。在这里您将接触到最好的求职干货和导师资源。如有任何疑问 ，可发送邮件至help@buddycareer.com联系我们");
+    await Message.sendSystemMessage(uid, "欢迎来到伙伴求职。在这里您将接触到最好的求职干货和导师资源。如有任何疑问 ，可发送邮件至help@buddycareer.com联系我们");
     res.redirect('/account');
   } catch (e) {
     console.log(e);
