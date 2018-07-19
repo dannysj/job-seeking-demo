@@ -1,3 +1,7 @@
+/**
+ * @module router/comment
+ */
+
 const Comment = require('../model/Comment.js');
 const app = require('express').Router();
 

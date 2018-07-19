@@ -1,3 +1,6 @@
+/**
+ * @module router/major
+ */
 const Major = require("../model/Major");
 const app = require('express').Router();
 

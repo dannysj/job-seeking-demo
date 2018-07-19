@@ -1,7 +1,10 @@
+/**
+ * @module router/user
+ */
+
 const User = require('../model/User');
 const express = require('express');
 const app = express.Router();
-
 
 app.post('/api/get_user_info', async (req, res) => {
   if (!!!req.body.uid)

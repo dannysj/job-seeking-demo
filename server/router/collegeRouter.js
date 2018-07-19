@@ -1,3 +1,7 @@
+/**
+ * @module router/college
+ */
+
 const College = require("../model/College");
 const app = require('express').Router();
 

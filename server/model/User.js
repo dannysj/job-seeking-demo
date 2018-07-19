@@ -1,5 +1,5 @@
 /**
- * @module User
+ * @module model/User
  */
 
 const db = require('./pool.js');
@@ -9,6 +9,9 @@ const uuid4 = require('uuid/v4');
 
 /**
  * @typedef {Object} user
+ *
+ * @global
+ * @static
  *
  * @property {number} id User ID
  * @property {number} uid User ID

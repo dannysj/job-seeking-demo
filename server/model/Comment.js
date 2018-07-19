@@ -1,5 +1,5 @@
 /**
- * @module Comment
+ * @module model/Comment
  */
 
 const db = require('./pool.js');

@@ -1,3 +1,7 @@
+/**
+ * @module router/user
+ */
+
 const db = {
   ...require('../messageDB.js'),
 };
@@ -7,6 +11,12 @@ const app = express.Router();
 const password_generator = require('generate-password');
 const Mail = require('../model/Mail');
 
+/**
+ * @param {string} first
+ * @param {string} last
+ * @param {string} password
+ * @param {string} email
+ */
 app.post('/api/create_user', async (req, res) => {
   const {first, last, password, email} = req.body;
   const user = await User.createUser(first, last, password, email);

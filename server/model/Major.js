@@ -1,5 +1,5 @@
 /**
- * @module Major
+ * @module model/Major
  */
 
 const db = require('./pool.js');
