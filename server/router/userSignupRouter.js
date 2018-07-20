@@ -4,7 +4,7 @@
 const app = require('express').Router();
 const Message = require('../model/Message.js');
 const User = require('../model/User');
-const Mail = require('../model/Mail');
+const Mail = require('../../mail/Mail');
 const password_generator = require('generate-password');
 
 /**

@@ -1,5 +1,5 @@
 const db = require('./pool.js');
-const Mail = require('./Mail');
+const Mail = require('../../mail/Mail');
 const User = require("./User");
 
 const createMessage = async (origin, dest, type, content) => {
