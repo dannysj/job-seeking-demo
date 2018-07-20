@@ -60,3 +60,22 @@ exports.createMentorReply = async (comment_id, reply) => {
   //   })
   //   .catch(err => callback(err));
 };
+
+exports.getMentorCommentsByMentorID = async (mid) => {
+  const query = `select json_agg(
+                   json_build_object('id', comment.id,
+                                     'text', comment.text,
+                                     'reply', comment.reply,
+                                     'time_added', to_char(comment.time_added, 'DD Mon HH24:MI'),
+                                     'first', u.first,
+                                     'last', u.last,
+                                     'profile_pic', u.profile_pic,
+                                     'like', (select COUNT(*) from mentor_comment_like where mentor_comment_like.comment_id = comment.id))
+                   order by time_added)
+          from mentor_comment comment, users u
+          where comment.mid = $1 and comment.uid = u.id
+  `;
+  const {rows} = await db.query(query, [mid]);
+  const result = rows[0].json_agg;
+  return result ? result : [];
+};

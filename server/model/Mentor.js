@@ -1,4 +1,5 @@
 const db = require('./pool.js');
+const Comment = require('./Comment');
 
 exports.approveMentor = async (uid, mid) => {
   const query = `update users
@@ -24,20 +25,15 @@ exports.getMentorApplications = async () => {
            m.offer_company as offer_company,
            m.id            as mid,
            u.id            as uid
-    from users u,
-         mentor_info m,
-         college c
-    where m.uid = u.id
-      and m.cid = c.id
-      and u.ismentor = false;
+    from users u, mentor_info m, college c
+    where m.uid = u.id and m.cid = c.id and u.ismentor = false;
   `;
   const {rows} = db.query(query);
   return rows;
 };
 
 exports.verifyInfoCompletion = async (uid) => {
-  const query = `select (major is not null
-                         and wechat is not null) as res
+  const query = `select (major is not null and wechat is not null) as res
                  from users
                  where id = $1;`;
   const {rows} = await db.query(query, [uid]);
@@ -90,64 +86,46 @@ exports.editMentorInfo = async (mentor_info) => {
 };
 
 
-const mentorSelectQuery = `
-  select u.id                       as uid,
-         u.first                    as first,
-         u.last                     as last,
-         u.dob                      as dob,
-         u.profile_pic              as profile_pic,
-         u.resume                   as resume,
-         u.id                       as uid,
-         c.id                       as cid,
-         c.name                     as college_name,
-         m.id                       as mid,
-         m.offer_title              as offer_title,
-         m.offer_company            as offer_company,
-         m.bio                      as bio,
-         m.bios                     as bios,
-         m.service                  as service,
-         m.num_weekly_slots         as num_weekly_slots,
-         (m.num_weekly_slots - (select count(*) from mentor_rel where mid = m.id
-                                                                  and status = 1
-                                                                  and now() - start_time < '1 week')
-             ) :: integer           as num_availability,
-         (select json_agg(
-                     json_build_object(
-                         'id', comment.id,
-                         'text', comment.text,
-                         'reply', comment.reply,
-                         'time_added', to_char(comment.time_added, 'DD Mon HH24:MI'),
-                         'first', u.first,
-                         'last', u.last,
-                         'profile_pic', u.profile_pic,
-                         'like',
-                         (select COUNT(*) from mentor_comment_like where mentor_comment_like.comment_id = comment.id)
-                     )
-                     order by time_added
-                     )
-          from mentor_comment comment,
-               users u
-          where comment.mid = $1
-            and comment.uid = u.id) as comments
-
-  from users u,
-       mentor_info m,
-       college c
-
-`;
-
 exports.getMentorDetailByUid = async (uid) => {
-  const query = mentorSelectQuery + ` where m.uid = u.id and m.cid = c.id and u.id = $1;`;
-  const {rows} = await db.query(query, [uid]);
-  return rows[0];
+  return await getMentorHelper(` where m.uid = u.id and m.cid = c.id and u.id = $1;`, [uid])
 };
 
 
 exports.getMentorDetail = async (mid) => {
-  const query = mentorSelectQuery + ` where m.uid = u.id and m.cid = c.id and m.id = $1;`;
-  const {rows} = await db.query(query, [mid]);
-  return rows[0];
+  return await getMentorHelper(` where m.uid = u.id and m.cid = c.id and m.id = $1;`, [mid]);
 };
+
+const getMentorHelper = async (whereClause, values) => {
+  const query = `
+    select u.id                                                                                                  as uid,
+           u.first                                                                                               as first,
+           u.last                                                                                                as last,
+           u.dob                                                                                                 as dob,
+           u.profile_pic                                                                                         as profile_pic,
+           u.resume                                                                                              as resume,
+           u.id                                                                                                  as uid,
+           c.id                                                                                                  as cid,
+           c.name                                                                                                as college_name,
+           m.id                                                                                                  as mid,
+           m.offer_title                                                                                         as offer_title,
+           m.offer_company                                                                                       as offer_company,
+           m.bio                                                                                                 as bio,
+           m.bios                                                                                                as bios,
+           m.service                                                                                             as service,
+           m.num_weekly_slots                                                                                    as num_weekly_slots,
+           (m.num_weekly_slots - (select count(*)
+                                  from mentor_rel
+                                  where mid = m.id and status = 1 and now() - start_time <
+                                                                      '1 week')) :: integer                      as num_availability
+    from users u, mentor_info m, college c
+  ${whereClause}`;
+  const {rows} = await db.query(query, values);
+  const mentor = rows[0];
+
+  mentor.comments = await Comment.getMentorCommentsByMentorID(mentor.mid);
+
+  return mentor;
+}
 
 
 exports.getMentorList = async (filter) => {
@@ -161,12 +139,8 @@ exports.getMentorList = async (filter) => {
            m.offer_company as offer_company,
            m.id            as mid,
            u.id            as uid
-    from users u,
-         mentor_info m,
-         college c
-    where m.uid = u.id
-      and m.cid = c.id
-      and u.ismentor = true;
+    from users u, mentor_info m, college c
+    where m.uid = u.id and m.cid = c.id and u.ismentor = true;
   `;
   const {rows} = await db.query(query);
   rows.filter(e => !e.major).forEach(e => e.major = []);
