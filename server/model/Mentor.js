@@ -1,14 +1,14 @@
 const db = require('./pool.js');
 const Comment = require('./Comment');
 
-exports.approveMentor = async (uid, mid) => {
+exports.approveMentor = async (mid) => {
   const query = `update users
                  set ismentor = true
                  where id = (select uid from mentor_info where id = $1);`;
   await db.query(query, [mid]);
 };
 
-exports.disapproveMentor = async (uid, mid) => {
+exports.disapproveMentor = async (mid) => {
   const query = `delete
                  from mentor_info
                  where id = $1;`;
@@ -28,7 +28,7 @@ exports.getMentorApplications = async () => {
     from users u, mentor_info m, college c
     where m.uid = u.id and m.cid = c.id and u.ismentor = false;
   `;
-  const {rows} = db.query(query);
+  const {rows} = await db.query(query);
   return rows;
 };
 

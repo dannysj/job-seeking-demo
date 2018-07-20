@@ -31,7 +31,7 @@ exports.createFollowerFolloweeRelationship = async (follower_uid, followee_uid) 
                      FROM follow_rel
                      WHERE follower_uid = $1
                        AND followee_uid = $2;`;
-  const {rowCount} = db.query(selectQuery, [follower_uid, followee_uid]);
+  const {rowCount} = await db.query(selectQuery, [follower_uid, followee_uid]);
 
   if (rowCount !== 0) return;
 
@@ -65,9 +65,9 @@ exports.getFollowersForFollowee = async (followee_id) => {
 };
 
 
-exports.getFolloweesForFollower = (followee_uid) => {
+exports.getFolloweesForFollower = async (followee_uid) => {
   const selectFolloweesQuery = "SELECT followee_uid FROM  follow_rel WHERE follower_uid = $1";
-  const {rows} = db.query(selectFolloweesQuery, [followee_uid]);
+  const {rows} = await db.query(selectFolloweesQuery, [followee_uid]);
   return rows.map(e => e.followee_uid);
 };
 

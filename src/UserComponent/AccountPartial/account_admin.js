@@ -7,6 +7,7 @@ import axios from 'axios';
 import 'react-quill/dist/quill.snow.css';
 import '../account.less';
 import {NotificationManager} from "react-notifications";
+import {getAuthHeader} from "../../utils";
 
 class AccountAdmin extends React.Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class AccountAdmin extends React.Component {
 
   updateInfo() {
     let handler = this;
-    axios.post('/api/admin/get_applications').then(res => {
+    axios.post('/api/admin/get_applications',{},getAuthHeader()).then(res => {
       if(res.data.code === 0){
         let list = res.data.applications.map((e) => {
 
@@ -135,7 +136,7 @@ class AccountAdmin extends React.Component {
 
     let handler = this;
 
-    axios.post('/api/admin/decide_mentor_app',{uid: uid, mid:mid,decision:decision}).then(res => {
+    axios.post('/api/admin/decide_mentor_app',{mentor_uid: uid, mid:mid, decision:decision},getAuthHeader()).then(res => {
       if(res.data.code===0){
         NotificationManager.success('操作成功','成功');
         // handler.state.applications.forEach(function(app, index){
