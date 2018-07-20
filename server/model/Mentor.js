@@ -86,12 +86,16 @@ exports.editMentorInfo = async (mentor_info) => {
 };
 
 
-exports.getMentorDetailByUid = async (uid) => {
+exports.getUserIDByMentorID = async (mid) => {
+  return await getMentorHelper(` where m.uid = u.id and m.cid = c.id and m.id = $1;`, [mid]);
+};
+
+exports.getMentorDetailByUserID = async (uid) => {
   return await getMentorHelper(` where m.uid = u.id and m.cid = c.id and u.id = $1;`, [uid])
 };
 
 
-exports.getMentorDetail = async (mid) => {
+exports.getMentorDetailByMentorID = async (mid) => {
   return await getMentorHelper(` where m.uid = u.id and m.cid = c.id and m.id = $1;`, [mid]);
 };
 

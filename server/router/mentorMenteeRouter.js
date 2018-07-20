@@ -1,4 +1,4 @@
-const db = {...require('../model/Relation.js'), ... require('../model/Follow')};
+const db = {...require('../model/MentorRelation.js'), ... require('../model/Follow')};
 const app = require('express').Router();
 const Message = require('../model/Message.js');
 

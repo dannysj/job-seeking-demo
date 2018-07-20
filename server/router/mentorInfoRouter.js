@@ -13,7 +13,7 @@ app.post('/api/mentor_edit', async (req, res) => {
 
 
 app.post('/api/get_mentor_detail_by_uid', async (req, res) => {
-  const mentor = await Mentor.getMentorDetailByUid(req.body.uid);
+  const mentor = await Mentor.getMentorDetailByUserID(req.body.uid);
   if (mentor)
     res.json({code: 0, mentor});
   else
@@ -21,7 +21,7 @@ app.post('/api/get_mentor_detail_by_uid', async (req, res) => {
 });
 
 app.post('/api/get_mentor_detail', async (req, res) => {
-  const mentor = await Mentor.getMentorDetail(req.body.mid);
+  const mentor = await Mentor.getMentorDetailByMentorID(req.body.mid);
   res.json({code: 0, mentor});
 });
 

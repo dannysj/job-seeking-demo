@@ -1,4 +1,4 @@
-const Mentorship = require('../model/Mentorship.js');
+const Mentorship = require('../model/MentorRelation.js');
 const app = require('express').Router();
 const paypal = require('paypal-rest-sdk');
 const Message = require('../model/Message.js');
