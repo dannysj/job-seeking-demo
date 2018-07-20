@@ -6,7 +6,7 @@ const image_compression_size = require("../config").image_compression_size;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, __dirname + '/../static/files');
+    cb(null, __dirname + '/../../static/files');
   },
   filename: (req, file, cb) => {
     cb(null, new Date().getTime() + '-' + file.originalname);
@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 
 const storage_name_perserved = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, __dirname + '/../static/files');
+    cb(null, __dirname + '/../../static/files');
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);

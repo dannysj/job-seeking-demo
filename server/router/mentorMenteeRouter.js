@@ -1,6 +1,6 @@
-const db = {...require('./model/Relation.js'), ... require('./followRelationDB')};
+const db = {...require('../model/Relation.js'), ... require('../model/Follow')};
 const app = require('express').Router();
-const Message = require('./model/Message.js');
+const Message = require('../model/Message.js');
 
 app.post('/api/get_rel_mentors', async (req, res) => {
   const mentors = await db.getRelMentors(req.body.uid);
@@ -33,24 +33,4 @@ app.post('/api/mentee_confirm', async (req, res) => {
   res.json({code: 0});
 });
 
-
-// API: unfollow_user. post: body:{follower_uid:, followee_uid:}
-// call db to delete followRelationship in a table.
-
-app.post('/api/whether_followed', (req, res) => {
-  // Request body. req.body{follower_uid, followee_uid"}
-  db.whetherFollowed(req.body.follower_uid, req.body.followee_uid, (err, whetherFollowed) => {
-      if (err) {
-        console.log(err);
-        res.json({code: 1, errMsg: 'Database Error'});
-        return;
-      }
-      if (whetherFollowed) {
-        res.json({whetherFollowed: "true"})
-      } else {
-        res.json({whetherFollowed: "false"})
-      }
-    }
-  )
-})
 module.exports = app;
