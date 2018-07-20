@@ -1,5 +1,5 @@
 /**
- * @module model/Mail
+ * @module Mail
  */
 
 const nodemailer = require('nodemailer');

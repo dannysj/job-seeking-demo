@@ -22,8 +22,6 @@
 <dd></dd>
 <dt><a href="#module_model/Comment">model/Comment</a></dt>
 <dd></dd>
-<dt><a href="#module_model/Mail">model/Mail</a></dt>
-<dd></dd>
 <dt><a href="#module_model/Major">model/Major</a></dt>
 <dd></dd>
 <dt><a href="#module_model/User">model/User</a></dt>
@@ -117,45 +115,6 @@ to prevent one user click like multiple times
 | comment_id | Comment ID |
 | reply | Reply text |
 
-<a name="module_model/Mail"></a>
-
-## model/Mail
-
-* [model/Mail](#module_model/Mail)
-    * [.sendActivationEmail(email, link)](#module_model/Mail.sendActivationEmail)
-    * [.sendPasswordResetEmail(email, newPassword)](#module_model/Mail.sendPasswordResetEmail)
-    * [.sendMessageEmail(email, message)](#module_model/Mail.sendMessageEmail)
-
-<a name="module_model/Mail.sendActivationEmail"></a>
-
-### model/Mail.sendActivationEmail(email, link)
-**Kind**: static method of [<code>model/Mail</code>](#module_model/Mail)  
-
-| Param | Description |
-| --- | --- |
-| email | receiver's email address |
-| link | activation link |
-
-<a name="module_model/Mail.sendPasswordResetEmail"></a>
-
-### model/Mail.sendPasswordResetEmail(email, newPassword)
-**Kind**: static method of [<code>model/Mail</code>](#module_model/Mail)  
-
-| Param | Description |
-| --- | --- |
-| email | receiver's email address |
-| newPassword | new password generated |
-
-<a name="module_model/Mail.sendMessageEmail"></a>
-
-### model/Mail.sendMessageEmail(email, message)
-**Kind**: static method of [<code>model/Mail</code>](#module_model/Mail)  
-
-| Param | Description |
-| --- | --- |
-| email | receiver's email address |
-| message | in-site message |
-
 <a name="module_model/Major"></a>
 
 ## model/Major
@@ -184,8 +143,6 @@ to prevent one user click like multiple times
     * _inner_
         * [~getUserHelper(whereClause, values)](#module_model/User..getUserHelper) ⇒ <code>user</code>
         * [~getUserIDHelper(whereClause, values)](#module_model/User..getUserIDHelper) ⇒ <code>number</code>
-        * [~hashedPassword(password)](#module_model/User..hashedPassword) ⇒ <code>string</code>
-        * [~sanitizeEmail(email)](#module_model/User..sanitizeEmail) ⇒ <code>string</code>
 
 <a name="module_model/User.getUserByUID"></a>
 
@@ -355,37 +312,6 @@ A helper method used to get user id by passing the constraints
 | --- | --- |
 | whereClause | <code>string</code> | 
 | values | <code>Array.&lt;\*&gt;</code> | 
-
-<a name="module_model/User..hashedPassword"></a>
-
-### model/User~hashedPassword(password) ⇒ <code>string</code>
-Generate hashed password from unhashed password
-
-**Kind**: inner method of [<code>model/User</code>](#module_model/User)  
-**Returns**: <code>string</code> - hashed password  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| password | <code>string</code> | Unhashed password |
-
-<a name="module_model/User..sanitizeEmail"></a>
-
-### model/User~sanitizeEmail(email) ⇒ <code>string</code>
-TODO: we might have to use GDPR standard in the future
-It depends on the law in the US.
-Since our transactions happen when the customer is physically in US,
-This website might have to conform to GDPR standard if U.S. government
-decides to endorse GDPR nation-wise.
-If this happens, we need to santicize all email in database (hash them)
-
-Now this method only ensures the email to be lower case.
-
-**Kind**: inner method of [<code>model/User</code>](#module_model/User)  
-**Returns**: <code>string</code> - sanitized email address  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| email | <code>string</code> | raw email address |
 
 <a name="module_router/college"></a>
 
