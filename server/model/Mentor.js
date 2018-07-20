@@ -87,7 +87,10 @@ exports.editMentorInfo = async (mentor_info) => {
 
 
 exports.getUserIDByMentorID = async (mid) => {
-  return await getMentorHelper(` where m.uid = u.id and m.cid = c.id and m.id = $1;`, [mid]);
+  const query = `select uid from mentor_info where id = $1`;
+  const {rows} = await db.query(query, [mid]);
+  if (rows.length !== 1) throw new Error("No such mentor");
+  return rows[0].uid;
 };
 
 exports.getMentorDetailByUserID = async (uid) => {

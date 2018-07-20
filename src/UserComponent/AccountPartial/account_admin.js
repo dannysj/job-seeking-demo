@@ -136,7 +136,7 @@ class AccountAdmin extends React.Component {
 
     let handler = this;
 
-    axios.post('/api/admin/decide_mentor_app',{mentor_uid: uid, mid:mid, decision:decision},getAuthHeader()).then(res => {
+    axios.post('/api/admin/decide_mentor_app',{mid:mid, decision:decision},getAuthHeader()).then(res => {
       if(res.data.code===0){
         NotificationManager.success('操作成功','成功');
         // handler.state.applications.forEach(function(app, index){

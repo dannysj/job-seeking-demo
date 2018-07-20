@@ -5,19 +5,18 @@ const User = require("../model/User");
 const app = require('express').Router();
 
 app.post('/api/admin/get_applications', async (req, res) => {
-
-  if(!await User.isUserAdmin(req.body.uid)) throw new Error("Unauthorized");
-
+  const {uid} = req.body;
+  const isAdmin = await User.isUserAdmin(uid);
+  if(!isAdmin) throw new Error("Unauthorized");
   const applications = await Mentor.getMentorApplications();
-
   res.json({code: 0, applications});
 });
 
 app.post('/api/admin/decide_mentor_app', async (req, res) => {
-  const {uid, mid, mentor_uid} = req.body;
-
-  if(!await User.isUserAdmin(uid)) throw new Error("Unauthorized");
-
+  const {uid, mid} = req.body;
+  const isAdmin = await User.isUserAdmin(uid);
+  if(!isAdmin) throw new Error("Unauthorized");
+  const mentor_uid = Mentor.getUserIDByMentorID(mid);
   if (req.body.decision === 1) {
     await Mentor.approveMentor(mid);
     await Message.sendSystemMessage(mentor_uid, "您的导师申请已被通过。您的账户已成为导师账户，请经常查看系统通知并为Mentee提供优质服务");
