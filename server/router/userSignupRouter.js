@@ -9,7 +9,7 @@ const User = require('../model/User');
 const express = require('express');
 const app = express.Router();
 const password_generator = require('generate-password');
-const Mail = require('../model/Mail');
+const Mail = require('../../mail/Mail');
 
 /**
  * @param {string} first

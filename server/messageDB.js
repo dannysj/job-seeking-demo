@@ -1,5 +1,5 @@
 const db = require('./model/pool.js');
-const mailingDispatch = require('./model/Mail');
+const mailingDispatch = require('../mail/Mail');
 
 exports.createMessage = (origin, dest, type, content, callback) => {
   const query = `

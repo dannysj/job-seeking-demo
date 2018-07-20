@@ -3,7 +3,7 @@
  */
 
 const nodemailer = require('nodemailer');
-const config = require('../config.js');
+const config = require('../server/config.js');
 const transporter = nodemailer.createTransport(config.mail_config);
 
 /**

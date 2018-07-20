@@ -3,9 +3,8 @@
  */
 
 const db = require('./pool.js');
-const bcrypt = require("bcrypt");
-const config = require("../config");
 const uuid4 = require('uuid/v4');
+const security = require('../security');
 
 /**
  * @typedef {Object} user
@@ -52,7 +51,7 @@ exports.getUserByUID = async (uid) => {
  * @returns {user} the user object without password entry
  */
 exports.getUserByEmailAndUnhashedPassword = async (email, password) => {
-  return await getUserHelper(`where email=$1 and password=$2`, [sanitizeEmail(email), hashedPassword(password)]);
+  return await getUserHelper(`where email=$1 and password=$2`, [security.sanitizeEmail(email), security.hashedPassword(password)]);
 };
 
 /**
@@ -98,7 +97,7 @@ const getUserHelper = async (whereClause, values) => {
  * @returns {number} User ID
  */
 exports.getUserIDByEmail = async (email) => {
-  return await getUserIDHelper(`where email=$1`, [sanitizeEmail(email)]);
+  return await getUserIDHelper(`where email=$1`, [security.sanitizeEmail(email)]);
 };
 
 /**
@@ -178,7 +177,7 @@ exports.createUser = async (first, last, password, email) => {
                  (first,last,password,email,profile_pic,register_date,isadmin,ismentor)
                  values($1,$2,$3,$4,'/img/sample_profile.jpg',now(),false,false)
                  returning *;`;
-  const {rows} = await db.query(query, [first, last, hashedPassword(password), sanitizeEmail(email)]);
+  const {rows} = await db.query(query, [first, last, hashedPassword(password), security.sanitizeEmail(email)]);
   const userInfo = rows[0];
   delete userInfo.password;
   return userInfo;
@@ -209,31 +208,5 @@ exports.addVerificationCode = async (email, verification_code) => {
   const query = `insert into user_verification (uid, verification_code)
                   values ((select id from users where email = $1),$2)
                   on CONFLICT (uid) do update set verification_code = $2, time_added=now();`;
-  await db.query(query, [sanitizeEmail(email), verification_code]);
-};
-
-/*                                                   Helper Methods                                                  */
-/**
- * Generate hashed password from unhashed password
- * @param {string} password Unhashed password
- * @returns {string} hashed password
- */
-const hashedPassword = (password) => {
-  return bcrypt.hashSync(password, config.hash_salt);
-};
-
-/**
- * TODO: we might have to use GDPR standard in the future
- * It depends on the law in the US.
- * Since our transactions happen when the customer is physically in US,
- * This website might have to conform to GDPR standard if U.S. government
- * decides to endorse GDPR nation-wise.
- * If this happens, we need to santicize all email in database (hash them)
- *
- * Now this method only ensures the email to be lower case.
- * @param {string} email raw email address
- * @returns {string} sanitized email address
- */
-const sanitizeEmail = (email) => {
-  return email.toLowerCase();
+  await db.query(query, [security.sanitizeEmail(email), verification_code]);
 };
