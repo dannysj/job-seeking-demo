@@ -82,7 +82,5 @@ const sendEmailHelper = async (dest, subject, text, html) => {
     text: text, // plaintext body
     html: html// html body
   };
-  console.log(mailOptions)
   await transporter.sendMail(mailOptions)
-
 };
