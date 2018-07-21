@@ -6,6 +6,8 @@ const User = require('../model/User');
 const express = require('express');
 const Email = require("../../mail/Mail");
 const MentorRelation = require("../model/Order");
+const PermissionError = require("../error").PermissionError;
+const InvalidArgumentError = require("../error").InvalidArgumentError;
 const app = express.Router();
 
 app.post('/api/get_user_info', async (req, res) => {

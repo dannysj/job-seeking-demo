@@ -5,6 +5,8 @@
 const db = require('./pool.js');
 const uuid4 = require('uuid/v4');
 const security = require('../security');
+const ResourceNotFoundError = require("../error").ResourceNotFoundError;
+const InvalidAccessTokenError = require("../error").InvalidAccessTokenError;
 
 /**
  * @typedef {Object} user

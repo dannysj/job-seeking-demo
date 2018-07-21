@@ -1,4 +1,7 @@
+const AppError = require('../error').AppError;
+
 const error_handler = (err, req, res, next) => {
+  console.log(err.stack);
   if (err instanceof AppError) {
     res.json({code: err.code, errMsg: err.message});
     return;

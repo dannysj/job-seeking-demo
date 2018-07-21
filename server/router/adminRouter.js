@@ -1,6 +1,7 @@
 const Mentor = require('../model/Mentor.js');
 const Message = require('../model/Message.js');
 const User = require("../model/User");
+const PermissionError = require("../error").PermissionError;
 
 const app = require('express').Router();
 
@@ -16,7 +17,7 @@ app.post('/api/admin/decide_mentor_app', async (req, res) => {
   const {uid, mid} = req.body;
   const isAdmin = await User.isUserAdmin(uid);
   if(!isAdmin) throw new PermissionError();
-  const mentor_uid = Mentor.getUserIDByMentorID(mid);
+  const mentor_uid = await Mentor.getUserIDByMentorID(mid);
   if (req.body.decision === 1) {
     await Mentor.approveMentor(mid);
     await Message.sendSystemMessage(mentor_uid, "您的导师申请已被通过。您的账户已成为导师账户，请经常查看系统通知并为Mentee提供优质服务");

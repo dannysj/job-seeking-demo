@@ -77,7 +77,7 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "api": "node server.js",
+    "api": "node $NODE_DEBUG_OPTION server.js",
     "docs": "jsdoc2md --template README-Template.hbs server/*/*.js > README.md"
   },
   "devDependencies": {
