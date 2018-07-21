@@ -64,7 +64,6 @@ const getUserHelper = async (whereClause, values) => {
   const query = `
   select
     id,
-    id as uid,
     first,
     last,
     profile_pic,
@@ -97,7 +96,7 @@ const getUserHelper = async (whereClause, values) => {
  * @returns {number} User ID
  */
 exports.getUserIDByEmail = async (email) => {
-  return await getUserInfoHelper('id', `where email = $1`, [sanitizeEmail(email)]);
+  return await getUserInfoHelper('id', `where email = $1`, [security.sanitizeEmail(email)]);
 };
 
 /**
@@ -225,9 +224,21 @@ exports.confirmVerification = async (verification_code) => {
  * @param {string} email Unsanitized Email
  * @param {string} verification_code
  */
-exports.addVerificationCode = async (email, verification_code) => {
+exports.addVerificationCodeByEmail = async (email, verification_code) => {
   const query = `insert into user_verification (uid, verification_code)
                   values ((select id from users where email = $1),$2)
-                  on CONFLICT (uid) do update set verification_code = $2, time_added=now();`;
+                  on conflict (uid) do update set verification_code = $2, time_added=now();`;
   await db.query(query, [security.sanitizeEmail(email), verification_code]);
+};
+
+/**
+ *
+ * @param {string} uid User ID
+ * @param {string} verification_code
+ */
+exports.addVerificationCodeByUserID = async (uid, verification_code) => {
+  const query = `insert into user_verification (uid, verification_code)
+                  values ($1,$2)
+                  on conflict (uid) do update set verification_code = $2, time_added=now();`;
+  await db.query(query, [uid, verification_code]);
 };

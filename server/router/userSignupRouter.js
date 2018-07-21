@@ -58,10 +58,10 @@ app.get('/activate', async (req, res) => {
  * @returns {Promise<void>}
  */
 const verificationCodeHelper = async (hostname, email) => {
-  let verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
-  await User.addVerificationCode(email, verificationCode);
+  const verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
+  await User.addVerificationCodeByEmail(email, verificationCode);
   const link = `http://${hostname}/activate?code=${verificationCode}`;
-  await Mail.sendActivationEmail(email, link)
+  await Mail.sendWelcomeEmail(email, link)
 };
 
 module.exports = app;

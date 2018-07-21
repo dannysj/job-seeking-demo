@@ -1,5 +1,4 @@
 import {NotificationManager} from "react-notifications";
-import axios from "axios/index";
 
 export default (state = JSON.parse(localStorage.getItem('user')), action) => {
   switch (action.type) {
@@ -22,6 +21,7 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
     case "FETCH_USER_FULFILLED":
       state = action.payload.data.user;
       break;
+
 
 
     case "FETCH_USER_REJECTED":
@@ -61,6 +61,10 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
     case "CHANGE_PASSWORD_FULFILLED":
       NotificationManager.success('资料更新成功', '完成啦');
       break;
+
+    case "CHANGE_EMAIL_FULFILLED":
+        NotificationManager.success('邮件更新成功', '完成啦');
+        break;
   }
 
   if (state) {
