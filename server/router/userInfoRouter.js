@@ -40,7 +40,7 @@ app.post('/api/change_password', async (req, res) => {
   res.json({code: 0});
 });
 
-app.post('/api/change_email', async (req, res) => {
+app.post('/api/verify_new_email', async (req, res) => {
   const {new_email, uid} = req.body;
   const verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
   await User.addVerificationCodeByUserID(uid, verificationCode);
@@ -48,7 +48,7 @@ app.post('/api/change_email', async (req, res) => {
   res.json({code: 0});
 });
 
-app.get('/api/verify_code', async (req, res) => {
+app.post('/api/verify_code', async (req, res) => {
   const {code, uid} = req.body;
   if (uid !== await User.confirmVerification(code)) throw new Error("Verification failed");
   res.json({code: 0});

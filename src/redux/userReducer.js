@@ -1,5 +1,4 @@
 import {NotificationManager} from "react-notifications";
-import axios from "axios/index";
 
 export default (state = JSON.parse(localStorage.getItem('user')), action) => {
   switch (action.type) {

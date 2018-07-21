@@ -47,7 +47,7 @@ exports.sendVerificationCode = async (email, verificationCode) => {
   const text = '验证码';
   const html = `
     感谢您使用使用同行平台，希望能和您一起在这里度过美好的时光！<br>
-    您的新验证码是"${verificationCode}"。 <br>`;
+    您的验证码是"${verificationCode}"。 <br>`;
 
   await sendEmailHelper(email, subject, text, html);
 };
@@ -82,6 +82,7 @@ const sendEmailHelper = async (dest, subject, text, html) => {
     text: text, // plaintext body
     html: html// html body
   };
-
+  console.log(mailOptions)
   await transporter.sendMail(mailOptions)
+
 };

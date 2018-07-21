@@ -64,7 +64,6 @@ const getUserHelper = async (whereClause, values) => {
   const query = `
   select
     id,
-    id as uid,
     first,
     last,
     profile_pic,

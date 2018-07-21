@@ -135,18 +135,16 @@ class AccountProfile extends React.Component {
   confirmNewEmailChange = (e) =>{
       e.preventDefault();
       let curState = this.state;
-      axios.post("/api/verify_code", {code: this.state.attr_key["verification_code"]},{headers: {access_token:store.getState().user.access_token}})
+      axios.post("/api/verify_code", {code: this.state.attr_key.verification_code},{headers: {access_token:store.getState().user.access_token}})
           .then(res=>{
                   if (res.data.code === 1){
                       NotificationManager.error("验证码不正确", "错误");
                       return
                   }
 
-                  store.dispatch(changeEmail(this.state.attr_key["new_email"]))
-                      .then(()=>{
-                      curState.attr_key["new_email"] = "";
-                      this.setState({curState});
-                  });
+                  store.dispatch(updateUser('email', this.state.attr_key["new_email"]));
+                  delete curState.attr_key["new_email"];
+                  delete curState.attr_key["verification_code"];
                 }
           )
   };
@@ -200,6 +198,17 @@ class AccountProfile extends React.Component {
       NotificationManager.error('Email格式不正确', '错误');
       return;
     }
+
+    axios.post("/api/verify_new_email", {new_email: this.state.attr_key.new_email},{headers: {access_token:store.getState().user.access_token}})
+      .then(res=>{
+          if (res.data.code === 1){
+            NotificationManager.error("验证码不正确", "错误");
+            return
+          }
+
+        NotificationManager.success("发送验证码成功", "成功");
+        }
+      );
 
     // Send verification
     this.setState(
