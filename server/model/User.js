@@ -147,7 +147,7 @@ exports.updateUserAttribute = async (uid, attr, val) => {
  * @param {string} password UNHASHED password
  */
 exports.updateUserWithUnhashedPassword = async (uid, password) => {
-  await this.updateUserAttribute(uid, 'password', hashedPassword(password));
+  await this.updateUserAttribute(uid, 'password', security.hashedPassword(password));
 };
 
 /**
@@ -177,7 +177,7 @@ exports.createUser = async (first, last, password, email) => {
                  (first,last,password,email,profile_pic,register_date,isadmin,ismentor)
                  values($1,$2,$3,$4,'/img/sample_profile.jpg',now(),false,false)
                  returning *;`;
-  const {rows} = await db.query(query, [first, last, hashedPassword(password), security.sanitizeEmail(email)]);
+  const {rows} = await db.query(query, [first, last, security.hashedPassword(password), security.sanitizeEmail(email)]);
   const userInfo = rows[0];
   delete userInfo.password;
   return userInfo;
