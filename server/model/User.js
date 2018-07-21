@@ -5,6 +5,7 @@
 const db = require('./pool.js');
 const uuid4 = require('uuid/v4');
 const security = require('../security');
+const InvalidVerificationCodeError = require("../error").InvalidVerificationCodeError;
 const ResourceNotFoundError = require("../error").ResourceNotFoundError;
 const InvalidAccessTokenError = require("../error").InvalidAccessTokenError;
 
@@ -214,8 +215,7 @@ exports.confirmVerification = async (verification_code) => {
                  where id = (select uid from user_verification where verification_code = $1)
       returning id;`;
   const {rows} = await db.query(query, [verification_code]);
-  if (rows.length === 0)
-    throw (`No user with verification code "${verification_code}" found `);
+  if (rows.length === 0) throw new InvalidVerificationCodeError();
   return rows[0].id;
 };
 

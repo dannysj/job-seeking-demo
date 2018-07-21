@@ -1,4 +1,5 @@
 const db = require('./pool.js');
+const ResourceNotFoundError = require("../error").ResourceNotFoundError;
 
 exports.getRelMentors = async (uid) => {
   const query = `
@@ -106,7 +107,7 @@ exports.addMentorShip = async (uid, mid, service_name, service_price, note) => {
                         where m.uid = u.id
                           and m.id = $1`;
   const mentor_result = await db.query(mentor_query, [mid]);
-  if (mentor_result.rows.length !== 1) throw new Error("No such mentor found");
+  if (mentor_result.rows.length !== 1) throw new ResourceNotFoundError();
   const {mentor_uid, mentor_name} = mentor_result.rows[0];
 
 
@@ -115,7 +116,7 @@ exports.addMentorShip = async (uid, mid, service_name, service_price, note) => {
                         from users
                         where id = $1;`;
   const mentee_result = await db.query(mentee_query, [uid]);
-  if (mentee_result.rows.length !== 1) throw new Error("No such mentee found");
+  if (mentee_result.rows.length !== 1) throw new ResourceNotFoundError();
   const mentee_name = mentee_result.rows[0].name;
 
 

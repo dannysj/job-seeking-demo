@@ -140,7 +140,8 @@ to prevent one user click like multiple times
         * [.updateAccessToken(user)](#module_model/User.updateAccessToken)
         * [.createUser(first, last, password, email)](#module_model/User.createUser) ⇒ <code>user</code>
         * [.confirmVerification(verification_code)](#module_model/User.confirmVerification) ⇒ <code>number</code>
-        * [.addVerificationCode(email, verification_code)](#module_model/User.addVerificationCode)
+        * [.addVerificationCodeByEmail(email, verification_code)](#module_model/User.addVerificationCodeByEmail)
+        * [.addVerificationCodeByUserID(uid, verification_code)](#module_model/User.addVerificationCodeByUserID)
         * [.user](#module_model/User.user) : <code>Object</code>
     * _inner_
         * [~getUserHelper(whereClause, values)](#module_model/User..getUserHelper) ⇒ <code>user</code>
@@ -276,14 +277,24 @@ Note that this method take in the entire user object as parameter instead of uid
 | --- | --- | --- |
 | verification_code | <code>string</code> | verification code of a given user |
 
-<a name="module_model/User.addVerificationCode"></a>
+<a name="module_model/User.addVerificationCodeByEmail"></a>
 
-### model/User.addVerificationCode(email, verification_code)
+### model/User.addVerificationCodeByEmail(email, verification_code)
 **Kind**: static method of [<code>model/User</code>](#module_model/User)  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | email | <code>string</code> | Unsanitized Email |
+| verification_code | <code>string</code> |  |
+
+<a name="module_model/User.addVerificationCodeByUserID"></a>
+
+### model/User.addVerificationCodeByUserID(uid, verification_code)
+**Kind**: static method of [<code>model/User</code>](#module_model/User)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| uid | <code>string</code> | User ID |
 | verification_code | <code>string</code> |  |
 
 <a name="module_model/User.user"></a>

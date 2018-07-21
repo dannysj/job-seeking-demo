@@ -41,24 +41,6 @@ exports.createMentorReply = async (comment_id, reply) => {
                  set reply = $2
                  where id = $1`;
   await db.query(query, [comment_id, reply]);
-
-  // TODO: Authentication
-  // const query = `select * from mentor_info
-  //                 where uid = $2 and
-  //                        id = (select mid from mentor_comment where id = $1)`;
-  // db.query(query, [comment_id, uid])
-  //   .then((result) => {
-  //
-  //     if (result.rows.length === 0) {
-  //       callback('Illegal');
-  //       return;
-  //     }
-  //
-  //
-  //
-  //
-  //   })
-  //   .catch(err => callback(err));
 };
 
 exports.getMentorCommentsByMentorID = async (mid) => {

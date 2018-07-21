@@ -1,5 +1,6 @@
 const db = require('./pool.js');
 const Comment = require('./Comment');
+const ResourceNotFoundError = require("../error").ResourceNotFoundError;
 
 exports.approveMentor = async (mid) => {
   const query = `update users
@@ -37,7 +38,7 @@ exports.verifyInfoCompletion = async (uid) => {
                  from users
                  where id = $1;`;
   const {rows} = await db.query(query, [uid]);
-  if (rows.length !== 1) throw new Error("No such user found");
+  if (rows.length !== 1) throw new ResourceNotFoundError();
   return rows[0].res;
 };
 
@@ -89,7 +90,7 @@ exports.editMentorInfo = async (mentor_info) => {
 exports.getUserIDByMentorID = async (mid) => {
   const query = `select uid from mentor_info where id = $1`;
   const {rows} = await db.query(query, [mid]);
-  if (rows.length !== 1) throw new Error("No such mentor");
+  if (rows.length !== 1) throw new ResourceNotFoundError();
   return rows[0].uid;
 };
 

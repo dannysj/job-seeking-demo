@@ -6,6 +6,7 @@ const User = require('../model/User');
 const express = require('express');
 const Email = require("../../mail/Mail");
 const MentorRelation = require("../model/Order");
+const InvalidVerificationCodeError = require("../error").InvalidVerificationCodeError;
 const PermissionError = require("../error").PermissionError;
 const InvalidArgumentError = require("../error").InvalidArgumentError;
 const app = express.Router();
@@ -59,7 +60,7 @@ app.post('/api/verify_new_email', async (req, res) => {
 
 app.post('/api/verify_code', async (req, res) => {
   const {code, uid} = req.body;
-  if (uid !== await User.confirmVerification(code)) throw new Error("Verification failed");
+  if (uid !== await User.confirmVerification(code)) throw new InvalidVerificationCodeError();
   res.json({code: 0});
 });
 
