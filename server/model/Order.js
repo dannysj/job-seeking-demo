@@ -49,6 +49,14 @@ exports.getRelMentees = async (uid) => {
   return rows;
 };
 
+exports.isMentorMenteeRelated = async (mentor_uid, mentee_uid) => {
+  const query = `select *
+                 from mentor_rel
+                 where mid = (select id from mentor_info where uid = $1) and uid = $2`;
+  const {rowCount} = await db.query(query, [mentor_uid, mentee_uid]);
+  return rowCount > 0;
+};
+
 exports.setMentorConfirm = async (mentor_uid, mrid) => {
   const query = `
     update mentor_rel

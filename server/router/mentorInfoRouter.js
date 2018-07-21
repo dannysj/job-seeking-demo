@@ -28,7 +28,6 @@ app.post('/api/get_mentor_detail', async (req, res) => {
 
 app.post('/api/get_mentor_list', async (req, res) => {
   const list = await Mentor.getMentorList([]);
-
   res.json({code: 0, list});
 });
 

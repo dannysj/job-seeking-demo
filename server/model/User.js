@@ -82,8 +82,7 @@ const getUserHelper = async (whereClause, values) => {
     array(select follow_rel.followee_uid from follow_rel where follow_rel.follower_uid = users.id) as followee
   from users ${whereClause};`;
   const {rows} = await db.query(query, values);
-  if (rows.length === 0)
-    throw new Error('No such user found');
+  if (rows.length === 0) throw new ResourceNotFoundError();
   return rows[0];
 };
 
@@ -109,7 +108,7 @@ exports.getUserIDByAccessToken = async (access_token) => {
   try {
     return await getUserInfoHelper('id', `where access_token = $1`, [access_token]);
   } catch (e) {
-    throw new Error('Access token invalid');
+    throw new InvalidAccessTokenError();
   }
 };
 
@@ -143,8 +142,7 @@ exports.getUserEmail = async (uid) => {
 const getUserInfoHelper = async (column, whereClause, values) => {
   const query = `select ${column} from users ${whereClause};`;
   const {rows} = await db.query(query, values);
-  if (rows.length === 0)
-    throw('No such user found');
+  if (rows.length === 0) throw new ResourceNotFoundError();
   return rows[0][column];
 };
 

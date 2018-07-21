@@ -7,7 +7,7 @@ const app = require('express').Router();
 app.post('/api/admin/get_applications', async (req, res) => {
   const {uid} = req.body;
   const isAdmin = await User.isUserAdmin(uid);
-  if(!isAdmin) throw new Error("Unauthorized");
+  if(!isAdmin) throw new PermissionError();
   const applications = await Mentor.getMentorApplications();
   res.json({code: 0, applications});
 });
@@ -15,7 +15,7 @@ app.post('/api/admin/get_applications', async (req, res) => {
 app.post('/api/admin/decide_mentor_app', async (req, res) => {
   const {uid, mid} = req.body;
   const isAdmin = await User.isUserAdmin(uid);
-  if(!isAdmin) throw new Error("Unauthorized");
+  if(!isAdmin) throw new PermissionError();
   const mentor_uid = Mentor.getUserIDByMentorID(mid);
   if (req.body.decision === 1) {
     await Mentor.approveMentor(mid);

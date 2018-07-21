@@ -1,34 +1,11 @@
 const error_handler = (err, req, res, next) => {
-  if (!err) {
-    next(err);
-  }
-
-  if (!err.message) {
-    res.json({code: 1, errMsg: err});
-    next(err);
+  if (err instanceof AppError) {
+    res.json({code: err.code, errMsg: err.message});
     return;
   }
 
-  const errMsg = err.message;
-  switch (errMsg) {
-    case 'Access denied': {
-      res.status(403);
-      res.json({error: 'Access Denied'});
-      break;
-    }
-
-    case 'Access token invalid': {
-      res.json({code: 44, errMsg});
-      break;
-    }
-
-    default: {
-      res.json({code: 1, errMsg});
-      break;
-    }
-  }
-
-  next(err);
+  const errMsg = err.message ? err.message : err;
+  res.json({code: 1, errMsg});
 };
 
 module.exports = error_handler;

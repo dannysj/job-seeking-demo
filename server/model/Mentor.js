@@ -132,7 +132,7 @@ const getMentorHelper = async (whereClause, values) => {
   mentor.comments = await Comment.getMentorCommentsByMentorID(mentor.mid);
 
   return mentor;
-}
+};
 
 
 exports.getMentorList = async (filter) => {
