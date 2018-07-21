@@ -47,10 +47,11 @@ export function changeUserPassword(new_password, user) {
   }
 }
 
-export function changeEmail(new_email, user) {
+export function changeEmail(new_email) {
+  const user = store.getState().user;
     return {
         type: "CHANGE_EMAIL",
-        payload: axios.post('/api/change_password', {email: new_email},
+        payload: axios.post('/api/change_email', {email: new_email},
             {headers: {access_token:user.access_token}}),
         password: new_email
     }

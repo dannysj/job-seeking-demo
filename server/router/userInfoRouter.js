@@ -4,6 +4,7 @@
 
 const User = require('../model/User');
 const express = require('express');
+const Email = require("../../mail/Mail");
 const app = express.Router();
 
 app.post('/api/get_user_info', async (req, res) => {
@@ -36,6 +37,20 @@ app.post('/api/verify_user', async (req, res) => {
 app.post('/api/change_password', async (req, res) => {
   const {uid, password} = req.body;
   await User.updateUserWithUnhashedPassword(uid, password);
+  res.json({code: 0});
+});
+
+app.post('/api/change_email', async (req, res) => {
+  const {new_email, uid} = req.body;
+  const verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
+  await User.addVerificationCodeByUserID(uid, verificationCode);
+  await Email.sendVerificationCode(new_email, verificationCode);
+  res.json({code: 0});
+});
+
+app.get('/api/verify_code', async (req, res) => {
+  const {code, uid} = req.body;
+  if (uid !== await User.confirmVerification(code)) throw new Error("Verification failed");
   res.json({code: 0});
 });
 

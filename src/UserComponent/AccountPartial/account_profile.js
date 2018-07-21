@@ -135,14 +135,14 @@ class AccountProfile extends React.Component {
   confirmNewEmailChange = (e) =>{
       e.preventDefault();
       let curState = this.state;
-      axios.post("/api/verify_code", {password: this.state.attr_key["old_password"], email: this.props.user.email})
+      axios.post("/api/verify_code", {code: this.state.attr_key["verification_code"]},{headers: {access_token:store.getState().user.access_token}})
           .then(res=>{
                   if (res.data.code === 1){
                       NotificationManager.error("验证码不正确", "错误");
                       return
                   }
 
-                  store.dispatch(changeEmail(this.state.attr_key["new_email"], store.getState().user))
+                  store.dispatch(changeEmail(this.state.attr_key["new_email"]))
                       .then(()=>{
                       curState.attr_key["new_email"] = "";
                       this.setState({curState});
