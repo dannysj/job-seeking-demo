@@ -26,7 +26,7 @@ export const updateAccessToken = (access_token) =>{
 
 
 export const updateUser = (attr, val, {local = false} = {}) => dispatch => {
-  const user =store.getState().user;
+  const user = store.getState().user;
   if (!local)
     dispatch({
       type: "UPDATE_USER",
@@ -38,7 +38,8 @@ export const updateUser = (attr, val, {local = false} = {}) => dispatch => {
   });
 };
 
-export function changeUserPassword(new_password, user) {
+export function changeUserPassword(new_password) {
+  const user = store.getState().user;
   return {
     type: "CHANGE_PASSWORD",
     payload: axios.post('/api/change_password', {email: user.email, password: new_password},

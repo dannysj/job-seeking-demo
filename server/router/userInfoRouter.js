@@ -30,10 +30,23 @@ app.post('/api/get_mentee_info', async (req, res) => {
 
 app.post('/api/update_user', async (req, res) => {
   const {uid, attr, val} = req.body;
-  const allowedAttr = ['profile_pic', 'resume', 'first', 'last', 'major', 'cover', 'email', 'wechat'];
-  if (!allowedAttr.includes(attr) || !uid || !val) throw new InvalidArgumentError();
+  const attrs = {
+    'profile_pic': '头像',
+    'resume': '简历',
+    'first': '姓名',
+    'last': '姓名',
+    'major': '专业',
+    'cover': ' 自我介绍',
+    'email': '邮箱',
+    'wechat': '微信号'
+  };
+  if (!Object.keys(attrs).includes(attr) || !uid || !val) throw new InvalidArgumentError();
   await User.updateAttribute(uid, attr, val);
-  res.json({code: 0});
+
+  if (attr === 'last') // This prevent multiple notifications of changing fist name and last name
+    res.json({code: 0});
+  else
+    res.json({code: 0, message: attrs[attr] + "更新成功"});
 });
 
 
@@ -47,7 +60,7 @@ app.post('/api/verify_user', async (req, res) => {
 app.post('/api/change_password', async (req, res) => {
   const {uid, password} = req.body;
   await User.updatePassword(uid, password);
-  res.json({code: 0});
+  res.json({code: 0, message: "密码更新成功"});
 });
 
 app.post('/api/verify_new_email', async (req, res) => {

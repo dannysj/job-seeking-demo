@@ -95,7 +95,7 @@ class AccountProfile extends React.Component {
               }
 
               //this.confirmAttrChange(e)
-              store.dispatch(changeUserPassword(this.state.attr_key["new_password"], store.getState().user)).then(()=>{
+              store.dispatch(changeUserPassword(this.state.attr_key["new_password"])).then(()=>{
                   curState.attr_key["new_password"] = ""
                   curState.attr_key["old_password"] = ""
                   curState.attr_key["confirm_password"] = ""

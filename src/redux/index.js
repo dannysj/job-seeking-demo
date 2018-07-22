@@ -21,7 +21,6 @@ const reducers = combineReducers({
 });
 
 const errorReporter = store => next => action => {
-  console.log("Error reporting for " + action.type);
   if (action.type.endsWith('REJECTED')){
     // TODO: In the future, all error will be received as non-20x code
     let errMsg = '';

@@ -5,6 +5,7 @@ import axios from 'axios';
 import {NotificationManager} from 'react-notifications';
 import '../account.less';
 import CollegeSelector from './Component/CollegeSelector'
+import {getAuthHeader} from "../../utils";
 
 //TODO: Bugs: Description text is not blank on next form input after submit edit
 //TODO: verification
@@ -130,29 +131,16 @@ class AccountApply extends React.Component {
     };
 
     handleSubmit = (e) => {
-        e.preventDefault();
+      e.preventDefault();
 
-        if(isNaN(this.state.mentor_info.num_weekly_slots) || this.state.mentor_info.num_weekly_slots < 0){
-            NotificationManager.error('每周愿意服务次数必须为自然数','错误');
-            return;
-        }
+      if (isNaN(this.state.mentor_info.num_weekly_slots) || this.state.mentor_info.num_weekly_slots < 0) {
+        NotificationManager.error('每周愿意服务次数必须为自然数', '错误');
+        return;
+      }
 
-        const apiUrl = this.state.hasNotApplied ? '/api/mentor_apply' : '/api/mentor_edit';
-        delete this.state.mentor_info["uid"];
-        axios.post(apiUrl, this.state.mentor_info,
-            {headers:{access_token: this.props.user.access_token}}).then(res => {
-            if (res.data.code === 0) {
-                NotificationManager.success('我们已收到您的表格','成功');
-            }
-            else {
-                if(res.data.code === 45) {
-                    NotificationManager.success('我们已收到您的表格，请尽快完善您的基础资料','成功');
-                }
-                else{
-                    NotificationManager.error('数据库错误','错误');
-                }
-            }
-        });
+      const apiUrl = this.state.hasNotApplied ? '/api/mentor_apply' : '/api/mentor_edit';
+      delete this.state.mentor_info["uid"];
+      axios.post(apiUrl, this.state.mentor_info, getAuthHeader());
     };
 
     render() {

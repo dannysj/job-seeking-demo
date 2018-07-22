@@ -12,7 +12,6 @@ import AccountService from './AccountPartial/account_service';
 import AccountAdmin from './AccountPartial/account_admin';
 import AccountLogout from "./AccountPartial/account_logout";
 import AccountForbidden from "./AccountPartial/account_forbidden";
-import MentorEdit from "./AccountPartial/mentor_edit";
 import CreateArticle from "./AccountPartial/create_article";
 import AccountNotification from "./AccountPartial/account_notification";
 import {connect} from "react-redux";

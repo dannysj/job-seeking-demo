@@ -3,12 +3,15 @@ const app = require('express').Router();
 
 app.post('/api/mentor_apply', async (req, res) => {
   const isCompleted = await Mentor.verifyInfoCompletion(req.body.uid);
-  res.json({code: isCompleted ? 0 : 45});
+  if (isCompleted)
+    res.json({code: 0, message: '我们已收到您的表格'});
+  else
+    res.json({code: 45, message: '我们已收到您的表格，请尽快完善您的基础资料'});
 });
 
 app.post('/api/mentor_edit', async (req, res) => {
   await Mentor.editMentorInfo(req.body);
-  res.json({code: 0});
+  res.json({code: 0, message: '我们已收到您的表格修改'});
 });
 
 
