@@ -1,20 +1,17 @@
 import React from 'react';
-import {Image, Segment} from 'semantic-ui-react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import store from "../../redux";
 import {updateUser} from "../../redux/userAction";
 import {NotificationManager} from 'react-notifications';
+import NotificationContainer from "./Component/NotificationContainer";
+
 class AccountNotification extends React.Component {
-  constructor(props) {
+  state = {
+    messages: []
+  };
 
-    super(props);
-
-    this.state =
-    {
-      messages: []
-    };
-
+  componentWillMount(){
     this.retrieveMessage();
   }
 
@@ -38,24 +35,10 @@ class AccountNotification extends React.Component {
     });
   }
 
-
   render() {
     return(
       <div className="account-inner-spacing">
-        <div className="category last notification">
-        {this.state.messages.map(el=>(
-          <div className="item">
-          <Segment>
-            <Image avatar src='/img/icon.png' />
-            系统通知：{new Date(el.timestamp).toLocaleTimeString()}
-            <br />
-            <div className="bio-display">
-              {el.content}
-            </div>
-          </Segment>
-          </div>
-        ))}
-        </div>
+        <NotificationContainer messages={this.state.messages}/>
       </div>
     );
   }
