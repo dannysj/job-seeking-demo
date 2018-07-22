@@ -34,25 +34,18 @@ class AccountApply extends React.Component {
     }
 
     componentWillMount(){
-        axios.post('/api/get_mentor_detail_by_uid',{},
-            {headers:{access_token: this.props.user.access_token}}).then(res => {
-            if (res.data.code  === 0) {
-                let mentor = res.data.mentor;
-                this.setState({
-                    mentor_info: mentor,
-                    statusChecked:true,
-                    hasNotApplied: false
-                });
-            }
-            else {
-                if(res.data.code === 55){
-                    this.setState({statusChecked: true, hasNotApplied: true});
-                }
-                else{
-                    NotificationManager.error('数据库错误', '错误')
-                }
-            }
-        });
+      axios.post('/api/get_mentor_detail_by_uid', {}, getAuthHeader()).then(res => {
+        if (res.data.code === 0) {
+          const mentor = res.data.mentor;
+          this.setState({
+            mentor_info: mentor,
+            statusChecked: true,
+            hasNotApplied: false
+          });
+        } else if (res.data.code === 55) {
+          this.setState({statusChecked: true, hasNotApplied: true});
+        }
+      });
     }
 
 

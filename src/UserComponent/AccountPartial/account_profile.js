@@ -7,7 +7,7 @@ import '../account.less';
 import './account_profile.less'
 import ImgCrop from './ImgCrop/imgcrop.js';
 import store from "../../redux";
-import {changeUserPassword, updateUser, updateAccessToken, changeEmail} from "../../redux/userAction";
+import {changeEmail, changeUserPassword, updateAccessToken, updateUser} from "../../redux/userAction";
 import {fetchMajorList} from "../../redux/majorListAction";
 import {connect} from 'react-redux'
 import validator from 'validator';
@@ -124,11 +124,7 @@ class AccountProfile extends React.Component {
     data.append('file', e.target.files[0]);
 
     axios.post('/api/file/general_upload', data).then(res => {
-      if (res.data.code === 0) {
-        store.dispatch(updateUser("resume", res.data.url));
-      } else {
-        NotificationManager.error('简历上传失败', '错误');
-      }
+      store.dispatch(updateUser("resume", res.data.url));
     });
   };
 
@@ -177,13 +173,8 @@ class AccountProfile extends React.Component {
     data.append('file', img);
 
     axios.post('/api/file/general_upload', data).then(res => {
-      if (res.data.code === 0) {
-        this.setState({showImgCrop: false});
-        store.dispatch(updateUser("profile_pic", res.data.url));
-      }
-      else {
-        NotificationManager.error('头像上传失败', '错误');
-      }
+      this.setState({showImgCrop: false});
+      store.dispatch(updateUser("profile_pic", res.data.url));
     });
   };
 

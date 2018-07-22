@@ -49,11 +49,18 @@ class InvalidArgumentError extends AppError {
   }
 }
 
+class FileUploadError extends AppError{
+  constructor() {
+    super('文件上传失败');
+  }
+}
+
 module.exports = {
   AppError,
   InvalidAccessTokenError,
   InvalidVerificationCodeError,
   PermissionError,
   ResourceNotFoundError,
-  InvalidArgumentError
+  InvalidArgumentError,
+  FileUploadError,
 };

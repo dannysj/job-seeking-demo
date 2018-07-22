@@ -24,8 +24,19 @@ axios.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.message === 'Network Error')
-      NotificationManager.error('无法连接到服务器', '错误');
+    let message;
+
+    if (error.response) { // The server has a response, but the status code is not 20x
+      if (error.response.data && error.response.data.message) {
+        message = error.response.data.message;
+      } else {
+        message = '服务器错误' // Just in case. This should not happen in reality
+      }
+    } else { // The server has no response
+      message = '网络连接错误，无法访问服务器'
+    }
+
+    NotificationManager.error(message, '错误');
     return Promise.reject(error);
   }
 );

@@ -8,5 +8,4 @@ export const getAuthHeader = () => {
   }
 
   return {headers: {access_token: store.getState().user.access_token}};
-
 };

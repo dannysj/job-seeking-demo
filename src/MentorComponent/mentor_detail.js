@@ -10,6 +10,7 @@ import Footer from '../Components/Footer';
 import {connect} from 'react-redux'
 import store from "../redux";
 import {fetchMentorDetail} from "../redux/mentorDetailAction";
+import {getAuthHeader} from "../utils";
 
 class MentorDetail extends Component {
   constructor (props) {
@@ -54,20 +55,14 @@ class MentorDetail extends Component {
 
   handleSubmit() {
     this.setState({showNoteModal: false})
-    var handler = this;
     axios.post('/api/create_order',
     {
       mid:this.props.match.params.mid,
       service_name: this.state.service_name,
       service_price: this.state.service_price,
       note: this.state.note
-    }, {headers: {access_token: this.props.user.access_token}}).then(res => {
-      if (res.data.code === 0) {
+    }, getAuthHeader()).then(res => {
         window.location.href = res.data.url;
-      }
-      else{
-        NotificationManager.error('数据库错误','错误');
-      }
     });
   }
 
