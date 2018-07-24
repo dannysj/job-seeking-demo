@@ -242,3 +242,9 @@ exports.addVerificationCodeByUserID = async (uid, verification_code) => {
                   on conflict (uid) do update set verification_code = $2, time_added=now();`;
   await db.query(query, [uid, verification_code]);
 };
+
+exports.checkEmailExist = async (email) => {
+  const query = `select * from users where email = $1`;
+  const {rows} = await db.query(query, [email])
+  return rows.length !== 0
+}

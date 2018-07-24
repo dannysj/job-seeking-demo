@@ -6,6 +6,7 @@ const Message = require('../model/Message.js');
 const User = require('../model/User');
 const Mail = require('../../mail/Mail');
 const password_generator = require('generate-password');
+const DuplicateEmailError = require("../error").DuplicateEmailError;
 
 /**
  * @param {string} first
