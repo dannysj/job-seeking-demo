@@ -16,6 +16,7 @@ const DuplicateEmailError = require("../error").DuplicateEmailError;
  */
 app.post('/api/create_user', async (req, res) => {
   const {first, last, password, email} = req.body;
+  if (await User.doesEmailExist(email)) throw new DuplicateEmailError();
   const user = await User.createUser(first, last, password, email);
   await User.updateAccessToken(user);
   await verificationCodeHelper(req.hostname, user.email);

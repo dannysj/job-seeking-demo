@@ -22,8 +22,7 @@ app.post('/api/get_user_info', async (req, res) => {
 app.post('/api/get_mentee_info', async (req, res) => {
   const {uid, mentee_uid} = req.body;
   if (!uid || !mentee_uid) throw new InvalidArgumentError();
-  const isMentorMenteeRelated = await MentorRelation.isMentorMenteeRelated(uid, mentee_uid);
-  const isUserAdmin = await User.isUserAdmin(uid);
+  const [isMentorMenteeRelated, isUserAdmin] = await Promise.all(MentorRelation.isMentorMenteeRelated(uid, mentee_uid), User.isUserAdmin(uid));
   if (!isMentorMenteeRelated && !isUserAdmin) throw new PermissionError();
   const user = await User.getUserByUserID(uid);
   res.json({code: 0, user});
@@ -66,11 +65,11 @@ app.post('/api/change_password', async (req, res) => {
 
 app.post('/api/verify_new_email', async (req, res) => {
   const {new_email, uid} = req.body;
-  if (User.checkEmailExist(new_email)) throw new DuplicateEmailError();
+  if (await User.doesEmailExist(new_email)) throw new DuplicateEmailError();
   const verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
   await User.addVerificationCodeByUserID(uid, verificationCode);
   await Email.sendVerificationCode(new_email, verificationCode);
-  res.json({code: 0});
+  res.json({code: 0, message: "发送验证码成功"});
 });
 
 app.post('/api/verify_code', async (req, res) => {

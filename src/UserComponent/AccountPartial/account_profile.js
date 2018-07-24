@@ -11,6 +11,7 @@ import {changeEmail, changeUserPassword, updateAccessToken, updateUser} from "..
 import {fetchMajorList} from "../../redux/majorListAction";
 import {connect} from 'react-redux'
 import validator from 'validator';
+import {getAuthHeader} from "../../utils";
 
 
 class AccountProfile extends React.Component {
@@ -19,12 +20,11 @@ class AccountProfile extends React.Component {
     this.state = {
       showImgCrop: false,
       attr_key: {},
-      verification_sent:  false,
-      verification_sent_count_down: 30
+      verification_sent_count_down: 0
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     store.dispatch(fetchMajorList());
   }
 
@@ -55,11 +55,6 @@ class AccountProfile extends React.Component {
 
     //FIXME: Fixe bunches data update
     for (const [attr, val] of Object.entries(attr_keys)) {
-      if (attr === "email" && !validator.isEmail(val)) {
-        NotificationManager.error('Email格式不正确', '错误');
-        return;
-      }
-
       if ((attr === "first" || attr === "last") && val.trim() === "") {
         NotificationManager.error('姓名不能为空', '错误');
         return;
@@ -72,42 +67,32 @@ class AccountProfile extends React.Component {
   }
  };
 
-  confirmPasswordChange = (e) =>{
-      e.preventDefault();
-      let curState = this.state;
-      axios.post("/api/verify_user", {password: this.state.attr_key["old_password"], email: this.props.user.email})
-          .then(res =>{
-              if (res.data.code === 1){
-                  NotificationManager.error("原密码不正确，请重新输入", "错误");
-                  return
-              }
+  confirmPasswordChange = (e) => {
+    e.preventDefault();
+    let curState = this.state;
+    axios.post("/api/verify_user", {
+      password: this.state.attr_key["old_password"],
+      email: this.props.user.email
+    }).then(res => {
+      store.dispatch(updateAccessToken(res.data.user.access_token));
 
-              store.dispatch(updateAccessToken(res.data.user.access_token));
+      if (this.state.attr_key["new_password"] === "") {
+        NotificationManager.error("新密码不能为空", "错误");
+        return
+      }
 
-              if (this.state.attr_key["new_password"] === ""){
-                  NotificationManager.error("新密码不能为空", "错误");
-                  return
-              }
+      if (this.state.attr_key["new_password"] !== this.state.attr_key["confirm_password"]) {
+        NotificationManager.error("确认密码和新密码不一致", "错误");
+        return;
+      }
 
-              if ( this.state.attr_key["new_password"] !== this.state.attr_key["confirm_password"] ){
-                  NotificationManager.error("确认密码和新密码不一致", "错误");
-                  return;
-              }
-
-              //this.confirmAttrChange(e)
-              store.dispatch(changeUserPassword(this.state.attr_key["new_password"])).then(()=>{
-                  curState.attr_key["new_password"] = ""
-                  curState.attr_key["old_password"] = ""
-                  curState.attr_key["confirm_password"] = ""
-                  delete curState.attr_key["new_password"];
-                  delete curState.attr_key["old_password"];
-                  delete curState.attr_key["confirm_password"];
-                  this.setState({curState});
-              });
-
-          }
-          )
-          .catch(err => console.log(err));
+      store.dispatch(changeUserPassword(this.state.attr_key["new_password"])).then(() => {
+        delete curState.attr_key["new_password"];
+        delete curState.attr_key["old_password"];
+        delete curState.attr_key["confirm_password"];
+        this.setState({curState});
+      });
+    });
   };
 
   handleResume = (e) => {
@@ -128,22 +113,16 @@ class AccountProfile extends React.Component {
     });
   };
 
-  confirmNewEmailChange = (e) =>{
-      e.preventDefault();
-      let curState = this.state;
-      axios.post("/api/verify_code", {code: this.state.attr_key.verification_code},
-                                     {headers: {access_token:store.getState().user.access_token}})
-          .then(res=>{
-                  if (res.data.code === 1){
-                      NotificationManager.error("验证码不正确", "错误");
-                      return
-                  }
-
-                  store.dispatch(updateUser('email', this.state.attr_key["new_email"]));
-                  delete curState.attr_key["new_email"];
-                  delete curState.attr_key["verification_code"];
-                }
-          )
+  confirmNewEmailChange = (e) => {
+    e.preventDefault();
+    let curState = this.state;
+    axios.post("/api/verify_code", {code: this.state.attr_key.verification_code}, getAuthHeader())
+      .then(res => {
+          store.dispatch(updateUser('email', this.state.attr_key["new_email"]));
+          delete curState.attr_key["new_email"];
+          delete curState.attr_key["verification_code"];
+        }
+      )
   };
 
   handleHeader = (e) => {
@@ -186,53 +165,33 @@ class AccountProfile extends React.Component {
   };
 
   sendVerificationCode = ()=>{
-    if (!validator.isEmail(this.state.attr_key.new_email)) {
+    const {new_email} = this.state.attr_key;
+
+    if (!validator.isEmail(new_email)) {
       NotificationManager.error('Email格式不正确', '错误');
       return;
     }
 
-    axios.post("/api/verify_new_email",
-        {new_email: this.state.attr_key.new_email},
-        {headers: {access_token:store.getState().user.access_token}})
-      .then(res=>{
-        NotificationManager.success("发送验证码成功", "成功");
-
+    axios.post("/api/verify_new_email", {new_email}, getAuthHeader()).then(res => {
         // Send verification
-        this.setState(
-          {
-            verification_sent_count_down: 30,
-            verification_sent: true
-          }
-        );
+        this.setState({verification_sent_count_down: 30});
 
-        let interval = setInterval(()=>{
-
-          let new_count_down = this.state.verification_sent_count_down - 1;
-          if (new_count_down === 0){
+        const interval = setInterval(() => {
+          const new_count_down = this.state.verification_sent_count_down - 1;
+          if (new_count_down === 0) {
             clearInterval(interval);
-            this.setState({
-              verification_sent: false,
-            })
+          } else {
+            this.setState({verification_sent_count_down: new_count_down})
           }
-          else {
-            this.setState({
-              verification_sent: true,
-              verification_sent_count_down: new_count_down
-            })
-          }
-        } ,1000)
-        }
-      );
-
-
-
+        }, 1000)
+      }
+    );
   };
 
   verficationCodeButton = ()=>{
 
-      if (this.state.verification_sent){
-
-          let sentence = this.state.verification_sent_count_down + "后可以再次发送验证码";
+      if (this.state.verification_sent_count_down > 0){
+          let sentence = this.state.verification_sent_count_down + "秒后可以再次发送验证码";
 
           return (
               <div className="ui disabled button">

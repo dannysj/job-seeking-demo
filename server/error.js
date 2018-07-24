@@ -34,11 +34,17 @@ class PermissionError extends AppError {
 }
 
 /**
- * When User/Mentor/Mentee/News... is not found
+ * When Mentor/Mentee/News... is not found
  */
 class ResourceNotFoundError extends AppError {
-  constructor() {
+   constructor() {
     super('找不到对象');
+  }
+}
+
+class UserNotFoundError extends AppError{
+  constructor() {
+    super('该用户不存在');
   }
 
 }
@@ -57,7 +63,13 @@ class FileUploadError extends AppError{
 
 class DuplicateEmailError extends AppError{
   constructor() {
-    super('邮件已被别的账户使用');
+    super('该邮箱地址已被别的账户使用');
+  }
+}
+
+class PasswordIncorrectError extends AppError{
+  constructor() {
+    super('密码不正确，请重新输入');
   }
 }
 
@@ -69,5 +81,7 @@ module.exports = {
   ResourceNotFoundError,
   InvalidArgumentError,
   FileUploadError,
-  DuplicateEmailError
+  DuplicateEmailError,
+  PasswordIncorrectError,
+  UserNotFoundError
 };

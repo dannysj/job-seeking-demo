@@ -5,6 +5,9 @@
 const db = require('./pool.js');
 const uuid4 = require('uuid/v4');
 const security = require('../security');
+const AppError = require("../error").AppError;
+const UserNotFoundError = require("../error").UserNotFoundError;
+const PasswordIncorrectError = require("../error").PasswordIncorrectError;
 const InvalidVerificationCodeError = require("../error").InvalidVerificationCodeError;
 const ResourceNotFoundError = require("../error").ResourceNotFoundError;
 const InvalidAccessTokenError = require("../error").InvalidAccessTokenError;
@@ -54,7 +57,18 @@ exports.getUserByUserID = async (uid) => {
  * @returns {user} the user object without password entry
  */
 exports.getUserByEmailAndPassword = async (email, password) => {
-  return await getUserHelper(`where email=$1 and password=$2`, [security.sanitizeEmail(email), security.hashPassword(password)]);
+  try {
+    return await getUserHelper(`where email=$1 and password=$2`, [security.sanitizeEmail(email), security.hashPassword(password)]);
+  } catch (e) {
+    if (e instanceof AppError) {// User does not exist
+      if (await this.doesEmailExist(email))
+        throw new PasswordIncorrectError();
+      else
+        throw new UserNotFoundError();
+    } else { // System Error
+      throw e;
+    }
+  }
 };
 
 /**
@@ -111,7 +125,10 @@ exports.getUserIDByAccessToken = async (access_token) => {
   try {
     return await getUserInfoHelper('id', `where access_token = $1`, [access_token]);
   } catch (e) {
-    throw new InvalidAccessTokenError();
+    if (e instanceof AppError)
+      throw new InvalidAccessTokenError();
+    else
+      throw e;
   }
 };
 
@@ -147,6 +164,18 @@ const getUserInfoHelper = async (column, whereClause, values) => {
   const {rows} = await db.query(query, values);
   if (rows.length === 0) throw new ResourceNotFoundError();
   return rows[0][column];
+};
+
+
+/**
+ *
+ * @param email Email Address
+ * @returns {Promise<boolean>} Whether user with given email exists
+ */
+exports.doesEmailExist = async (email) => {
+  const query = `select * from users where email = $1`;
+  const {rows} = await db.query(query, [email]);
+  return rows.length !== 0
 };
 
 /*                                                  Update User Info                                                  */
@@ -242,9 +271,3 @@ exports.addVerificationCodeByUserID = async (uid, verification_code) => {
                   on conflict (uid) do update set verification_code = $2, time_added=now();`;
   await db.query(query, [uid, verification_code]);
 };
-
-exports.checkEmailExist = async (email) => {
-  const query = `select * from users where email = $1`;
-  const {rows} = await db.query(query, [email])
-  return rows.length !== 0
-}
