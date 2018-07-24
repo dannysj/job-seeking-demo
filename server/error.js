@@ -55,6 +55,12 @@ class FileUploadError extends AppError{
   }
 }
 
+class DuplicateEmailError extends AppError{
+  constructor() {
+    super('邮件已被别的账户使用');
+  }
+}
+
 module.exports = {
   AppError,
   InvalidAccessTokenError,
@@ -63,4 +69,5 @@ module.exports = {
   ResourceNotFoundError,
   InvalidArgumentError,
   FileUploadError,
+  DuplicateEmailError
 };

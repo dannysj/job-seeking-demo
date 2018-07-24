@@ -9,6 +9,7 @@ const MentorRelation = require("../model/Order");
 const InvalidVerificationCodeError = require("../error").InvalidVerificationCodeError;
 const PermissionError = require("../error").PermissionError;
 const InvalidArgumentError = require("../error").InvalidArgumentError;
+const DuplicateEmailError = require("../error").DuplicateEmailError;
 const app = express.Router();
 
 app.post('/api/get_user_info', async (req, res) => {
@@ -65,6 +66,7 @@ app.post('/api/change_password', async (req, res) => {
 
 app.post('/api/verify_new_email', async (req, res) => {
   const {new_email, uid} = req.body;
+  if (User.checkEmailExist(new_email)) throw new DuplicateEmailError();
   const verificationCode = Math.random().toString(32).replace(/[^a-z]+/g, '');
   await User.addVerificationCodeByUserID(uid, verificationCode);
   await Email.sendVerificationCode(new_email, verificationCode);
