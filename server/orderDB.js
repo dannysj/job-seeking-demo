@@ -1,4 +1,4 @@
-const db = require('./_dbPool.js');
+const db = require('./model/pool.js');
 
 exports.addMentorShip = (uid, mid, service_name, service_price, note, callback) => {
   const query = `insert into mentor_rel

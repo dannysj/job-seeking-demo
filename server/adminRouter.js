@@ -8,7 +8,7 @@ const sharp = require('sharp');
 const express = require('express');
 const app = express();
 const multer = require('multer');
-const image_compression_size = require("./_config").image_compression_size;
+const image_compression_size = require("./config").image_compression_size;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

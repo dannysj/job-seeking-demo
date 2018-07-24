@@ -1,0 +1,163 @@
+.cloud {
+  width: 350px; height: 120px;
+
+
+  background: #FFF;
+
+  border-radius: 100px;
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+
+  position: absolute;
+
+  z-index:1;
+  transition: ease 1s;
+
+  &:after, &:before {
+    content: '';
+    position: absolute;
+    background: #FFF;
+    z-index: 1;
+  }
+
+  &:before {
+    width: 180px; height: 180px;
+    top: -90px; right: 50px;
+
+    border-radius: 200px;
+    -webkit-border-radius: 200px;
+    -moz-border-radius: 200px;
+  }
+  &:after {
+    width: 100px; height: 100px;
+    top: -50px; left: 50px;
+
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+  }
+}
+
+.error-index {
+  background: #0D0F41;
+  color: #FFF;
+  overflow: hidden;
+  z-index: -2;
+  min-height: 100%;
+  position: relative;
+
+  .clouds {
+    position: absolute;
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    min-height: 30%;
+    color: black;
+    background: #FFF;
+    min-width: 40%;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-flow: column;
+    z-index: 3;
+    text-align: center;
+    padding: 0em 2em;
+    margin: 1em 0em 1em 0em;
+
+    .title {
+      &.logo-item {
+        font-size: 2em;
+        display: inline-block;
+        line-height: 1.2;
+      }
+    }
+  }
+
+}
+
+.clouds {
+  > * {
+    &:nth-child(1) {
+      top:5%;
+      left:5%;
+      -webkit-transform: scale(0.4);
+      -moz-transform: scale(0.4);
+      transform: scale(0.4);
+      opacity: 0.9;
+
+    }
+
+    &:nth-child(2) {
+      top:25%;
+      left:15%;
+      -webkit-transform: scale(0.3);
+      -moz-transform: scale(0.3);
+      transform: scale(0.3);
+
+    }
+
+    &:nth-child(3) {
+      left: 70%;
+      top:15%;
+      -webkit-transform: scale(0.6);
+      -moz-transform: scale(0.6);
+      transform: scale(0.6);
+      opacity: 0.6;
+
+    }
+
+    &:nth-child(4) {
+      left: 40%; top: 80%;
+
+      -webkit-transform: scale(0.6);
+      -moz-transform: scale(0.6);
+      transform: scale(0.6);
+      opacity: 0.7;
+
+    }
+
+    &:nth-child(5) {
+      left: 80%; top: 60%;
+
+      -webkit-transform: scale(0.75);
+      -moz-transform: scale(0.75);
+      transform: scale(0.75);
+      opacity: 0.75;
+
+
+    }
+
+    &:nth-child(6) {
+      left: -5%; top: 55%;
+
+      -webkit-transform: scale(0.5);
+      -moz-transform: scale(0.5);
+      transform: scale(0.5);
+      opacity: 0.8;
+
+
+    }
+  }
+}
+
+
+@-webkit-keyframes movingcloud {
+    0% {left: 80%;}
+    100% {left: -20%;}
+}
+@-moz-keyframes movingcloud {
+  0% {left: 80%;}
+  100% {left: -20%;}
+}
+@-o-keyframes movingcloud {
+  0% {left: 80%;}
+  100% {left: -20%;}
+}

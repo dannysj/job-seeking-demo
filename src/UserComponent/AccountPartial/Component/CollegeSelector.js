@@ -16,11 +16,18 @@ class CollegeSelector extends Component {
     this.triggerSearch()
   }
 
-  // handleAddition = (e, {value}) => {
-  //   this.setState({
-  //     college_list: [{text: value, value}, ...this.state.college_list]
-  //   })
-  // };
+  handleAddition = (e, {value}) => {
+    axios.post('/api/add_college', {college_name: value}).then(res => {
+      if (res.data.code === 0) {
+        const {id, name}= res.data.college;
+        this.setState({custom_college: {key: id, text: name, value: name}})
+      } else {
+        NotificationManager.error('无法添加大学', '错误');
+      }
+    }).catch(e => {
+      NotificationManager.error('无法添加大学', '错误');
+    })
+  };
 
   handleSearchChange = (e, {searchQuery}) => {
     clearTimeout(this.timer);
@@ -43,14 +50,15 @@ class CollegeSelector extends Component {
 
 
   render() {
+    const college_list = [...this.state.college_list, this.state.custom_college];
     return (<Dropdown name='cid' placeholder='院校名称' fluid search selection
-                      // allowAdditions
+                      allowAdditions
                       loading={this.state.isLoadingCollegeList}
                       onSearchChange={this.handleSearchChange}
-                      options={this.state.college_list.concat(this.state.custom_college)}
+                      options={college_list}
                       onChange={this.props.handleChange}
-                      // onAddItem={this.handleAddition}
-                      defaultValue={this.props.defaultValue.value}/>)
+                      onAddItem={this.handleAddition}
+                      defaultValue={this.state.custom_college.value}/>)
   }
 }
 

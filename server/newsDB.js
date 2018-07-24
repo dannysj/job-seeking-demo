@@ -1,4 +1,4 @@
-const db = require('./_dbPool.js');
+const db = require('./model/pool.js');
 
 exports.createNews = (news, callback) => {
   const query = `insert into news

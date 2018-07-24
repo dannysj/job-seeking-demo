@@ -9,8 +9,8 @@ result in irrevertable consequences (i.e. failure in user auth)
 *****************************************************************/
 
 
-const security = require('../security');
-const db = require('../_dbPool');
+const security = require('../middleware/access_token_validator');
+const db = require('../model/pool');
 
 const selection_query = `select id,service from mentor_info`;
 

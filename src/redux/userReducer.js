@@ -4,8 +4,6 @@ import axios from "axios/index";
 export default (state = JSON.parse(localStorage.getItem('user')), action) => {
   switch (action.type) {
     case "LOGOUT":
-      delete axios.defaults.headers.common['access_token'];
-      localStorage.removeItem('user');
       state = null;
       break;
 
@@ -27,8 +25,6 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
 
 
     case "FETCH_USER_REJECTED":
-      delete axios.defaults.headers.common['access_token'];
-      localStorage.removeItem('user');
       state = null;
       break;
 
@@ -67,9 +63,10 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
       break;
   }
 
-  if (state !== null) {
-    axios.defaults.headers.common['access_token'] = state.access_token;
+  if (state) {
     localStorage.setItem('user', JSON.stringify(state));
+  } else {
+    localStorage.removeItem('user');
   }
 
   return state;

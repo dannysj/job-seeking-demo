@@ -24,16 +24,33 @@ class Mentor extends Component {
       filterPressed: false,
       keyword: '',
       left: 100,
+      page: 1,
     };
+
+    this.handlePageChange = this.handlePageChange.bind(this);
+    this.saveState = this.saveState.bind(this);
   }
 
   componentWillMount() {
     store.dispatch(fetchMentorList());
+    if (this.props.history.location.state) {
+      if (this.props.history.location.state.page) {
+    
+      this.setState({page: this.props.history.location.state.page});
+    }
+    }
+  }
+
+  saveState() {
+
+    this.props.history.push('/mentor',this.state)
   }
 
   toggle_outside = (e) => {
     this.setState({filterPressed: false});
   };
+
+  handlePageChange = (e, {activePage}) => this.setState({page: activePage});
 
   handleRemoveButton = (e, title) => {
     let curState = this.state;
@@ -111,7 +128,7 @@ class Mentor extends Component {
           </div>
         </div>
         <div onClick={this.toggle_outside}>
-          <MentorProfileContainer mentors={filteredMentors} />
+          <MentorProfileContainer page={this.state.page} saveState={this.saveState} handlePageChange={this.handlePageChange} mentors={filteredMentors} />
         </div>
       </div>
     );

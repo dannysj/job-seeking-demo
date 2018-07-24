@@ -12,48 +12,67 @@ import './MentorProfile.less'
   unfollowUser: unfollowUser
 })
 class MentorProfile extends Component {
-  renderRow = (icon, text) =>
-    (<Table.Row className="table-clean-row">
-      <Table.Cell><img className="title-icon" alt="position" src={icon}/></Table.Cell>
-      <Table.Cell>
+  renderRow = (name, text) =>
+    (<div className="item">
+        <div className="logo-item">{name}</div>
         <div className="card-info">{text}</div>
-      </Table.Cell>
-    </Table.Row>);
+      </div>
+    );
 
   render() {
     const mentor = this.props.mentor;
     const isFollowing = this.props.followee.includes(mentor.uid);
-
+    //FIXME:
+    const isAvailable = true;
+    const backimgstyle = {
+      backgroundImage: 'url('+mentor.profile_pic+')',
+      backgroundPosition: 'center center no-repeat',
+      backgroundSize: 'cover',
+      filter:'blur(1em)',
+      };
     return (
       <div className="mentor-container" key={mentor.mid}>
         <div className="inner-container">
           <div className="mentor-profile">
+            <div className="mentor-profile-background" style={backimgstyle}> </div>
+            <div className="">
             <img className="mentor-picture" src={mentor.profile_pic} alt={mentor.last + ' ' + mentor.first}/>
-            <br/>
+            <br/><br/>
             <div><strong>{mentor.last + ' ' + mentor.first}</strong></div>
+            </div>
+            <div className="mentor-buttons-container">
+            {
+              (this.props.user) ? (      <div className={`mentor-button ${isFollowing ? 'following' : 'not-following'}-button`}>
+                      <div onClick={() => isFollowing ? this.props.unfollowUser(mentor.uid) : this.props.followUser(mentor.uid)}/>
+                    </div>) : (<div></div>)
+            }
+
+            <div className={`mentor-button ${isAvailable ? 'available' : 'not-available'}-button`}>
+              <div></div>
+            </div>
+            </div>
           </div>
-          <div className="vertical-divider"/>
+
           <div className="mentor-text">
-            <Table className="table-clean-border" basic='very'>
-              <Table.Body>
-                {this.renderRow('/icons/company.png', mentor.offer_company)}
-                {this.renderRow('/icons/school.png', mentor.college_name)}
-                {this.renderRow('/icons/position.png', mentor.offer_title)}
-                {this.renderRow('/icons/age.png', mentor.major.join(', '))}
-              </Table.Body>
-            </Table>
+            <div className="mentor-text-inner">
+                {this.renderRow('在读院校', mentor.college_name)}
+                {this.renderRow('offer公司', mentor.offer_company)}
+                {this.renderRow('专业', mentor.major.join(', '))}
+                {this.renderRow('offer职位', mentor.offer_title)}
+
+
+
+
+            </div>
           </div>
         </div>
 
         <div className="connect-circle-container">
-          <Link to={'/mentor/' + mentor.mid}>
+          <Link to={'/mentor/' + mentor.mid} onClick={this.props.saveState}>
             <div className="connect-circle">
               <div>详情</div>
             </div>
           </Link>
-          <div className={`connect-circle ${isFollowing ? 'following' : 'not-following'}-button`}>
-            <div onClick={() => isFollowing ? this.props.unfollowUser(mentor.uid) : this.props.followUser(mentor.uid)}/>
-          </div>
         </div>
 
       </div>

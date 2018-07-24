@@ -76,8 +76,10 @@ class News extends React.Component {
           this.props.news_list.map((el,index) => (
             <Link to={'/news/'+el.id} key={el.id}>
             <div className="list-news-container new-big" key={el.id}>
-              <img className={"list-news-picture" + (this.state.loaded[index] ? "" : " on-load")} src={el.thumbnail} alt={el.title} onLoad={() => {
+              <div className={(this.state.loaded[index] ? "" : "list-news-picture on-load")}>
+              <img className="list-news-picture"  src={el.thumbnail} alt={el.title} onLoad={() => {
                 this.handleImageLoaded(index, "top")}}/>
+                </div>
               <div className="list-news-text">
                 <div className="list-news-title">{el.title}</div>
                 <div className="list-news-author-details">
@@ -107,8 +109,10 @@ class News extends React.Component {
             this.props.news_list.map((el,index) => (
               <Link to={'/news/'+el.id} key={el.id}>
               <div className="list-news-container" key={el.id}>
-                <img className={"list-news-picture" + (this.state.loaded_now[index] ? "" : " on-load")} src={el.thumbnail} alt={el.title} onLoad={() => {
+              <div className={(this.state.loaded[index] ? "" : "list-news-picture on-load")}>
+                <img className="list-news-picture" src={el.thumbnail} alt={el.title} onLoad={() => {
                   this.handleImageLoaded(index, "trend")}}/>
+                  </div>
                 <div className="list-news-text">
                   <div className="list-news-title">{el.title}</div>
                   <div className="list-news-subtitle">{el.last + el.first}</div>
