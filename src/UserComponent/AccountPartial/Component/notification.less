@@ -1,0 +1,22 @@
+.account-inner-spacing > .notification {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-around;
+  align-items: baseline;
+  position: relative;
+  background: white;
+  box-shadow: none;
+  > .item {
+    padding-bottom: 1em;
+    width: 100%;
+    > .segment {
+      width: 100%;
+      > .timestamp {
+        float: right;
+      }
+    }
+  }
+  > .pagination {
+    align-self: center;
+  }
+}

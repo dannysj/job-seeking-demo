@@ -1,8 +1,7 @@
-const db = require('./orderDB.js');
-const express = require('express');
-const app = express.Router();
+const Mentorship = require('../model/Order.js');
+const app = require('express').Router();
 const paypal = require('paypal-rest-sdk');
-const messageDispatch = require('./messageDB.js');
+const Message = require('../model/Message.js');
 
 paypal.configure({
   'mode': 'live', //sandbox or live
@@ -12,24 +11,23 @@ paypal.configure({
 
 var pendingPayments = {};
 
-app.post('/callback/payment_complete', (req, res) => {
+app.post('/callback/payment_complete', async (req, res) => {
   console.log(JSON.stringify(req.body));
   res.json();
   if (pendingPayments[req.body.orderid].res) {
-    db.addMentorShip(pendingPayments[req.body.orderid].uid,
-      pendingPayments[req.body.orderid].mid,
-      pendingPayments[req.body.orderid].service_name,
-      pendingPayments[req.body.orderid].service_price,
-      (err) => {
-        if (err) {
-          console.log(err);
-          pendingPayments[req.body.orderid].res.json({code: 1, errMsg: 'Database Error'});
-          pendingPayments[req.body.order_id] = null;
-          return;
-        }
-        pendingPayments[req.body.orderid].res.json({code: 0});
-        pendingPayments[req.body.order_id] = null;
-      });
+    try {
+      await Mentorship.addMentorShip(pendingPayments[req.body.orderid].uid,
+        pendingPayments[req.body.orderid].mid,
+        pendingPayments[req.body.orderid].service_name,
+        pendingPayments[req.body.orderid].service_price);
+
+      pendingPayments[req.body.orderid].res.json({code: 0});
+      pendingPayments[req.body.order_id] = null;
+    } catch (err) {
+      console.log(err);
+      pendingPayments[req.body.orderid].res.json({code: 1, errMsg: 'Database Error'});
+      pendingPayments[req.body.order_id] = null;
+    }
   }
   else {
 // Error Handling
@@ -48,29 +46,23 @@ app.post('/api/poll_payment', (req, res) => {
 });
 
 
-app.post('/api/create_order', (req, res) => {
+app.post('/api/create_order', async (req, res) => {
   // Temporary code for internal testing.
   // No payment required, get straight through as if payment confirmed
-  db.addMentorShip(req.body.uid,
+  const {mentee_name, mentor_uid, mentor_name} = await Mentorship.addMentorShip(req.body.uid,
     req.body.mid,
     req.body.service_name,
     req.body.service_price,
-    req.body.note,
-    (err, mentee_name, mentor_uid, mentor_name) => {
-      if (err) {
-        console.log(err);
-        res.json({code: 1});
-        return;
-      }
-      res.json({code: 0, url: '/account/mentor'});
-      console.log('Return: '+mentee_name+' '+mentor_uid+' '+mentor_name);
-      messageDispatch.sendSystemMessage(mentor_uid,
-        `${mentee_name} 刚刚申请了您的服务 ${req.body.service_name}，备注：${req.body.note}`,
-        (err)=>  console.log(err));
-      messageDispatch.sendSystemMessage(req.body.uid,
-        `您刚刚申请了${mentor_name}的服务 ${req.body.service_name}，请等候导师处理`,
-        (err)=>  console.log(err));
-    });
+    req.body.note);
+
+  res.json({code: 0, url: '/account/mentor'});
+
+  console.log('Return: ' + mentee_name + ' ' + mentor_uid + ' ' + mentor_name);
+  await Message.sendSystemMessage(mentor_uid,
+    `${mentee_name} 刚刚申请了您的服务 ${req.body.service_name}，备注：${req.body.note}`);
+  await Message.sendSystemMessage(req.body.uid,
+    `您刚刚申请了${mentor_name}的服务 ${req.body.service_name}，请等候导师处理`);
+
 //   var timestamp = new Date().getTime();
 //
 //   var create_payment_json = {
@@ -120,7 +112,7 @@ app.post('/api/create_order', (req, res) => {
 });
 
 app.get('/return/payment_complete', (req, res) => {
-  paypal.payment.get(req.query.paymentId, (err, payment) => {
+  paypal.payment.get(req.query.paymentId, async (err, payment) => {
     console.dir(payment);
     if (err) {
       console.log(err);
@@ -130,19 +122,19 @@ app.get('/return/payment_complete', (req, res) => {
 
     // if(payment.payer.status == 'VERIFIED'){ // TODO: uncommment these
 
-    db.addMentorShip(pendingPayments[payment.id].uid,
-      pendingPayments[payment.id].mid,
-      pendingPayments[payment.id].service_name,
-      pendingPayments[payment.id].service_price,
-      (err) => {
-        if (err) {
-          console.log(err);
-          pendingPayments[payment.id] = null;
-          return;
-        }
-        pendingPayments[payment.id] = null;
-        res.redirect('/account/mentor');
-      });
+    try {
+      await Mentorship.addMentorShip(pendingPayments[payment.id].uid,
+        pendingPayments[payment.id].mid,
+        pendingPayments[payment.id].service_name,
+        pendingPayments[payment.id].service_price);
+
+      pendingPayments[payment.id] = null;
+      res.redirect('/account/mentor');
+    } catch (err) {
+      console.log(err);
+      pendingPayments[payment.id] = null;
+    }
+
 
     // }
     // else{

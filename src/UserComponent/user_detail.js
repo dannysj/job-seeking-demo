@@ -39,7 +39,7 @@ class UserDetail extends Component {
     }
     else {
       axios.post(
-        '/api/get_user_info',
+        '/api/get_mentor_info',
         {mentee_uid:this.props.match.params.uid},
         {headers:{access_token: this.props.user.access_token}})
       .then(res => {

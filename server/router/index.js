@@ -12,15 +12,4 @@ fs.readdirSync(__dirname).forEach(file => {
   }
 });
 
-// Reading every files ends with Router.js in the parent folder
-const parentDir = path.join(__dirname, '..');
-fs.readdirSync(parentDir).forEach(file => {
-  if (file.endsWith('Router.js')) {
-    const filePath = path.resolve(parentDir, file);
-    const router = require(filePath);
-    app.use('/', router);
-  }
-});
-
-
 module.exports = app;

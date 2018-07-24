@@ -23,14 +23,9 @@ class CreateArticle extends React.Component {
     let handler = this;
 
     axios.post('/api/file/general_upload', data).then(res => {
-      if(res.data.code === 0){
-        let curState = handler.state;
-        curState['news']['thumbnail'] = res.data.url;
-        handler.setState(curState);
-      }
-      else{
-        NotificationManager.error('无法上传图片','错误');
-      }
+      let curState = handler.state;
+      curState['news']['thumbnail'] = res.data.url;
+      handler.setState(curState);
     });
   };
 
