@@ -20,7 +20,7 @@ app.post('/api/create_user', async (req, res) => {
   const user = await User.createUser(first, last, password, email);
   await User.updateAccessToken(user);
   await verificationCodeHelper(req.hostname, user.email);
-  res.json({code: 0, user: user});
+  res.json({code: 0, user: user, message: '注册成功，请检查邮件并激活此账号'});
 });
 
 app.post('/api/resend_verification_code', async (req, res) => {

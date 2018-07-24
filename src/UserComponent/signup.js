@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import React, {Component} from 'react';
+import {NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './user.less';
 import store from "../redux";
@@ -24,22 +24,15 @@ class Signup extends Component {
 
   handleSubmit (e) {
     e.preventDefault();
-    if(this.state.user.password === this.state.user.cpassword){
-      axios.post('/api/create_user',this.state.user).then(res => {
-        if(res.data.code===0){
-          store.dispatch(setUser(res.data.user));
-          this.context.router.history.push('/account');
-            NotificationManager.success('请检查邮件并激活此账号', '注册成功');
-        }
-        else{
-          NotificationManager.error('无法成功注册您的账户', '错误');
-        }
-      });
-    }
-    else{
+    if (this.state.user.password !== this.state.user.cpassword) {
       NotificationManager.error('两次输入的密码不一致', '错误');
+      return;
     }
 
+    axios.post('/api/create_user', this.state.user).then(res => {
+      store.dispatch(setUser(res.data.user));
+      this.context.router.history.push('/account');
+    });
   }
 
   handleChange (e) {

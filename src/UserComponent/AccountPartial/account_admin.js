@@ -94,7 +94,7 @@ class AccountAdmin extends React.Component {
   handleSubmitNews(){
     let data = this.state.news;
     data.author_id = this.props.user.id;
-    axios.post('/api/create_news', data).then(res => {
+    axios.post('/api/create_news', data, getAuthHeader()).then(res => {
       NotificationManager.success('干货成功上传', '成功');
       this.context.router.history.push('/news/' + res.data.nid);
     });
