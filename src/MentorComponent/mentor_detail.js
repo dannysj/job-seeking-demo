@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Button, Image, Divider, Icon, Modal, TextArea, Header, Input} from 'semantic-ui-react';
+import {Button, Header, Icon, Image, Input, Modal} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {NotificationManager} from 'react-notifications';
 import './mentor.less';
 import CommentBox from "./CommentBox";
 import Arrow from "../Components/Arrow";
@@ -11,6 +11,7 @@ import {connect} from 'react-redux'
 import store from "../redux";
 import {fetchMentorDetail} from "../redux/mentorDetailAction";
 import {getAuthHeader} from "../utils";
+import Loading from "../Components/Loading";
 
 class MentorDetail extends Component {
   constructor (props) {
@@ -184,12 +185,8 @@ class MentorDetail extends Component {
 
     const mentor = this.props.mentorDetailStore[this.props.match.params.mid];
 
-    if(!mentor)
-      return (
-        <div className="loading-news-view">
-          <Button basic loading>Loading</Button>
-        </div>
-      );
+    if (!mentor)
+      return (<Loading/>);
 
     let modalClassName='ui modal';
     const backimgstyle = {

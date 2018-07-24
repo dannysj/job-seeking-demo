@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Button, Image} from 'semantic-ui-react';
+import {Image} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import './user.less';
 import {getAuthHeader} from "../utils";
+import Loading from "../Components/Loading";
 
 class UserDetail extends Component {
   state = {
@@ -88,11 +89,7 @@ class UserDetail extends Component {
     }
 
     if (this.state.isLoading) {
-      return (
-        <div className="loading-news-view">
-          <Button basic loading>Loading</Button>
-        </div>
-      );
+      return (<Loading/>);
     }
 
     return (
