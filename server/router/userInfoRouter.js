@@ -5,7 +5,7 @@
 const User = require('../model/User');
 const express = require('express');
 const Email = require("../../mail/Mail");
-const MentorRelation = require("../model/Order");
+const MentorRelation = require("../model/MentorRelation");
 const InvalidVerificationCodeError = require("../error").InvalidVerificationCodeError;
 const PermissionError = require("../error").PermissionError;
 const InvalidArgumentError = require("../error").InvalidArgumentError;
@@ -22,9 +22,12 @@ app.post('/api/get_user_info', async (req, res) => {
 app.post('/api/get_mentee_info', async (req, res) => {
   const {uid, mentee_uid} = req.body;
   if (!uid || !mentee_uid) throw new InvalidArgumentError();
-  const [isMentorMenteeRelated, isUserAdmin] = await Promise.all(MentorRelation.isMentorMenteeRelated(uid, mentee_uid), User.isUserAdmin(uid));
+  const [isMentorMenteeRelated, isUserAdmin] = await Promise.all([
+    MentorRelation.isMentorMenteeRelated(uid, mentee_uid),
+    User.isUserAdmin(uid)
+  ]);
   if (!isMentorMenteeRelated && !isUserAdmin) throw new PermissionError();
-  const user = await User.getUserByUserID(uid);
+  const user = await User.getUserByUserID(mentee_uid);
   res.json({code: 0, user});
 });
 

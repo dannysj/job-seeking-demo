@@ -3,7 +3,7 @@ const Mentor = require("../model/Mentor");
 // Mentor.getUserIDByMentorID(21).then(console.log).catch(console.log);
 
 
-const MentorRelation = require('../model/Order')
+const MentorRelation = require('../model/MentorRelation')
 
 MentorRelation.isMentorMenteeRelated(71,14).then(console.log).catch(console.log)
 MentorRelation.isMentorMenteeRelated(71,19).then(console.log).catch(console.log)

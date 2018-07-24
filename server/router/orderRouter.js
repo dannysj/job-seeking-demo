@@ -1,4 +1,4 @@
-const Mentorship = require('../model/Order.js');
+const Mentorship = require('../model/MentorRelation.js');
 const app = require('express').Router();
 const paypal = require('paypal-rest-sdk');
 const Message = require('../model/Message.js');
@@ -49,20 +49,17 @@ app.post('/api/poll_payment', (req, res) => {
 app.post('/api/create_order', async (req, res) => {
   // Temporary code for internal testing.
   // No payment required, get straight through as if payment confirmed
-  const {mentee_name, mentor_uid, mentor_name} = await Mentorship.addMentorShip(req.body.uid,
-    req.body.mid,
-    req.body.service_name,
-    req.body.service_price,
-    req.body.note);
+  const {uid, mid, service_name, service_price, note} = req.body;
 
-  res.json({code: 0, url: '/account/mentor'});
+  const {mentee_name, mentor_uid, mentor_name} = await Mentorship.addMentorShip(uid, mid, service_name, service_price, note);
 
   console.log('Return: ' + mentee_name + ' ' + mentor_uid + ' ' + mentor_name);
   await Message.sendSystemMessage(mentor_uid,
-    `${mentee_name} 刚刚申请了您的服务 ${req.body.service_name}，备注：${req.body.note}`);
+    `${mentee_name} 刚刚申请了您的服务 ${service_name}，备注：${note}`);
   await Message.sendSystemMessage(req.body.uid,
-    `您刚刚申请了${mentor_name}的服务 ${req.body.service_name}，请等候导师处理`);
+    `您刚刚申请了${mentor_name}的服务 ${service_name}，请等候导师处理`);
 
+  res.json({code: 0, url: '/account/mentor'});
 //   var timestamp = new Date().getTime();
 //
 //   var create_payment_json = {

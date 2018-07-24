@@ -17,6 +17,18 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   axios.defaults.baseURL = process.env.REACT_APP_API_HOST;
 }
 
+axios.interceptors.request.use(
+  (config) => {
+    if (config.headers.access_token === null){
+      NotificationManager.error('请先登录', '错误');
+      throw new axios.Cancel('请先登录');
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  });
+
 axios.interceptors.response.use(
   (response) => {
     if (response.data && response.data.message)
@@ -24,22 +36,22 @@ axios.interceptors.response.use(
     return response;
   },
   (error) => {
-    let message;
+    if (!(error instanceof axios.Cancel)) // See axios.interceptors.request
+      NotificationManager.error(getMessagefromError(error), '错误');
 
-    if (error.response) { // The server has a response, but the status code is not 20x
-      if (error.response.data && error.response.data.message) {
-        message = error.response.data.message;
-      } else {
-        message = '服务器错误' // Just in case. This should not happen in reality
-      }
-    } else { // The server has no response
-      message = '网络连接错误，无法访问服务器'
-    }
-
-    NotificationManager.error(message, '错误');
     return Promise.reject(error);
   }
 );
+
+const getMessagefromError = (error) => {
+  if (!error.response) // The server has no response
+    return '网络连接错误，无法访问服务器';
+
+  if (error.response.data && error.response.data.message)  // The server has a response, but the status code is not 20x
+    return error.response.data.message;
+
+  return '未知服务器错误'
+};
 
 ReactDOM.render(
   <Provider store={store}>

@@ -1,6 +1,20 @@
 const db = require('./pool.js');
 const ResourceNotFoundError = require("../error").ResourceNotFoundError;
 
+exports.getMentorIDbyRelationID = async (mrid) => {
+  const query = `select mid from mentor_rel where id = $1`;
+  const {rows} = await db.query(query, [mrid]);
+  return rows[0].mid;
+};
+
+
+exports.getMenteeUserIDbyRelationID = async (mrid) => {
+  const query = `select uid from mentor_rel where id = $1`;
+  const {rows} = await db.query(query, [mrid]);
+  return rows[0].uid;
+};
+
+
 exports.getRelMentors = async (uid) => {
   const query = `
     select mr.id           as mrid,
@@ -58,7 +72,7 @@ exports.isMentorMenteeRelated = async (mentor_uid, mentee_uid) => {
   return rowCount > 0;
 };
 
-exports.setMentorConfirm = async (mentor_uid, mrid) => {
+exports.setMentorConfirm = async (mrid) => {
   const query = `
     update mentor_rel
     set status = 2
@@ -67,7 +81,7 @@ exports.setMentorConfirm = async (mentor_uid, mrid) => {
   await db.query(query, [mrid])
 };
 
-exports.setMentorDecision = async (mentor_uid, mrid, agreed) => {
+exports.setMentorDecision = async (mrid, agreed) => {
   let decision_status = (agreed === 1) ? 1 : 50;
   const query = `
     update mentor_rel
@@ -101,7 +115,7 @@ exports.addMentorShip = async (uid, mid, service_name, service_price, note) => {
 
 
   // get mentor info
-  const mentor_query = `select m.uid as uid, concat(u.last, u.first) as mentor_name
+  const mentor_query = `select m.uid as mentor_uid, concat(u.last, u.first) as mentor_name
                         from mentor_info m,
                              users u
                         where m.uid = u.id

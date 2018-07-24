@@ -5,66 +5,42 @@ import {Button} from 'semantic-ui-react';
 import axios from 'axios';
 import '../account.less';
 import {getAuthHeader} from "../../utils";
+import {fetchUser} from "../../redux/userAction";
+import store from "../../redux";
 
 class AccountService extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state =
-      {
-        loaded: [],
-        mentees: []
-      };
-
-    this.updateInfo = this.updateInfo.bind(this);
-    this.handleConfirm = this.handleConfirm.bind(this);
-    this.handleDecision = this.handleDecision.bind(this);
-    this.handleImageLoaded = this.handleImageLoaded.bind(this);
-    //this.updateInfo();
+  state = {
+    loaded: [],
+    mentees: []
+  };
+  componentDidMount() {
+    this.updateInfo();
   }
 
-  /*  componentDidMount() {
-      //FIXME:
-
-      let list = this.props.mentees.map((e) => {
-      //let list = this.state.mentees.map((e) => {
-        return e.id;
-      })
-      this.setState({loaded: list});
-    }*/
-
-  updateInfo() {
-    var handler = this;
-    console.log(this.props.user.access_token);
-    axios.post('/api/get_rel_mentees', {}, {headers: {access_token: this.props.user.access_token}}).then(res => {
+  updateInfo = ()  => {
+    axios.post('/api/get_rel_mentees', {}, getAuthHeader()).then(res => {
       const list = res.data.mentees.map(e => e.id);
-      handler.setState({mentees: res.data.mentees, loaded: list});
+      this.setState({mentees: res.data.mentees, loaded: list});
     });
-  }
+  };
 
-  handleImageLoaded(index) {
+  handleImageLoaded = (index) => {
     let loaded = this.state.loaded;
-    let newLoaded = loaded.filter(e => e !== index)
+    let newLoaded = loaded.filter(e => e !== index);
     this.setState({loaded: newLoaded});
+  };
 
-  }
-
-  handleConfirm(mrid) {
-    var handler = this;
+  handleConfirm = (mrid) => {
     axios.post('/api/mentor_confirm', {mrid}, getAuthHeader()).then(res => {
-      handler.updateInfo();
+      this.updateInfo();
     });
-  }
+  };
 
-  handleDecision(mrid, agreed) {
+  handleDecision = (mrid, agreed) => {
     axios.post('/api/mentor_decision', {mrid, agreed}, getAuthHeader()).then(res => {
-      console.log(res.data);
-      window.location.reload(); // TODO: the reason I used reload here is because
-                                // this.updateInfo only updates the page content
-                                // it doesn't update the number of unread system messages
-                                // we need to change to a decent way of doing this
+      store.dispatch(fetchUser()); // to update notification
     });
-  }
+  };
 
 
   render() {
