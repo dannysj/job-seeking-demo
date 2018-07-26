@@ -10,7 +10,7 @@ app.post('/api/mentor_apply', async (req, res) => {
 });
 
 app.post('/api/mentor_edit', async (req, res) => {
-  await Mentor.editMentorInfo(req.body);
+  await Mentor.editMentorApplication(req.body);
   res.json({code: 0, message: '我们已收到您的表格修改'});
 });
 

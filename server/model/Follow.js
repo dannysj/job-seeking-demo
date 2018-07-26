@@ -1,3 +1,6 @@
+/**
+ * @module model/Follow
+ */
 const db = require('./pool.js');
 // Table: follow_rel
 // follower

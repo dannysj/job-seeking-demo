@@ -1,3 +1,6 @@
+/**
+ * @module model/Message
+ */
 const db = require('./pool.js');
 const Mail = require('../../mail/Mail');
 const User = require("./User");
@@ -11,10 +14,21 @@ const createMessage = async (origin, dest, type, content) => {
   await Mail.sendMessageEmail(email, content);
 };
 
+/**
+ *
+ * @param dest User ID
+ * @param content Content of the message
+ * @returns {Promise<void>}
+ */
 exports.sendSystemMessage = async (dest, content) => {
   await createMessage(0, dest, 1, content)
 };
 
+/**
+ *
+ * @param uid User ID
+ * @returns {Promise<*>} A list of notifications
+ */
 exports.getNotificationsByUserID = async (uid) => {
   const query = `select *
                  from message
@@ -25,6 +39,10 @@ exports.getNotificationsByUserID = async (uid) => {
   return rows;
 };
 
+/**
+ *
+ * @param uid User ID
+ */
 exports.setNotificationsAsRead = async (uid) => {
   const query = `update message
                  set is_read = true

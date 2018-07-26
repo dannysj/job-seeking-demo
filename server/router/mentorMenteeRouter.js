@@ -33,7 +33,7 @@ app.post('/api/mentor_decision', async (req, res) => {
 });
 
 app.post('/api/mentee_confirm', async (req, res) => {
-  await MentorRelation.setMenteeConfirm(req.body.uid, req.body.mrid);
+  await MentorRelation.setMenteeConfirm(req.body.mrid);
   res.json({code: 0});
 });
 

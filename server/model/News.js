@@ -1,12 +1,29 @@
+/**
+ * @module model/News
+ */
 const db = require('./pool.js');
-
-exports.createNews = async (news) => {
+/**
+ *
+ * @param author_id Author's User ID
+ * @param type Type of news
+ * @param title Title of news
+ * @param thumbnail Thumbnail
+ * @param content Not used anymore
+ * @param delta json representation of the content
+ @returns {Promise<*>} News ID
+ */
+exports.createNews = async (author_id, type, title, thumbnail, content, delta) => {
   const query = `insert into news (author_id, publish_time, type, title, thumbnail, content, delta)
                  values ($1, now(), $2, $3, $4, $5, $6) returning id;`;
-  const {rows} = await db.query(query, [news.author_id, news.type, news.title, news.thumbnail, news.content, news.delta]);
+  const {rows} = await db.query(query, [author_id, type, title, thumbnail, content, delta]);
   return rows[0].id;
 };
 
+/**
+ *
+ * @param nid: News ID
+ * @returns {Promise<*>}
+ */
 exports.getNewsDetail = async (nid) => {
   const query = `
     select n.title                                   as title,
@@ -28,6 +45,13 @@ exports.getNewsDetail = async (nid) => {
   return rows[0];
 };
 
+/**
+ * Get a list of news
+ *
+ * @param batch_size: Number of news per page
+ * @param batch_num: Page Number
+ * @returns {Promise<*>}
+ */
 exports.getNewsList = async (batch_size, batch_num) => {
   const query = `select n.*, to_char(n.publish_time, 'DD Mon HH24:MI') as date, u.first as first, u.last as last
                  from news n,
