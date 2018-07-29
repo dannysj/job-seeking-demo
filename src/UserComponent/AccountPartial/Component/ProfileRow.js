@@ -2,8 +2,17 @@ import React from "react";
 import store from "../../../redux";
 import {updateUser} from "../../../redux/userAction";
 import {TextArea} from "semantic-ui-react";
+import PropTypes from 'prop-types';
 
 export default class ProfileRow extends React.Component{
+  static propTypes = {
+    user: PropTypes.object,
+    names: PropTypes.array,
+    keys: PropTypes.array,
+    multiline: PropTypes.bool,
+    display: PropTypes.string,
+  };
+
   constructor(props){
     super(props);
     this.state = this.getInitialState();

@@ -13,6 +13,7 @@ import {connect} from 'react-redux'
 import validator from 'validator';
 import {getAuthHeader} from "../../utils";
 import ProfileRow from "./Component/ProfileRow";
+import PasswordEditor from "./Component/PasswordEditor";
 
 @connect(state => ({
   major_list: state.major_list,
@@ -40,43 +41,7 @@ class AccountProfile extends React.Component {
   };
 
 
-  initAttrChangePassword = (key_name) => {
-    let curState = this.state;
-    let attr_keys = curState.attr_key;
 
-    attr_keys[key_name] = "";
-
-    this.setState({attr_key: attr_keys});
-  };
-
-
-  confirmPasswordChange = (e) => {
-    e.preventDefault();
-    let curState = this.state;
-    axios.post("/api/verify_user", {
-      password: this.state.attr_key["old_password"],
-      email: this.props.user.email
-    }).then(res => {
-      store.dispatch(updateAccessToken(res.data.user.access_token));
-
-      if (this.state.attr_key["new_password"] === "") {
-        NotificationManager.error("新密码不能为空", "错误");
-        return
-      }
-
-      if (this.state.attr_key["new_password"] !== this.state.attr_key["confirm_password"]) {
-        NotificationManager.error("确认密码和新密码不一致", "错误");
-        return;
-      }
-
-      store.dispatch(changeUserPassword(this.state.attr_key["new_password"])).then(() => {
-        delete curState.attr_key["new_password"];
-        delete curState.attr_key["old_password"];
-        delete curState.attr_key["confirm_password"];
-        this.setState({curState});
-      });
-    });
-  };
 
   handleResume = (e) => {
     const fileType = e.target.files[0]["type"];
@@ -249,89 +214,9 @@ class AccountProfile extends React.Component {
                       options={this.props.major_list}/>
           </ProfileRow>
 
-          <ProfileRow keys={['cover']} names={['自我介绍']} user={user} multiline={true}/>
+          <ProfileRow keys={['cover']} names={['自我介绍']} user={user} multiline/>
 
-
-          {/*password*/}
-          <div className={"item " + ((this.state.attr_key.hasOwnProperty('old_password')) ? "is-expanded" : "")}>
-            <div className="content">
-              <div className="inner-content">
-                <div className="header">密码设置</div>
-                <div className="info">{'密码不可见'}</div>
-              </div>
-              <div className="edit-toggle"
-                   onClick={() => {
-                     this.initAttrChangePassword('old_password');
-                     this.initAttrChangePassword('new_password');
-                     this.initAttrChangePassword('confirm_password');
-                   }}>
-                更改
-              </div>
-            </div>
-
-
-            {/*password edit */}
-            <div
-              className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('old_password')) ? "is-expanded" : "")}>
-
-              {/*Add three box */}
-              <div className="form-text">
-                <div className="ui segment">
-                  <div className="ui grid">
-                    <div className="row">
-                      <div className="ten wide column">
-                        <label>旧密码</label>
-                        <input type="password"
-                               name="old_password"
-                               placeholder="Old Password"
-                               onChange={this.handleInputChange}
-                               value={this.state.attr_key.old_password}
-                               required/>
-                      </div>
-                    </div>
-
-                    <div className="row">
-                      <div className="ten wide column">
-                        <label>新密码</label>
-                        <input type="password"
-                               name="new_password"
-                               placeholder="New Password"
-                               onChange={this.handleInputChange}
-                               value={this.state.attr_key.new_password}
-                               required/>
-                      </div>
-                    </div>
-
-                    <div className="row">
-                      <div className="ten wide column">
-                        <label>确认密码</label>
-                        <input type="password" name="confirm_password"
-                               placeholder="Confirm Password"
-                               onChange={this.handleInputChange}
-                               value={this.state.attr_key.confirm_password}
-                               required/>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/*no need to change                 */}
-              <div className="actions">
-                <div className="ui gray deny button" onClick={() => {
-                  this.cancelAttrChange("new_password");
-                  this.cancelAttrChange("old_password");
-                  this.cancelAttrChange("confirm_password");
-                }}>
-                  取消
-                </div>
-                <div className="ui blue right labeled icon button" onClick={this.confirmPasswordChange}>
-                  确认
-                  <i className="checkmark icon"/>
-                </div>
-              </div>
-            </div>
-          </div>
+          <PasswordEditor user={user}/>
         </div>
 
         <div className="category">
