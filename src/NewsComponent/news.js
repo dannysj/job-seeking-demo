@@ -8,6 +8,7 @@ import './news.less';
 import store from "../redux";
 import {fetchNewsList} from "../redux/newsListAction";
 import {connect} from 'react-redux'
+import Loading from "../Components/Loading";
 
 class News extends React.Component {
   constructor (props) {
@@ -54,13 +55,9 @@ class News extends React.Component {
 
   render() {
     if (this.props.loading) {
-      return (
-        <div className="loading-news-view">
-            <Button basic loading>Loading</Button>
-        </div>
-      );
+      return (<Loading/>);
     }
-    else
+
     return(
       <div className="news-container">
         <Container>

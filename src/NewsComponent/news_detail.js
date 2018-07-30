@@ -6,6 +6,7 @@ import './news.less';
 import Footer from '../Components/Footer';
 import ProfileFollow from '../Components/ProfileFollow';
 import * as QuillDeltaToHtmlConverter from  'quill-delta-to-html'
+import Loading from "../Components/Loading";
 
 class NewsDetail extends Component {
 
@@ -75,11 +76,7 @@ class NewsDetail extends Component {
       backgroundSize: 'cover',
       };
     if (this.state.loading) {
-      return (
-        <div className="loading-news-view">
-            <Button basic loading>Loading</Button>
-        </div>
-      );
+      return (<Loading/>);
     }
     //TODO: Onload event for this
     else

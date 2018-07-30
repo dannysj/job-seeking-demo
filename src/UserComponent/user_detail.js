@@ -1,72 +1,40 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { Modal, Button, Image, Header, Dropdown, Container } from 'semantic-ui-react';
+import {Image} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import Arrow from "../Components/Arrow";
-import Footer from '../Components/Footer';
 import './user.less';
+import {getAuthHeader} from "../utils";
+import Loading from "../Components/Loading";
 
 class UserDetail extends Component {
+  state = {
+    user: {},
+    is_resume_open: false,
+    isDown: true,
+    notAuthorized: false,
+    isLoading: true
+  };
 
-  constructor (props) {
-    super(props);
-    this.state={
-      user:{},
-      is_resume_open:false,
-      isDown:true,
-      notAuthorized:false,
-    };
 
-    /**
-    For anyone seeing this, I want to admit this is an EXTREMELY SHITTY way of
-    doing the authorization. We should perform the authorization in backend (check the TODO comment in userInfoRouter)
-    to make sure that the user id (mentee_uid) is indeed, a mentee of the api requester (identified by the access_token in the header).
-
-    However, here, due to the asynic nature of redux, this.props.user is not populated instantly once the page is open.
-    Instead, we need to wait for a couple of seconds before it is populated based on
-    the info grabbed from the database asynchronously.
-    Which means, if the user goes directly into user detail page, it is not going to work
-    because the api request for the user info happens almost immediately.
-    But, if the user access this page via his/her /account/service tab, it is going
-    to work like a charm because this.props.user is already populated at that point.
-
-    In short, the current code does prevent any malicious access by using the url directly.
-    **/
-    console.log(this.props.user);
-    if(this.props.user.access_token == ''){
-      this.state.notAuthorized = true;
-    }
-    else {
-      axios.post(
-        '/api/get_user_info',
-        {mentee_uid:this.props.match.params.uid},
-        {headers:{access_token: this.props.user.access_token}})
-      .then(res => {
-        if(res.data.code==0){
-          console.log(res.data.user);
-          this.setState({user:res.data.user});
-        }
-        else{
-          //TODO: Error Handling
-        }
-      });
-    }
-
-    this.resumeToggled = this.resumeToggled.bind(this);
-    this.random = this.random.bind(this);
-    this.createStarryBackground = this.createStarryBackground.bind(this);
+  componentDidMount(){
+    this.setState({isLoading: true});
+    axios.post('/api/get_mentee_info', {mentee_uid: this.props.match.params.uid}, getAuthHeader()).then(res => {
+      this.setState({user: res.data.user, isLoading: false});
+    }).catch(()=>{
+      this.setState({notAuthorized: true});
+    });
   }
 
-  resumeToggled(e) {
+  resumeToggled = (e) => {
     let check = this.state.is_resume_open;
     let down = this.state.isDown;
     this.setState({is_resume_open: !check, isDown: !down});
-  }
+  };
 
-  random(num) {
+  random = (num) => {
     return parseInt(Math.random() * num);
-  }
+  };
+
   createStarryBackground = () => {
     let particles = []
     const min = 20;
@@ -108,19 +76,22 @@ class UserDetail extends Component {
 
 
     return particles;
-  }
+  };
 
   render() {
     let modalClassName='ui modal';
     if(this.state.showAddServiceModal){
       modalClassName += ' payment-qr-container';
     }
-    console.log(this.state.notAuthorized);
 
     if(this.state.notAuthorized){
       return (<div>'您没有阅读此页的权限'</div>);
     }
-    else {
+
+    if (this.state.isLoading) {
+      return (<Loading/>);
+    }
+
     return (
       <div className="user-background">
         <div className="stars-background">
@@ -139,7 +110,6 @@ class UserDetail extends Component {
             <p><b>Wechat@ </b>{this.state.user.wechat}</p>
           </div>
 
-
         </div>
 
         <div className="card">
@@ -154,13 +124,11 @@ class UserDetail extends Component {
           <div className="title">
               简历
             </div>
-          <iframe className="resume-holder" src={this.state.user.resume} width="100%" type='application/pdf'></iframe>
-
+          <embed className="resume-holder" src={this.state.user.resume} width="100%" type='application/pdf'/>
         </div>
 
       </div>
     );
-  }
   }
 }
 

@@ -7,10 +7,11 @@ import '../account.less';
 import './account_profile.less'
 import ImgCrop from './ImgCrop/imgcrop.js';
 import store from "../../redux";
-import {changeUserPassword, updateUser, updateAccessToken} from "../../redux/userAction";
+import {changeEmail, changeUserPassword, updateAccessToken, updateUser} from "../../redux/userAction";
 import {fetchMajorList} from "../../redux/majorListAction";
 import {connect} from 'react-redux'
 import validator from 'validator';
+import {getAuthHeader} from "../../utils";
 
 
 class AccountProfile extends React.Component {
@@ -19,10 +20,11 @@ class AccountProfile extends React.Component {
     this.state = {
       showImgCrop: false,
       attr_key: {},
+      verification_sent_count_down: 0
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     store.dispatch(fetchMajorList());
   }
 
@@ -53,11 +55,6 @@ class AccountProfile extends React.Component {
 
     //FIXME: Fixe bunches data update
     for (const [attr, val] of Object.entries(attr_keys)) {
-      if (attr === "email" && !validator.isEmail(val)) {
-        NotificationManager.error('Email格式不正确', '错误');
-        return;
-      }
-
       if ((attr === "first" || attr === "last") && val.trim() === "") {
         NotificationManager.error('姓名不能为空', '错误');
         return;
@@ -70,42 +67,32 @@ class AccountProfile extends React.Component {
   }
  };
 
-  confirmPasswordChange = (e) =>{
-      e.preventDefault();
-      let curState = this.state;
-      axios.post("/api/verify_user", {password: this.state.attr_key["old_password"], email: this.props.user.email})
-          .then(res =>{
-              if (res.data.code === 1){
-                  NotificationManager.error("原密码不正确，请重新输入", "错误");
-                  return
-              }
+  confirmPasswordChange = (e) => {
+    e.preventDefault();
+    let curState = this.state;
+    axios.post("/api/verify_user", {
+      password: this.state.attr_key["old_password"],
+      email: this.props.user.email
+    }).then(res => {
+      store.dispatch(updateAccessToken(res.data.user.access_token));
 
-              store.dispatch(updateAccessToken(res.data.user.access_token));
+      if (this.state.attr_key["new_password"] === "") {
+        NotificationManager.error("新密码不能为空", "错误");
+        return
+      }
 
-              if (this.state.attr_key["new_password"] === ""){
-                  NotificationManager.error("新密码不能为空", "错误");
-                  return
-              }
+      if (this.state.attr_key["new_password"] !== this.state.attr_key["confirm_password"]) {
+        NotificationManager.error("确认密码和新密码不一致", "错误");
+        return;
+      }
 
-              if ( this.state.attr_key["new_password"] !== this.state.attr_key["confirm_password"] ){
-                  NotificationManager.error("确认密码和新密码不一致", "错误");
-                  return;
-              }
-
-              //this.confirmAttrChange(e)
-              store.dispatch(changeUserPassword(this.state.attr_key["new_password"], store.getState().user)).then(()=>{
-                  curState.attr_key["new_password"] = ""
-                  curState.attr_key["old_password"] = ""
-                  curState.attr_key["confirm_password"] = ""
-                  delete curState.attr_key["new_password"];
-                  delete curState.attr_key["old_password"];
-                  delete curState.attr_key["confirm_password"];
-                  this.setState({curState});
-              });
-
-          }
-          )
-          .catch(err => console.log(err));
+      store.dispatch(changeUserPassword(this.state.attr_key["new_password"])).then(() => {
+        delete curState.attr_key["new_password"];
+        delete curState.attr_key["old_password"];
+        delete curState.attr_key["confirm_password"];
+        this.setState({curState});
+      });
+    });
   };
 
   handleResume = (e) => {
@@ -122,14 +109,21 @@ class AccountProfile extends React.Component {
     data.append('file', e.target.files[0]);
 
     axios.post('/api/file/general_upload', data).then(res => {
-      if (res.data.code === 0) {
-        store.dispatch(updateUser("resume", res.data.url));
-      } else {
-        NotificationManager.error('简历上传失败', '错误');
-      }
+      store.dispatch(updateUser("resume", res.data.url));
     });
   };
 
+  confirmNewEmailChange = (e) => {
+    e.preventDefault();
+    let curState = this.state;
+    axios.post("/api/verify_code", {code: this.state.attr_key.verification_code}, getAuthHeader())
+      .then(res => {
+          store.dispatch(updateUser('email', this.state.attr_key["new_email"]));
+          delete curState.attr_key["new_email"];
+          delete curState.attr_key["verification_code"];
+        }
+      )
+  };
 
   handleHeader = (e) => {
     // check legit files
@@ -159,13 +153,8 @@ class AccountProfile extends React.Component {
     data.append('file', img);
 
     axios.post('/api/file/general_upload', data).then(res => {
-      if (res.data.code === 0) {
-        this.setState({showImgCrop: false});
-        store.dispatch(updateUser("profile_pic", res.data.url));
-      }
-      else {
-        NotificationManager.error('头像上传失败', '错误');
-      }
+      this.setState({showImgCrop: false});
+      store.dispatch(updateUser("profile_pic", res.data.url));
     });
   };
 
@@ -173,6 +162,50 @@ class AccountProfile extends React.Component {
     let curState = this.state;
     delete curState.attr_key[key_name];
     this.setState(curState);
+  };
+
+  sendVerificationCode = ()=>{
+    const {new_email} = this.state.attr_key;
+
+    if (!validator.isEmail(new_email)) {
+      NotificationManager.error('Email格式不正确', '错误');
+      return;
+    }
+
+    axios.post("/api/verify_new_email", {new_email}, getAuthHeader()).then(res => {
+        // Send verification
+        this.setState({verification_sent_count_down: 30});
+
+        const interval = setInterval(() => {
+          const new_count_down = this.state.verification_sent_count_down - 1;
+          if (new_count_down === 0) {
+            clearInterval(interval);
+          } else {
+            this.setState({verification_sent_count_down: new_count_down})
+          }
+        }, 1000)
+      }
+    );
+  };
+
+  verficationCodeButton = ()=>{
+
+      if (this.state.verification_sent_count_down > 0){
+          let sentence = this.state.verification_sent_count_down + "秒后可以再次发送验证码";
+
+          return (
+              <div className="ui disabled button">
+                  {sentence}
+              </div>
+          )
+      }
+      return(
+        <div className="eight wide column">
+            <button className="ui primary button" onClick={this.sendVerificationCode} >
+              发送验证
+            </button>
+        </div>
+      );
   };
 
   handleInputChange = (e, data) => {
@@ -426,29 +459,65 @@ class AccountProfile extends React.Component {
                   邮箱、微信号绑定设置
                 </div>
               </div>
-              <div className={"item first "+ ((this.state.attr_key.hasOwnProperty('email')) ? "is-expanded" : "")}>
+
+
+              {/*Email*/}
+              <div className={"item first "+ ((this.state.attr_key.hasOwnProperty('new_email')) ? "is-expanded" : "")}>
                 <div className="content">
                   <div className="inner-content">
                   <div className="header">Email</div>
                   <div className="info">{user.email}</div>
-                  </div>
-                  <div className="edit-toggle"  onClick={()=>this.initAttrChange('email')}>
-                    编辑
-                  </div>
                 </div>
+                <div className="edit-toggle"  onClick={()=>{
+                                                            this.initAttrChange('new_email');
+                                                            this.initAttrChange('verification_code')}}>
+                    编辑
+                </div>
+              </div>
 
-                <div className={"expandable-content " + ((this.state.attr_key.hasOwnProperty('email')) ? "is-expanded" : "")}>
-                  <div className="form-text">
-                    <input type="text" name="email" value={this.state.attr_key.email} onChange={this.handleInputChange}/>
-                    <div className="padding-text"></div>
+                <div className={"expandable-content " +
+                        ((this.state.attr_key.hasOwnProperty('new_email')) ? "is-expanded" : "")}>
+
+                  <div className="ui segment" style={{paddingBottom: "10px"}}>
+                      <div className="ui stackable two column grid">
+
+                          <label style={{paddingTop: "14px"}}>新Email</label>
+                          <div className="row" style={{paddingTop: "0px"}}>
+                              <div className="eight wide column">
+                                <input type="text" name="new_email"
+                                       placeholder="新Email"
+                                       value={this.state.attr_key.new_email}
+                                       onChange={this.handleInputChange}/>
+                              </div>
+                              <div className="eight wide column">
+                                  {this.verficationCodeButton()}
+                              </div>
+                          </div>
+                          <div className="row" style={{paddingBottom: "0px"}}>
+                              <div className="eight wide column">
+                                  <label>输入验证码</label>
+                              </div>
+                          </div>
+                          <div className="row" style={{paddingTop: "0px"}}>
+                              <div className="eight wide column">
+                                  <input type="text" name="verification_code"
+                                         placeholder="新邮箱里收到的验证码"
+                                         value={this.state.attr_key.verification_code}
+                                         onChange={this.handleInputChange}
+                                         />
+                              </div>
+                          </div>
+
+                      </div>
                   </div>
                   <div className="actions">
                     <div className="ui gray deny button" onClick={() => {
-                      this.cancelAttrChange("email");
+                      this.cancelAttrChange("new_email");
+                      this.cancelAttrChange("verification_code");
                     }}>
                       取消
                     </div>
-                    <div className="ui blue right labeled icon button" onClick={this.confirmAttrChange}>
+                    <div className="ui blue right labeled icon button" onClick={this.confirmNewEmailChange}>
                       确认
                       <i className="checkmark icon"/>
                     </div>
@@ -456,6 +525,8 @@ class AccountProfile extends React.Component {
                 </div>
               </div>
 
+
+              {/*Wechat*/}
               <div className="item">
                 <div className="content">
                   <div className="inner-content">

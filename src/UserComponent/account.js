@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Route, Switch } from 'react-router';
-import { Label, Icon, Button } from 'semantic-ui-react';
+import React, {Component} from 'react';
+import {Route, Switch} from 'react-router';
+import {Icon, Label} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import './account.less';
 import NavLink from '../NavLinkComponent/navlink';
@@ -12,11 +12,11 @@ import AccountService from './AccountPartial/account_service';
 import AccountAdmin from './AccountPartial/account_admin';
 import AccountLogout from "./AccountPartial/account_logout";
 import AccountForbidden from "./AccountPartial/account_forbidden";
-import MentorEdit from "./AccountPartial/mentor_edit";
 import CreateArticle from "./AccountPartial/create_article";
 import AccountNotification from "./AccountPartial/account_notification";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
+import Loading from "../Components/Loading";
 
 
 class Account extends Component {
@@ -30,11 +30,7 @@ class Account extends Component {
     }
 
     if(user.pending){
-      return (
-        <div className="loading-news-view">
-            <Button basic loading>Loading</Button>
-        </div>
-      );
+      return (<Loading/>);
     }
 
     return (

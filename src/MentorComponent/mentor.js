@@ -5,6 +5,7 @@ import {fetchMentorList} from "../redux/mentorListAction";
 import store from "../redux";
 import {connect} from "react-redux";
 import MentorProfileContainer from './MentorProfileContainer'
+import Loading from "../Components/Loading";
 
 @connect(state => ({
   mentors: state.mentorListStore.mentors,
@@ -86,11 +87,7 @@ class Mentor extends Component {
       .filter((el) => (selected.colleges.length === 0 || selected.colleges.indexOf(el.college_name) > -1));
 
     if (this.props.loading) {
-      return (
-        <div className="loading-news-view">
-          <Button basic loading>Loading</Button>
-        </div>
-      );
+      return (<Loading/>);
     }
 
     return (

@@ -1,34 +1,11 @@
+const AppError = require('../error').AppError;
+
 const error_handler = (err, req, res, next) => {
-  if (!err) {
-    next(err);
-  }
+  if (!(err instanceof AppError)) console.error(`System ${err.stack}`);
 
-  if (!err.message) {
-    res.json({code: 1, errMsg: err});
-    next(err);
-    return;
-  }
-
-  const errMsg = err.message;
-  switch (errMsg) {
-    case 'Access denied': {
-      res.status(403);
-      res.json({error: 'Access Denied'});
-      break;
-    }
-
-    case 'Access token invalid': {
-      res.json({code: 44, errMsg});
-      break;
-    }
-
-    default: {
-      res.json({code: 1, errMsg});
-      break;
-    }
-  }
-
-  next(err);
+  const code = err.code ? err.code : 1;
+  const message = err instanceof AppError ? err.message : '未知服务器错误';
+  res.status(403).json({code, message});
 };
 
 module.exports = error_handler;

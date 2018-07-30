@@ -10,7 +10,7 @@ const config = require("./config");
  * @param {string} password Unhashed password
  * @returns {string} hashed password
  */
-exports.hashedPassword = (password) => {
+exports.hashPassword = (password) => {
   return bcrypt.hashSync(password, config.hash_salt);
 };
 

@@ -3,7 +3,7 @@ import {Button} from 'semantic-ui-react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import CommentBox from "../../MentorComponent/CommentBox";
-import {NotificationManager} from 'react-notifications';
+import {getAuthHeader} from "../../utils";
 
 class AccountMentor extends React.Component {
   constructor(props) {
@@ -17,31 +17,17 @@ class AccountMentor extends React.Component {
     this.updateInfo();
   }
 
-  updateInfo(){
+  updateInfo() {
     let handler = this;
-    axios.post('/api/get_rel_mentors',{}, {headers:{access_token: this.props.user.access_token}}).then(res => {
-      if(res.data.code === 0){
-        handler.setState({mentors:res.data.mentors});
-      }
-      else{
-        // TODO: error handling
-        NotificationManager.error('数据库错误','错误');
-        console.log(res.data);
-      }
+    axios.post('/api/get_rel_mentors', {}, getAuthHeader()).then(res => {
+      handler.setState({mentors: res.data.mentors});
     });
   }
 
   handleConfirm(mrid) {
     let handler = this;
-    axios.post('/api/mentee_confirm', {mrid: mrid},{headers:{access_token: this.props.user.access_token}}).then(res => {
-      if(res.data.code === 0){
-        handler.updateInfo();
-      }
-      else{
-        // TODO: error handling
-        NotificationManager.error('数据库错误','错误');
-        console.log(res.data);
-      }
+    axios.post('/api/mentee_confirm', {mrid}, getAuthHeader()).then(res => {
+      handler.updateInfo();
     });
   }
 

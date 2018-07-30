@@ -1,5 +1,4 @@
 import {NotificationManager} from "react-notifications";
-import axios from "axios/index";
 
 export default (state = JSON.parse(localStorage.getItem('user')), action) => {
   switch (action.type) {
@@ -23,19 +22,9 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
       state = action.payload.data.user;
       break;
 
-
     case "FETCH_USER_REJECTED":
       state = null;
       break;
-
-
-    case "UPDATE_USER_FULFILLED":
-      const data = JSON.parse(action.payload.config.data);
-      if (data.attr !== 'last')  // prevent multiple notifications when updating name
-        NotificationManager.success('资料更新成功', '完成啦');
-      state = {...state, [data.attr]: data.val};
-      break;
-
 
     case "UPDATE_USER_LOCAL":
       state = {...state, [action.payload.attr]: action.payload.val};
@@ -57,17 +46,12 @@ export default (state = JSON.parse(localStorage.getItem('user')), action) => {
       state = {...state, followee};
       break;
     }
-
-    case "CHANGE_PASSWORD_FULFILLED":
-      NotificationManager.success('资料更新成功', '完成啦');
-      break;
   }
 
-  if (state) {
+  if (state)
     localStorage.setItem('user', JSON.stringify(state));
-  } else {
+   else
     localStorage.removeItem('user');
-  }
 
   return state;
 }

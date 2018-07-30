@@ -8,7 +8,6 @@ class MentorProfileContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
       totalPages: Math.ceil(this.props.mentors.length / this.itemsPerPage)
     };
 

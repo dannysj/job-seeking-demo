@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Button, Image, Divider, Icon, Modal, TextArea, Header, Input} from 'semantic-ui-react';
+import {Button, Header, Icon, Image, Input, Modal} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {NotificationManager} from 'react-notifications';
 import './mentor.less';
 import CommentBox from "./CommentBox";
 import Arrow from "../Components/Arrow";
@@ -10,6 +10,8 @@ import Footer from '../Components/Footer';
 import {connect} from 'react-redux'
 import store from "../redux";
 import {fetchMentorDetail} from "../redux/mentorDetailAction";
+import {getAuthHeader} from "../utils";
+import Loading from "../Components/Loading";
 
 class MentorDetail extends Component {
   constructor (props) {
@@ -54,20 +56,14 @@ class MentorDetail extends Component {
 
   handleSubmit() {
     this.setState({showNoteModal: false})
-    var handler = this;
     axios.post('/api/create_order',
     {
       mid:this.props.match.params.mid,
       service_name: this.state.service_name,
       service_price: this.state.service_price,
       note: this.state.note
-    }, {headers: {access_token: this.props.user.access_token}}).then(res => {
-      if (res.data.code === 0) {
+    }, getAuthHeader()).then(res => {
         window.location.href = res.data.url;
-      }
-      else{
-        NotificationManager.error('数据库错误','错误');
-      }
     });
   }
 
@@ -189,12 +185,8 @@ class MentorDetail extends Component {
 
     const mentor = this.props.mentorDetailStore[this.props.match.params.mid];
 
-    if(!mentor)
-      return (
-        <div className="loading-news-view">
-          <Button basic loading>Loading</Button>
-        </div>
-      );
+    if (!mentor)
+      return (<Loading/>);
 
     let modalClassName='ui modal';
     const backimgstyle = {

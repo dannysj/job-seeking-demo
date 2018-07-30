@@ -1,12 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Button, Image, Input, Segment } from 'semantic-ui-react';
+import {Button, Image, Input} from 'semantic-ui-react';
 import ReactQuill from 'react-quill';
 import axios from 'axios';
 import 'react-quill/dist/quill.snow.css';
 import '../account.less';
 import {NotificationManager} from "react-notifications";
+import {getAuthHeader} from "../../utils";
 
 class AccountAdmin extends React.Component {
   constructor(props) {
@@ -31,20 +32,9 @@ class AccountAdmin extends React.Component {
 
   updateInfo() {
     let handler = this;
-    axios.post('/api/admin/get_applications').then(res => {
-      if(res.data.code === 0){
-        let list = res.data.applications.map((e) => {
-
-          return e.id;
-        });
-
-        handler.setState({applications: res.data.applications, loaded: list});
-      }
-      else{
-        // TODO: error handling
-        NotificationManager.error('数据库错误','错误');
-        console.log(res.data);
-      }
+    axios.post('/api/admin/get_applications', {}, getAuthHeader()).then(res => {
+      const list = res.data.applications.map(e => e.id);
+      handler.setState({applications: res.data.applications, loaded: list});
     });
   }
 
@@ -67,16 +57,9 @@ class AccountAdmin extends React.Component {
     let handler = this;
 
     axios.post('/api/file/general_upload', data).then(res => {
-      if(res.data.code === 0){
-        let curState = handler.state;
-        curState['news']['thumbnail'] = res.data.url;
-        handler.setState(curState);
-      }
-      else{
-        // TODO: error handling
-        NotificationManager.error('缩略图上传错误','错误');
-        console.log(res.data);
-      }
+      let curState = handler.state;
+      curState['news']['thumbnail'] = res.data.url;
+      handler.setState(curState);
     });
     //
     // var reader = new FileReader();
@@ -102,31 +85,18 @@ class AccountAdmin extends React.Component {
   handleCompanyIcon(e) {
     let data = new FormData();
     data.append('file', e.target.files[0]);
-    let handler = this;
 
     axios.post('/api/file/general_upload_name_perserved', data).then(res => {
-      if(res.data.code === 0){
-        NotificationManager.success('上传成功','成功');
-      }
-      else{
-        // TODO: error handling
-        NotificationManager.error('上传错误','错误');
-        console.log(res.data);
-      }
+      NotificationManager.success('上传成功', '成功');
     });
   }
 
   handleSubmitNews(){
     let data = this.state.news;
     data.author_id = this.props.user.id;
-    axios.post('/api/create_news',data).then(res => {
-      if(res.data.code===0){
-        NotificationManager.success('干货成功上传','成功');
-        this.context.router.history.push('/news/'+res.data.nid);
-      }
-      else{
-        NotificationManager.error('数据库错误','错误');
-      }
+    axios.post('/api/create_news', data, getAuthHeader()).then(res => {
+      NotificationManager.success('干货成功上传', '成功');
+      this.context.router.history.push('/news/' + res.data.nid);
     });
   }
 
@@ -135,8 +105,7 @@ class AccountAdmin extends React.Component {
 
     let handler = this;
 
-    axios.post('/api/admin/decide_mentor_app',{uid: uid, mid:mid,decision:decision}).then(res => {
-      if(res.data.code===0){
+    axios.post('/api/admin/decide_mentor_app',{mid:mid, decision:decision},getAuthHeader()).then(res => {
         NotificationManager.success('操作成功','成功');
         // handler.state.applications.forEach(function(app, index){
         //   if(app.id == mid){
@@ -145,10 +114,6 @@ class AccountAdmin extends React.Component {
         // });
         // handler.setState({applications: handler.state.applications});
         handler.updateInfo();
-      }
-      else{
-        NotificationManager.error('数据库错误','错误');
-      }
     });
   }
 

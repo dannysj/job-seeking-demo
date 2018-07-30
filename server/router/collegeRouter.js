@@ -12,7 +12,7 @@ app.post('/api/get_college_list', async (req, res) => {
 
 app.post('/api/add_college', async (req, res) => {
   const college = await College.addCollege(req.body.college_name);
-  res.json({code: 0, college});
+  res.json({code: 0, college, message: '添加大学成功'});
 });
 
 module.exports = app;

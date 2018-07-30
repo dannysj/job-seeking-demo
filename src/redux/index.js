@@ -9,7 +9,6 @@ import majorListReducer from './majorListReducer'
 import mentorListReducer from './mentorListReducer'
 import newsListReducer from "./newsListReducer";
 import mentorDetailReducer from "./mentorDetailReducer";
-import {NotificationManager} from "react-notifications";
 import {logout} from "./userAction";
 
 const reducers = combineReducers({
@@ -21,34 +20,16 @@ const reducers = combineReducers({
 });
 
 const errorReporter = store => next => action => {
-  console.log("Error reporting for " + action.type);
-  if (action.type.endsWith('REJECTED')){
-    // TODO: In the future, all error will be received as non-20x code
-    let errMsg = '';
-    switch (action.type) {
-      case 'FETCH_USER_REJECTED':
-        errMsg = '登录信息已过期';
-        break;
-      default:
-        errMsg = action.type;
-    }
-    NotificationManager.error(errMsg, '网络错误');
-  }
+  if (!action.type.endsWith('REJECTED')) return next(action);
+  if (!action.payload.response) return next(action); // The server should return a response
 
-  if (action.type.endsWith('FULFILLED') && action.payload.data.code === 44){
+  const data = action.payload.response.data;
+  if (data && data.code === 44 && store.getState().user) {
     // resign up
-    if (store.getState().user) {
-      NotificationManager.error("请重新登陆", '登陆过期');
-      store.dispatch(logout());
-      history.push("/login");
-      history.go(0);
-    }
+    store.dispatch(logout());
+    history.push("/login");
+    history.go(0);
     // Send notification.
-    return;
-  }
-
-  if (action.type.endsWith('FULFILLED') && action.payload.data.code !== 0){
-    NotificationManager.error(action.type, '数据库错误');
   }
 
   return next(action);
