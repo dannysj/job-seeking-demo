@@ -10,6 +10,7 @@ import AccountBalance from './AccountPartial/account_balance';
 import AccountApply from './AccountPartial/account_apply';
 import AccountService from './AccountPartial/account_service';
 import AccountAdmin from './AccountPartial/account_admin';
+import AccountDashboard from './AccountPartial/account_dashboard';
 import AccountLogout from "./AccountPartial/account_logout";
 import AccountForbidden from "./AccountPartial/account_forbidden";
 import CreateArticle from "./AccountPartial/create_article";
@@ -42,8 +43,10 @@ class Account extends Component {
           <div className="four wide column account-side-container">
             <div className="ui vertical fluid tabular menu account-side-no-container">
               <div className="account-status">
-                <Icon name='graduation'  color="blue" className="menu-icon" />
-                您的账号状态：{user.ismentor ? "Mentor":"Mentee"}
+                <div className="chinese-label">您的账号状态：</div>
+                <div className="label"><Icon name='graduation'  color="blue" className="menu-icon" />
+                <div className="innerlabel">{user.ismentor ? "Mentor":"Mentee"}</div></div>
+
               </div>
 
               <NavLink to="/account/">
@@ -88,6 +91,12 @@ class Account extends Component {
                     <Icon name='user secret'  className="menu-icon" />管理员页面
                   </NavLink>)
               }
+              {
+                user.isadmin && (
+                  <NavLink to="/account/dashboard">
+                    <Icon name='chart line'  className="menu-icon" />数据统计
+                  </NavLink>)
+              }
               <NavLink to="/account/logout">
                 <Icon name='log out'  className="menu-icon" />注销
               </NavLink>
@@ -106,6 +115,7 @@ class Account extends Component {
                   <Route path='/account/create_article' render={()=><CreateArticle user={user}/>} />
                   <Route path='/account/notification' render={()=><AccountNotification user={user}/>} />
                   <Route path='/account/admin' render={()=><AccountAdmin user={user}/>} />
+                  <Route path='/account/dashboard' render={()=><AccountDashboard user={user}/>} />
                   <Route path='/account/logout' render={()=><AccountLogout/>} />
                   <Route path='/account/' render={()=><AccountProfile/>} />
                 </Switch>

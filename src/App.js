@@ -206,6 +206,12 @@ class App extends Component {
                     <Icon name='user secret'  className="tab menu-icon" />管理员页面
                   </NavLink>)
               }
+              {
+                user.isadmin && (
+                  <NavLink to="/account/dashboard">
+                    <Icon name='chart line'  className="menu-icon" />数据统计
+                  </NavLink>)
+              }
               <NavLink to="/account/logout">
                 <Icon name='log out'  className="tab menu-icon" />注销
               </NavLink>

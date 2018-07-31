@@ -38,7 +38,7 @@ class MentorProfile extends Component {
             <div className="">
             <img className="mentor-picture" src={mentor.profile_pic} alt={mentor.last + ' ' + mentor.first}/>
             <br/><br/>
-            <div><strong>{mentor.last + ' ' + mentor.first}</strong></div>
+            <div className="mentor-names"><strong>{mentor.last + ' ' + mentor.first}</strong></div>
             </div>
             <div className="mentor-buttons-container">
             {

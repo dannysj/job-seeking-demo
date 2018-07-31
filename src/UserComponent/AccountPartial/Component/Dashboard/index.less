@@ -1,0 +1,128 @@
+.dashboard-main {
+  display: flex;
+  flex-flow: column;
+  background: #FFF;
+  border-radius: 5px;
+  padding: 1em 0em;
+
+  .d-title {
+    position: relative;
+    padding: 1.5em;
+    .title {
+      float: right;
+      text-align: right;
+      font-family: NeutraText-Light;
+      color: #808080;
+      font-size: 1em;
+      padding-right: 0.5em;
+
+      margin-right: 0.5em;
+
+      &.right {
+        font-size: 2em;
+        padding-right: 0em;
+        position: absolute;
+        right: 0;
+      }
+    }
+
+    .selection {
+      display: flex;
+      flex-flow: row;
+      justify-content: left;
+      color: #B7B7B7;
+      font-family: HYYakuHei-DEW;
+
+      .active {
+        font-size: 1.5em;
+        color: #8AB7F7;
+        border-bottom: 4px #8AB7F7 solid;
+        border-bottom-left-radius: 2px;
+        /* margin-bottom: 1em; */
+        padding-bottom: 0.5em;
+        border-bottom-right-radius: 2px;
+      }
+    }
+  }
+
+  .d-info {
+    min-height: 120px;
+    background: #F0F8FD;
+    padding: 1em 0em;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-around;
+    margin-right: -1rem;
+    .new-mem {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      .graph-icon {
+        background-color: #FFAD9F;
+        color: #FF7F69;
+      }
+    }
+
+    .new-trans {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      .graph-icon {
+        background-color: #9FCFFF;
+        color: #6991FF;
+      }
+    }
+
+    .new-men {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      .graph-icon {
+        background-color: #FFED9F;
+        color: #FFD769;
+      }
+    }
+    .graph-icon {
+      width: 2.5em;
+      height: 2.5em;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 1em;
+    }
+
+
+  }
+  .d-graph {
+    padding: 2em 1em 2em 2em;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .dashboard-main {
+    .right {
+      display: none;
+    }
+    .title {
+      line-height: 1.2;
+      text-align: center;
+    }
+    .new-trans {
+          flex-flow: column;
+    }
+    .new-men {
+          flex-flow: column;
+    }
+    .new-mem {
+          flex-flow: column;
+    }
+    .info {
+      text-align: center;
+    }
+    .d-title {
+      padding: 0em 1.5em 1.5em;
+    }
+  }
+
+}
