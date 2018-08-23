@@ -20,6 +20,7 @@ import NewsDetail from './NewsComponent/news_detail';
 import About from './AboutComponent/about';
 import Reset from './UserComponent/reset';
 import ErrorPage from './ErrorPage';
+import VideoHome from './VideoComponent/home';
 // Redux
 import store from "./redux";
 import {fetchUser, setUser} from "./redux/userAction";
@@ -126,6 +127,12 @@ class App extends Component {
                 <div className="chinese-top">就业干货</div>
               </div>
             </NavLink>
+            <NavLink to="/video-home" onClick={this.menuToggled} isHorizontal>
+              <div className="Nav-item ">
+                <div className="App-subtitle">Videos</div>
+                <div className="chinese-top">视频啦</div>
+              </div>
+            </NavLink>
             <NavLink to="/about" onClick={this.menuToggled} isHorizontal>
               <div className="Nav-item ">
                 <div className="App-subtitle">About</div>
@@ -181,7 +188,11 @@ class App extends Component {
                     </NavLink>
                     <NavLink to="/account/create_article">
                       <Icon name='write'  className="tab menu-icon" />编写干货
-                    </NavLink></div>):(<div>
+                    </NavLink>
+                    <NavLink to="/account/video-upload">
+                      <Icon name='cloud upload'  className="menu-icon" />上传视频
+                    </NavLink>
+                    </div>):(<div>
                     <NavLink to="/account/mentor">
                      <Icon name='user secret'  className="tab menu-icon" />我的导师
                    </NavLink>
@@ -201,16 +212,14 @@ class App extends Component {
 
               </NavLink>
               {
-                user.isadmin && (
+                user.isadmin && (<div>
                   <NavLink to="/account/admin">
                     <Icon name='user secret'  className="tab menu-icon" />管理员页面
-                  </NavLink>)
-              }
-              {
-                user.isadmin && (
+                  </NavLink>
                   <NavLink to="/account/dashboard">
                     <Icon name='chart line'  className="menu-icon" />数据统计
-                  </NavLink>)
+                  </NavLink>
+                  </div>)
               }
               <NavLink to="/account/logout">
                 <Icon name='log out'  className="tab menu-icon" />注销
@@ -233,6 +242,7 @@ class App extends Component {
             <Route path='/error' component={ErrorPage}/>
             <Route path='/news' component={News}/>
             <Route path='/about' component={About}/>
+            <Route path='/video-home' component={VideoHome}/>
             <Route path='/' component={Home}/>
           </Switch>
           </Provider>

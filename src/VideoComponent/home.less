@@ -1,0 +1,71 @@
+.video-home {
+  position: relative;
+  min-height: 100%;
+  background: #0D0F41;
+  display: flex;
+  flex-flow: column;
+  justify-content: baseline;
+  align-items: center;
+
+  &:nth-child(1) {
+    padding-top: 2rem;
+  }
+
+  > .card {
+    background: #FFF;
+    width: 70%;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-flow: column;
+    z-index: 2;
+    text-align: center;
+    padding: 0em 2em;
+    margin: 1em 0em 1em 0em;
+
+    .title {
+      font-size: 5rem;
+      flex-flow: row;
+      display: flex;
+      font-family: HYSHANGWEIQINGCHATIW;
+      width: 100%;
+      padding: 0.9em 0em 0.1em 0em;
+      .subtitle {
+        padding-left: 1em;
+        padding-right: 1em;
+        font-size: 1.3rem;
+      }
+    }
+
+    .content {
+      border: none;
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-flow: row;
+      padding-bottom: 5em;
+      align-content: center;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+
+      .list-news-container {
+        &.new-big {
+          height: 250px;
+        }
+        .list-news-picture {
+          height: 70%;
+        }
+        .list-news-subtitle {
+          font-size: 1em;
+        }
+      }
+
+    }
+
+  }
+
+
+
+}

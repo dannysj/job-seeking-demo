@@ -15,6 +15,7 @@ import AccountLogout from "./AccountPartial/account_logout";
 import AccountForbidden from "./AccountPartial/account_forbidden";
 import CreateArticle from "./AccountPartial/create_article";
 import AccountNotification from "./AccountPartial/account_notification";
+import AccountUploadVideo from "./AccountPartial/account_upload_vid";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import Loading from "../Components/Loading";
@@ -66,7 +67,11 @@ class Account extends Component {
                     </NavLink>
                     <NavLink to="/account/create_article">
                       <Icon name='write'  className="menu-icon" />编写干货
-                    </NavLink></div>):(
+                    </NavLink>
+                    <NavLink to="/account/video-upload">
+                      <Icon name='cloud upload'  className="menu-icon" />上传视频
+                    </NavLink>
+                    </div>):(
                     <div><NavLink to="/account/mentor">
                      <Icon name='user secret'  className="menu-icon" />我的导师
                    </NavLink>
@@ -117,7 +122,8 @@ class Account extends Component {
                   <Route path='/account/admin' render={()=><AccountAdmin user={user}/>} />
                   <Route path='/account/dashboard' render={()=><AccountDashboard user={user}/>} />
                   <Route path='/account/logout' render={()=><AccountLogout/>} />
-                  <Route path='/account/' render={()=><AccountProfile/>} />
+                  <Route path='/account/video-upload' render={()=><AccountUploadVideo/>} />
+                    <Route path='/account/' render={()=><AccountProfile/>}/>
                 </Switch>
               )
                 : (<Switch onChange={this.onRouteChange}>
