@@ -8,6 +8,7 @@ import {connect} from 'react-redux';
 import store from "../../redux";
 import validator from 'validator';
 import {getAuthHeader} from "../../utils";
+// Using dropzone later
 
 class AccountUploadVideo extends React.Component {
     constructor(props) {
@@ -20,24 +21,10 @@ class AccountUploadVideo extends React.Component {
         this.handleHeader = this.handleHeader.bind(this);
     }
 
-    componentWillMount(){
-      axios.post('/api/get_mentor_detail_by_uid', {}, getAuthHeader()).then(res => {
-        if (res.data.code === 0) {
-          const mentor = res.data.mentor;
-          this.setState({
-            mentor_info: mentor,
-            statusChecked: true,
-            hasNotApplied: false
-          });
-        } else if (res.data.code === 55) {
-          this.setState({statusChecked: true, hasNotApplied: true});
-        }
-      });
-    }
-
     handleHeader = (e) => {
       // check legit files
-      const fileType = e.target.files[0]["type"];
+      const file = e.target.files[0];
+      const fileType = file["type"];
       const ValidImageTypes = ["video/*"];
       if (ValidImageTypes.indexOf(fileType) < 0) {
         // invalid file type code goes here.
@@ -45,14 +32,14 @@ class AccountUploadVideo extends React.Component {
         return;
       }
 
-      const file = e.target.files[0];
-      const fileReader = new FileReader();
-      const handler = this;
-      fileReader.onloadend = function (e2) {
-        // do smth
-        handler.setState({})
-      };
-      fileReader.readAsDataURL(file);
+      let data = new FormData();
+      data.append('file', file);
+
+      axios.post('/api/file/general_upload', data).then(res => {
+
+        //FIXME: Backend
+        //store.dispatch(updateUser("profile_pic", res.data.url));
+      });
     };
 
     handleSubmit = (e) => {
